@@ -1,0 +1,97 @@
+using UnityEngine;
+
+[DefaultExecutionOrder((int)ScriptsExecutionOrder.ExecutionOrder.catDeath)]
+public class CatDeath : MonoBehaviour
+{
+    Constants CONS;
+    Variables VARS;
+    ScriptsExecutionController SEC;
+
+    GameObject gameManager;
+
+    Vector3 catIniPosition;
+
+    //storedVoidBlocks
+    GameObject[] storedVoidBlocks = new GameObject[512];
+    int curStoredVoidBlockIndex;
+
+    Transform tempTransform;
+
+    #region ConstantsUsed
+    Transform catTransform;
+
+    float maxEnergy;
+
+    GameObject storedVoidBlocksEmpty;
+    #endregion
+
+    #region VariablesUsed
+    #endregion
+
+    void Start()
+    {
+        gameManager = GameObject.Find("GameManager");
+
+        CONS = gameManager.GetComponent<Constants>();
+        VARS = gameManager.GetComponent<Variables>();
+        SEC = gameManager.GetComponent<ScriptsExecutionController>();
+
+        catTransform = CONS.catTransform;
+        maxEnergy = CONS.maxEnergy;
+        storedVoidBlocksEmpty = CONS.storedVoidBlocksEmpty;
+
+        catIniPosition = catTransform.position;
+
+        //loadStoredVoidBlocks
+        tempTransform = storedVoidBlocksEmpty.transform;
+        for (int i = 0; i < 512; i++)
+        {
+            storedVoidBlocks[i] = tempTransform.GetChild(i).gameObject;
+        }
+    }
+
+    void Update()
+    {
+        if (VARS.isToDie)
+        {
+            Die();
+
+            VARS.isToDie = false;
+
+            VARS.isIntoNewRoom = true;
+        }
+    }
+    void Die()
+    {
+        //turnIntoVoid
+        storedVoidBlocks[curStoredVoidBlockIndex].transform.position = new Vector3
+            (Mathf.RoundToInt(catTransform.position.x), Mathf.RoundToInt(catTransform.position.y), Mathf.RoundToInt(catTransform.position.z));
+
+        //voidTempChildToCurPlaneEmpty
+        storedVoidBlocks[curStoredVoidBlockIndex].transform.SetParent(VARS.curPlaneEmpty.transform, true);
+
+        curStoredVoidBlockIndex++;
+
+        catTransform.position = catIniPosition;
+
+        //VARS.curEnergy = maxEnergy;
+        VARS.curEnergy = 0.1f;
+        VARS.horCurSpeed = 0;
+        VARS.verCurSpeed = 0;
+
+        VARS.outIniRotationStartTime = 0.1f;
+
+        //strawBerry
+        //isCarryingStrawberries = false;
+
+        //for (int i = 0; i < carriedStrawberries.Count; i++)
+        //{
+        //    carriedStrawberries[i].transform.position = carriedStrawberriesIniPositions[i];
+        //}
+
+        //carriedStrawberries.Clear();
+        //carriedStrawberriesIniPositions.Clear();
+
+        VARS.isToLoseCarriedStrawberries = true;
+    }
+}
