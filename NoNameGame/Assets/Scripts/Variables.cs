@@ -79,6 +79,12 @@ public class Variables : MonoBehaviour
     public float curRoomGravity;
     #endregion
 
+    #region TileData
+    [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
+        "  \nTILEDATA\n --- ")]
+
+    #endregion
+
     #region CameraManager
     [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
         "  \nCAMERAMANAGER\n --- ")]

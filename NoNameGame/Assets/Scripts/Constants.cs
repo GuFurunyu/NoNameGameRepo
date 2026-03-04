@@ -54,6 +54,12 @@ public class Constants : MonoBehaviour
         "  \nCURROOMMANAGER\n --- ")]
     #endregion
 
+    #region TileData
+    [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
+        "  \nTILEDATA\n --- ")]
+
+    #endregion
+
     #region CameraManager
     [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
         "  \nCAMERAMANAGER\n --- ")]

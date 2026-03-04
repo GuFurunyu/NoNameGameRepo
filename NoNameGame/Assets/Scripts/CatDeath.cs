@@ -59,8 +59,6 @@ public class CatDeath : MonoBehaviour
             Die();
 
             VARS.isToDie = false;
-
-            VARS.isIntoNewRoom = true;
         }
     }
     void Die()
@@ -72,14 +70,20 @@ public class CatDeath : MonoBehaviour
         //voidTempChildToCurPlaneEmpty
         storedVoidBlocks[curStoredVoidBlockIndex].transform.SetParent(VARS.curPlaneEmpty.transform, true);
 
+        //activateVoidBlock
+        storedVoidBlocks[curStoredVoidBlockIndex].SetActive(true);
+
         curStoredVoidBlockIndex++;
 
         catTransform.position = catIniPosition;
 
         //VARS.curEnergy = maxEnergy;
-        VARS.curEnergy = 0.1f;
-        VARS.horCurSpeed = 0;
-        VARS.verCurSpeed = 0;
+        //VARS.curEnergy = 0.1f;
+        UFL.SetCurEnergy(0.1f);
+        //VARS.horCurSpeed = 0;
+        UFL.SetHorCurSpeed(0);
+        //VARS.verCurSpeed = 0;
+        UFL.SetVerCurSpeed(0);
 
         VARS.outIniRotationStartTime = 0.1f;
 
@@ -95,5 +99,7 @@ public class CatDeath : MonoBehaviour
         //carriedStrawberriesIniPositions.Clear();
 
         VARS.isToLoseCarriedStrawberries = true;
+
+        VARS.isIntoNewRoom = true;
     }
 }

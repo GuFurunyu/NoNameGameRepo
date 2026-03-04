@@ -21,7 +21,7 @@ public class CatEnergy : MonoBehaviour
     bool isOnGround;
     bool isInLiquid;
 
-    float curEnergy;
+    //float curEnergy;
     #endregion
 
     void Start()
@@ -41,7 +41,7 @@ public class CatEnergy : MonoBehaviour
     {
         isOnGround=VARS.isOnGround;
         isInLiquid = VARS.isInLiquid;
-        curEnergy = VARS.curEnergy;
+        //curEnergy = VARS.curEnergy;
 
         #region OnGroundOrInLiquidReset
         if (!VARS.isRotating && 
@@ -51,13 +51,15 @@ public class CatEnergy : MonoBehaviour
                 isInLiquid)
             {
                 //energyRestore
-                if (curEnergy < maxEnergy)
+                if (VARS.curEnergy < maxEnergy)
                 {
-                    curEnergy += onGroundEnergyRestoreSpeed * Time.deltaTime;
+                    //curEnergy += onGroundEnergyRestoreSpeed * Time.deltaTime;
+                    UFL.AddCurEnergy(onGroundEnergyRestoreSpeed * Time.deltaTime);
                 }
-                if (curEnergy > maxEnergy)
+                if (VARS.curEnergy > maxEnergy)
                 {
-                    curEnergy = maxEnergy;
+                    //curEnergy = maxEnergy;
+                    UFL.SetCurEnergy(maxEnergy);
                 }
             }
             else
@@ -86,11 +88,11 @@ public class CatEnergy : MonoBehaviour
         #endregion
 
         //outOfEnergy
-        if (curEnergy <= 0)
+        if (VARS.curEnergy <= 0)
         {
             VARS.isToDie = true;
         }
 
-        VARS.curEnergy = curEnergy;
+        //VARS.curEnergy = curEnergy;
     }
 }

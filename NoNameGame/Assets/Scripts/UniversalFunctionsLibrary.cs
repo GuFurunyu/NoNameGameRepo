@@ -47,6 +47,19 @@ public class UniversalFunctionsLibrary : MonoBehaviour
     //{
     //}
 
+    #region Universal
+    public Vector3 Vector3Abs(Vector3 vector)
+    {
+        return new Vector3(Mathf.Abs(vector.x), Mathf.Abs(vector.y), Mathf.Abs(vector.z));
+    }
+
+    public Vector3 Vector3RoundToInt(Vector3 vector)
+    {
+        return new Vector3(Mathf.RoundToInt(vector.x), Mathf.RoundToInt(vector.y), Mathf.RoundToInt(vector.z));
+    }
+    #endregion
+
+    #region RoomsManager
     public bool IsInRoom(int roomIndex, Vector3 position)
     {
         tempVector = position - roomCenters[roomIndex];
@@ -64,4 +77,39 @@ public class UniversalFunctionsLibrary : MonoBehaviour
 
         return false;
     }
+    #endregion
+
+    #region CatMove
+    public void SetHorCurSpeed(float value)
+    {
+        VARS.horCurSpeed = value;
+    }
+
+    public void AddHorCurSpeed(float value)
+    {
+        VARS.horCurSpeed += value;
+    }
+
+    public void SetVerCurSpeed(float value)
+    {
+        VARS.verCurSpeed = value;
+    }
+
+    public void AddVerCurSpeed(float value)
+    {
+        VARS.verCurSpeed += value;
+    }
+    #endregion
+
+    #region CatEnergy
+    public void SetCurEnergy(float value)
+    {
+        VARS.curEnergy = value;
+    }
+
+    public void AddCurEnergy(float value)
+    {
+        VARS.curEnergy += value;
+    }
+    #endregion
 }

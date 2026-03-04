@@ -64,14 +64,14 @@ public class CatRotate : MonoBehaviour
     bool isOnGround;
     bool isInLiquid;
 
-    float horCurSpeed;
-    float verCurSpeed;
+    //float horCurSpeed;
+    //float verCurSpeed;
 
     bool isCatStill;
 
     int rotationRestNum;
 
-    float curEnergy;
+    //float curEnergy;
     #endregion
 
     void Start()
@@ -108,11 +108,11 @@ public class CatRotate : MonoBehaviour
         camIniEulerangles = VARS.camIniEulerangles;
         isOnGround = VARS.isOnGround;
         isInLiquid = VARS.isInLiquid;
-        horCurSpeed = VARS.horCurSpeed;
-        verCurSpeed = VARS.verCurSpeed;
+        //horCurSpeed = VARS.horCurSpeed;
+        //verCurSpeed = VARS.verCurSpeed;
         isCatStill = VARS.isCatStill;
         rotationRestNum = VARS.rotationRestNum;
-        curEnergy = VARS.curEnergy;
+        //curEnergy = VARS.curEnergy;
 
         #region Rotate
         if (VARS.isInNewRoom)
@@ -184,7 +184,7 @@ public class CatRotate : MonoBehaviour
             //rotationControl
             if (rotationRestNum > 0)
             {
-                if (curEnergy > rotationEnergyCost)
+                if (VARS.curEnergy > rotationEnergyCost)
                 {
                     if (VARS.isInputtingDownKey)
                     {
@@ -204,7 +204,8 @@ public class CatRotate : MonoBehaviour
 
                             rotationRestNum--;
 
-                            curEnergy -= rotationEnergyCost;
+                            //curEnergy -= rotationEnergyCost;
+                            UFL.AddCurEnergy(-rotationEnergyCost);
                         }
                         else if (VARS.isInputtingRightKey)
                         {
@@ -222,7 +223,8 @@ public class CatRotate : MonoBehaviour
 
                             rotationRestNum--;
 
-                            curEnergy -= rotationEnergyCost;
+                            //curEnergy -= rotationEnergyCost;
+                            UFL.AddCurEnergy(-rotationEnergyCost);
                         }
                     }
                 }
@@ -277,9 +279,11 @@ public class CatRotate : MonoBehaviour
                         curRight = -curUp;
                         curUp = tempVector;
 
-                        tempFloat = horCurSpeed;
-                        horCurSpeed = -verCurSpeed;
-                        verCurSpeed = tempFloat;
+                        tempFloat = VARS.horCurSpeed;
+                        //horCurSpeed = -verCurSpeed;
+                        UFL.SetHorCurSpeed(-VARS.verCurSpeed);
+                        //verCurSpeed = tempFloat;
+                        UFL.SetVerCurSpeed(tempFloat);
 
                         //catTransform.Rotate(0, 0, -90);
                     }
@@ -289,9 +293,11 @@ public class CatRotate : MonoBehaviour
                         curRight = curUp;
                         curUp = -tempVector;
 
-                        tempFloat = horCurSpeed;
-                        horCurSpeed = verCurSpeed;
-                        verCurSpeed = -tempFloat;
+                        tempFloat = VARS.horCurSpeed;
+                        //horCurSpeed = verCurSpeed;
+                        UFL.SetHorCurSpeed(VARS.verCurSpeed);
+                        //verCurSpeed = -tempFloat;
+                        UFL.SetVerCurSpeed(-tempFloat);
 
                         //catTransform.Rotate(0, 0, 90);
                     }
@@ -346,10 +352,10 @@ public class CatRotate : MonoBehaviour
         }
         #endregion
 
-        VARS.horCurSpeed = horCurSpeed;
-        VARS.verCurSpeed = verCurSpeed;
+        //VARS.horCurSpeed = horCurSpeed;
+        //VARS.verCurSpeed = verCurSpeed;
 
-        VARS.curEnergy = curEnergy;
+        //VARS.curEnergy = curEnergy;
 
         VARS.curUp = curUp;
         VARS.curRight = curRight;

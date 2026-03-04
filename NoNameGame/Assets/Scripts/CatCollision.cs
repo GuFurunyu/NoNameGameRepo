@@ -106,10 +106,10 @@ public class CatCollision : MonoBehaviour
     Vector3 curRight;
     Vector3 curUp;
 
-    float horCurSpeed;
-    float verCurSpeed;
+    //float horCurSpeed;
+    //float verCurSpeed;
 
-    float curEnergy;
+    //float curEnergy;
     #endregion
 
     void Start()
@@ -137,9 +137,9 @@ public class CatCollision : MonoBehaviour
     {
         curRight = VARS.curRight;
         curUp = VARS.curUp;
-        horCurSpeed = VARS.horCurSpeed;
-        verCurSpeed = VARS.verCurSpeed;
-        curEnergy = VARS.curEnergy;
+        //horCurSpeed = VARS.horCurSpeed;
+        //verCurSpeed = VARS.verCurSpeed;
+        //curEnergy = VARS.curEnergy;
 
         #region Collision
 
@@ -183,14 +183,14 @@ public class CatCollision : MonoBehaviour
             !VARS.isTwisting)
         {
             #region OnGroundDetect
-            if (Physics.Raycast(downRay1, out downHit1, rayDistance - verCurSpeed / 1000) ||
-                Physics.Raycast(downRay2, out downHit2, rayDistance - verCurSpeed / 1000))
+            if (Physics.Raycast(downRay1, out downHit1, rayDistance - VARS.verCurSpeed / 1000) ||
+                Physics.Raycast(downRay2, out downHit2, rayDistance - VARS.verCurSpeed / 1000))
             {
-                if (Physics.Raycast(downRay1, out downHit1, rayDistance - verCurSpeed / 1000))
+                if (Physics.Raycast(downRay1, out downHit1, rayDistance - VARS.verCurSpeed / 1000))
                 {
                     Detect(2, 1);
                 }
-                if (Physics.Raycast(downRay2, out downHit2, rayDistance - verCurSpeed / 1000))
+                if (Physics.Raycast(downRay2, out downHit2, rayDistance - VARS.verCurSpeed / 1000))
                 {
                     Detect(2, 2);
                 }
@@ -208,14 +208,14 @@ public class CatCollision : MonoBehaviour
             #endregion
 
             #region ToCeilingDetect
-            if (Physics.Raycast(upRay1, out upHit1, rayDistance + verCurSpeed / 1000) ||
-                Physics.Raycast(upRay2, out upHit2, rayDistance + verCurSpeed / 1000))
+            if (Physics.Raycast(upRay1, out upHit1, rayDistance + VARS.verCurSpeed / 1000) ||
+                Physics.Raycast(upRay2, out upHit2, rayDistance + VARS.verCurSpeed / 1000))
             {
-                if (Physics.Raycast(upRay1, out upHit1, rayDistance + verCurSpeed / 1000))
+                if (Physics.Raycast(upRay1, out upHit1, rayDistance + VARS.verCurSpeed / 1000))
                 {
                     Detect(1, 1);
                 }
-                if (Physics.Raycast(upRay2, out upHit2, rayDistance + verCurSpeed / 1000))
+                if (Physics.Raycast(upRay2, out upHit2, rayDistance + VARS.verCurSpeed / 1000))
                 {
                     Detect(1, 2);
                 }
@@ -233,14 +233,14 @@ public class CatCollision : MonoBehaviour
             #endregion
 
             #region BlockDetect
-            if (Physics.Raycast(leftRay1, out leftHit1, rayDistance - horCurSpeed / 1000) ||
-                    Physics.Raycast(leftRay2, out leftHit2, rayDistance - horCurSpeed / 1000))
+            if (Physics.Raycast(leftRay1, out leftHit1, rayDistance - VARS.horCurSpeed / 1000) ||
+                    Physics.Raycast(leftRay2, out leftHit2, rayDistance - VARS.horCurSpeed / 1000))
             {
-                if (Physics.Raycast(leftRay1, out leftHit1, rayDistance - horCurSpeed / 1000))
+                if (Physics.Raycast(leftRay1, out leftHit1, rayDistance - VARS.horCurSpeed / 1000))
                 {
                     Detect(3, 1);
                 }
-                if (Physics.Raycast(leftRay2, out leftHit2, rayDistance - horCurSpeed / 1000))
+                if (Physics.Raycast(leftRay2, out leftHit2, rayDistance - VARS.horCurSpeed / 1000))
                 {
                     Detect(3, 2);
                 }
@@ -256,14 +256,14 @@ public class CatCollision : MonoBehaviour
                 VARS.isLeftBlocked = false;
             }
 
-            if (Physics.Raycast(rightRay1, out rightHit1, rayDistance + horCurSpeed / 1000) ||
-                Physics.Raycast(rightRay2, out rightHit2, rayDistance + horCurSpeed / 1000))
+            if (Physics.Raycast(rightRay1, out rightHit1, rayDistance + VARS.horCurSpeed / 1000) ||
+                Physics.Raycast(rightRay2, out rightHit2, rayDistance + VARS.horCurSpeed / 1000))
             {
-                if (Physics.Raycast(rightRay1, out rightHit1, rayDistance + horCurSpeed / 1000))
+                if (Physics.Raycast(rightRay1, out rightHit1, rayDistance + VARS.horCurSpeed / 1000))
                 {
                     Detect(4, 1);
                 }
-                if (Physics.Raycast(rightRay2, out rightHit2, rayDistance + horCurSpeed / 1000))
+                if (Physics.Raycast(rightRay2, out rightHit2, rayDistance + VARS.horCurSpeed / 1000))
                 {
                     Detect(4, 2);
                 }
@@ -299,10 +299,11 @@ public class CatCollision : MonoBehaviour
                 //intoLiquidSlowDown
                 if (!VARS.isInLiquid)
                 {
-                    if (Mathf.Abs(verCurSpeed) > verMaxSpeed / 2)
+                    if (Mathf.Abs(VARS.verCurSpeed) > verMaxSpeed / 2)
                     {
                         if (curTileData != null)
-                            verCurSpeed = verCurSpeed / curTileData.fluidDrag;
+                            //verCurSpeed = verCurSpeed / curTileData.fluidDrag;
+                            UFL.SetVerCurSpeed(VARS.verCurSpeed / curTileData.fluidDrag);
                     }
                 }
 
@@ -314,9 +315,10 @@ public class CatCollision : MonoBehaviour
                 //outLiquidSlowDown
                 if (VARS.isInLiquid)
                 {
-                    if (Mathf.Abs(verCurSpeed) > verMaxSpeed / 2)
+                    if (Mathf.Abs(VARS.verCurSpeed) > verMaxSpeed / 2)
                     {
-                        verCurSpeed = verCurSpeed / 2;
+                        //verCurSpeed = verCurSpeed / 2;
+                        UFL.SetVerCurSpeed(VARS.verCurSpeed / 2);
                     }
                 }
 
@@ -401,11 +403,6 @@ public class CatCollision : MonoBehaviour
             }
         }
         #endregion
-
-        VARS.horCurSpeed = horCurSpeed;
-        VARS.verCurSpeed = verCurSpeed;
-
-        VARS.curEnergy = curEnergy;
     }
 
     //dir(~~?): 1-up, 2-down, 3-left, 4-right, 5-liquid, 6-Gas, 7-Mist
@@ -589,7 +586,7 @@ public class CatCollision : MonoBehaviour
                         {
                             if (dirIndex == 2)
                             {
-                                breakingPower = Mathf.Max(-verCurSpeed, breakingPower);
+                                breakingPower = Mathf.Max(-VARS.verCurSpeed, breakingPower);
 
                                 if (breakingPower > curTileData.toughness)
                                 {
@@ -606,17 +603,22 @@ public class CatCollision : MonoBehaviour
                         if (dirIndex == 1 ||
                             dirIndex == 2)
                         {
-                            verCurSpeed = -verCurSpeed * curTileData.elasticity;
+                            //verCurSpeed = -verCurSpeed * curTileData.elasticity;
+                            UFL.SetVerCurSpeed(-VARS.verCurSpeed * curTileData.elasticity);
 
                             if (dirIndex == 2)
                             {
-                                curEnergy += elasticEnergyRestoreAmount;
+                                //curEnergy += elasticEnergyRestoreAmount;
+
+                                UFL.AddCurEnergy(elasticEnergyRestoreAmount);
                             }
                         }
                         else if (dirIndex == 3 ||
                             dirIndex == 4)
                         {
-                            horCurSpeed = -horCurSpeed * curTileData.elasticity;
+                            //horCurSpeed = -horCurSpeed * curTileData.elasticity;
+
+                            UFL.SetHorCurSpeed(-VARS.horCurSpeed * curTileData.elasticity);
                         }
                     }
                     else

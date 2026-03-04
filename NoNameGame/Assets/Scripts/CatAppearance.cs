@@ -40,7 +40,7 @@ public class CatAppearance : MonoBehaviour
     Vector3 curUp;
     Vector3 curRight;
 
-    float curEnergy;
+    //float curEnergy;
     #endregion
 
     void Start()
@@ -70,7 +70,7 @@ public class CatAppearance : MonoBehaviour
         curRoomStableForward = VARS.curRoomStableForward;
         curUp = VARS.curUp;
         curRight = VARS.curRight;
-        curEnergy = VARS.curEnergy;
+        //curEnergy = VARS.curEnergy;
 
         #region contraction
         if (VARS.isContracting)
@@ -179,12 +179,13 @@ public class CatAppearance : MonoBehaviour
         #endregion
 
         #region EnergyMask
-        if (curEnergy < 0)
+        if (VARS.curEnergy < 0)
         {
-            curEnergy = 0;
+            //curEnergy = 0;
+            UFL.SetCurEnergy(0);
         }
 
-        if (curEnergy >= maxEnergy)
+        if (VARS.curEnergy >= maxEnergy)
         {
             catEnergyMask.SetActive(false);
         }
@@ -193,12 +194,12 @@ public class CatAppearance : MonoBehaviour
             //localScale
             //catEnergyMask.transform.localScale = Vector3.one + curUp * ((maxEnergy - curEnergy) / maxEnergy - 1);
             catEnergyMask.transform.localScale = new Vector3
-                (1+Mathf.Abs(curUp.x)*((maxEnergy-curEnergy)/maxEnergy-1),
-                1 + Mathf.Abs(curUp.y) * ((maxEnergy - curEnergy) / maxEnergy - 1),
-                1 + Mathf.Abs(curUp.z) * ((maxEnergy - curEnergy) / maxEnergy - 1));
+                (1+Mathf.Abs(curUp.x)*((maxEnergy-VARS.curEnergy)/maxEnergy-1),
+                1 + Mathf.Abs(curUp.y) * ((maxEnergy - VARS.curEnergy) / maxEnergy - 1),
+                1 + Mathf.Abs(curUp.z) * ((maxEnergy - VARS.curEnergy) / maxEnergy - 1));
 
             //position
-            catEnergyMask.transform.localPosition = -curRoomStableForward * 0.01f + curUp * (1 - (maxEnergy - curEnergy) / maxEnergy) / 2;
+            catEnergyMask.transform.localPosition = -curRoomStableForward * 0.01f + curUp * (1 - (maxEnergy - VARS.curEnergy) / maxEnergy) / 2;
 
             catEnergyMask.SetActive(true);
         }
