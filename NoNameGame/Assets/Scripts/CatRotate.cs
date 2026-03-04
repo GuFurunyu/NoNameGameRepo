@@ -5,6 +5,7 @@ public class CatRotate : MonoBehaviour
 {
     Constants CONS;
     Variables VARS;
+    UniversalFunctionsLibrary UFL;
     ScriptsExecutionController SEC;
 
     GameObject gameManager;
@@ -79,6 +80,7 @@ public class CatRotate : MonoBehaviour
 
         CONS = gameManager.GetComponent<Constants>();
         VARS = gameManager.GetComponent<Variables>();
+        UFL = gameManager.GetComponent<UniversalFunctionsLibrary>();
         SEC = gameManager.GetComponent<ScriptsExecutionController>();
 
         camTransform = CONS.camTransform;

@@ -6,6 +6,7 @@ public class CatEnergy : MonoBehaviour
 {
     Constants CONS;
     Variables VARS;
+    UniversalFunctionsLibrary UFL;
     ScriptsExecutionController SEC;
 
     GameObject gameManager;
@@ -29,6 +30,7 @@ public class CatEnergy : MonoBehaviour
 
         CONS = gameManager.GetComponent<Constants>();
         VARS = gameManager.GetComponent<Variables>();
+        UFL = gameManager.GetComponent<UniversalFunctionsLibrary>();
         SEC = gameManager.GetComponent<ScriptsExecutionController>();
 
         maxEnergy = CONS.maxEnergy;

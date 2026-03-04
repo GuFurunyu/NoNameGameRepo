@@ -378,7 +378,7 @@ MonoBehaviour:
   offsetThres: 0.2
   triggerTypeIndex: 0
   stateOfMatterIndex: 0
-  isMovable: 0
+  isMovable: 1
   isPositionDetermined: 0
   isAffectedByGravity: 1
   isPlatform: 0

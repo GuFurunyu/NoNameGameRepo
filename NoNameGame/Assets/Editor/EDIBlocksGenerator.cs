@@ -1,28 +1,61 @@
-//ByCopilot
+//PartlyByCopilot
+//NotFullyUnderstood
 using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
-public class EDIBlocksGenerator : EditorWindow
+public class EDIBlocksArranger : EditorWindow
 {
+    public GameObject curPlaneEmpty;
+
     public int maxBlockTypes = 5;
     public int blockTypeCount = 2;
 
     public List<GameObject> blocks = new List<GameObject>();
     public List<float> blockDepths = new List<float>();
 
-    public GameObject curPlaneEmpty;
+    private string[] faceDirectionStrings = new string[6]
+        {"Front","Back","Left","Right","Top","Bottom" };
 
-    public Vector3 curRoomStableForward;
-    public Vector3 curRoomStableUp;
-    public Vector3 curRoomStableRight;
+    private Vector3[] faceStableForwards = new Vector3[6]
+        {Vector3.forward,Vector3.back,Vector3.right,Vector3.left,Vector3.down,Vector3.up };
+    private Vector3[] faceStableUps = new Vector3[6]
+        {Vector3.right,Vector3.right,Vector3.up,Vector3.up,Vector3.forward,Vector3.forward };
+    private Vector3[] faceStableRights = new Vector3[6]
+        {Vector3.down,Vector3.up,Vector3.back,Vector3.forward,Vector3.right,Vector3.left };
+
+    private Vector3 curRoomStableForward;
+    private Vector3 curRoomStableUp;
+    private Vector3 curRoomStableRight;
 
     public Texture2D blocksArrangementTexture;
 
-    [MenuItem("Tools/BlocksGenerator")]
+    void AutoSetRoomStableDirections()
+    {
+        if (curPlaneEmpty == null || curPlaneEmpty.transform.parent == null || curPlaneEmpty.transform.parent.parent == null)
+            return;
+
+        string parent2Name = curPlaneEmpty.transform.parent.parent.name;
+        for (int i = 0; i < faceDirectionStrings.Length; i++)
+        {
+            if (parent2Name.Contains(faceDirectionStrings[i]))
+            {
+                Debug.Log("enter");
+
+                curRoomStableForward = faceStableForwards[i];
+                curRoomStableUp = faceStableUps[i];
+                curRoomStableRight = faceStableRights[i];
+                break;
+            }
+        }
+    }
+
+
+    [MenuItem("Tools/BlocksArranger")]
     static void Init()
     {
-        EditorWindow.GetWindow<EDIBlocksGenerator>("BlocksGenerator");
+        EditorWindow.GetWindow<EDIBlocksArranger>("BlocksArranger");
     }
 
     void OnGUI()
@@ -30,7 +63,7 @@ public class EDIBlocksGenerator : EditorWindow
         maxBlockTypes = EditorGUILayout.IntField("Block Type Max", maxBlockTypes);
         blockTypeCount = EditorGUILayout.IntSlider("Block Type Count", blockTypeCount, 2, maxBlockTypes);
 
-        // 保证列表长度
+        // 保证列表长度（~？）
         while (blocks.Count < blockTypeCount) blocks.Add(null);
         while (blocks.Count > blockTypeCount) blocks.RemoveAt(blocks.Count - 1);
         while (blockDepths.Count < blockTypeCount) blockDepths.Add(0f);
@@ -44,9 +77,7 @@ public class EDIBlocksGenerator : EditorWindow
 
         curPlaneEmpty = (GameObject)EditorGUILayout.ObjectField("Cur Plane Empty", curPlaneEmpty, typeof(GameObject), true);
 
-        curRoomStableForward = EditorGUILayout.Vector3Field("Room Stable Forward", curRoomStableForward);
-        curRoomStableUp = EditorGUILayout.Vector3Field("Room Stable Up", curRoomStableUp);
-        curRoomStableRight = EditorGUILayout.Vector3Field("Room Stable Right", curRoomStableRight);
+        AutoSetRoomStableDirections();
 
         blocksArrangementTexture = (Texture2D)EditorGUILayout.ObjectField("Blocks Arrangement Texture", blocksArrangementTexture, typeof(Texture2D), false);
 
@@ -56,7 +87,13 @@ public class EDIBlocksGenerator : EditorWindow
         {
             GenerateBlocks();
         }
+
+        if (GUILayout.Button("Clear"))
+        {
+            Clear();
+        }
     }
+
     void GenerateBlocks()
     {
         if (blocksArrangementTexture == null || curPlaneEmpty == null)
@@ -141,5 +178,23 @@ public class EDIBlocksGenerator : EditorWindow
 
         EditorUtility.SetDirty(curPlaneEmpty);
         Debug.Log("Blocks generated based on texture.");
+    }
+
+    void Clear()
+    {
+        if (curPlaneEmpty == null)
+        {
+            Debug.LogError("curPlaneEmpty 未赋值！");
+            return;
+        }
+        Undo.RegisterFullObjectHierarchyUndo(curPlaneEmpty, "Clear Blocks");
+        // 逆序删除所有子物体
+        for (int i = curPlaneEmpty.transform.childCount - 1; i >= 0; i--)
+        {
+            GameObject child = curPlaneEmpty.transform.GetChild(i).gameObject;
+            Undo.DestroyObjectImmediate(child);
+        }
+        EditorUtility.SetDirty(curPlaneEmpty);
+        Debug.Log("curPlaneEmpty 的所有子物体已清空。");
     }
 }

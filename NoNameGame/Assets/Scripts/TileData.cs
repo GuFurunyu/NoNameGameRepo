@@ -5,6 +5,7 @@ public class TileData : MonoBehaviour
 {
     Constants CONS;
     Variables VARS;
+    UniversalFunctionsLibrary UFL;
     ScriptsExecutionController SEC;
 
     GameObject gameManager;
@@ -102,6 +103,7 @@ public class TileData : MonoBehaviour
 
         CONS = gameManager.GetComponent<Constants>();
         VARS = gameManager.GetComponent<Variables>();
+        UFL = gameManager.GetComponent<UniversalFunctionsLibrary>();
         SEC = gameManager.GetComponent<ScriptsExecutionController>();
 
         roomManager = GameObject.Find("RoomManager");
@@ -112,7 +114,7 @@ public class TileData : MonoBehaviour
 
         for (int i = 0; i < VARS.roomCenters.Length; i++)
         {
-            if (RM.IsInRoom(i, thisTransform.position))
+            if (UFL.IsInRoom(i, thisTransform.position))
             {
                 inRoomIndex = i;
 

@@ -6,6 +6,7 @@ public class CatTrigger : MonoBehaviour
 {
     Constants CONS;
     Variables VARS;
+    UniversalFunctionsLibrary UFL;
     ScriptsExecutionController SEC;
 
     GameObject gameManager;
@@ -69,6 +70,7 @@ public class CatTrigger : MonoBehaviour
 
         CONS = gameManager.GetComponent<Constants>();
         VARS = gameManager.GetComponent<Variables>();
+        UFL = gameManager.GetComponent<UniversalFunctionsLibrary>();
         SEC = gameManager.GetComponent<ScriptsExecutionController>();
 
         camTransform = CONS.camTransform;

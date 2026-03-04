@@ -5,6 +5,7 @@ public class CurRoomManager : MonoBehaviour
 {
     Constants CONS;
     Variables VARS;
+    UniversalFunctionsLibrary UFL;
     ScriptsExecutionController SEC;
 
     GameObject gameManager;
@@ -25,6 +26,7 @@ public class CurRoomManager : MonoBehaviour
 
         CONS = gameManager.GetComponent<Constants>();
         VARS = gameManager.GetComponent<Variables>();
+        UFL = gameManager.GetComponent<UniversalFunctionsLibrary>();
         SEC = gameManager.GetComponent<ScriptsExecutionController>();
     }
 

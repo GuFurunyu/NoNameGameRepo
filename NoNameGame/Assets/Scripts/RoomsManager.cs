@@ -7,6 +7,7 @@ public class RoomsManager : MonoBehaviour
 {
     Constants CONS;
     Variables VARS;
+    UniversalFunctionsLibrary UFL;
     ScriptsExecutionController SEC;
 
     GameObject gameManager;
@@ -67,6 +68,7 @@ public class RoomsManager : MonoBehaviour
 
         CONS = gameManager.GetComponent<Constants>();
         VARS = gameManager.GetComponent<Variables>();
+        UFL = gameManager.GetComponent<UniversalFunctionsLibrary>();
         SEC = gameManager.GetComponent<ScriptsExecutionController>();
 
         gridBreadth = CONS.gridBreadth;
@@ -91,14 +93,14 @@ public class RoomsManager : MonoBehaviour
         roomStableRights = VARS.roomStableRights;
 
         #region IfIsInNewRoom
-        if (IsInRoom(VARS.curRoomIndex, catTransform.position))
+        if (UFL.IsInRoom(VARS.curRoomIndex, catTransform.position))
         {
         }
         else
         {
             for (int i = 0; i < roomCenters.Length; i++)
             {
-                if (IsInRoom(i, catTransform.position))
+                if (UFL.IsInRoom(i, catTransform.position))
                 {
                     VARS.curRoomIndex = i;
                     break;
@@ -219,23 +221,23 @@ public class RoomsManager : MonoBehaviour
         #endregion
     }
 
-    public bool IsInRoom(int roomIndex, Vector3 position)
-    {
-        tempVector = position - roomCenters[roomIndex];
+    //public bool IsInRoom(int roomIndex, Vector3 position)
+    //{
+    //    tempVector = position - roomCenters[roomIndex];
 
-        //ifIsInThePlane
-        if (Mathf.Abs(Vector3.Dot(tempVector, roomStableForwards[roomIndex])) <= inRoomMaxForwardDistance)
-        {
-            //ifIsInsideTheBoundary
-            if (Mathf.Abs(Vector3.Dot(tempVector, roomStableUps[roomIndex])) <= (roomCoordBreadth / 2 + 1) * gridBreadth &&
-                Mathf.Abs(Vector3.Dot(tempVector, roomStableRights[roomIndex])) <= (roomCoordBreadth / 2 + 1)* gridBreadth)
-            {
-                return true;
-            }
-        }
+    //    //ifIsInThePlane
+    //    if (Mathf.Abs(Vector3.Dot(tempVector, roomStableForwards[roomIndex])) <= inRoomMaxForwardDistance)
+    //    {
+    //        //ifIsInsideTheBoundary
+    //        if (Mathf.Abs(Vector3.Dot(tempVector, roomStableUps[roomIndex])) <= (roomCoordBreadth / 2 + 1) * gridBreadth &&
+    //            Mathf.Abs(Vector3.Dot(tempVector, roomStableRights[roomIndex])) <= (roomCoordBreadth / 2 + 1)* gridBreadth)
+    //        {
+    //            return true;
+    //        }
+    //    }
 
-        return false;
-    }
+    //    return false;
+    //}
 
     void IntoNewRoom()
     {

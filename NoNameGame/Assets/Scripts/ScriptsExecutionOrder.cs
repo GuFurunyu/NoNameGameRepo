@@ -30,6 +30,7 @@ public class ScriptsExecutionOrder : MonoBehaviour
         scriptsExecutionOrder,
         constants,
         variables,
+        universalFunctionsLibrary,
         scriptsExecutionController,
         dataManager,
         roomsManager,

@@ -6,17 +6,20 @@ public class BlocksManager : MonoBehaviour
 {
     Constants CONS;
     Variables VARS;
+    UniversalFunctionsLibrary UFL;
     ScriptsExecutionController SEC;
 
     GameObject gameManager;
 
     //storedBlock
+    GameObject[] storedSandBlocks = new GameObject[512];
     GameObject[] storedWaterBlocks = new GameObject[512];
     GameObject[] storedAcidBlocks = new GameObject[512];
     GameObject[] storedVaporBlocks = new GameObject[512];
     GameObject[] storedGasBlocks = new GameObject[512];
     GameObject[] storedElectricMistBlocks = new GameObject[512];
     GameObject[] storedLightElectricMistBlocks = new GameObject[512];
+    int curStoredSandBlockIndex;
     int curStoredWaterBlockIndex;
     int curStoredAcidBlockIndex;
     int curStoredVaporBlockIndex;
@@ -109,6 +112,7 @@ public class BlocksManager : MonoBehaviour
     #region ConstantsUsed
     int roomCoordBreadth;
 
+    GameObject storedSandBlocksEmpty;
     GameObject storedWaterBlocksEmpty;
     GameObject storedAcidBlocksEmpty;
     GameObject storedVaporBlocksEmpty;
@@ -139,9 +143,11 @@ public class BlocksManager : MonoBehaviour
 
         CONS = gameManager.GetComponent<Constants>();
         VARS = gameManager.GetComponent<Variables>();
+        UFL = gameManager.GetComponent<UniversalFunctionsLibrary>();
         SEC = gameManager.GetComponent<ScriptsExecutionController>();
 
         roomCoordBreadth = CONS.roomCoordBreadth;
+        storedSandBlocksEmpty = CONS.storedSandBlocksEmpty;
         storedWaterBlocksEmpty = CONS.storedWaterBlocksEmpty;
         storedAcidBlocksEmpty = CONS.storedAcidBlocksEmpty;
         storedVaporBlocksEmpty = CONS.storedVaporBlocksEmpty;
@@ -154,6 +160,7 @@ public class BlocksManager : MonoBehaviour
         #region loadStoredBlocks
         for (int i = 0; i < 512; i++)
         {
+            storedSandBlocks[i] = storedSandBlocksEmpty.transform.GetChild(i).gameObject;
             storedWaterBlocks[i] = storedWaterBlocksEmpty.transform.GetChild(i).gameObject;
             storedAcidBlocks[i] = storedAcidBlocksEmpty.transform.GetChild(i).gameObject;
             storedVaporBlocks[i] = storedVaporBlocksEmpty.transform.GetChild(i).gameObject;
@@ -221,6 +228,12 @@ public class BlocksManager : MonoBehaviour
                     }
                 }
             }
+
+            //shaffleCurBlocks
+            ShaffleCurBlocks();
+
+            //deactivateOutlineSquaresHidenInSurroundingBlocks
+            DeactivateOutlineSquaresHidenInSurroundingBlocks();
 
             VARS.isInNewRoomBlocksManagerResetOver = true;
         }
@@ -314,7 +327,7 @@ public class BlocksManager : MonoBehaviour
 
                         if (curDownBlockTypeIndex == 0)
                         {
-                            CurBlockMove(i, 2, false);
+                            CurBlockMove(i, 2, true);
                         }
                     }
                 }
@@ -599,6 +612,9 @@ public class BlocksManager : MonoBehaviour
 
                     curSpawnedBlocks[i].transform.position = Vector3.zero;
 
+                    curSpawnedBlocks[i].SetActive(false);
+
+                    curStoredSandBlockIndex = 0;
                     curStoredWaterBlockIndex = 0;
                     curStoredAcidBlockIndex = 0;
                     curStoredVaporBlockIndex = 0;
@@ -664,6 +680,59 @@ public class BlocksManager : MonoBehaviour
                 //}
 
                 break;
+            }
+        }
+    }
+
+    void ShaffleCurBlocks()
+    {
+        int n = curBlocks.Count;
+        for (int i = n - 1; i > 0; i--)
+        {
+            int j = Random.Range(0, i + 1);
+
+            // curBlocks
+            tempGameObject = curBlocks[i];
+            curBlocks[i] = curBlocks[j];
+            curBlocks[j] = tempGameObject;
+
+            // curBlockTileDatas
+            tempTileData = curBlockTileDatas[i];
+            curBlockTileDatas[i] = curBlockTileDatas[j];
+            curBlockTileDatas[j] = tempTileData;
+
+            // curCoordVectors
+            tempVector = curCoordVectors[i];
+            curCoordVectors[i] = curCoordVectors[j];
+            curCoordVectors[j] = tempVector;
+        }
+    }
+
+    void DeactivateOutlineSquaresHidenInSurroundingBlocks()
+    {
+        int[] hollowOrMovableTypeIndexes = { 0, 2050, 310, 320, 410, 420, 510, 520 };
+
+        for (int i = 0; i < curBlocks.Count; i++)
+        {
+            curCoordVector = curCoordVectors[i];
+
+            int upType = GetNearBlockTypeIndex(1);
+            int downType = GetNearBlockTypeIndex(2);
+            int leftType = GetNearBlockTypeIndex(3);
+            int rightType = GetNearBlockTypeIndex(4);
+
+            bool upOk = System.Array.IndexOf(hollowOrMovableTypeIndexes, upType) == -1;
+            bool downOk = System.Array.IndexOf(hollowOrMovableTypeIndexes, downType) == -1;
+            bool leftOk = System.Array.IndexOf(hollowOrMovableTypeIndexes, leftType) == -1;
+            bool rightOk = System.Array.IndexOf(hollowOrMovableTypeIndexes, rightType) == -1;
+
+            if (upOk && downOk && leftOk && rightOk)
+            {
+                Transform blockTrans = curBlocks[i].transform;
+                for (int c = 0; c < blockTrans.childCount; c++)
+                {
+                    blockTrans.GetChild(c).gameObject.SetActive(false);
+                }
             }
         }
     }
@@ -780,6 +849,9 @@ public class BlocksManager : MonoBehaviour
     {
         switch (blockTypeIndex)
         {
+            case 2050:
+                tempGameObject = storedSandBlocks[curStoredSandBlockIndex++];
+                break;
             case 310:
                 tempGameObject = storedWaterBlocks[curStoredWaterBlockIndex++];
                 break;
@@ -808,6 +880,8 @@ public class BlocksManager : MonoBehaviour
         tempVector = curCoordVector + VARS.roomCenters[VARS.curRoomIndex];
 
         tempGameObject.transform.position = tempVector;
+
+        tempGameObject.SetActive(true);
 
         curSpawnedBlocks.Add(tempGameObject);
     }

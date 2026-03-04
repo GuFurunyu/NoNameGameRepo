@@ -223,6 +223,7 @@ public class Constants : MonoBehaviour
     [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
         "  \nBLOCKSMANAGER\n --- ")]
     //storedBlock
+    public GameObject storedSandBlocksEmpty;
     public GameObject storedWaterBlocksEmpty;
     public GameObject storedAcidBlocksEmpty;
     public GameObject storedVaporBlocksEmpty;
@@ -271,5 +272,10 @@ public class Constants : MonoBehaviour
         //catTransform = cat.transform;
 
         positionFixOffset = gridBreadth + rayDistance - catBreadth / 4;
+    }
+
+    void test()
+    {
+
     }
 }
