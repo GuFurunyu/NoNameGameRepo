@@ -10,8 +10,6 @@ public class CatDeath : MonoBehaviour
 
     GameObject gameManager;
 
-    Vector3 catIniPosition;
-
     //storedVoidBlocks
     GameObject[] storedVoidBlocks = new GameObject[512];
     int curStoredVoidBlockIndex;
@@ -42,7 +40,7 @@ public class CatDeath : MonoBehaviour
         maxEnergy = CONS.maxEnergy;
         storedVoidBlocksEmpty = CONS.storedVoidBlocksEmpty;
 
-        catIniPosition = catTransform.position;
+        VARS.catIniPosition = catTransform.position;
 
         //loadStoredVoidBlocks
         tempTransform = storedVoidBlocksEmpty.transform;
@@ -75,7 +73,7 @@ public class CatDeath : MonoBehaviour
 
         curStoredVoidBlockIndex++;
 
-        catTransform.position = catIniPosition;
+        catTransform.position = VARS.catIniPosition;
 
         //VARS.curEnergy = maxEnergy;
         //VARS.curEnergy = 0.1f;

@@ -12,7 +12,7 @@ PlayerSettings:
   targetDevice: 2
   useOnDemandResources: 0
   accelerometerFrequency: 60
-  companyName: DefaultCompany
+  companyName: EURTSTUDIO
   productName: NoNameGame
   defaultCursor: {fileID: 2800000, guid: 772f94ae826619340a6af91b8dc3802a, type: 3}
   cursorHotspot: {x: 0, y: 0}

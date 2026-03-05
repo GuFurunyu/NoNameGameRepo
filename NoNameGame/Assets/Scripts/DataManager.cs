@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -13,6 +15,21 @@ public class DataManager : MonoBehaviour
 
     GameObject gameManager;
 
+    public class WorldData
+    {
+        public Vector3[] roomPlanePositions = new Vector3[54];
+        public Vector3[] roomPlaneEulerangles = new Vector3[54];
+    }
+
+    WorldData curWorldData = new WorldData();
+
+    public class CatWorldData
+    {
+        public GameObject curActivatedSavePoint;
+    }
+
+    CatWorldData curCatWorldData = new CatWorldData();
+
     public class KeyCodesData
     {
         public KeyCode upKeyCode;
@@ -25,8 +42,22 @@ public class DataManager : MonoBehaviour
 
     KeyCodesData curKeyCodesData = new KeyCodesData();
 
-    #region ConstantsUsed
+    string tempPath;
+    string tempJsonString;
 
+    Vector3 tempVector;
+    Transform tempTransform;
+
+    #region ConstantsUsed
+    float gridBreadth;
+    int roomCoordBreadth;
+
+    GameObject[] faces = new GameObject[6];
+    Vector3[] faceStableForwards = new Vector3[6];
+
+    GameObject[] roomPlanes = new GameObject[54];
+
+    GameObject[] twistingCenters = new GameObject[6];
     #endregion
 
     #region VariablesUsed
@@ -43,11 +74,36 @@ public class DataManager : MonoBehaviour
         UFL = gameManager.GetComponent<UniversalFunctionsLibrary>();
         SEC = gameManager.GetComponent<ScriptsExecutionController>();
 
+        gridBreadth = CONS.gridBreadth;
+        roomCoordBreadth = CONS.roomCoordBreadth;
+        faces = CONS.faces;
+        faceStableForwards = CONS.faceStableForwards;
+        roomPlanes = CONS.roomPlanes;
+        twistingCenters = CONS.twistingCenters;
+
+        ReadWorldData();
+
+        ReadCatWorldData();
+
         ReadKeyCodesData();
     }
 
     void Update()
     {
+        if (VARS.isToWriteWorldData)
+        {
+            WriteWorldData();
+
+            VARS.isToWriteWorldData = false;
+        }
+
+        if (VARS.isToWriteCatWorldData)
+        {
+            WriteCatWorldData();
+
+            VARS.isToWriteCatWorldData = false;
+        }
+
         if (VARS.isToWriteKeyCodesData)
         {
             WriteKeyCodesData();
@@ -56,30 +112,98 @@ public class DataManager : MonoBehaviour
         }
     }
 
-    void WriteKeyCodesData()
+    #region WorldData
+    void ReadWorldData()
     {
-        curKeyCodesData.upKeyCode = VARS.upKeyCode;
-        curKeyCodesData.downKeyCode = VARS.downKeyCode;
-        curKeyCodesData.leftKeyCode = VARS.leftKeyCode;
-        curKeyCodesData.rightKeyCode = VARS.rightKeyCode;
-        curKeyCodesData.jumpKeyCode = VARS.jumpKeyCode;
-        curKeyCodesData.dashKeyCode = VARS.dashKeyCode;
+        tempPath = Path.Combine(Application.persistentDataPath, "Datas", "WorldData.txt");
 
-        string jsonString = JsonUtility.ToJson(curKeyCodesData);
+        if (File.Exists(tempPath))
+        {
+            tempJsonString = File.ReadAllText(tempPath);
+            curWorldData = JsonUtility.FromJson<WorldData>(tempJsonString);
 
-        string path = Path.Combine(Application.persistentDataPath, "Datas","KeyCodesData.txt");
+            for (int i = 0; i < 54; i++)
+            {
+                tempTransform = roomPlanes[i].transform;
 
-        File.WriteAllText(path, jsonString);
+                //Debug.Log("position: " + curWorldData.roomPlanePositions[i]);
+                //Debug.Log("eulerangles: " + curWorldData.roomPlaneEulerangles[i]);
+
+                tempTransform.position = curWorldData.roomPlanePositions[i];
+                tempTransform.eulerAngles = curWorldData.roomPlaneEulerangles[i];
+
+                //childToTheFaces
+                for (int j = 0; j < 6; j++)
+                {
+                    tempVector = tempTransform.position - twistingCenters[j].transform.position;
+
+                    //ifIsInTheFaceChildToIt
+                    if (Mathf.Abs(Vector3.Dot(tempVector, faceStableForwards[j])) <= (roomCoordBreadth / 2 + 2) * gridBreadth)
+                    {
+                        tempTransform.SetParent(faces[j].transform, true);
+
+                        break;
+                    }
+                }
+            }
+        }
     }
 
+    void WriteWorldData()
+    {
+        for (int i = 0; i < 54; i++)
+        {
+            tempTransform = roomPlanes[i].transform;
+
+            curWorldData.roomPlanePositions[i] = tempTransform.position;
+            curWorldData.roomPlaneEulerangles[i] = tempTransform.eulerAngles;
+        }
+
+        tempJsonString = JsonUtility.ToJson(curWorldData);
+
+        tempPath = Path.Combine(Application.persistentDataPath, "Datas", "WorldData.txt");
+
+        File.WriteAllText(tempPath, tempJsonString);
+    }
+    #endregion
+
+    #region CatWorldData
+    void ReadCatWorldData()
+    {
+        tempPath = Path.Combine(Application.persistentDataPath, "Datas", "CatWorldData.txt");
+
+        if (File.Exists(tempPath))
+        {
+            tempJsonString = File.ReadAllText(tempPath);
+            curCatWorldData = JsonUtility.FromJson<CatWorldData>(tempJsonString);
+
+            VARS.curActivatedSavePoint = curCatWorldData.curActivatedSavePoint;           
+
+            VARS.isToActivateCurActivatedSavePoint = true;
+        }
+    }
+
+    void WriteCatWorldData()
+    {
+        curCatWorldData.curActivatedSavePoint = VARS.curActivatedSavePoint;
+
+        tempJsonString = JsonUtility.ToJson(curCatWorldData);
+
+        tempPath = Path.Combine(Application.persistentDataPath, "Datas", "CatWorldData.txt");
+
+        File.WriteAllText(tempPath, tempJsonString);
+    }
+    #endregion
+
+    #region KeyCodesData
     void ReadKeyCodesData()
     {
-        string path = Path.Combine(Application.persistentDataPath, "Datas","KeyCodesData.txt");
+        tempPath = Path.Combine(Application.persistentDataPath, "Datas", "KeyCodesData.txt");
 
-        if (File.Exists(path))
+        if (File.Exists(tempPath))
         {
-            string jsonString = File.ReadAllText(path);
-            curKeyCodesData = JsonUtility.FromJson<KeyCodesData>(jsonString);
+            tempJsonString = File.ReadAllText(tempPath);
+            curKeyCodesData = JsonUtility.FromJson<KeyCodesData>(tempJsonString);
 
             VARS.upKeyCode = curKeyCodesData.upKeyCode;
             VARS.downKeyCode = curKeyCodesData.downKeyCode;
@@ -102,4 +226,21 @@ public class DataManager : MonoBehaviour
             Debug.Log("没有找到存档文件");
         }
     }
+
+    void WriteKeyCodesData()
+    {
+        curKeyCodesData.upKeyCode = VARS.upKeyCode;
+        curKeyCodesData.downKeyCode = VARS.downKeyCode;
+        curKeyCodesData.leftKeyCode = VARS.leftKeyCode;
+        curKeyCodesData.rightKeyCode = VARS.rightKeyCode;
+        curKeyCodesData.jumpKeyCode = VARS.jumpKeyCode;
+        curKeyCodesData.dashKeyCode = VARS.dashKeyCode;
+
+        tempJsonString = JsonUtility.ToJson(curKeyCodesData);
+
+        tempPath = Path.Combine(Application.persistentDataPath, "Datas","KeyCodesData.txt");
+
+        File.WriteAllText(tempPath, tempJsonString);
+    }
+    #endregion
 }

@@ -708,6 +708,18 @@ public class CatCollision : MonoBehaviour
                 {
                     VARS.isEdgeGateTriggered = true;
                 }
+
+                //savePoint(notActiavted)
+                else if (curTileData.triggerTypeIndex == 6)
+                {
+                    VARS.isActivatingASavePoint = true;
+                }
+
+                //activatedSavePoint(~~?)
+                else if (curTileData.triggerTypeIndex == 7)
+                {
+
+                }
             }
         }
     }

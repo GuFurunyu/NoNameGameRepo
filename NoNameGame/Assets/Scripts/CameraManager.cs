@@ -45,7 +45,7 @@ public class CameraManager : MonoBehaviour
         if (VARS.isInNewRoom)
         {
             //position
-            camTransform.position = VARS.roomCenters[VARS.curRoomIndex] - VARS.curRoomStableForward * 8;
+            camTransform.position = VARS.roomCenters[VARS.curRoomIndex] - VARS.curRoomStableForward * 7;
 
             //tempFloat = camTransform.eulerAngles.z;
             //camTransform.LookAt(CONS.roomPlanes[VARS.curRoomIndex].transform.position);

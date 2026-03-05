@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 [DefaultExecutionOrder((int)ScriptsExecutionOrder.ExecutionOrder.universalFunctionsLibrary)]
@@ -17,6 +18,10 @@ public class UniversalFunctionsLibrary : MonoBehaviour
     int roomCoordBreadth;
 
     float inRoomMaxForwardDistance;
+
+    GameObject[] roomPlanes = new GameObject[54];
+
+    Transform camTransform;
     #endregion
 
     #region VariablesUsed
@@ -36,6 +41,8 @@ public class UniversalFunctionsLibrary : MonoBehaviour
         gridBreadth = CONS.gridBreadth;
         roomCoordBreadth = CONS.roomCoordBreadth;
         inRoomMaxForwardDistance= CONS.inRoomMaxForwardDistance;
+        roomPlanes = CONS.roomPlanes;
+        camTransform = CONS.camTransform;
 
         roomCenters = VARS.roomCenters;
         roomStableForwards = VARS.roomStableForwards;
@@ -59,6 +66,9 @@ public class UniversalFunctionsLibrary : MonoBehaviour
     }
     #endregion
 
+    //#region DataManager
+    //#endregion
+
     #region RoomsManager
     public bool IsInRoom(int roomIndex, Vector3 position)
     {
@@ -76,6 +86,18 @@ public class UniversalFunctionsLibrary : MonoBehaviour
         }
 
         return false;
+    }
+    #endregion
+
+    #region CameraManager
+    public void SetCameraEulerangles(Vector3 targetEulerangles)
+    {
+        camTransform.eulerAngles = targetEulerangles;
+    }
+
+    public void CameraRotate(float rotationStep)
+    {
+        camTransform.Rotate(0, 0, rotationStep);
     }
     #endregion
 

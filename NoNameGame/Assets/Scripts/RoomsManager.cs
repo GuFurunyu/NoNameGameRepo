@@ -168,17 +168,17 @@ public class RoomsManager : MonoBehaviour
                 }
 
                 //catAndCamTempChildToCurTwistingCenter
-                camTransform.SetParent(curTwistingCenter.transform, true);
+                //camTransform.SetParent(curTwistingCenter.transform, true);
                 catTransform.SetParent(curTwistingCenter.transform, true);
 
                 //setTargetEulerangles
                 if (VARS.isClockwiseTwisting)
                 {
-                    twistingTargetEulerangles = curTwistingCenter.transform.eulerAngles + new Vector3(0, 0, -90);
+                    twistingTargetEulerangles = curTwistingCenter.transform.eulerAngles + new Vector3(0, 0, 90);
                 }
                 else
                 {
-                    twistingTargetEulerangles = curTwistingCenter.transform.eulerAngles + new Vector3(0, 0, 90);
+                    twistingTargetEulerangles = curTwistingCenter.transform.eulerAngles + new Vector3(0, 0, -90);
                 }
 
                 isTwistingPresetOver = true;
@@ -208,14 +208,21 @@ public class RoomsManager : MonoBehaviour
                 curRelatedRoomPlaneIndexes.Clear();
 
                 //freeCatAndCam
-                camTransform.SetParent(null);
+                //camTransform.SetParent(null);
                 catTransform.SetParent(null);
+
+                //resetCatEulerangles
+                catTransform.eulerAngles = Vector3.zero;
 
                 isTwistingPresetOver = false;
 
                 twistingAccumulatedDegree = 0;
 
                 VARS.isTwisting = false;
+
+                VARS.isIntoNewRoom = true;
+
+                VARS.isToWriteWorldData = true;
             }
         }
         #endregion

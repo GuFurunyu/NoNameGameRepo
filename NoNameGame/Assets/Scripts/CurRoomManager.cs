@@ -94,5 +94,7 @@ public class CurRoomManager : MonoBehaviour
             VARS.curUp = VARS.curRoomStableUp;
         if (VARS.curRight == Vector3.zero)
             VARS.curRight = VARS.curRoomStableRight;
+
+        VARS.curPlaneEmpty = CONS.roomPlanes[VARS.curRoomIndex].transform.GetChild(0).gameObject;
     }
 }

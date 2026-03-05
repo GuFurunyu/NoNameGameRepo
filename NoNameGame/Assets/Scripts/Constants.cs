@@ -192,6 +192,10 @@ public class Constants : MonoBehaviour
 
     //edgeGate
     public float throughEdgeGateGapTime;
+
+    //storedBlocks
+    public GameObject storedSavePointBlockEmpty;
+    public GameObject storedActivatedSavePointBlockEmpty;
     #endregion
 
     #region CatAppearance

@@ -24,7 +24,7 @@ public class TileData : MonoBehaviour
     Vector3 curCoordinates;
     public float offsetThres = 0.2f;
 
-    //0-not, 1-strawberry, 2-energyCrystal, 3-gate, 4-edgeGate, 5-edgeGateTrigger
+    //0-not, 1-strawberry, 2-energyCrystal, 3-gate, 4-edgeGate, 5-edgeGateTrigger, 6-savePoint, 7-activatedSavePoint
     public int triggerTypeIndex;
 
     //0-solid, 1-liquid, 2-gas
@@ -77,7 +77,8 @@ public class TileData : MonoBehaviour
     //      100-(White)Block, 110-RedBlock, 120-YellowBlock, 130-BlueBlock, 140-OrangeBlock, 150-GreenBlock, 160-PurpleBlock
     //  2-SpecialSolidBlocks
     //      2010-VoidBlock(~Spike), 2011-UpSpikeBlock, 2012-DownSpikeBlock, 2013-LeftSpikeBlock, 2014-RightSpikeBlock
-    //      2020-IceBlock(~?), 2021-BreakableIceBlock, 2030-HoneyBlock, 2040-ElasticBlock, 2050-SandBlock, 2060-PlatFormBlock, 2070-ElectricMistCenterBlock
+    //      2020-IceBlock(~?), 2021-BreakableIceBlock, 2030-HoneyBlock, 2040-ElasticBlock, 2050-SandBlock, 2060-PlatFormBlock, 2070-ElectricMistCenterBlock,
+    //      2080-SavePointBlock, 2090-ActivatedSavePointBlock
     //  3-LiquidBlocks
     //      310-WaterBlock, 320-AcidBlock
     //  4-GasBlocks

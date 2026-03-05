@@ -247,13 +247,15 @@ public class CatRotate : MonoBehaviour
                 if (isLeftRotated)
                 {
                     //camTransform.Rotate(0, 0, -rotationStep);
-                    camTransform.Rotate(0, 0, -rotationSpeed * targetDegree * Time.deltaTime);
+                    //camTransform.Rotate(0, 0, -rotationSpeed * targetDegree * Time.deltaTime);
+                    UFL.CameraRotate(-rotationSpeed * targetDegree * Time.deltaTime);
                     //camTransform.Rotate(leftRotationVector * rotationSpeed * targetDegree * Time.deltaTime);
                 }
                 else
                 {
                     //camTransform.Rotate(0, 0, rotationStep);
-                    camTransform.Rotate(0, 0, rotationSpeed * targetDegree * Time.deltaTime);
+                    //camTransform.Rotate(0, 0, rotationSpeed * targetDegree * Time.deltaTime);
+                    UFL.CameraRotate(rotationSpeed * targetDegree * Time.deltaTime);
                     //camTransform.Rotate(rightRotationVector * rotationSpeed * targetDegree * Time.deltaTime);
                 }
 
@@ -262,7 +264,8 @@ public class CatRotate : MonoBehaviour
             }
             else
             {
-                camTransform.eulerAngles = targetEulerangles;
+                //camTransform.eulerAngles = targetEulerangles;
+                UFL.SetCameraEulerangles(targetEulerangles);
 
                 accumulatedDegree = 0;
                 //rotationStepAccumulatedDegree = 0;

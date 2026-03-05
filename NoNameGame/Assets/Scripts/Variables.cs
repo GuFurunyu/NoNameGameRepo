@@ -18,8 +18,14 @@ public class Variables : MonoBehaviour
     #region DataManager
     [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
         "  \nDATAMANAGER\n --- ")]
-    //keyCodes
+    //keyCodesData
     public bool isToWriteKeyCodesData;
+
+    //worldData
+    public bool isToWriteWorldData;
+
+    //catWorldData
+    public bool isToWriteCatWorldData;
     #endregion
 
     #region RoomsManager
@@ -242,6 +248,11 @@ public class Variables : MonoBehaviour
     //edgeGate
     public bool isEnteringAnEdgeGate;
     public bool isEdgeGateTriggered;
+
+    //savePoint
+    public bool isActivatingASavePoint;
+    public GameObject curActivatedSavePoint;//~?
+    public bool isToActivateCurActivatedSavePoint;
     #endregion
 
     #region CatAppearance
@@ -259,6 +270,9 @@ public class Variables : MonoBehaviour
         "  \nCATDEATH\n --- ")]
     //toDie
     public bool isToDie;
+
+    //catIniPosition
+    public Vector3 catIniPosition;
     #endregion
 
     #region BlocksManager

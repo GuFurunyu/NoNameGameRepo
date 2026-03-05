@@ -31,6 +31,10 @@ public class CatTrigger : MonoBehaviour
     public Vector3 curEdgeGatesCommonLineVector;
     public float curEdgeGatesAngle;
 
+    //savePoint
+    GameObject storedSavePointBlock;
+    GameObject storedActivatedSavePointBlock;
+
     #region ConstantsUsed
     Transform camTransform;
 
@@ -49,6 +53,9 @@ public class CatTrigger : MonoBehaviour
     float throughEdgeGateGapTime;
 
     List<GameObject> edgeGates = new List<GameObject>();
+
+    GameObject storedSavePointBlockEmpty;
+    GameObject storedActivatedSavePointBlockEmpty;
     #endregion
 
     #region VariablesUsed
@@ -56,6 +63,8 @@ public class CatTrigger : MonoBehaviour
     TileData curTriggerTileData;
 
     Vector3[] roomStableForwards;
+
+    Vector3 curRoomStableForward;
 
     Vector3 curRight;
     Vector3 curUp;
@@ -84,6 +93,12 @@ public class CatTrigger : MonoBehaviour
         energyCrystalRespawnTime = CONS.energyCrystalRespawnTime;
         throughEdgeGateGapTime = CONS.throughEdgeGateGapTime;
         edgeGates = CONS.edgeGates;
+        storedSavePointBlockEmpty = CONS.storedSavePointBlockEmpty;
+        storedActivatedSavePointBlockEmpty = CONS.storedActivatedSavePointBlockEmpty;
+
+        //loadStoredBlocks
+        storedSavePointBlock = storedSavePointBlockEmpty.transform.GetChild(0).gameObject;
+        storedActivatedSavePointBlock = storedActivatedSavePointBlockEmpty.transform.GetChild(0).gameObject;
     }
 
     void Update()
@@ -91,6 +106,7 @@ public class CatTrigger : MonoBehaviour
         curTriggerTile = VARS.curTriggerTile;
         curTriggerTileData = VARS.curTriggerTileData;
         roomStableForwards = VARS.roomStableForwards;
+        curRoomStableForward = VARS.curRoomStableForward;
         curRight = VARS.curRight;
         curUp = VARS.curUp;
         isOnGround = VARS.isOnGround;
@@ -269,6 +285,45 @@ public class CatTrigger : MonoBehaviour
                     throughEdgeGateTime = Time.time;
                 }
             }
+        }
+        #endregion
+
+        #region SavePoint
+        if (VARS.isActivatingASavePoint)
+        {
+            ////deactivateTheLastSavePoint
+            //if (VARS.curActivatedSavePoint != null)
+            //{
+            //    VARS.curActivatedSavePoint.SetActive(true);
+            //}
+
+            //setCurActivatedSavePointForTheNextDeactivation
+            VARS.curActivatedSavePoint = curTriggerTile;
+
+            VARS.isToWriteCatWorldData = true;
+
+            VARS.isToActivateCurActivatedSavePoint = true;
+
+            VARS.isActivatingASavePoint = false;
+        }
+
+        if (VARS.isToActivateCurActivatedSavePoint)
+        {
+            //activateCurSavePoint
+            storedActivatedSavePointBlock.transform.position = VARS.curActivatedSavePoint.transform.position;
+
+            //tempChildToCurPlaneEmpty
+            storedActivatedSavePointBlock.transform.SetParent(VARS.curPlaneEmpty.transform, true);
+
+            //VARS.curActivatedSavePoint.SetActive(false);
+
+            //setCatIniPosition
+            VARS.catIniPosition = VARS.curActivatedSavePoint.transform.position - curRoomStableForward * 0.1f;
+
+            //setCatPosition
+            catTransform.position = VARS.catIniPosition;
+
+            VARS.isToActivateCurActivatedSavePoint = false;
         }
         #endregion
 

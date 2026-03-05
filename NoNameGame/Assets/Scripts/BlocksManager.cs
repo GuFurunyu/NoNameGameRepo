@@ -200,7 +200,8 @@ public class BlocksManager : MonoBehaviour
 
         if (VARS.isInNewRoom)
         {
-            VARS.curPlaneEmpty = CONS.roomPlanes[VARS.curRoomIndex].transform.GetChild(0).gameObject;
+            if (VARS.curPlaneEmpty == null)
+                VARS.curPlaneEmpty = CONS.roomPlanes[VARS.curRoomIndex].transform.GetChild(0).gameObject;
 
             curBlocks.Clear();
             curBlockTileDatas.Clear();
@@ -223,7 +224,8 @@ public class BlocksManager : MonoBehaviour
                         curBlockTileDatas.Add(tempTransform.GetComponent<TileData>());
                         //curBlockStateOfMatterIndexes.Add(tempTransform.GetComponent<TileData>().stateOfMatterIndex);
 
-                        curCoordVector = tempTransform.localPosition;
+                        //curCoordVector = tempTransform.localPosition;
+                        curCoordVector = tempTransform.position - VARS.curPlaneEmpty.transform.position;
                         curCoordVectors.Add(curCoordVector);
                     }
                 }
