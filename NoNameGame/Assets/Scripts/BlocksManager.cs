@@ -100,6 +100,13 @@ public class BlocksManager : MonoBehaviour
     //BlockInfoInMatrix curLeftBlockInfoInMatrix;
     //BlockInfoInMatrix curRightBlockInfoInMatrix;
 
+    //gate
+    float curNearestGateDistance;
+
+    //edgeGate
+    float curNearestEdgeGateDistance;
+    int curNearestEdgeGateIndex;
+
     bool tempBool;
     int tempInt;
     float tempFloat;
@@ -110,7 +117,12 @@ public class BlocksManager : MonoBehaviour
     //BlockInfoInMatrix tempBlockInfoInMatrix;
 
     #region ConstantsUsed
+    float gridBreadth;
     int roomCoordBreadth;
+
+    List<GameObject> gates = new List<GameObject>();
+
+    List<GameObject> edgeGates = new List<GameObject>();
 
     GameObject storedSandBlocksEmpty;
     GameObject storedWaterBlocksEmpty;
@@ -124,6 +136,8 @@ public class BlocksManager : MonoBehaviour
     #endregion
 
     #region VariablesUsed
+    List<int> edgeGateLinkedToIndexes = new List<int>();
+
     //Vector3 planeUp;
     //Vector3 planeRight;
     Vector3 curRoomStableUp;
@@ -146,7 +160,10 @@ public class BlocksManager : MonoBehaviour
         UFL = gameManager.GetComponent<UniversalFunctionsLibrary>();
         SEC = gameManager.GetComponent<ScriptsExecutionController>();
 
+        gridBreadth = CONS.gridBreadth;
         roomCoordBreadth = CONS.roomCoordBreadth;
+        gates = CONS.gates;
+        edgeGates = CONS.edgeGates;
         storedSandBlocksEmpty = CONS.storedSandBlocksEmpty;
         storedWaterBlocksEmpty = CONS.storedWaterBlocksEmpty;
         storedAcidBlocksEmpty = CONS.storedAcidBlocksEmpty;
@@ -154,8 +171,9 @@ public class BlocksManager : MonoBehaviour
         storedGasBlocksEmpty = CONS.storedGasBlocksEmpty;
         storedElectricMistBlocksEmpty = CONS.storedElectricMistBlocksEmpty;
         storedLightElectricMistBlocksEmpty = CONS.storedLightElectricMistBlocksEmpty;
-
         blocksManagerFixedDeltaTime = CONS.blocksManagerFixedDeltaTime;
+
+        edgeGateLinkedToIndexes = VARS.edgeGateLinkedToIndexes;
 
         #region loadStoredBlocks
         for (int i = 0; i < 512; i++)
@@ -236,6 +254,110 @@ public class BlocksManager : MonoBehaviour
 
             //deactivateOutlineSquaresHidenInSurroundingBlocks
             DeactivateOutlineSquaresHidenInSurroundingBlocks();
+
+            //lockNotConnectedGates
+            for (int i = 0; i < gates.Count; i++)
+            {
+                if (gates[i].transform.parent != VARS.curPlaneEmpty.transform)
+                    continue;
+
+                tempTransform = gates[i].transform;
+
+                //findCurNearestGate
+                curNearestGateDistance = 999;
+                for (int j = 0; j < gates.Count; j++)
+                {
+                    if (gates[j].transform.parent != tempTransform.parent)
+                    {
+                        if (Vector3.Distance(gates[i].transform.position, tempTransform.position) < curNearestGateDistance)
+                        {
+                            curNearestGateDistance = Vector3.Distance(gates[i].transform.position, tempTransform.position);
+                        }
+                    }
+                }
+
+                //linkConnectedEdgeGates
+                if (curNearestGateDistance < 6 * gridBreadth)
+                {
+                    tempTransform.GetComponent<TileData>().triggerTypeIndex = 3;
+                    for (int k = 0; k < tempTransform.childCount; k++)
+                    {
+                        tempTransform.GetChild(k).gameObject.SetActive(false);
+                    }
+                }
+                //lockNotConnectedEdgeGates
+                else
+                {
+                    tempTransform.GetComponent<TileData>().triggerTypeIndex = 0;
+                    for (int k = 0; k < tempTransform.childCount; k++)
+                    {
+                        tempTransform.GetChild(k).gameObject.SetActive(true);
+                    }
+                }
+            }
+
+
+            //initializeEdgeGateLinkedToIndexes
+            edgeGateLinkedToIndexes.Clear();
+            for (int i=0;i < edgeGates.Count; i++)
+            {
+                edgeGateLinkedToIndexes.Add(-1);
+            }
+
+            for (int i = 0; i < edgeGates.Count; i++)
+            {
+                if(edgeGates[i].transform.parent != VARS.curPlaneEmpty.transform)
+                    continue;
+
+                tempTransform = edgeGates[i].transform;
+
+                //for (int i = 0; i < edgeGates.Count; i++)
+                //{
+                //    if (edgeGates[i].transform.parent != curTriggerTile.transform.parent)
+                //    {
+                //        if (Vector3.Distance(edgeGates[i].transform.position, curTriggerTile.transform.position) < curNearestEdgeGateDistance)
+                //        {
+                //            curNearestEdgeGateDistance = Vector3.Distance(edgeGates[i].transform.position, curTriggerTile.transform.position);
+                //            curNearestEdgeGateIndex = i;
+                //        }
+                //    }
+                //}
+
+                //findCurNearestEdgeGate
+                curNearestEdgeGateDistance = 999;
+                for (int j = 0; j < edgeGates.Count; j++)
+                {
+                    if (edgeGates[j].transform.parent != tempTransform.parent)
+                    {
+                        if (Vector3.Distance(edgeGates[i].transform.position, tempTransform.position) < curNearestEdgeGateDistance)
+                        {
+                            curNearestEdgeGateDistance = Vector3.Distance(edgeGates[i].transform.position, tempTransform.position);
+                            curNearestEdgeGateIndex = i;
+                        }
+                    }
+                }
+
+                //linkConnectedEdgeGates
+                if (curNearestEdgeGateDistance < 6 * gridBreadth)
+                {
+                    tempTransform.GetComponent<TileData>().triggerTypeIndex = 4;
+                    edgeGateLinkedToIndexes[i] = curNearestEdgeGateIndex;
+                    for (int k = 0; k < tempTransform.childCount; k++)
+                    {
+                        tempTransform.GetChild(k).gameObject.SetActive(false);
+                    }
+                }
+                //lockNotConnectedEdgeGates
+                else
+                {
+                    tempTransform.GetComponent<TileData>().triggerTypeIndex = 0;
+                    edgeGateLinkedToIndexes[i] = -1;
+                    for (int k = 0; k < tempTransform.childCount; k++)
+                    {
+                        tempTransform.GetChild(k).gameObject.SetActive(true);
+                    }
+                }
+            }
 
             VARS.isInNewRoomBlocksManagerResetOver = true;
         }

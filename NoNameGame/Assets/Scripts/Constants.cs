@@ -41,6 +41,9 @@ public class Constants : MonoBehaviour
     //~?
     //Vector3 outerGravityVector = new Vector3(1, -1, 1);
 
+    //gates
+    public List<GameObject> gates = new List<GameObject>();
+
     //edgeGates
     public List<GameObject> edgeGates = new List<GameObject>();
 
@@ -66,6 +69,11 @@ public class Constants : MonoBehaviour
     //objectAndTransform
     public Camera cam;
     public Transform camTransform;
+
+    //initialSightMasks
+    public GameObject initialSightMasksEmpty;
+    public float initialSightMasksSpeed;
+    public float initialSightMasksMaxDistance;
     #endregion
 
     #region Cat
@@ -193,8 +201,10 @@ public class Constants : MonoBehaviour
     //edgeGate
     public float throughEdgeGateGapTime;
 
+    //savePoints
+    public List<GameObject> savePoints = new List<GameObject>();
+
     //storedBlocks
-    public GameObject storedSavePointBlockEmpty;
     public GameObject storedActivatedSavePointBlockEmpty;
     #endregion
 

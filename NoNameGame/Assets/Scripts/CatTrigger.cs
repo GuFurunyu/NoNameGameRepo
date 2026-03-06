@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.ComponentModel;
 using UnityEngine;
 
 [DefaultExecutionOrder((int)ScriptsExecutionOrder.ExecutionOrder.catTrigger)]
@@ -35,7 +36,11 @@ public class CatTrigger : MonoBehaviour
     GameObject storedSavePointBlock;
     GameObject storedActivatedSavePointBlock;
 
+    GameObject tempGameObject;
+
     #region ConstantsUsed
+    GameObject[] faces = new GameObject[6];
+
     Transform camTransform;
 
     Transform catTransform;
@@ -54,23 +59,28 @@ public class CatTrigger : MonoBehaviour
 
     List<GameObject> edgeGates = new List<GameObject>();
 
-    GameObject storedSavePointBlockEmpty;
+    List<GameObject> savePoints = new List<GameObject>();
+
     GameObject storedActivatedSavePointBlockEmpty;
     #endregion
 
     #region VariablesUsed
-    GameObject curTriggerTile;
-    TileData curTriggerTileData;
-
     Vector3[] roomStableForwards;
 
+    GameObject curPlaneEmpty;
+
     Vector3 curRoomStableForward;
+
+    List<int> edgeGateLinkedToIndexes = new List<int>();
 
     Vector3 curRight;
     Vector3 curUp;
 
     bool isOnGround;
     bool isInLiquid;
+
+    GameObject curTriggerTile;
+    TileData curTriggerTileData;
     #endregion
 
     void Start()
@@ -82,6 +92,7 @@ public class CatTrigger : MonoBehaviour
         UFL = gameManager.GetComponent<UniversalFunctionsLibrary>();
         SEC = gameManager.GetComponent<ScriptsExecutionController>();
 
+        faces = CONS.faces;
         camTransform = CONS.camTransform;
         catTransform = CONS.catTransform;
         maxEnergy = CONS.maxEnergy;
@@ -93,24 +104,26 @@ public class CatTrigger : MonoBehaviour
         energyCrystalRespawnTime = CONS.energyCrystalRespawnTime;
         throughEdgeGateGapTime = CONS.throughEdgeGateGapTime;
         edgeGates = CONS.edgeGates;
-        storedSavePointBlockEmpty = CONS.storedSavePointBlockEmpty;
+        savePoints = CONS.savePoints;
         storedActivatedSavePointBlockEmpty = CONS.storedActivatedSavePointBlockEmpty;
 
+        roomStableForwards = VARS.roomStableForwards;
+        edgeGateLinkedToIndexes = VARS.edgeGateLinkedToIndexes;
+
         //loadStoredBlocks
-        storedSavePointBlock = storedSavePointBlockEmpty.transform.GetChild(0).gameObject;
         storedActivatedSavePointBlock = storedActivatedSavePointBlockEmpty.transform.GetChild(0).gameObject;
     }
 
     void Update()
     {
-        curTriggerTile = VARS.curTriggerTile;
-        curTriggerTileData = VARS.curTriggerTileData;
-        roomStableForwards = VARS.roomStableForwards;
+        curPlaneEmpty = VARS.curPlaneEmpty;
         curRoomStableForward = VARS.curRoomStableForward;
         curRight = VARS.curRight;
         curUp = VARS.curUp;
         isOnGround = VARS.isOnGround;
         isInLiquid = VARS.isInLiquid;
+        curTriggerTile = VARS.curTriggerTile;
+        curTriggerTileData = VARS.curTriggerTileData;
 
         #region Strawberries
         if (!VARS.isRotating && 
@@ -238,22 +251,29 @@ public class CatTrigger : MonoBehaviour
             //ifIsGapTimeOver
             if (Time.time - throughEdgeGateTime > throughEdgeGateGapTime)
             {
-                //findCurNearestEdgeGate
-                curNearestEdgeGateDistance = 999;
+                ////findCurNearestEdgeGate
+                //curNearestEdgeGateDistance = 999;
 
-                for (int i = 0; i < edgeGates.Count; i++)
+                //for (int i = 0; i < edgeGates.Count; i++)
+                //{
+                //    if (edgeGates[i].transform.parent != curTriggerTile.transform.parent)
+                //    {
+                //        if (Vector3.Distance(edgeGates[i].transform.position, curTriggerTile.transform.position) < curNearestEdgeGateDistance)
+                //        {
+                //            curNearestEdgeGateDistance = Vector3.Distance(edgeGates[i].transform.position, curTriggerTile.transform.position);
+                //            curNearestEdgeGateIndex = i;
+                //        }
+                //    }
+                //}
+
+                //curToEdgeGate = edgeGates[curNearestEdgeGateIndex];
+                for(int i=0;i< edgeGates.Count; i++)
                 {
-                    if (edgeGates[i].transform.parent != curTriggerTile.transform.parent)
+                    if (curTriggerTile == edgeGates[i])
                     {
-                        if (Vector3.Distance(edgeGates[i].transform.position, curTriggerTile.transform.position) < curNearestEdgeGateDistance)
-                        {
-                            curNearestEdgeGateDistance = Vector3.Distance(edgeGates[i].transform.position, curTriggerTile.transform.position);
-                            curNearestEdgeGateIndex = i;
-                        }
+                        curToEdgeGate = edgeGates[edgeGateLinkedToIndexes[i]];
                     }
                 }
-
-                curToEdgeGate = edgeGates[curNearestEdgeGateIndex];
                 //curEdgeGatesBetweenVector = curToEdgeGate.transform.position - curTile.transform.position;
 
                 //toNewRoom
@@ -289,41 +309,105 @@ public class CatTrigger : MonoBehaviour
         #endregion
 
         #region SavePoint
-        if (VARS.isActivatingASavePoint)
+        if (VARS.isToActivateASavePoint)
         {
-            ////deactivateTheLastSavePoint
+            //deactivateTheLastSavePoint
             //if (VARS.curActivatedSavePoint != null)
             //{
             //    VARS.curActivatedSavePoint.SetActive(true);
             //}
 
-            //setCurActivatedSavePointForTheNextDeactivation
-            VARS.curActivatedSavePoint = curTriggerTile;
+            VARS.isToDetermineCurActivatedSavePoint = true;
+
+            VARS.isToActivateCurSavePoint = true;
+
+            VARS.isToActivateASavePoint = false;
+        }
+
+        if (VARS.isToDetermineCurActivatedSavePoint)
+        {
+            savePoints[VARS.curActivatedSavePointIndex].SetActive(true);
+
+            //determineCurActivatedSavePoint
+            for (int i = 0; i < savePoints.Count; i++)
+            {
+                if (savePoints[i] == curTriggerTile)
+                {
+                    VARS.curActivatedSavePointIndex = i;
+                    VARS.curActivatedSavePointPosition = savePoints[i].transform.position;
+
+                    Debug.Log(VARS.curActivatedSavePointPosition);
+
+                    break;
+                }
+            }
 
             VARS.isToWriteCatWorldData = true;
 
-            VARS.isToActivateCurActivatedSavePoint = true;
-
-            VARS.isActivatingASavePoint = false;
+            VARS.isToDetermineCurActivatedSavePoint = false;
         }
 
-        if (VARS.isToActivateCurActivatedSavePoint)
+        if (VARS.isToActivateCurSavePoint)
         {
             //activateCurSavePoint
-            storedActivatedSavePointBlock.transform.position = VARS.curActivatedSavePoint.transform.position;
+            //storedActivatedSavePointBlock.transform.position = VARS.curActivatedSavePoint.transform.position;
+            storedActivatedSavePointBlock.transform.position = savePoints[VARS.curActivatedSavePointIndex].transform.position;
 
             //tempChildToCurPlaneEmpty
             storedActivatedSavePointBlock.transform.SetParent(VARS.curPlaneEmpty.transform, true);
 
             //VARS.curActivatedSavePoint.SetActive(false);
+            savePoints[VARS.curActivatedSavePointIndex].SetActive(false);
 
             //setCatIniPosition
-            VARS.catIniPosition = VARS.curActivatedSavePoint.transform.position - curRoomStableForward * 0.1f;
+            //VARS.catIniPosition = VARS.curActivatedSavePoint.transform.position - curRoomStableForward * 0.1f;
+            VARS.catIniPosition = VARS.curActivatedSavePointPosition - curRoomStableForward * 0.1f;
+
+            //Debug.Log("catIniPosition:" + VARS.catIniPosition);
 
             //setCatPosition
-            catTransform.position = VARS.catIniPosition;
+            if (VARS.horCurSpeed == 0 &&
+                VARS.verCurSpeed == 0)
+                catTransform.position = VARS.catIniPosition;
 
-            VARS.isToActivateCurActivatedSavePoint = false;
+            //Debug.Log("catPosition:" + catTransform.position);
+
+            VARS.isToActivateCurSavePoint = false;
+        }
+        #endregion
+
+        #region Center
+        if (VARS.isInCenter)
+        {
+            if (VARS.isInputtingDownKey)
+            {
+                if (VARS.isLeftKeyDown ||
+                    VARS.isRightKeyDown)
+                {
+                    //getTwistingFaceIndex
+                    tempGameObject = curPlaneEmpty.transform.parent.parent.gameObject;
+                    for (int i = 0; i < 6; i++)
+                    {
+                        if (tempGameObject == faces[i])
+                        {
+                            VARS.twistingFaceIndex = i + 1;
+                            break;
+                        }
+                    }
+
+                    //determineTwistingDirection
+                    if (VARS.isLeftKeyDown)
+                    {
+                        VARS.isClockwiseTwisting = true;
+                    }
+                    else if (VARS.isRightKeyDown)
+                    {
+                        VARS.isClockwiseTwisting = false;
+                    }
+
+                    VARS.isTwisting = true;
+                }
+            }
         }
         #endregion
 

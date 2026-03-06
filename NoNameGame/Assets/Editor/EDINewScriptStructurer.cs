@@ -1,3 +1,5 @@
+//ByCopilot
+//NotFullyUnderstood
 using UnityEditor;
 using UnityEngine;
 using System.IO;

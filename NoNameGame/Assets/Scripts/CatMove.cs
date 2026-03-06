@@ -140,6 +140,9 @@ public class CatMove : MonoBehaviour
         toCeilingEnergyDecreaseSpeed = CONS.toCeilingEnergyDecreaseSpeed;
         jumpEnergyCost = CONS.jumpEnergyCost;
         dashEnergyCost = CONS.dashEnergyCost;
+
+        VARS.horCurSpeed = 0;
+        VARS.verCurSpeed = 0;
     }
 
     void Update()
@@ -168,7 +171,8 @@ public class CatMove : MonoBehaviour
 
         #region Move
         if (!VARS.isRotating && 
-            !VARS.isTwisting)
+            !VARS.isTwisting &&
+            VARS.isInNewRoomAllResetOver)
         {
             #region LeftAndRight
             if (!isInLiquid && !isInGas && !isInMist)
@@ -217,6 +221,8 @@ public class CatMove : MonoBehaviour
             //moveLeft
             if (VARS.isInputtingLeftKey)
             {
+                Debug.Log("enter");
+
                 //forDash
                 //lastHorDirectionInput = leftKeyCode;
                 VARS.curFacingDirectionIndex = 1;

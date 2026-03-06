@@ -25,7 +25,12 @@ public class DataManager : MonoBehaviour
 
     public class CatWorldData
     {
-        public GameObject curActivatedSavePoint;
+        //savePoint
+        public int curActivatedSavePointIndex;
+        public Vector3 curActivatedSavePointPosition;
+
+        //exploredRooms
+        public bool[] isRoomExplored = new bool[54];
     }
 
     CatWorldData curCatWorldData = new CatWorldData();
@@ -129,8 +134,22 @@ public class DataManager : MonoBehaviour
                 //Debug.Log("position: " + curWorldData.roomPlanePositions[i]);
                 //Debug.Log("eulerangles: " + curWorldData.roomPlaneEulerangles[i]);
 
+                //if (i == 5)
+                //{
+                //    Debug.Log("position1: " + tempTransform.position);
+                //    Debug.Log("eulerangles1: " + tempTransform.eulerAngles);
+                //    Debug.Log("curActivatedSavePointPosition1: " + CONS.savePoints[VARS.curActivatedSavePointIndex].transform.position);
+                //}
+
                 tempTransform.position = curWorldData.roomPlanePositions[i];
                 tempTransform.eulerAngles = curWorldData.roomPlaneEulerangles[i];
+
+                //if(i==5)
+                //{
+                //    Debug.Log("position2: " + tempTransform.position);
+                //    Debug.Log("eulerangles2: " + tempTransform.eulerAngles);
+                //    Debug.Log("curActivatedSavePointPosition2: " + CONS.savePoints[VARS.curActivatedSavePointIndex].transform.position);
+                //}
 
                 //childToTheFaces
                 for (int j = 0; j < 6; j++)
@@ -151,6 +170,8 @@ public class DataManager : MonoBehaviour
 
     void WriteWorldData()
     {
+        tempPath = Path.Combine(Application.persistentDataPath, "Datas", "WorldData.txt");
+
         for (int i = 0; i < 54; i++)
         {
             tempTransform = roomPlanes[i].transform;
@@ -160,8 +181,6 @@ public class DataManager : MonoBehaviour
         }
 
         tempJsonString = JsonUtility.ToJson(curWorldData);
-
-        tempPath = Path.Combine(Application.persistentDataPath, "Datas", "WorldData.txt");
 
         File.WriteAllText(tempPath, tempJsonString);
     }
@@ -177,19 +196,29 @@ public class DataManager : MonoBehaviour
             tempJsonString = File.ReadAllText(tempPath);
             curCatWorldData = JsonUtility.FromJson<CatWorldData>(tempJsonString);
 
-            VARS.curActivatedSavePoint = curCatWorldData.curActivatedSavePoint;           
+            //savePoint
+            VARS.curActivatedSavePointIndex = curCatWorldData.curActivatedSavePointIndex;
+            VARS.curActivatedSavePointPosition = curCatWorldData.curActivatedSavePointPosition;
 
-            VARS.isToActivateCurActivatedSavePoint = true;
+            //isRoomExplored
+            VARS.isRoomExplored = curCatWorldData.isRoomExplored;
+
+            VARS.isToActivateCurSavePoint = true;
         }
     }
 
     void WriteCatWorldData()
     {
-        curCatWorldData.curActivatedSavePoint = VARS.curActivatedSavePoint;
+        tempPath = Path.Combine(Application.persistentDataPath, "Datas", "CatWorldData.txt");
+
+        //savePoint
+        curCatWorldData.curActivatedSavePointIndex = VARS.curActivatedSavePointIndex;
+        curCatWorldData.curActivatedSavePointPosition = VARS.curActivatedSavePointPosition;
+
+        //isRoomExplored
+        curCatWorldData.isRoomExplored = VARS.isRoomExplored;
 
         tempJsonString = JsonUtility.ToJson(curCatWorldData);
-
-        tempPath = Path.Combine(Application.persistentDataPath, "Datas", "CatWorldData.txt");
 
         File.WriteAllText(tempPath, tempJsonString);
     }
@@ -221,14 +250,16 @@ public class DataManager : MonoBehaviour
             VARS.curKeyCodes.Add(VARS.jumpKeyCode);
             VARS.curKeyCodes.Add(VARS.dashKeyCode);
         }
-        else
-        {
-            Debug.Log("没有找到存档文件");
-        }
+        //else
+        //{
+        //    Debug.Log("没有找到存档文件");
+        //}
     }
 
     void WriteKeyCodesData()
     {
+        tempPath = Path.Combine(Application.persistentDataPath, "Datas", "KeyCodesData.txt");
+
         curKeyCodesData.upKeyCode = VARS.upKeyCode;
         curKeyCodesData.downKeyCode = VARS.downKeyCode;
         curKeyCodesData.leftKeyCode = VARS.leftKeyCode;
@@ -237,8 +268,6 @@ public class DataManager : MonoBehaviour
         curKeyCodesData.dashKeyCode = VARS.dashKeyCode;
 
         tempJsonString = JsonUtility.ToJson(curKeyCodesData);
-
-        tempPath = Path.Combine(Application.persistentDataPath, "Datas","KeyCodesData.txt");
 
         File.WriteAllText(tempPath, tempJsonString);
     }

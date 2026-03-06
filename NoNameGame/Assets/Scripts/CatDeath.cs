@@ -83,6 +83,8 @@ public class CatDeath : MonoBehaviour
         //VARS.verCurSpeed = 0;
         UFL.SetVerCurSpeed(0);
 
+        VARS.isToInitializeSight = true;
+
         VARS.outIniRotationStartTime = 0.1f;
 
         //strawBerry

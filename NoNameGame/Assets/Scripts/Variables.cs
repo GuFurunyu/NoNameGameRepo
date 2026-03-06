@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+//using ECB = Variables.ExecutionControlBool;
 
 [DefaultExecutionOrder((int)ScriptsExecutionOrder.ExecutionOrder.variables)]
 public class Variables : MonoBehaviour
@@ -31,18 +32,11 @@ public class Variables : MonoBehaviour
     #region RoomsManager
     [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
         "  \nROOMSMANAGER\n --- ")]
-    //roomsInfo
-    public Vector3[] roomCenters = new Vector3[54];
-    public Vector3[] roomStableForwards = new Vector3[54];
-    public Vector3[] roomStableUps = new Vector3[54];
-    public Vector3[] roomStableRights = new Vector3[54];
-    //public List<Vector3> roomOPoints = new List<Vector3>();
-
     //~?
     //bool isRoomDetermined;
 
     //isInNewRoom
-    public bool isIntoNewRoom = true;
+    public bool isIntoNewRoom;
     public bool isInNewRoom;
 
     //isInNewRoomResetOver
@@ -52,8 +46,21 @@ public class Variables : MonoBehaviour
     public bool isInNewRoomBlocksManagerResetOver;
     public bool isInNewRoomAllResetOver;
 
+    //roomsInfo
+    public Vector3[] roomCenters = new Vector3[54];
+    public Vector3[] roomStableForwards = new Vector3[54];
+    public Vector3[] roomStableUps = new Vector3[54];
+    public Vector3[] roomStableRights = new Vector3[54];
+    //public List<Vector3> roomOPoints = new List<Vector3>();
+
     //curRoomIndex
     public int curRoomIndex;
+
+    //edgeGatesLinkedToIndexes
+    public List<int> edgeGateLinkedToIndexes = new List<int>();
+
+    //isRoomExploredList
+    public bool[] isRoomExplored = new bool[54];
 
     //twist
     public bool isTwisting;
@@ -64,6 +71,10 @@ public class Variables : MonoBehaviour
     #region CurRoomManager
     [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
         "  \nCURROOMMANAGER\n --- ")]
+    //curPlaneEmpty
+    //~?
+    public GameObject curPlaneEmpty;
+
     //curRoomInfo
     public Vector3 curRoomCenter;
     public Vector3 curRoomStableForward;
@@ -86,8 +97,8 @@ public class Variables : MonoBehaviour
     #endregion
 
     #region TileData
-    [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
-        "  \nTILEDATA\n --- ")]
+    //[Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
+    //    "  \nTILEDATA\n --- ")]
 
     #endregion
 
@@ -96,6 +107,10 @@ public class Variables : MonoBehaviour
         "  \nCAMERAMANAGER\n --- ")]
     //iniEulerAngles
     public Vector3 camIniEulerangles;
+
+    //initializeSight
+    public bool isToInitializeSight;
+    public bool isInitializingSight;
     #endregion
 
     #region Cat
@@ -118,7 +133,7 @@ public class Variables : MonoBehaviour
     public KeyCode confirmKeyCode = KeyCode.Space;
     public KeyCode backKeyCode = KeyCode.Escape;
 
-    public bool isKeyCodeChanged = true;
+    public bool isKeyCodeChanged;
 
     //isInputtingKey
     public bool isInputtingLeftKey;
@@ -131,10 +146,10 @@ public class Variables : MonoBehaviour
     public bool isInputtingBackKey;
 
     //isKeyDown
-    public bool isUpKeyDown;
-    public bool isDownKeyDown;
     public bool isLeftKeyDown;
     public bool isRightKeyDown;
+    public bool isUpKeyDown;
+    public bool isDownKeyDown;
     public bool isJumpKeyDown;
     public bool isDashKeyDown;
     public bool isConfirmKeyDown;
@@ -215,15 +230,15 @@ public class Variables : MonoBehaviour
     #region CatRotate
     [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
         "  \nCATROTATE\n --- ")]
-    //rotationNum
-    public int rotationRestNum;
-
     //isRotating
     public bool isRotating;
 
     //isIniRotation
     public bool isIniRotation;
     public float outIniRotationStartTime;
+
+    //rotationNum
+    public int rotationRestNum;
     #endregion
 
     #region CatEnergy
@@ -250,9 +265,15 @@ public class Variables : MonoBehaviour
     public bool isEdgeGateTriggered;
 
     //savePoint
-    public bool isActivatingASavePoint;
-    public GameObject curActivatedSavePoint;//~?
-    public bool isToActivateCurActivatedSavePoint;
+    public bool isToActivateASavePoint;
+    public bool isToDetermineCurActivatedSavePoint;
+    public bool isToActivateCurSavePoint;
+    //public GameObject curActivatedSavePoint;//~?
+    public int curActivatedSavePointIndex;
+    public Vector3 curActivatedSavePointPosition;
+
+    //center
+    public bool isInCenter;
     #endregion
 
     #region CatAppearance
@@ -278,10 +299,6 @@ public class Variables : MonoBehaviour
     #region BlocksManager
     [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
         "  \nBLOCKSMANAGER\n --- ")]
-    //curPlaneEmpty
-    //~?
-    public GameObject curPlaneEmpty;
-
     //gravity
     //~?
     public float curGravity;
@@ -290,17 +307,17 @@ public class Variables : MonoBehaviour
     //int[] curGoableBlockTypeIndexes;
 
     //fluidContinuosnessOptimization
-    public bool isFluidContinuousnessOptimizationActivated = true;
+    public bool isFluidContinuousnessOptimizationActivated;
     #endregion
 
     #region OptionsManager
     [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
         "  \nOPTIONSMANAGER\n --- ")]
-    //isOptionPanelActivated
-    public bool isOptionPanelActivated;
-
     //curKeyCodes
     public List<KeyCode> curKeyCodes = new List<KeyCode>();
+
+    //isOptionPanelActivated
+    public bool isOptionPanelActivated;
     #endregion
 
     #region ConstantsUsed

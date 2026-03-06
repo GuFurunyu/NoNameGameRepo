@@ -13,7 +13,6 @@ public class CurRoomManager : MonoBehaviour
     //directions
 
     #region ConstantsUsed
-
     #endregion
 
     #region VariablesUsed
@@ -41,6 +40,14 @@ public class CurRoomManager : MonoBehaviour
         if (VARS.isInNewRoom)
         {
             CurRoomInitialize();
+
+            //ifCurRoomNotExploredMarkItExplored
+            if (!VARS.isRoomExplored[curRoomIndex])
+            {
+                VARS.isRoomExplored[curRoomIndex] = true;
+
+                VARS.isToWriteCatWorldData = true;
+            }
 
             ////directions
             //GetPlaneDirections();

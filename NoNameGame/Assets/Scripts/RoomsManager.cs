@@ -128,104 +128,122 @@ public class RoomsManager : MonoBehaviour
         }
         #endregion
 
-        #region Twist
-        if (VARS.isTwisting)
+        if (VARS.isInNewRoomAllResetOver)
         {
-            if (!isTwistingPresetOver)
+            //hideOtherPlanes
+            for(int i = 0; i < roomPlanes.Length; i++)
             {
-                curTwistingCenter = twistingCenters[VARS.twistingFaceIndex - 1];
-                curTwistingCenterPosition = curTwistingCenter.transform.position;
-
-                curFaceStableForward = faceStableForwards[VARS.twistingFaceIndex - 1];
-                curFaceStableUp = faceStableUps[VARS.twistingFaceIndex - 1];
-                curFaceStableRight = faceStableRights[VARS.twistingFaceIndex - 1];
-
-                //getRelatedRoomPlanes
-                for (int i = 0; i < roomPlanes.Length; i++)
+                if (i != VARS.curRoomIndex)
                 {
-                    tempVector = roomCenters[i] - curTwistingCenterPosition;
-
-                    //getRoomPlanesInTheFace
-                    if (Mathf.Abs(Vector3.Dot(tempVector, curFaceStableForward)) <= (roomCoordBreadth / 2 + 2) * gridBreadth)
-                    {
-                        curRelatedRoomPlanes.Add(roomPlanes[i]);
-                        curRelatedRoomPlaneIndexes.Add(i);
-                    }
-
-                    //getRoomPlanesSurroundingTheFace
-                    if (Mathf.Abs(Vector3.SignedAngle(tempVector, curFaceStableUp, curFaceStableForward)) <= 6 &&
-                        Mathf.Abs(Vector3.SignedAngle(tempVector, curFaceStableRight, curFaceStableForward)) <= 6)
-                    {
-                        curRelatedRoomPlanes.Add(roomPlanes[i]);
-                        curRelatedRoomPlaneIndexes.Add(i);
-                    }
-                }
-
-                //roomPlanesTempChildToCurTwistingCenter
-                for(int i=0; i < curRelatedRoomPlanes.Count; i++)
-                {
-                    curRelatedRoomPlanes[i].transform.SetParent(curTwistingCenter.transform, true);
-                }
-
-                //catAndCamTempChildToCurTwistingCenter
-                //camTransform.SetParent(curTwistingCenter.transform, true);
-                catTransform.SetParent(curTwistingCenter.transform, true);
-
-                //setTargetEulerangles
-                if (VARS.isClockwiseTwisting)
-                {
-                    twistingTargetEulerangles = curTwistingCenter.transform.eulerAngles + new Vector3(0, 0, 90);
+                    roomPlanes[i].SetActive(false);
                 }
                 else
                 {
-                    twistingTargetEulerangles = curTwistingCenter.transform.eulerAngles + new Vector3(0, 0, -90);
+                    roomPlanes[i].SetActive(true);
                 }
-
-                isTwistingPresetOver = true;
             }
 
-            //twist
-            if (twistingAccumulatedDegree < 90)
+            #region Twist
+            if (VARS.isTwisting)
             {
-                twistingAccumulatedDegree += twistSpeed * Time.deltaTime;
-                if (VARS.isClockwiseTwisting)
+                if (!isTwistingPresetOver)
                 {
-                    curTwistingCenter.transform.Rotate(curFaceStableForward * twistSpeed * Time.deltaTime);
+                    curTwistingCenter = twistingCenters[VARS.twistingFaceIndex - 1];
+                    curTwistingCenterPosition = curTwistingCenter.transform.position;
+
+                    curFaceStableForward = faceStableForwards[VARS.twistingFaceIndex - 1];
+                    curFaceStableUp = faceStableUps[VARS.twistingFaceIndex - 1];
+                    curFaceStableRight = faceStableRights[VARS.twistingFaceIndex - 1];
+
+                    //getRelatedRoomPlanes
+                    for (int i = 0; i < roomPlanes.Length; i++)
+                    {
+                        tempVector = roomCenters[i] - curTwistingCenterPosition;
+
+                        //getRoomPlanesInTheFace
+                        if (Mathf.Abs(Vector3.Dot(tempVector, curFaceStableForward)) <= (roomCoordBreadth / 2 + 2) * gridBreadth)
+                        {
+                            curRelatedRoomPlanes.Add(roomPlanes[i]);
+                            curRelatedRoomPlaneIndexes.Add(i);
+                        }
+
+                        //getRoomPlanesSurroundingTheFace
+                        if (Mathf.Abs(Vector3.SignedAngle(tempVector, curFaceStableUp, curFaceStableForward)) <= 6 &&
+                            Mathf.Abs(Vector3.SignedAngle(tempVector, curFaceStableRight, curFaceStableForward)) <= 6)
+                        {
+                            curRelatedRoomPlanes.Add(roomPlanes[i]);
+                            curRelatedRoomPlaneIndexes.Add(i);
+                        }
+                    }
+
+                    //roomPlanesTempChildToCurTwistingCenter
+                    for (int i = 0; i < curRelatedRoomPlanes.Count; i++)
+                    {
+                        curRelatedRoomPlanes[i].transform.SetParent(curTwistingCenter.transform, true);
+                    }
+
+                    //catAndCamTempChildToCurTwistingCenter
+                    //camTransform.SetParent(curTwistingCenter.transform, true);
+                    catTransform.SetParent(curTwistingCenter.transform, true);
+
+                    //setTargetEulerangles
+                    if (VARS.isClockwiseTwisting)
+                    {
+                        twistingTargetEulerangles = curTwistingCenter.transform.eulerAngles + new Vector3(0, 0, 90);
+                    }
+                    else
+                    {
+                        twistingTargetEulerangles = curTwistingCenter.transform.eulerAngles + new Vector3(0, 0, -90);
+                    }
+
+                    isTwistingPresetOver = true;
+                }
+
+                //twist
+                if (twistingAccumulatedDegree < 90)
+                {
+                    twistingAccumulatedDegree += twistSpeed * Time.deltaTime;
+                    if (VARS.isClockwiseTwisting)
+                    {
+                        curTwistingCenter.transform.Rotate(curFaceStableForward * twistSpeed * Time.deltaTime);
+                    }
+                    else
+                    {
+                        curTwistingCenter.transform.Rotate(-curFaceStableForward * twistSpeed * Time.deltaTime);
+                    }
                 }
                 else
                 {
-                    curTwistingCenter.transform.Rotate(-curFaceStableForward * twistSpeed * Time.deltaTime);
+                    //setPositionsAndEulerangles(~?)
+                    curTwistingCenter.transform.eulerAngles = twistingTargetEulerangles;
+
+                    //resetRoomPlanesParents
+                    ResetCurRelatedPlanes();
+                    curRelatedRoomPlanes.Clear();
+                    curRelatedRoomPlaneIndexes.Clear();
+
+                    //freeCatAndCam
+                    //camTransform.SetParent(null);
+                    catTransform.SetParent(null);
+
+                    //resetCatEulerangles
+                    catTransform.eulerAngles = Vector3.zero;
+
+                    isTwistingPresetOver = false;
+
+                    twistingAccumulatedDegree = 0;
+
+                    VARS.isIntoNewRoom = true;
+
+                    VARS.isToWriteWorldData = true;
+
+                    VARS.isToDetermineCurActivatedSavePoint = true;
+
+                    VARS.isTwisting = false;
                 }
             }
-            else
-            {
-                //setPositionsAndEulerangles(~?)
-                curTwistingCenter.transform.eulerAngles = twistingTargetEulerangles;
-
-                //resetRoomPlanesParents
-                ResetCurRelatedPlanes();
-                curRelatedRoomPlanes.Clear();
-                curRelatedRoomPlaneIndexes.Clear();
-
-                //freeCatAndCam
-                //camTransform.SetParent(null);
-                catTransform.SetParent(null);
-
-                //resetCatEulerangles
-                catTransform.eulerAngles = Vector3.zero;
-
-                isTwistingPresetOver = false;
-
-                twistingAccumulatedDegree = 0;
-
-                VARS.isTwisting = false;
-
-                VARS.isIntoNewRoom = true;
-
-                VARS.isToWriteWorldData = true;
-            }
+            #endregion
         }
-        #endregion
     }
 
     //public bool IsInRoom(int roomIndex, Vector3 position)

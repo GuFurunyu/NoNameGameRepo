@@ -38,6 +38,13 @@ public class Control : MonoBehaviour
 
     void Update()
     {
+        //Debug.Log("enterControl");
+
+        //if (Input.GetKey(KeyCode.Space))
+        //{
+        //    Debug.Log("inputtingSpace");
+        //}
+
         isKeyCodeChanged = VARS.isKeyCodeChanged;
 
         if (isKeyCodeChanged)

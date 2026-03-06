@@ -671,7 +671,7 @@ public class CatCollision : MonoBehaviour
                 VARS.curTriggerTile = curTile;
                 VARS.curTriggerTileData = curTileData;
 
-                //strawberry
+                //strawberry(get)
                 if (curTileData.triggerTypeIndex == 1)
                 {
                     //isCarryingStrawberries = true;
@@ -682,7 +682,7 @@ public class CatCollision : MonoBehaviour
                     VARS.isGettingAStrawberry = true;
                 }
 
-                //energyCrystal
+                //energyCrystal(get)
                 else if (curTileData.triggerTypeIndex == 2)
                 {
                     if (curTile.transform.localScale != Vector3.one * 0.2f)
@@ -697,28 +697,40 @@ public class CatCollision : MonoBehaviour
 
                 }
 
-                //edgeGate
+                //edgeGate(enter)
                 else if (curTileData.triggerTypeIndex == 4)
                 {
                     VARS.isEnteringAnEdgeGate = true;
                 }
 
-                //edgeGateTrigger
+                //edgeGateTrigger(triggerEdgeGate)
                 else if (curTileData.triggerTypeIndex == 5)
                 {
                     VARS.isEdgeGateTriggered = true;
                 }
 
-                //savePoint(notActiavted)
+                //activateSavePoint(notActiavted)
                 else if (curTileData.triggerTypeIndex == 6)
                 {
-                    VARS.isActivatingASavePoint = true;
+                    VARS.isToActivateASavePoint = true;
                 }
 
                 //activatedSavePoint(~~?)
                 else if (curTileData.triggerTypeIndex == 7)
                 {
 
+                }
+
+                //center(in)
+                else if (curTileData.triggerTypeIndex == 8)
+                {
+                    VARS.isInCenter = true;
+                }
+
+                //center(out)
+                if (curTileData.triggerTypeIndex != 8)
+                {
+                    VARS.isInCenter = false;
                 }
             }
         }

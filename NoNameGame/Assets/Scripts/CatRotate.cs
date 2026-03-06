@@ -182,7 +182,8 @@ public class CatRotate : MonoBehaviour
             }
 
             //rotationControl
-            if (rotationRestNum > 0)
+            if (rotationRestNum > 0 &&
+                !VARS.isInCenter)
             {
                 if (VARS.curEnergy > rotationEnergyCost)
                 {

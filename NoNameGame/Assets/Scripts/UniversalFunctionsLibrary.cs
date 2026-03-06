@@ -104,21 +104,29 @@ public class UniversalFunctionsLibrary : MonoBehaviour
     #region CatMove
     public void SetHorCurSpeed(float value)
     {
+        //Debug.Log("setHorCurSpeed: " + value);
+
         VARS.horCurSpeed = value;
     }
 
     public void AddHorCurSpeed(float value)
     {
+        //Debug.Log("addHorCurSpeed: " + value);
+
         VARS.horCurSpeed += value;
     }
 
     public void SetVerCurSpeed(float value)
     {
+        //Debug.Log("setVerCurSpeed: " + value);
+
         VARS.verCurSpeed = value;
     }
 
     public void AddVerCurSpeed(float value)
     {
+        //Debug.Log("addVerCurSpeed: " + value);
+
         VARS.verCurSpeed += value;
     }
     #endregion
