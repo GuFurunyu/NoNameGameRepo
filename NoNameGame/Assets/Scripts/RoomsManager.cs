@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using Unity.Collections.LowLevel.Unsafe;
+using Unity.VisualScripting;
 using UnityEngine;
 
 [DefaultExecutionOrder((int)ScriptsExecutionOrder.ExecutionOrder.roomsManager)]
@@ -27,11 +29,22 @@ public class RoomsManager : MonoBehaviour
     float twistingAccumulatedDegree;
     Vector3 twistingTargetEulerangles;
 
+    int curMiniMapRotatingDirIndex;
+
+    Vector3 curMiniMapRotationAxis;
+
+    Quaternion curMiniMapRotationTargetQuaternion;
+    Vector3 camMiniMapRotationTargetEulerAngles;
+
+    float accumulatedMiniMapRotationDegree;
+
+    int tempInt;
     float tempFloat1;
     float tempFloat2;
     float tempFloat3;
     float tempFloat4;
     Vector3 tempVector;
+    GameObject tempGameObject;
 
     #region ConstantsUsed
     float gridBreadth;
@@ -50,12 +63,16 @@ public class RoomsManager : MonoBehaviour
 
     float twistSpeed;
 
+    float miniMapRotationSpeed;
+
     Transform camTransform;
 
     Transform catTransform;
     #endregion
 
     #region VariablesUsed
+    GameObject curPlaneEmpty;
+
     Vector3[] roomCenters = new Vector3[54];
     Vector3[] roomStableForwards = new Vector3[54];
     Vector3[] roomStableUps = new Vector3[54];
@@ -81,19 +98,22 @@ public class RoomsManager : MonoBehaviour
         roomPlanes = CONS.roomPlanes;
         twistingCenters = CONS.twistingCenters;
         twistSpeed = CONS.twistSpeed;
+        miniMapRotationSpeed = CONS.miniMapRotationSpeed;
         camTransform = CONS.camTransform;
         catTransform = CONS.catTransform;
-    }
+
+		roomCenters = VARS.roomCenters;
+		roomStableForwards = VARS.roomStableForwards;
+		roomStableUps = VARS.roomStableUps;
+		roomStableRights = VARS.roomStableRights;
+	}
 
     void Update()
     {
-        roomCenters = VARS.roomCenters;
-        roomStableForwards = VARS.roomStableForwards;
-        roomStableUps = VARS.roomStableUps;
-        roomStableRights = VARS.roomStableRights;
+		curPlaneEmpty = VARS.curPlaneEmpty;
 
-        #region IfIsInNewRoom
-        if (UFL.IsInRoom(VARS.curRoomIndex, catTransform.position))
+		#region IfIsInNewRoom
+		if (UFL.IsInRoom(VARS.curRoomIndex, catTransform.position))
         {
         }
         else
@@ -107,53 +127,87 @@ public class RoomsManager : MonoBehaviour
                 }
             }
 
-            VARS.isIntoNewRoom = true;
+            VARS.IsIntoNewRoom = true;
         }
 
-        if (VARS.isIntoNewRoom)
+        if (VARS.IsIntoNewRoom)
         {
             IntoNewRoom();
         }
         #endregion
 
         #region InNewRoomReset
-        if (VARS.isInNewRoomCurRoomManagerResetOver &&
-            VARS.isInNewRoomCameraManagerResetOver &&
-            VARS.isInNewRoomCatRotateResetOver &&
-            VARS.isInNewRoomBlocksManagerResetOver)
+        if (!VARS.IsInNewRoomAllResetOver)
         {
-            VARS.isInNewRoom = false;
+            if (VARS.IsInNewRoomCurRoomManagerResetOver &&
+                VARS.IsInNewRoomCameraManagerResetOver &&
+                VARS.IsInNewRoomCatRotateResetOver &&
+                VARS.IsInNewRoomBlocksManagerResetOver)
+            {
+                //hideOtherPlanes
+                if (!VARS.IsZoomedOut)
+                    UFL.HideOtherPlanes();
 
-            VARS.isInNewRoomAllResetOver = true;
+                VARS.IsInNewRoom = false;
+
+                VARS.IsInNewRoomAllResetOver = true;
+            }
         }
         #endregion
 
-        if (VARS.isInNewRoomAllResetOver)
+        if (VARS.IsInNewRoomAllResetOver)
         {
-            //hideOtherPlanes
-            for(int i = 0; i < roomPlanes.Length; i++)
+            #region Twist
+            //control
+            if (!VARS.IsTwisting)
             {
-                if (i != VARS.curRoomIndex)
+                if (VARS.IsInCenter)
                 {
-                    roomPlanes[i].SetActive(false);
-                }
-                else
-                {
-                    roomPlanes[i].SetActive(true);
+                    if (VARS.IsInputtingDownKey)
+                    {
+                        if (VARS.IsLeftKeyDown ||
+                            VARS.IsRightKeyDown)
+                        {
+                            //getTwistingFaceIndex
+                            tempGameObject = curPlaneEmpty.transform.parent.parent.gameObject;
+                            for (int i = 0; i < 6; i++)
+                            {
+                                if (tempGameObject == faces[i])
+                                {
+                                    VARS.twistingFaceIndex = i + 1;
+                                    break;
+                                }
+                            }
+
+                            //determineTwistingDirection
+                            if (VARS.IsLeftKeyDown)
+                            {
+                                VARS.IsClockwiseTwisting = true;
+                            }
+                            else if (VARS.IsRightKeyDown)
+                            {
+                                VARS.IsClockwiseTwisting = false;
+                            }
+
+                            VARS.IsTwisting = true;
+                        }
+                    }
                 }
             }
 
-            #region Twist
-            if (VARS.isTwisting)
+            //process
+            else
             {
                 if (!isTwistingPresetOver)
                 {
-                    curTwistingCenter = twistingCenters[VARS.twistingFaceIndex - 1];
+                    tempInt = VARS.twistingFaceIndex;
+
+                    curTwistingCenter = twistingCenters[tempInt - 1];
                     curTwistingCenterPosition = curTwistingCenter.transform.position;
 
-                    curFaceStableForward = faceStableForwards[VARS.twistingFaceIndex - 1];
-                    curFaceStableUp = faceStableUps[VARS.twistingFaceIndex - 1];
-                    curFaceStableRight = faceStableRights[VARS.twistingFaceIndex - 1];
+                    curFaceStableForward = faceStableForwards[tempInt - 1];
+                    curFaceStableUp = faceStableUps[tempInt - 1];
+                    curFaceStableRight = faceStableRights[tempInt - 1];
 
                     //getRelatedRoomPlanes
                     for (int i = 0; i < roomPlanes.Length; i++)
@@ -161,15 +215,17 @@ public class RoomsManager : MonoBehaviour
                         tempVector = roomCenters[i] - curTwistingCenterPosition;
 
                         //getRoomPlanesInTheFace
-                        if (Mathf.Abs(Vector3.Dot(tempVector, curFaceStableForward)) <= (roomCoordBreadth / 2 + 2) * gridBreadth)
+                        if (/*Mathf.Abs(Vector3.Dot(tempVector, curFaceStableForward)) <= (roomCoordBreadth / 2 + 2) * gridBreadth*/
+                            UFL.IsPlaneInTheFace(i, tempInt))
                         {
                             curRelatedRoomPlanes.Add(roomPlanes[i]);
                             curRelatedRoomPlaneIndexes.Add(i);
                         }
 
                         //getRoomPlanesSurroundingTheFace
-                        if (Mathf.Abs(Vector3.SignedAngle(tempVector, curFaceStableUp, curFaceStableForward)) <= 6 &&
-                            Mathf.Abs(Vector3.SignedAngle(tempVector, curFaceStableRight, curFaceStableForward)) <= 6)
+                        if (/*Mathf.Abs(Vector3.SignedAngle(tempVector, curFaceStableUp, curFaceStableForward)) <= 6 &&
+                            Mathf.Abs(Vector3.SignedAngle(tempVector, curFaceStableRight, curFaceStableForward)) <= 6*/
+                            UFL.IsPlaneSurroundingTheFace(i, tempInt))
                         {
                             curRelatedRoomPlanes.Add(roomPlanes[i]);
                             curRelatedRoomPlaneIndexes.Add(i);
@@ -187,7 +243,7 @@ public class RoomsManager : MonoBehaviour
                     catTransform.SetParent(curTwistingCenter.transform, true);
 
                     //setTargetEulerangles
-                    if (VARS.isClockwiseTwisting)
+                    if (VARS.IsClockwiseTwisting)
                     {
                         twistingTargetEulerangles = curTwistingCenter.transform.eulerAngles + new Vector3(0, 0, 90);
                     }
@@ -203,7 +259,7 @@ public class RoomsManager : MonoBehaviour
                 if (twistingAccumulatedDegree < 90)
                 {
                     twistingAccumulatedDegree += twistSpeed * Time.deltaTime;
-                    if (VARS.isClockwiseTwisting)
+                    if (VARS.IsClockwiseTwisting)
                     {
                         curTwistingCenter.transform.Rotate(curFaceStableForward * twistSpeed * Time.deltaTime);
                     }
@@ -229,22 +285,121 @@ public class RoomsManager : MonoBehaviour
                     //resetCatEulerangles
                     catTransform.eulerAngles = Vector3.zero;
 
+                    //setMiniMapRoomPlanes
+                    UFL.SetMiniMapRoomPlanesByRoomPlanes();
+
                     isTwistingPresetOver = false;
 
                     twistingAccumulatedDegree = 0;
 
-                    VARS.isIntoNewRoom = true;
+                    VARS.IsIntoNewRoom = true;
 
-                    VARS.isToWriteWorldData = true;
+                    VARS.IsToWriteWorldData = true;
 
-                    VARS.isToDetermineCurActivatedSavePoint = true;
+                    VARS.IsToDetermineCurActivatedSavePointPosition = true;
 
-                    VARS.isTwisting = false;
+                    VARS.IsTwisting = false;
                 }
             }
-            #endregion
-        }
-    }
+			#endregion
+
+			#region MiniMap
+            //intoMiniMap
+            if (!VARS.IsInMiniMap)
+            {
+                //HR
+                if (!VARS.IsZoomedOut)
+                {
+                    if (!VARS.IsInCenter)
+                    {
+                        //if (VARS.IsInputtingUpKey)
+                        //{
+                        //    if (VARS.IsJumpKeyDown)
+                        //    {
+                        if (VARS.IsConfirmKeyDown)
+                        {
+                            UFL.IntoMiniMap();
+
+                            VARS.IsInMiniMap = true;
+                        }
+                        //    }
+                        //}
+                    }
+                }
+            }
+
+            //inMiniMap
+            else
+            {
+                if (!VARS.IsMiniMapRotating)
+                {
+                    //miniMapRotationControl
+                    if (VARS.IsUpKeyDown)
+                    {
+                        VARS.IsMiniMapRotating = true;
+                        curMiniMapRotatingDirIndex = 1;
+                        curMiniMapRotationTargetQuaternion = camTransform.rotation * Quaternion.AngleAxis(-90, Vector3.right);
+                        camMiniMapRotationTargetEulerAngles = curMiniMapRotationTargetQuaternion.eulerAngles;
+                        //Debug.Log(camMiniMapRotationTargetEulerAngles);
+                        accumulatedMiniMapRotationDegree = 0;
+                    }
+                    else if (VARS.IsDownKeyDown)
+                    {
+                        VARS.IsMiniMapRotating = true;
+                        curMiniMapRotatingDirIndex = 2;
+                        curMiniMapRotationTargetQuaternion = camTransform.rotation * Quaternion.AngleAxis(90, Vector3.right);
+                        camMiniMapRotationTargetEulerAngles = curMiniMapRotationTargetQuaternion.eulerAngles;
+                        //Debug.Log(camMiniMapRotationTargetEulerAngles);
+                        accumulatedMiniMapRotationDegree = 0;
+                    }
+                    else if (VARS.IsLeftKeyDown)
+                    {
+                        VARS.IsMiniMapRotating = true;
+                        curMiniMapRotatingDirIndex = 3;
+                        curMiniMapRotationTargetQuaternion = camTransform.rotation * Quaternion.AngleAxis(-90, Vector3.up);
+                        camMiniMapRotationTargetEulerAngles = curMiniMapRotationTargetQuaternion.eulerAngles;
+                        //Debug.Log(camMiniMapRotationTargetEulerAngles);
+                        accumulatedMiniMapRotationDegree = 0;
+                    }
+                    else if (VARS.IsRightKeyDown)
+                    {
+                        VARS.IsMiniMapRotating = true;
+                        curMiniMapRotatingDirIndex = 4;
+                        curMiniMapRotationTargetQuaternion = camTransform.rotation * Quaternion.AngleAxis(90, Vector3.up);
+                        camMiniMapRotationTargetEulerAngles = curMiniMapRotationTargetQuaternion.eulerAngles;
+                        //Debug.Log(camMiniMapRotationTargetEulerAngles);
+                        accumulatedMiniMapRotationDegree = 0;
+                    }
+
+                    //outOfMiniMap
+                    if (VARS.IsConfirmKeyDown)
+                    {
+                        UFL.OutOfMiniMap();
+
+                        VARS.IsInMiniMap = false;
+                    }
+                }
+                //miniMapRotationProcess
+                else
+                {
+                    if (accumulatedMiniMapRotationDegree < 90)
+                    {
+                        UFL.CameraRotateAround(Vector3.zero, curMiniMapRotatingDirIndex, miniMapRotationSpeed * 90 * Time.deltaTime);
+
+                        accumulatedMiniMapRotationDegree += miniMapRotationSpeed * 90 * Time.deltaTime;
+
+                    }
+                    else
+                    {
+                        UFL.SetCameraEulerangles(camMiniMapRotationTargetEulerAngles);
+
+                        VARS.IsMiniMapRotating = false;
+                    }
+                }
+            }
+			#endregion
+		}
+	}
 
     //public bool IsInRoom(int roomIndex, Vector3 position)
     //{
@@ -266,15 +421,15 @@ public class RoomsManager : MonoBehaviour
 
     void IntoNewRoom()
     {
-        VARS.isIntoNewRoom = false;
+        VARS.IsIntoNewRoom = false;
 
-        VARS.isInNewRoom = true;
+        VARS.IsInNewRoom = true;
 
-        VARS.isInNewRoomCurRoomManagerResetOver = false;
-        VARS.isInNewRoomCameraManagerResetOver = false;
-        VARS.isInNewRoomCatRotateResetOver = false;
-        VARS.isInNewRoomBlocksManagerResetOver = false;
-        VARS.isInNewRoomAllResetOver = false;
+        VARS.IsInNewRoomCurRoomManagerResetOver = false;
+        VARS.IsInNewRoomCameraManagerResetOver = false;
+        VARS.IsInNewRoomCatRotateResetOver = false;
+        VARS.IsInNewRoomBlocksManagerResetOver = false;
+        VARS.IsInNewRoomAllResetOver = false;
     }
 
     void ResetCurRelatedPlanes()

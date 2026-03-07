@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UIElements;
 
 [DefaultExecutionOrder((int)ScriptsExecutionOrder.ExecutionOrder.curRoomManager)]
 public class CurRoomManager : MonoBehaviour
@@ -10,9 +11,13 @@ public class CurRoomManager : MonoBehaviour
 
     GameObject gameManager;
 
+    Transform tempTransform;
+    GameObject tempGameObject;
+
     //directions
 
     #region ConstantsUsed
+    GameObject[] faces = new GameObject[6];
     #endregion
 
     #region VariablesUsed
@@ -27,6 +32,8 @@ public class CurRoomManager : MonoBehaviour
         VARS = gameManager.GetComponent<Variables>();
         UFL = gameManager.GetComponent<UniversalFunctionsLibrary>();
         SEC = gameManager.GetComponent<ScriptsExecutionController>();
+
+        faces = CONS.faces;
     }
 
     void Update()
@@ -37,16 +44,16 @@ public class CurRoomManager : MonoBehaviour
 
         //CurRoomInitialize();
 
-        if (VARS.isInNewRoom)
+        if (VARS.IsInNewRoom)
         {
             CurRoomInitialize();
 
             //ifCurRoomNotExploredMarkItExplored
-            if (!VARS.isRoomExplored[curRoomIndex])
+            if (!VARS.IsRoomExplored[curRoomIndex])
             {
-                VARS.isRoomExplored[curRoomIndex] = true;
+                VARS.IsRoomExplored[curRoomIndex] = true;
 
-                VARS.isToWriteCatWorldData = true;
+                VARS.IsToWriteCatWorldData = true;
             }
 
             ////directions
@@ -59,7 +66,7 @@ public class CurRoomManager : MonoBehaviour
 
             //camIniEulerangles = VARS.roomStableForwards[VARS.curRoomIndex] * Vector3.SignedAngle(Vector3.right, iniRight, VARS.roomStableForwards[VARS.curRoomIndex]);
 
-            VARS.isInNewRoomCurRoomManagerResetOver = true;
+            VARS.IsInNewRoomCurRoomManagerResetOver = true;
         }
     }
     //void GetPlaneDirections()
@@ -90,8 +97,23 @@ public class CurRoomManager : MonoBehaviour
     //}
 
     void CurRoomInitialize()
-    {
-        VARS.curRoomCenter = VARS.roomCenters[curRoomIndex];
+	{
+        tempTransform = CONS.roomPlanes[VARS.curRoomIndex].transform;
+        tempGameObject = tempTransform.parent.gameObject;
+
+		for (int i = 0; i < 6; i++)
+        {
+            if (tempGameObject == faces[i])
+            {
+                VARS.curFaceIndex = i + 1;
+
+                break;
+            }
+        }
+
+		VARS.curPlaneEmpty = tempTransform.GetChild(0).gameObject;
+
+		VARS.curRoomCenter = VARS.roomCenters[curRoomIndex];
         VARS.curRoomStableForward = VARS.roomStableForwards[curRoomIndex];
         VARS.curRoomStableUp = VARS.roomStableUps[curRoomIndex];
         VARS.curRoomStableRight = VARS.roomStableRights[curRoomIndex];
@@ -101,7 +123,5 @@ public class CurRoomManager : MonoBehaviour
             VARS.curUp = VARS.curRoomStableUp;
         if (VARS.curRight == Vector3.zero)
             VARS.curRight = VARS.curRoomStableRight;
-
-        VARS.curPlaneEmpty = CONS.roomPlanes[VARS.curRoomIndex].transform.GetChild(0).gameObject;
     }
 }

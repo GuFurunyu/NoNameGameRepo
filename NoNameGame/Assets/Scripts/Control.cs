@@ -45,7 +45,7 @@ public class Control : MonoBehaviour
         //    Debug.Log("inputtingSpace");
         //}
 
-        isKeyCodeChanged = VARS.isKeyCodeChanged;
+        isKeyCodeChanged = VARS.IsKeyCodeChanged;
 
         if (isKeyCodeChanged)
         {
@@ -58,50 +58,78 @@ public class Control : MonoBehaviour
             confirmKeyCode = VARS.confirmKeyCode;
             backKeyCode = VARS.backKeyCode;
 
-            VARS.isKeyCodeChanged = false;
+            VARS.IsKeyCodeChanged = false;
         }
 
-        VARS.isInputtingUpKey = Input.GetKey(upKeyCode);
-        VARS.isInputtingDownKey = Input.GetKey(downKeyCode);
-        if (!VARS.isOptionPanelActivated)
+        if (!VARS.IsRotating &&
+            !VARS.IsTwisting &&
+            !VARS.IsMiniMapRotating &&
+            VARS.IsInNewRoomAllResetOver)
         {
-            VARS.isInputtingLeftKey = Input.GetKey(leftKeyCode);
-            VARS.isInputtingRightKey = Input.GetKey(rightKeyCode);
-            VARS.isInputtingJumpKey = Input.GetKey(jumpKeyCode);
-            VARS.isInputtingDashKey = Input.GetKey(dashKeyCode);
-        }
-        VARS.isInputtingConfirmKey = Input.GetKey(confirmKeyCode);
-        VARS.isInputtingBackKey = Input.GetKey(backKeyCode);
+            VARS.IsInputtingUpKey = Input.GetKey(upKeyCode);
+            VARS.IsInputtingDownKey = Input.GetKey(downKeyCode);
+            if (!VARS.IsOptionPanelActivated)
+            {
+                VARS.IsInputtingLeftKey = Input.GetKey(leftKeyCode);
+                VARS.IsInputtingRightKey = Input.GetKey(rightKeyCode);
+                VARS.IsInputtingJumpKey = Input.GetKey(jumpKeyCode);
+                VARS.IsInputtingDashKey = Input.GetKey(dashKeyCode);
+            }
+            VARS.IsInputtingConfirmKey = Input.GetKey(confirmKeyCode);
+            VARS.IsInputtingBackKey = Input.GetKey(backKeyCode);
 
-        VARS.isUpKeyDown = Input.GetKeyDown(upKeyCode);
-        VARS.isDownKeyDown = Input.GetKeyDown(downKeyCode);
-        if (!VARS.isOptionPanelActivated)
+            VARS.IsUpKeyDown = Input.GetKeyDown(upKeyCode);
+            VARS.IsDownKeyDown = Input.GetKeyDown(downKeyCode);
+            if (!VARS.IsOptionPanelActivated)
+            {
+                VARS.IsLeftKeyDown = Input.GetKeyDown(leftKeyCode);
+                VARS.IsRightKeyDown = Input.GetKeyDown(rightKeyCode);
+                VARS.IsJumpKeyDown = Input.GetKeyDown(jumpKeyCode);
+                VARS.IsDashKeyDown = Input.GetKeyDown(dashKeyCode);
+            }
+            VARS.IsConfirmKeyDown = Input.GetKeyDown(confirmKeyCode);
+            VARS.IsBackKeyDown = Input.GetKeyDown(backKeyCode);
+
+            VARS.IsUpKeyUp = Input.GetKeyUp(upKeyCode);
+            VARS.IsDownKeyUp = Input.GetKeyUp(downKeyCode);
+            if (!VARS.IsOptionPanelActivated)
+            {
+                VARS.IsLeftKeyUp = Input.GetKeyUp(leftKeyCode);
+                VARS.IsRightKeyUp = Input.GetKeyUp(rightKeyCode);
+                VARS.IsJumpKeyUp = Input.GetKeyUp(jumpKeyCode);
+                VARS.IsDashKeyUp = Input.GetKeyUp(dashKeyCode);
+            }
+            VARS.IsConfirmKeyUp = Input.GetKeyUp(upKeyCode);
+            VARS.IsBackKeyUp = Input.GetKeyUp(downKeyCode);
+        }
+        else
         {
-            VARS.isLeftKeyDown = Input.GetKeyDown(leftKeyCode);
-            VARS.isRightKeyDown = Input.GetKeyDown(rightKeyCode);
-            VARS.isJumpKeyDown = Input.GetKeyDown(jumpKeyCode);
-            VARS.isDashKeyDown = Input.GetKeyDown(dashKeyCode);
+            VARS.IsInputtingUpKey = false;
+            VARS.IsInputtingDownKey = false;
+            VARS.IsInputtingLeftKey = false;
+            VARS.IsInputtingRightKey = false;
+            VARS.IsInputtingJumpKey = false;
+            VARS.IsInputtingDashKey = false;
+            VARS.IsInputtingConfirmKey = false;
+            VARS.IsInputtingBackKey = false;
+
+            VARS.IsUpKeyDown = false;
+            VARS.IsDownKeyDown = false;
+            VARS.IsLeftKeyDown = false;
+            VARS.IsRightKeyDown = false;
+            VARS.IsJumpKeyDown = false;
+            VARS.IsDashKeyDown = false;
+            VARS.IsConfirmKeyDown = false;
+            VARS.IsBackKeyDown = false;
+
+            VARS.IsUpKeyUp = false;
+            VARS.IsDownKeyUp = false;
+            VARS.IsLeftKeyUp = false;
+            VARS.IsRightKeyUp = false;
+            VARS.IsJumpKeyUp = false;
+            VARS.IsDashKeyUp = false;
+            VARS.IsConfirmKeyUp = false;
+            VARS.IsBackKeyUp = false;
         }
-        VARS.isConfirmKeyDown = Input.GetKeyDown(confirmKeyCode);
-        VARS.isBackKeyDown = Input.GetKeyDown(backKeyCode);
-
-        ////debug
-        //if (catTransform.position.y < 0)
-        //{
-        //    catTransform.position = new Vector3(catTransform.position.x, 1, catTransform.position.z);
-        //}
-
-        //if (VARS.isInNewRoomAllResetOver)
-        //{
-        //    #region CurRoom
-        //    //camera
-        //    //camTransform.position = RM.roomCenters[RM.curRoomIndex] - RM.roomStableForwards[RM.curRoomIndex] * 8;
-
-        //    //if (leftRotationVector == Vector3.zero)
-        //    //    leftRotationVector = RM.roomStableForwards[RM.curRoomIndex] * -1;
-        //    //if (rightRotationVector == Vector3.zero)
-        //    //    rightRotationVector = RM.roomStableForwards[RM.curRoomIndex] * 1;
-        //    #endregion
-        //}
     }
 }

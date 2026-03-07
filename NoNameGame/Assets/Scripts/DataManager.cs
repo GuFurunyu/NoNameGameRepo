@@ -17,8 +17,13 @@ public class DataManager : MonoBehaviour
 
     public class WorldData
     {
+        //rooms
         public Vector3[] roomPlanePositions = new Vector3[54];
         public Vector3[] roomPlaneEulerangles = new Vector3[54];
+
+        //miniMapRooms
+        public Vector3[] miniMapRoomPlanePositions = new Vector3[54];
+        public Vector3[] miniMapRoomPlaneEulerangles = new Vector3[54];
     }
 
     WorldData curWorldData = new WorldData();
@@ -56,6 +61,7 @@ public class DataManager : MonoBehaviour
     #region ConstantsUsed
     float gridBreadth;
     int roomCoordBreadth;
+    int miniMapRoomCoordBreadth;
 
     GameObject[] faces = new GameObject[6];
     Vector3[] faceStableForwards = new Vector3[6];
@@ -63,6 +69,10 @@ public class DataManager : MonoBehaviour
     GameObject[] roomPlanes = new GameObject[54];
 
     GameObject[] twistingCenters = new GameObject[6];
+
+    GameObject[] miniMapFaces = new GameObject[6];
+    GameObject[] miniMapRoomPlanes = new GameObject[54];
+    GameObject[] miniMapTwistingCenters = new GameObject[6];
     #endregion
 
     #region VariablesUsed
@@ -81,10 +91,14 @@ public class DataManager : MonoBehaviour
 
         gridBreadth = CONS.gridBreadth;
         roomCoordBreadth = CONS.roomCoordBreadth;
+        miniMapRoomCoordBreadth = CONS.miniMapRoomCoordBreadth;
         faces = CONS.faces;
         faceStableForwards = CONS.faceStableForwards;
         roomPlanes = CONS.roomPlanes;
         twistingCenters = CONS.twistingCenters;
+        miniMapFaces = CONS.miniMapFaces;
+        miniMapRoomPlanes = CONS.miniMapRoomPlanes;
+        miniMapTwistingCenters = CONS.miniMapTwistingCenters;
 
         ReadWorldData();
 
@@ -95,25 +109,25 @@ public class DataManager : MonoBehaviour
 
     void Update()
     {
-        if (VARS.isToWriteWorldData)
+        if (VARS.IsToWriteWorldData)
         {
             WriteWorldData();
 
-            VARS.isToWriteWorldData = false;
+            VARS.IsToWriteWorldData = false;
         }
 
-        if (VARS.isToWriteCatWorldData)
+        if (VARS.IsToWriteCatWorldData)
         {
             WriteCatWorldData();
 
-            VARS.isToWriteCatWorldData = false;
+            VARS.IsToWriteCatWorldData = false;
         }
 
-        if (VARS.isToWriteKeyCodesData)
+        if (VARS.IsToWriteKeyCodesData)
         {
             WriteKeyCodesData();
 
-            VARS.isToWriteKeyCodesData = false;
+            VARS.IsToWriteKeyCodesData = false;
         }
     }
 
@@ -129,37 +143,43 @@ public class DataManager : MonoBehaviour
 
             for (int i = 0; i < 54; i++)
             {
+                //rooms
                 tempTransform = roomPlanes[i].transform;
 
-                //Debug.Log("position: " + curWorldData.roomPlanePositions[i]);
-                //Debug.Log("eulerangles: " + curWorldData.roomPlaneEulerangles[i]);
+                tempTransform.position = UFL.Vector3RoundToInt(curWorldData.roomPlanePositions[i]);
+                tempTransform.eulerAngles = UFL.Vector3RoundToInt(curWorldData.roomPlaneEulerangles[i]);
 
-                //if (i == 5)
-                //{
-                //    Debug.Log("position1: " + tempTransform.position);
-                //    Debug.Log("eulerangles1: " + tempTransform.eulerAngles);
-                //    Debug.Log("curActivatedSavePointPosition1: " + CONS.savePoints[VARS.curActivatedSavePointIndex].transform.position);
-                //}
-
-                tempTransform.position = curWorldData.roomPlanePositions[i];
-                tempTransform.eulerAngles = curWorldData.roomPlaneEulerangles[i];
-
-                //if(i==5)
-                //{
-                //    Debug.Log("position2: " + tempTransform.position);
-                //    Debug.Log("eulerangles2: " + tempTransform.eulerAngles);
-                //    Debug.Log("curActivatedSavePointPosition2: " + CONS.savePoints[VARS.curActivatedSavePointIndex].transform.position);
-                //}
-
-                //childToTheFaces
+                //roomPlanesChildToTheFaces
                 for (int j = 0; j < 6; j++)
                 {
-                    tempVector = tempTransform.position - twistingCenters[j].transform.position;
+                    //tempVector = tempTransform.position - twistingCenters[j].transform.position;
 
                     //ifIsInTheFaceChildToIt
-                    if (Mathf.Abs(Vector3.Dot(tempVector, faceStableForwards[j])) <= (roomCoordBreadth / 2 + 2) * gridBreadth)
+                    if (/*Mathf.Abs(Vector3.Dot(tempVector, faceStableForwards[j])) <= (roomCoordBreadth / 2 + 2) * gridBreadth*/
+                        UFL.IsPlaneInTheFace(i, j + 1))
                     {
                         tempTransform.SetParent(faces[j].transform, true);
+
+                        break;
+                    }
+                }
+
+                //miniMapRooms
+                tempTransform = miniMapRoomPlanes[i].transform;
+
+                tempTransform.position = UFL.Vector3RoundToInt(curWorldData.miniMapRoomPlanePositions[i]);
+                tempTransform.eulerAngles = UFL.Vector3RoundToInt(curWorldData.miniMapRoomPlaneEulerangles[i]);
+
+                //miniMapRoomPlanesChildToTheFaces
+                for (int j = 0; j < 6; j++)
+                {
+                    //tempVector = tempTransform.position - miniMapTwistingCenters[j].transform.position;
+
+                    //ifIsInTheFaceChildToIt
+                    if (/*Mathf.Abs(Vector3.Dot(tempVector, faceStableForwards[j])) <= (miniMapRoomCoordBreadth / 2 + 2) * gridBreadth*/
+                        UFL.IsMiniMapPlaneInTheFace(i, j + 1))
+                    {
+                        tempTransform.SetParent(miniMapFaces[j].transform, true);
 
                         break;
                     }
@@ -174,10 +194,17 @@ public class DataManager : MonoBehaviour
 
         for (int i = 0; i < 54; i++)
         {
+            //rooms
             tempTransform = roomPlanes[i].transform;
 
-            curWorldData.roomPlanePositions[i] = tempTransform.position;
-            curWorldData.roomPlaneEulerangles[i] = tempTransform.eulerAngles;
+            curWorldData.roomPlanePositions[i] = UFL.Vector3RoundToInt(tempTransform.position);
+            curWorldData.roomPlaneEulerangles[i] = UFL.Vector3RoundToInt(tempTransform.eulerAngles);
+
+            //miniMapRooms
+            tempTransform = miniMapRoomPlanes[i].transform;
+
+            curWorldData.miniMapRoomPlanePositions[i] = UFL.Vector3RoundToInt(tempTransform.position);
+            curWorldData.miniMapRoomPlaneEulerangles[i] = UFL.Vector3RoundToInt(tempTransform.eulerAngles);
         }
 
         tempJsonString = JsonUtility.ToJson(curWorldData);
@@ -201,9 +228,9 @@ public class DataManager : MonoBehaviour
             VARS.curActivatedSavePointPosition = curCatWorldData.curActivatedSavePointPosition;
 
             //isRoomExplored
-            VARS.isRoomExplored = curCatWorldData.isRoomExplored;
+            VARS.IsRoomExplored = curCatWorldData.isRoomExplored;
 
-            VARS.isToActivateCurSavePoint = true;
+            VARS.IsToActivateCurSavePoint = true;
         }
     }
 
@@ -216,7 +243,7 @@ public class DataManager : MonoBehaviour
         curCatWorldData.curActivatedSavePointPosition = VARS.curActivatedSavePointPosition;
 
         //isRoomExplored
-        curCatWorldData.isRoomExplored = VARS.isRoomExplored;
+        curCatWorldData.isRoomExplored = VARS.IsRoomExplored;
 
         tempJsonString = JsonUtility.ToJson(curCatWorldData);
 

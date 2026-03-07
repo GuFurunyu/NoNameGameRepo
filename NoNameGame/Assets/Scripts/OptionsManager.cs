@@ -84,25 +84,25 @@ public class OptionsManager : MonoBehaviour
     void Update()
     {
         //activateOptionPanel
-        if (VARS.isBackKeyDown)
+        if (VARS.IsBackKeyDown)
         {
             if (!isInKeySetSub)
             {
                 optionsPanel.SetActive(!optionsPanel.activeSelf);
 
-                VARS.isOptionPanelActivated = optionsPanel.activeSelf;
+                VARS.IsOptionPanelActivated = optionsPanel.activeSelf;
 
                 curOptionIndex = 0;
             }
         }
 
-        if (VARS.isOptionPanelActivated)
+        if (VARS.IsOptionPanelActivated)
         {
             #region Options
             if (!isInKeySetSub)
             {
                 //chooseOptions
-                if (VARS.isDownKeyDown)
+                if (VARS.IsDownKeyDown)
                 {
                     curOptionIndex++;
 
@@ -111,7 +111,7 @@ public class OptionsManager : MonoBehaviour
                         curOptionIndex = optionEmpties.Count - 1;
                     }
                 }
-                else if (VARS.isUpKeyDown)
+                else if (VARS.IsUpKeyDown)
                 {
                     curOptionIndex--;
 
@@ -137,7 +137,7 @@ public class OptionsManager : MonoBehaviour
             {
                 //intoKeySetSub
                 if (!isInKeySetSub &&
-                    VARS.isConfirmKeyDown)
+                    VARS.IsConfirmKeyDown)
                 {
                     isFromOptionsToKeySetSub = true;
                 }
@@ -152,7 +152,7 @@ public class OptionsManager : MonoBehaviour
 
                     //Input.ResetInputAxes();
 
-                    VARS.isConfirmKeyDown = false;
+                    VARS.IsConfirmKeyDown = false;
                 }
 
                 if (isInKeySetSub)
@@ -160,7 +160,7 @@ public class OptionsManager : MonoBehaviour
                     //chooseKeys
                     if (!isSettingAKey)
                     {
-                        if (VARS.isDownKeyDown)
+                        if (VARS.IsDownKeyDown)
                         {
                             curKeySetSubIndex++;
 
@@ -169,7 +169,7 @@ public class OptionsManager : MonoBehaviour
                                 curKeySetSubIndex = keySetSubEmpties.Count - 1;
                             }
                         }
-                        else if (VARS.isUpKeyDown)
+                        else if (VARS.IsUpKeyDown)
                         {
                             curKeySetSubIndex--;
 
@@ -197,7 +197,7 @@ public class OptionsManager : MonoBehaviour
                     //toSetAKey
                     if (!isSettingAKey &&
                         curKeySetSubIndex < keySetSubEmpties.Count - 1 &&
-                        VARS.isConfirmKeyDown)
+                        VARS.IsConfirmKeyDown)
                     {
                         isSettingAKey = true;
 
@@ -243,9 +243,9 @@ public class OptionsManager : MonoBehaviour
                                 keySetSubEmpties[curKeySetSubIndex].transform.GetChild(2).GetComponent<SpriteRenderer>().sprite = keySprites[curSetKeyIndex];
                                 keySetSubEmpties[curKeySetSubIndex].transform.GetChild(3).GetComponent<SpriteRenderer>().sprite = keyChosenSprites[curSetKeyIndex];
 
-                                VARS.isToWriteKeyCodesData = true;
+                                VARS.IsToWriteKeyCodesData = true;
 
-                                VARS.isKeyCodeChanged = true;
+                                VARS.IsKeyCodeChanged = true;
 
                                 isSettingAKey = false;
                             }
@@ -254,8 +254,8 @@ public class OptionsManager : MonoBehaviour
 
                     //ok
                     if ((curKeySetSubIndex == keySetSubEmpties.Count - 1 &&
-                        VARS.isConfirmKeyDown) ||
-                        VARS.isBackKeyDown)
+                        VARS.IsConfirmKeyDown) ||
+                        VARS.IsBackKeyDown)
                     {
                         isFromKeySetSubToOptions = true;
                     }
@@ -279,7 +279,7 @@ public class OptionsManager : MonoBehaviour
             #region Exit
             if (curOptionIndex == 1)
             {
-                if (VARS.isConfirmKeyDown)
+                if (VARS.IsConfirmKeyDown)
                 {
                     #if UNITY_EDITOR
                     UnityEditor.EditorApplication.isPlaying = false;

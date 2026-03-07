@@ -52,11 +52,11 @@ public class CatDeath : MonoBehaviour
 
     void Update()
     {
-        if (VARS.isToDie)
+        if (VARS.IsToDie)
         {
             Die();
 
-            VARS.isToDie = false;
+            VARS.IsToDie = false;
         }
     }
     void Die()
@@ -83,7 +83,7 @@ public class CatDeath : MonoBehaviour
         //VARS.verCurSpeed = 0;
         UFL.SetVerCurSpeed(0);
 
-        VARS.isToInitializeSight = true;
+        VARS.IsToInitializeSight = true;
 
         VARS.outIniRotationStartTime = 0.1f;
 
@@ -98,8 +98,8 @@ public class CatDeath : MonoBehaviour
         //carriedStrawberries.Clear();
         //carriedStrawberriesIniPositions.Clear();
 
-        VARS.isToLoseCarriedStrawberries = true;
+        VARS.IsToLoseCarriedStrawberries = true;
 
-        VARS.isIntoNewRoom = true;
+        VARS.IsIntoNewRoom = true;
     }
 }

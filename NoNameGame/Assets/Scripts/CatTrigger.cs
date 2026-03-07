@@ -120,19 +120,19 @@ public class CatTrigger : MonoBehaviour
         curRoomStableForward = VARS.curRoomStableForward;
         curRight = VARS.curRight;
         curUp = VARS.curUp;
-        isOnGround = VARS.isOnGround;
-        isInLiquid = VARS.isInLiquid;
+        isOnGround = VARS.IsOnGround;
+        isInLiquid = VARS.IsInLiquid;
         curTriggerTile = VARS.curTriggerTile;
         curTriggerTileData = VARS.curTriggerTileData;
 
         #region Strawberries
-        if (!VARS.isRotating && 
-            !VARS.isTwisting)
+        if (!VARS.IsRotating && 
+            !VARS.IsTwisting)
         {
             //lose
-            if (VARS.isToLoseCarriedStrawberries)
+            if (VARS.IsToLoseCarriedStrawberries)
             {
-                VARS.isCarryingStrawberries = false;
+                VARS.IsCarryingStrawberries = false;
 
                 for (int i = 0; i < carriedStrawberries.Count; i++)
                 {
@@ -144,18 +144,18 @@ public class CatTrigger : MonoBehaviour
             }
 
             //get
-            if (VARS.isGettingAStrawberry)
+            if (VARS.IsGettingAStrawberry)
             {
-                VARS.isCarryingStrawberries = true;
+                VARS.IsCarryingStrawberries = true;
 
                 carriedStrawberries.Add(curTriggerTile);
                 carriedStrawberriesIniPositions.Add(curTriggerTile.transform.position);
 
-                VARS.isGettingAStrawberry = false;
+                VARS.IsGettingAStrawberry = false;
             }
 
             //carry
-            if (VARS.isCarryingStrawberries)
+            if (VARS.IsCarryingStrawberries)
             {
                 for (int i = 0; i < carriedStrawberries.Count; i++)
                 {
@@ -166,7 +166,7 @@ public class CatTrigger : MonoBehaviour
                 }
             }
             //collect
-            else if (VARS.isCollectingStrawberries)
+            else if (VARS.IsCollectingStrawberries)
             {
                 if (carriedStrawberries.Count > 0)
                 {
@@ -188,22 +188,22 @@ public class CatTrigger : MonoBehaviour
                         carriedStrawberries.Clear();
                         carriedStrawberriesIniPositions.Clear();
 
-                        VARS.isCollectingStrawberries = false;
+                        VARS.IsCollectingStrawberries = false;
                     }
                 }
                 else
                 {
-                    VARS.isCollectingStrawberries = false;
+                    VARS.IsCollectingStrawberries = false;
                 }
             }
         }
         #endregion
 
         #region EnergyCrystals
-        if (!VARS.isRotating && 
-            !VARS.isTwisting)
+        if (!VARS.IsRotating && 
+            !VARS.IsTwisting)
         {
-            if (VARS.isGettingAnEnergyCrystal)
+            if (VARS.IsGettingAnEnergyCrystal)
             {
                 gotEnergyCrystals.Add(curTriggerTile);
                 energyCrystalGotTimes.Add(Time.time);
@@ -216,7 +216,7 @@ public class CatTrigger : MonoBehaviour
                     VARS.curEnergy = maxEnergy;
                 }
 
-                VARS.isGettingAnEnergyCrystal = false;
+                VARS.IsGettingAnEnergyCrystal = false;
             }
 
             if (gotEnergyCrystals.Count > 0)
@@ -246,7 +246,7 @@ public class CatTrigger : MonoBehaviour
         #endregion
 
         #region EdgeGate
-        if (VARS.isEnteringAnEdgeGate)
+        if (VARS.IsEnteringAnEdgeGate)
         {
             //ifIsGapTimeOver
             if (Time.time - throughEdgeGateTime > throughEdgeGateGapTime)
@@ -277,7 +277,7 @@ public class CatTrigger : MonoBehaviour
                 //curEdgeGatesBetweenVector = curToEdgeGate.transform.position - curTile.transform.position;
 
                 //toNewRoom
-                if (VARS.isEdgeGateTriggered)
+                if (VARS.IsEdgeGateTriggered)
                 {
                     Debug.Log("enter");
 
@@ -300,7 +300,7 @@ public class CatTrigger : MonoBehaviour
                         curRight = Vector3.Cross(curEdgeGatesCommonLineVector, curRight);
                     }
 
-                    VARS.isEdgeGateTriggered = false;
+                    VARS.IsEdgeGateTriggered = false;
 
                     throughEdgeGateTime = Time.time;
                 }
@@ -309,45 +309,46 @@ public class CatTrigger : MonoBehaviour
         #endregion
 
         #region SavePoint
-        if (VARS.isToActivateASavePoint)
+        if (VARS.IsToActivateASavePoint)
         {
-            //deactivateTheLastSavePoint
-            //if (VARS.curActivatedSavePoint != null)
-            //{
-            //    VARS.curActivatedSavePoint.SetActive(true);
-            //}
+			//deactivateTheLastSavePoint
+			//if (VARS.curActivatedSavePoint != null)
+			//{
+			//    VARS.curActivatedSavePoint.SetActive(true);
+			//}
 
-            VARS.isToDetermineCurActivatedSavePoint = true;
+			savePoints[VARS.curActivatedSavePointIndex].SetActive(true);
 
-            VARS.isToActivateCurSavePoint = true;
+			//determineCurActivatedSavePoint
+			for (int i = 0; i < savePoints.Count; i++)
+			{
+				if (savePoints[i] == curTriggerTile)
+				{
+					VARS.curActivatedSavePointIndex = i;
 
-            VARS.isToActivateASavePoint = false;
+					break;
+				}
+			}
+
+			VARS.IsToDetermineCurActivatedSavePointPosition = true;
+
+            VARS.IsToActivateCurSavePoint = true;
+
+            VARS.IsToActivateASavePoint = false;
         }
 
-        if (VARS.isToDetermineCurActivatedSavePoint)
-        {
-            savePoints[VARS.curActivatedSavePointIndex].SetActive(true);
+        if (VARS.IsToDetermineCurActivatedSavePointPosition)
+		{
+			VARS.curActivatedSavePointPosition = CONS.savePoints[VARS.curActivatedSavePointIndex].transform.position;
 
-            //determineCurActivatedSavePoint
-            for (int i = 0; i < savePoints.Count; i++)
-            {
-                if (savePoints[i] == curTriggerTile)
-                {
-                    VARS.curActivatedSavePointIndex = i;
-                    VARS.curActivatedSavePointPosition = savePoints[i].transform.position;
+			//Debug.Log(VARS.curActivatedSavePointPosition);
 
-                    Debug.Log(VARS.curActivatedSavePointPosition);
+			VARS.IsToWriteCatWorldData = true;
 
-                    break;
-                }
-            }
-
-            VARS.isToWriteCatWorldData = true;
-
-            VARS.isToDetermineCurActivatedSavePoint = false;
+            VARS.IsToDetermineCurActivatedSavePointPosition = false;
         }
 
-        if (VARS.isToActivateCurSavePoint)
+        if (VARS.IsToActivateCurSavePoint)
         {
             //activateCurSavePoint
             //storedActivatedSavePointBlock.transform.position = VARS.curActivatedSavePoint.transform.position;
@@ -372,60 +373,25 @@ public class CatTrigger : MonoBehaviour
 
             //Debug.Log("catPosition:" + catTransform.position);
 
-            VARS.isToActivateCurSavePoint = false;
-        }
-        #endregion
-
-        #region Center
-        if (VARS.isInCenter)
-        {
-            if (VARS.isInputtingDownKey)
-            {
-                if (VARS.isLeftKeyDown ||
-                    VARS.isRightKeyDown)
-                {
-                    //getTwistingFaceIndex
-                    tempGameObject = curPlaneEmpty.transform.parent.parent.gameObject;
-                    for (int i = 0; i < 6; i++)
-                    {
-                        if (tempGameObject == faces[i])
-                        {
-                            VARS.twistingFaceIndex = i + 1;
-                            break;
-                        }
-                    }
-
-                    //determineTwistingDirection
-                    if (VARS.isLeftKeyDown)
-                    {
-                        VARS.isClockwiseTwisting = true;
-                    }
-                    else if (VARS.isRightKeyDown)
-                    {
-                        VARS.isClockwiseTwisting = false;
-                    }
-
-                    VARS.isTwisting = true;
-                }
-            }
+            VARS.IsToActivateCurSavePoint = false;
         }
         #endregion
 
         #region OnGroundOrInLiquidReset
-        if (!VARS.isRotating && 
-            !VARS.isTwisting)
+        if (!VARS.IsRotating && 
+            !VARS.IsTwisting)
         {
-            if (VARS.isOnGround ||
-                VARS.isInLiquid)
+            if (VARS.IsOnGround ||
+                VARS.IsInLiquid)
             {
-                if (VARS.isIniRotation)
+                if (VARS.IsIniRotation)
                 {
                     //strawberries
-                    if (VARS.isCarryingStrawberries)
+                    if (VARS.IsCarryingStrawberries)
                     {
-                        VARS.isCollectingStrawberries = true;
+                        VARS.IsCollectingStrawberries = true;
 
-                        VARS.isCarryingStrawberries = false;
+                        VARS.IsCarryingStrawberries = false;
                     }
                 }
             }

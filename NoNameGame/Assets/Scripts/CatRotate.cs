@@ -106,26 +106,28 @@ public class CatRotate : MonoBehaviour
         curUp = VARS.curUp;
         curRight = VARS.curRight;
         camIniEulerangles = VARS.camIniEulerangles;
-        isOnGround = VARS.isOnGround;
-        isInLiquid = VARS.isInLiquid;
+        isOnGround = VARS.IsOnGround;
+        isInLiquid = VARS.IsInLiquid;
         //horCurSpeed = VARS.horCurSpeed;
         //verCurSpeed = VARS.verCurSpeed;
-        isCatStill = VARS.isCatStill;
+        isCatStill = VARS.IsCatStill;
         rotationRestNum = VARS.rotationRestNum;
         //curEnergy = VARS.curEnergy;
 
         #region Rotate
-        if (VARS.isInNewRoom)
+        if (VARS.IsInNewRoom)
         {
             //ifNotByDeath
             if (VARS.outIniRotationStartTime != 0.1f)
                 VARS.outIniRotationStartTime = 0;
 
-            VARS.isInNewRoomCatRotateResetOver = true;
+            VARS.IsInNewRoomCatRotateResetOver = true;
         }
 
-        if (!VARS.isRotating &&
-            !VARS.isTwisting)
+        if (!VARS.IsRotating &&
+            !VARS.IsTwisting &&
+            !VARS.IsInMiniMap &&
+            VARS.IsInNewRoomAllResetOver)
         {
             //ifIsIniRotation
             if (/*curRight == iniRight*/
@@ -135,7 +137,7 @@ public class CatRotate : MonoBehaviour
                 (camTransform.eulerAngles.z + 360) % 360 == (camIniEulerangles.z + 360) % 360*/
                 curRight == curRoomStableRight)
             {
-                VARS.isIniRotation = true;
+                VARS.IsIniRotation = true;
             }
             else
             {
@@ -143,12 +145,12 @@ public class CatRotate : MonoBehaviour
                 //print(camTransform.eulerAngles);
                 //print(camIniEulerangles);
 
-                VARS.isIniRotation = false;
+                VARS.IsIniRotation = false;
 
                 outIniRotationDegree = Vector3.SignedAngle(curRoomStableRight, curRight, curRoomStableForward);
 
-                if (!VARS.isRotating &&
-                    !VARS.isTwisting)
+                if (!VARS.IsRotating &&
+                    !VARS.IsTwisting)
                 {
                     if (VARS.outIniRotationStartTime == 0)
                     {
@@ -158,7 +160,7 @@ public class CatRotate : MonoBehaviour
             }
 
             //returnIniRotation
-            if (!VARS.isIniRotation &&
+            if (!VARS.IsIniRotation &&
                 Time.time - VARS.outIniRotationStartTime >= returnIniRotationTime &&
                 !isCatStill)
             {
@@ -167,7 +169,7 @@ public class CatRotate : MonoBehaviour
 
                 targetDegree = Mathf.Abs(outIniRotationDegree);
 
-                VARS.isRotating = true;
+                VARS.IsRotating = true;
 
                 isIniRotated = true;
 
@@ -183,44 +185,44 @@ public class CatRotate : MonoBehaviour
 
             //rotationControl
             if (rotationRestNum > 0 &&
-                !VARS.isInCenter)
+                !VARS.IsInCenter)
             {
                 if (VARS.curEnergy > rotationEnergyCost)
                 {
-                    if (VARS.isInputtingDownKey)
+                    if (VARS.IsInputtingDownKey)
                     {
-                        if (VARS.isInputtingLeftKey)
+                        if (VARS.IsInputtingLeftKey)
                         {
                             //startEulerangles = camTransform.eulerAngles;
                             targetDegree = 90;
                             targetEulerangles = camTransform.eulerAngles + leftRotationVector * targetDegree;
 
-                            VARS.isRotating = true;
+                            VARS.IsRotating = true;
 
                             isLeftRotated = true;
 
                             isIniRotated = false;
 
-                            VARS.isIniRotation = false;
+                            VARS.IsIniRotation = false;
 
                             rotationRestNum--;
 
                             //curEnergy -= rotationEnergyCost;
                             UFL.AddCurEnergy(-rotationEnergyCost);
                         }
-                        else if (VARS.isInputtingRightKey)
+                        else if (VARS.IsInputtingRightKey)
                         {
                             //startEulerangles = camTransform.eulerAngles;
                             targetDegree = 90;
                             targetEulerangles = camTransform.eulerAngles + rightRotationVector * targetDegree;
 
-                            VARS.isRotating = true;
+                            VARS.IsRotating = true;
 
                             isLeftRotated = false;
 
                             isIniRotated = false;
 
-                            VARS.isIniRotation = false;
+                            VARS.IsIniRotation = false;
 
                             rotationRestNum--;
 
@@ -232,7 +234,7 @@ public class CatRotate : MonoBehaviour
             }
         }
         //rotationProcess
-        else if (VARS.isRotating)
+        else if (VARS.IsRotating)
         {
             if (accumulatedDegree - targetDegree < rotationEndThres &&
                 targetDegree != 0)
@@ -271,7 +273,7 @@ public class CatRotate : MonoBehaviour
                 accumulatedDegree = 0;
                 //rotationStepAccumulatedDegree = 0;
 
-                VARS.isRotating = false;
+                VARS.IsRotating = false;
 
                 VARS.outIniRotationStartTime = 0;
 
@@ -318,24 +320,24 @@ public class CatRotate : MonoBehaviour
         if (rotationRestNum == 0)
         {
             //cat.GetComponent<MeshRenderer>().material = fadedColor;
-            VARS.isInFadedColor = true;
+            VARS.IsInFadedColor = true;
         }
         else
         {
             //cat.GetComponent<MeshRenderer>().material = normalColor;
-            VARS.isInFadedColor = false;
+            VARS.IsInFadedColor = false;
         }
         #endregion
 
         #region OnGroundOrInLiquidReset
-        if (!VARS.isRotating &&
-            !VARS.isTwisting)
+        if (!VARS.IsRotating &&
+            !VARS.IsTwisting)
         {
             if (isOnGround ||
                 isInLiquid)
             {
                 //rotationRestNumRestore
-                if (VARS.isIniRotation)
+                if (VARS.IsIniRotation)
                 {
                     if (rotationNumRestoreStartTime == 0)
                     {

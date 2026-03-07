@@ -39,13 +39,13 @@ public class CatEnergy : MonoBehaviour
 
     void Update()
     {
-        isOnGround=VARS.isOnGround;
-        isInLiquid = VARS.isInLiquid;
+        isOnGround=VARS.IsOnGround;
+        isInLiquid = VARS.IsInLiquid;
         //curEnergy = VARS.curEnergy;
 
         #region OnGroundOrInLiquidReset
-        if (!VARS.isRotating && 
-            !VARS.isTwisting)
+        if (!VARS.IsRotating && 
+            !VARS.IsTwisting)
         {
             if (isOnGround ||
                 isInLiquid)
@@ -90,7 +90,7 @@ public class CatEnergy : MonoBehaviour
         //outOfEnergy
         if (VARS.curEnergy <= 0)
         {
-            VARS.isToDie = true;
+            VARS.IsToDie = true;
         }
 
         //VARS.curEnergy = curEnergy;

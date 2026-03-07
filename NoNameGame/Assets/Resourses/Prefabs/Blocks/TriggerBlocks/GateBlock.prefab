@@ -300,7 +300,7 @@ MonoBehaviour:
   isPlatform: 0
   isNotClimbable: 0
   sharpDirVector: {x: 0, y: 0, z: 0}
-  toughness: 0
+  toughness: 999
   elasticity: 0
   tackiness: 0
   friction: 1

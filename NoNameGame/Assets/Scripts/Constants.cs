@@ -20,6 +20,7 @@ public class Constants : MonoBehaviour
     //breadth
     public float gridBreadth;
     public int roomCoordBreadth;
+    public int miniMapRoomCoordBreadth;
 
     //inRoomMaxForwardDistance
     public float inRoomMaxForwardDistance;
@@ -50,6 +51,12 @@ public class Constants : MonoBehaviour
     //twist
     public GameObject[] twistingCenters = new GameObject[6];
     public float twistSpeed;
+
+    //miniMap
+    public GameObject[] miniMapFaces = new GameObject[6];
+    public GameObject[] miniMapRoomPlanes = new GameObject[54];
+    public GameObject[] miniMapTwistingCenters = new GameObject[6];
+    public float miniMapRotationSpeed;
     #endregion
 
     #region CurRoomManager
@@ -74,6 +81,20 @@ public class Constants : MonoBehaviour
     public GameObject initialSightMasksEmpty;
     public float initialSightMasksSpeed;
     public float initialSightMasksMaxDistance;
+
+    //zoomSpeed
+    public float zoomSpeed;
+
+    //zoomInAutoTriggerTime
+    public float zoomInAutoTriggerTime;
+
+    //size
+    public float camNormalSize;
+    public float camZoomedOutMaxSize;
+    public float camMiniMapSize;
+
+    //distance
+    public float camMiniMapDistanceToCubeCore;
     #endregion
 
     #region Cat

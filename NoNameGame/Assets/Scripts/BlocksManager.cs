@@ -216,7 +216,7 @@ public class BlocksManager : MonoBehaviour
         curUp = VARS.curUp;
         curRight = VARS.curRight;
 
-        if (VARS.isInNewRoom)
+        if (VARS.IsInNewRoom)
         {
             if (VARS.curPlaneEmpty == null)
                 VARS.curPlaneEmpty = CONS.roomPlanes[VARS.curRoomIndex].transform.GetChild(0).gameObject;
@@ -359,10 +359,10 @@ public class BlocksManager : MonoBehaviour
                 }
             }
 
-            VARS.isInNewRoomBlocksManagerResetOver = true;
+            VARS.IsInNewRoomBlocksManagerResetOver = true;
         }
 
-        if (VARS.isInNewRoomAllResetOver)
+        if (VARS.IsInNewRoomAllResetOver)
         {
             ////sortCurBlocks
             //SortCurBlocks();
@@ -701,7 +701,7 @@ public class BlocksManager : MonoBehaviour
             #endregion
 
             #region FluidContinuousnessOptimization
-            if (VARS.isFluidContinuousnessOptimizationActivated)
+            if (VARS.IsFluidContinuousnessOptimizationActivated)
             {
                 //filterOutTheHolesCausedByTheBlocksMoved
                 for (int i = curMovedBlockCoordVectors.Count - 1; i >= 0; i--)
@@ -900,7 +900,7 @@ public class BlocksManager : MonoBehaviour
 
     void CurBlockMove(int curBlockIndex, int dirIndex, bool isFluid = true)
     {
-        if (VARS.isFluidContinuousnessOptimizationActivated &&
+        if (VARS.IsFluidContinuousnessOptimizationActivated &&
             isFluid)
         {
             //curMovedBlockIndexes.Add(curBlockIndex);

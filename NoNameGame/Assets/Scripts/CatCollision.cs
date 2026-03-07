@@ -179,8 +179,8 @@ public class CatCollision : MonoBehaviour
         mistRightRay = new Ray(leftPoint, curRight);
         #endregion        
 
-        if (!VARS.isRotating &&
-            !VARS.isTwisting)
+        if (!VARS.IsRotating &&
+            !VARS.IsTwisting)
         {
             #region OnGroundDetect
             if (Physics.Raycast(downRay1, out downHit1, rayDistance - VARS.verCurSpeed / 1000) ||
@@ -196,14 +196,14 @@ public class CatCollision : MonoBehaviour
                 }
             }
 
-            if (VARS.groundDetected)
+            if (VARS.IsGroundDetected)
             {
-                VARS.groundDetected = false;
-                VARS.isOnGround = true;
+                VARS.IsGroundDetected = false;
+                VARS.IsOnGround = true;
             }
             else
             {
-                VARS.isOnGround = false;
+                VARS.IsOnGround = false;
             }
             #endregion
 
@@ -221,14 +221,14 @@ public class CatCollision : MonoBehaviour
                 }
             }
 
-            if (VARS.ceilingDetected)
+            if (VARS.IsCeilingDetected)
             {
-                VARS.ceilingDetected = false;
-                VARS.isToCeiling = true;
+                VARS.IsCeilingDetected = false;
+                VARS.IsToCeiling = true;
             }
             else
             {
-                VARS.isToCeiling = false;
+                VARS.IsToCeiling = false;
             }
             #endregion
 
@@ -246,14 +246,14 @@ public class CatCollision : MonoBehaviour
                 }
             }
 
-            if (VARS.leftBlockDetected)
+            if (VARS.IsLeftBlockDetected)
             {
-                VARS.leftBlockDetected = false;
-                VARS.isLeftBlocked = true;
+                VARS.IsLeftBlockDetected = false;
+                VARS.IsLeftBlocked = true;
             }
             else
             {
-                VARS.isLeftBlocked = false;
+                VARS.IsLeftBlocked = false;
             }
 
             if (Physics.Raycast(rightRay1, out rightHit1, rayDistance + VARS.horCurSpeed / 1000) ||
@@ -269,14 +269,14 @@ public class CatCollision : MonoBehaviour
                 }
             }
 
-            if (VARS.rightBlockDetected)
+            if (VARS.IsRightBlockDetected)
             {
-                VARS.rightBlockDetected = false;
-                VARS.isRightBlocked = true;
+                VARS.IsRightBlockDetected = false;
+                VARS.IsRightBlocked = true;
             }
             else
             {
-                VARS.isRightBlocked = false;
+                VARS.IsRightBlocked = false;
             }
             #endregion
 
@@ -294,10 +294,10 @@ public class CatCollision : MonoBehaviour
                 }
             }
 
-            if (VARS.liquidDetected)
+            if (VARS.IsLiquidDetected)
             {
                 //intoLiquidSlowDown
-                if (!VARS.isInLiquid)
+                if (!VARS.IsInLiquid)
                 {
                     if (Mathf.Abs(VARS.verCurSpeed) > verMaxSpeed / 2)
                     {
@@ -307,13 +307,13 @@ public class CatCollision : MonoBehaviour
                     }
                 }
 
-                VARS.liquidDetected = false;
-                VARS.isInLiquid = true;
+                VARS.IsLiquidDetected = false;
+                VARS.IsInLiquid = true;
             }
             else
             {
                 //outLiquidSlowDown
-                if (VARS.isInLiquid)
+                if (VARS.IsInLiquid)
                 {
                     if (Mathf.Abs(VARS.verCurSpeed) > verMaxSpeed / 2)
                     {
@@ -322,7 +322,7 @@ public class CatCollision : MonoBehaviour
                     }
                 }
 
-                VARS.isInLiquid = false;
+                VARS.IsInLiquid = false;
             }
             #endregion
 
@@ -340,19 +340,19 @@ public class CatCollision : MonoBehaviour
                 }
             }
 
-            if (VARS.gasDetected)
+            if (VARS.IsGasDetected)
             {
-                VARS.gasDetected = false;
-                VARS.isInGas = true;
+                VARS.IsGasDetected = false;
+                VARS.IsInGas = true;
             }
             else
             {
-                VARS.isInGas = false;
+                VARS.IsInGas = false;
             }
 
             //mightAdoptedTigherVersion
-            //VARS.isInGas = VARS.gasDetected;
-            //VARS.gasDetected = false;
+            //VARS.IsInGas = VARS.IsGasDetected;
+            //VARS.IsGasDetected = false;
             #endregion
 
             #region MistDetect
@@ -379,27 +379,27 @@ public class CatCollision : MonoBehaviour
                 }
             }
 
-            if (VARS.mistDetected)
+            if (VARS.IsMistDetected)
             {
-                VARS.mistDetected = false;
-                VARS.isInMist = true;
+                VARS.IsMistDetected = false;
+                VARS.IsInMist = true;
             }
             else
             {
-                VARS.isInMist = false;
+                VARS.IsInMist = false;
             }
             #endregion
         }
         #endregion
 
         #region OnGroundOrInLiquidReset
-        if (!VARS.isRotating &&
-            !VARS.isTwisting)
+        if (!VARS.IsRotating &&
+            !VARS.IsTwisting)
         {
-            if (VARS.isOnGround ||
-                VARS.isInLiquid)
+            if (VARS.IsOnGround ||
+                VARS.IsInLiquid)
             {
-                VARS.isAttachWall = false;
+                VARS.IsAttachWall = false;
             }
         }
         #endregion
@@ -520,7 +520,7 @@ public class CatCollision : MonoBehaviour
                     //void
                     if (curTileData.blockTypeIndex == 2010)
                     {
-                        VARS.isToDie = true;
+                        VARS.IsToDie = true;
                     }
 
                     switch (dirIndex)
@@ -528,21 +528,21 @@ public class CatCollision : MonoBehaviour
                         case 1:
                             VARS.curUpTileData = curTileData;
                             if (!curTileData.isPlatform)
-                                VARS.ceilingDetected = true;
+                                VARS.IsCeilingDetected = true;
                             break;
                         case 2:
                             VARS.curDownTileData = curTileData;
-                            VARS.groundDetected = true; ;
+                            VARS.IsGroundDetected = true; ;
                             break;
                         case 3:
                             VARS.curLeftTileData = curTileData;
                             if (!curTileData.isPlatform)
-                                VARS.leftBlockDetected = true;
+                                VARS.IsLeftBlockDetected = true;
                             break;
                         case 4:
                             VARS.curRightTileData = curTileData;
                             if (!curTileData.isPlatform)
-                                VARS.rightBlockDetected = true; ;
+                                VARS.IsRightBlockDetected = true; ;
                             break;
                     }
 
@@ -577,7 +577,7 @@ public class CatCollision : MonoBehaviour
                         //    {
                         //        //Die();
 
-                        //        VARS.isToDie = true;
+                        //        VARS.IsToDie = true;
                         //    }
                         //}
 
@@ -641,7 +641,7 @@ public class CatCollision : MonoBehaviour
                         VARS.buoyancyDistanceFixFloat = 0;
                     }
 
-                    VARS.liquidDetected = true;
+                    VARS.IsLiquidDetected = true;
 
                     breakingPower = 0;
                 }
@@ -651,7 +651,7 @@ public class CatCollision : MonoBehaviour
                 {
                     VARS.curGasTileData = curTileData;
 
-                    VARS.gasDetected = true;
+                    VARS.IsGasDetected = true;
 
                     breakingPower = 0;
                 }
@@ -660,7 +660,7 @@ public class CatCollision : MonoBehaviour
                 {
                     VARS.curMistTileData = curTileData;
 
-                    VARS.mistDetected = true;
+                    VARS.IsMistDetected = true;
 
                     breakingPower = 0;
                 }
@@ -679,7 +679,7 @@ public class CatCollision : MonoBehaviour
                     //carriedStrawberries.Add(curTile);
                     //carriedStrawberriesIniPositions.Add(curTile.transform.position);
 
-                    VARS.isGettingAStrawberry = true;
+                    VARS.IsGettingAStrawberry = true;
                 }
 
                 //energyCrystal(get)
@@ -687,7 +687,7 @@ public class CatCollision : MonoBehaviour
                 {
                     if (curTile.transform.localScale != Vector3.one * 0.2f)
                     {
-                        VARS.isGettingAnEnergyCrystal = true;
+                        VARS.IsGettingAnEnergyCrystal = true;
                     }
                 }
 
@@ -700,19 +700,19 @@ public class CatCollision : MonoBehaviour
                 //edgeGate(enter)
                 else if (curTileData.triggerTypeIndex == 4)
                 {
-                    VARS.isEnteringAnEdgeGate = true;
+                    VARS.IsEnteringAnEdgeGate = true;
                 }
 
                 //edgeGateTrigger(triggerEdgeGate)
                 else if (curTileData.triggerTypeIndex == 5)
                 {
-                    VARS.isEdgeGateTriggered = true;
+                    VARS.IsEdgeGateTriggered = true;
                 }
 
                 //activateSavePoint(notActiavted)
                 else if (curTileData.triggerTypeIndex == 6)
                 {
-                    VARS.isToActivateASavePoint = true;
+                    VARS.IsToActivateASavePoint = true;
                 }
 
                 //activatedSavePoint(~~?)
@@ -724,16 +724,16 @@ public class CatCollision : MonoBehaviour
                 //center(in)
                 else if (curTileData.triggerTypeIndex == 8)
                 {
-                    VARS.isInCenter = true;
+                    VARS.IsInCenter = true;
                 }
+			}
 
-                //center(out)
-                if (curTileData.triggerTypeIndex != 8)
-                {
-                    VARS.isInCenter = false;
-                }
-            }
-        }
+			//center(out)
+			if (curTileData.triggerTypeIndex != 8)
+			{
+				VARS.IsInCenter = false;
+			}
+		}
     }
 
 }

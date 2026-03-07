@@ -73,7 +73,7 @@ public class CatAppearance : MonoBehaviour
         //curEnergy = VARS.curEnergy;
 
         #region contraction
-        if (VARS.isContracting)
+        if (VARS.IsContracting)
         {
             catTransform.localScale -= new Vector3
                 (Mathf.Abs(curRight.x), Mathf.Abs(curRight.y), Mathf.Abs(curRight.z))
@@ -81,14 +81,14 @@ public class CatAppearance : MonoBehaviour
 
             if (catTransform.localScale.magnitude < contractionMin)
             {
-                VARS.isContracting = false;
+                VARS.IsContracting = false;
             }
         }
         else
         {
             if (catTransform.localScale.magnitude < 1.73f)
             {
-                if (!VARS.isHighJumping)
+                if (!VARS.IsHighJumping)
                 {
                     catTransform.localScale += new Vector3
                         (Mathf.Abs(curRight.x), Mathf.Abs(curRight.y), Mathf.Abs(curRight.z))
@@ -103,7 +103,7 @@ public class CatAppearance : MonoBehaviour
         #endregion
 
         #region Color
-        if (VARS.isInFadedColor)
+        if (VARS.IsInFadedColor)
         {
             cat.GetComponent<MeshRenderer>().material = fadedColor;
         }
@@ -206,19 +206,19 @@ public class CatAppearance : MonoBehaviour
         #endregion
 
         #region Outlines
-        //outerOutlinesEmpty.SetActive(!VARS.isInLiquid && !VARS.isInGas);
-        //outerGrayOutlinesEmpty.SetActive(VARS.isInLiquid || VARS.isInGas);
+        //outerOutlinesEmpty.SetActive(!VARS.IsInLiquid && !VARS.IsInGas);
+        //outerGrayOutlinesEmpty.SetActive(VARS.IsInLiquid || VARS.IsInGas);
 
-        //if (VARS.isInLiquid || VARS.isInGas)
+        //if (VARS.IsInLiquid || VARS.IsInGas)
         //{
         //    outerOutlinesEmpty.SetActive(false);
         //}
-        //else if (VARS.isOnGround)
+        //else if (VARS.IsOnGround)
         //{
         //    outerOutlinesEmpty.SetActive(true);
         //}
 
-        //outerOutlinesEmpty.SetActive(VARS.isOnGround && !VARS.isInLiquid && !VARS.isInGas);
+        //outerOutlinesEmpty.SetActive(VARS.IsOnGround && !VARS.IsInLiquid && !VARS.IsInGas);
         #endregion
     }
 }
