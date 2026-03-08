@@ -56,7 +56,14 @@ public class Constants : MonoBehaviour
     public GameObject[] miniMapFaces = new GameObject[6];
     public GameObject[] miniMapRoomPlanes = new GameObject[54];
     public GameObject[] miniMapTwistingCenters = new GameObject[6];
-    public float miniMapRotationSpeed;
+    public float miniMapRotationMovingSpeed;
+    public GameObject[] miniMapRotationCameraPoints = new GameObject[26];
+    //public Vector3[] miniMapRotationCameraPointStableUps = new Vector3[26];
+    //public Vector3[] miniMapRotationCameraPointStableRights = new Vector3[26];
+    public GameObject[] miniMapRotationCameraUpPoints = new GameObject[26];
+    public GameObject[] miniMapRotationCameraDownPoints = new GameObject[26];
+    public GameObject[] miniMapRotationCameraLeftPoints = new GameObject[26];
+    public GameObject[] miniMapRotationCameraRightPoints = new GameObject[26];
     #endregion
 
     #region CurRoomManager
@@ -245,12 +252,12 @@ public class Constants : MonoBehaviour
 
     //outlines
     public GameObject innerOutlinesEmpty;
-    public GameObject outerOutlinesEmpty;
-    public GameObject outerGrayOutlinesEmpty;
+    //public GameObject outerOutlinesEmpty;
+    //public GameObject outerGrayOutlinesEmpty;
 
-    ////eyes
-    //public GameObject catLeftEye;
-    //public GameObject catRightEye;
+    //eyes
+    public GameObject catLeftEye;
+    public GameObject catRightEye;
     #endregion
 
     #region CatDeath

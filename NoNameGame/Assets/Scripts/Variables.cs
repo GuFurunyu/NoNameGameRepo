@@ -185,6 +185,17 @@ public class Variables : MonoBehaviour
 
     public Vector3 camEuleranglesBeforeIntoMiniMap;
 
+
+    public GameObject curMiniMapRotationCameraPoint;
+    public GameObject curToMiniMapRotationCameraPoint;
+
+    [SerializeField] private bool _isMiniMapRotationCameraPositionIndexNotInitialized;
+    public bool IsMiniMapRotationCameraPointIndexNotInitialized
+    { get { return _isMiniMapRotationCameraPositionIndexNotInitialized; } set { _isMiniMapRotationCameraPositionIndexNotInitialized = value; } }
+
+    public int curMiniMapRotationCameraPointIndex;
+    public int curToMiniMapRotationCameraPointIndex;
+
     #endregion
 
     #region Cat

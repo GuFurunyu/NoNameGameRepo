@@ -292,6 +292,13 @@ public class CameraManager : MonoBehaviour
             }
             #endregion
             #endregion
+
+            #region MiniMap
+            //if (VARS.IsInMiniMap)
+            //{
+            //    UFL.SetCameraEulerangles(new Vector3(camTransform.eulerAngles.x, camTransform.eulerAngles.y, VARS.camEuleranglesBeforeIntoMiniMap.z));
+            //}
+            #endregion
         }
     }
 }

@@ -16,6 +16,7 @@ public class UniversalFunctionsLibrary : MonoBehaviour
     float tempFloat;
     float[] tempFloats = new float[3];
     Vector3 tempVector;
+    Quaternion tempQuaternion;
 
     #region ConstantsUsed
     float gridBreadth;
@@ -35,6 +36,13 @@ public class UniversalFunctionsLibrary : MonoBehaviour
     GameObject[] miniMapFaces = new GameObject[6];
     GameObject[] miniMapRoomPlanes = new GameObject[54];
     GameObject[] miniMapTwistingCenters = new GameObject[6];
+    GameObject[] miniMapRotationCameraPoints = new GameObject[26];
+    //Vector3[] miniMapRotationCameraPointStableUps = new Vector3[26];
+    //Vector3[] miniMapRotationCameraPointStableRights = new Vector3[26];
+    GameObject[] miniMapRotationCameraUpPoints = new GameObject[26];
+    GameObject[] miniMapRotationCameraDownPoints = new GameObject[26];
+    GameObject[] miniMapRotationCameraLeftPoints = new GameObject[26];
+    GameObject[] miniMapRotationCameraRightPoints = new GameObject[26];
 
     Camera cam;
     Transform camTransform;
@@ -73,6 +81,13 @@ public class UniversalFunctionsLibrary : MonoBehaviour
         miniMapFaces = CONS.miniMapFaces;
         miniMapRoomPlanes = CONS.miniMapRoomPlanes;
         miniMapTwistingCenters = CONS.miniMapTwistingCenters;
+        miniMapRotationCameraPoints = CONS.miniMapRotationCameraPoints;
+        //miniMapRotationCameraPointStableUps = CONS.miniMapRotationCameraPointStableUps;
+        //miniMapRotationCameraPointStableRights = CONS.miniMapRotationCameraPointStableRights;
+        miniMapRotationCameraUpPoints = CONS.miniMapRotationCameraUpPoints;
+        miniMapRotationCameraDownPoints = CONS.miniMapRotationCameraDownPoints;
+        miniMapRotationCameraLeftPoints = CONS.miniMapRotationCameraLeftPoints;
+        miniMapRotationCameraRightPoints = CONS.miniMapRotationCameraRightPoints;
         cam = CONS.cam;
         camTransform = CONS.camTransform;
         camNormalSize = CONS.camNormalSize;
@@ -260,13 +275,13 @@ public class UniversalFunctionsLibrary : MonoBehaviour
         cat.GetComponent<MeshRenderer>().enabled = false;
 
         //camPosition
-        camTransform.position = -VARS.curRoomStableForward * camMiniMapDistanceToCubeCore;
+        SetCameraPosition(-VARS.curRoomStableForward * camMiniMapDistanceToCubeCore);
 
         //camEulerangles
         VARS.camEuleranglesBeforeIntoMiniMap = camTransform.eulerAngles;
 
         //camSize
-        cam.orthographicSize = camMiniMapSize;
+        SetCameraSize(camMiniMapSize);
     }
 
     public void OutOfMiniMap()
@@ -286,17 +301,27 @@ public class UniversalFunctionsLibrary : MonoBehaviour
         cat.GetComponent<MeshRenderer>().enabled = true;
 
         //camPosition
-        camTransform.position = VARS.curRoomCenter - VARS.curRoomStableForward * 7;
+        SetCameraPosition(VARS.curRoomCenter - VARS.curRoomStableForward * 7);
 
         //camEulerangles
-        camTransform.eulerAngles = VARS.camEuleranglesBeforeIntoMiniMap;
+        SetCameraEulerangles(VARS.camEuleranglesBeforeIntoMiniMap);
 
         //camSize
-        cam.orthographicSize = camNormalSize;
+        SetCameraSize(camNormalSize);
     }
     #endregion
 
     #region CameraManager
+    public void SetCameraPosition(Vector3 position)
+    {
+        camTransform.position = position;
+    }
+
+    public void CameraMove(Vector3 movingVector)
+    {
+        camTransform.position += movingVector;
+    }
+
     public void SetCameraEulerangles(Vector3 targetEulerangles)
     {
         camTransform.eulerAngles = targetEulerangles;
@@ -309,27 +334,120 @@ public class UniversalFunctionsLibrary : MonoBehaviour
 
     //dirIndex:
     //1-up, 2-down, 3-left, 4-right
-    public void CameraRotateAround(Vector3 centerPosition, int dirIndex, float rotationStep)
+    public void MiniMapCameraRotate(int dirIndex, float rotationMovingStep)
     {
+        tempVector = (VARS.curToMiniMapRotationCameraPoint.transform.position - VARS.curMiniMapRotationCameraPoint.transform.position).normalized;
+
+        CameraMove(tempVector * rotationMovingStep);
+
+        //tempVector = camTransform.eulerAngles;
+
+        //camTransform.LookAt(Vector3.zero);
+
+        //SetCameraEulerangles(new Vector3(camTransform.eulerAngles.x, camTransform.eulerAngles.y, tempVector.z));
+
+        //// 保存LookAt前的z轴旋转
+        //float z = camTransform.eulerAngles.z;
+        ////// LookAt会重置rotation
+        ////camTransform.LookAt(Vector3.zero);
+        ////// 用四元数叠加z轴旋转
+        ////camTransform.rotation = Quaternion.Euler(camTransform.eulerAngles.x, camTransform.eulerAngles.y, z);
+
+        //Quaternion lookAtRotation = Quaternion.LookRotation(Vector3.zero - camTransform.position, Vector3.up);
+        //Quaternion zRotation = Quaternion.AngleAxis(z, Vector3.forward);
+        //camTransform.rotation = lookAtRotation * zRotation;
+
+        camTransform.LookAt(Vector3.zero,camTransform.up);
+    }
+
+    public void GetCurToMiniMapRotationCameraPoint(int dirIndex)
+    {
+        //getCurIndexAndCurPoint
+        if (VARS.IsMiniMapRotationCameraPointIndexNotInitialized)
+        {
+            VARS.curMiniMapRotationCameraPointIndex = VARS.curFaceIndex - 1;
+
+            VARS.IsMiniMapRotationCameraPointIndexNotInitialized = false;
+        }
+        VARS.curMiniMapRotationCameraPoint = miniMapRotationCameraPoints[VARS.curMiniMapRotationCameraPointIndex];
+        Debug.Log("curIndex: " + VARS.curMiniMapRotationCameraPointIndex);
+
+        //switch (dirIndex)
+        //{
+        //    case 1:
+        //        VARS.curToMiniMapRotationCameraPoint = miniMapRotationCameraDownPoints[VARS.curMiniMapRotationCameraPointIndex];
+        //        break;
+        //    case 2:
+        //        VARS.curToMiniMapRotationCameraPoint = miniMapRotationCameraUpPoints[VARS.curMiniMapRotationCameraPointIndex];
+        //        break;
+        //    case 3:
+        //        VARS.curToMiniMapRotationCameraPoint = miniMapRotationCameraRightPoints[VARS.curMiniMapRotationCameraPointIndex];
+        //        break;
+        //    case 4:
+        //        VARS.curToMiniMapRotationCameraPoint = miniMapRotationCameraLeftPoints[VARS.curMiniMapRotationCameraPointIndex];
+        //        break;
+        //}
+
+        //Debug.Log("camUp: " + camTransform.up);
+        //Debug.Log("camDown: " + -camTransform.up);
+        //Debug.Log("camLeft: " + -camTransform.right);
+        //Debug.Log("camRight: " + camTransform.right);
+
+        //getCurToIndexAndCurToPoint
         switch (dirIndex)
         {
             case 1:
-                tempVector = Vector3.up;
+                //tempVector = -miniMapRotationCameraPointStableUps[VARS.curMiniMapRotationCameraPointIndex];
+                tempVector = -camTransform.up;
+                //tempQuaternion = camTransform.rotation * Quaternion.AngleAxis(camTransform.eulerAngles.z, camTransform.forward);
+                //tempVector = tempQuaternion.eulerAngles;
                 break;
             case 2:
-                tempVector = -Vector3.up;
+                //tempVector = miniMapRotationCameraPointStableUps[VARS.curMiniMapRotationCameraPointIndex];
+                tempVector = camTransform.up;
                 break;
             case 3:
-                tempVector = -Vector3.right;
+                //tempVector = miniMapRotationCameraPointStableRights[VARS.curMiniMapRotationCameraPointIndex];
+                tempVector = camTransform.right;
                 break;
             case 4:
-                tempVector = Vector3.right;
+                //tempVector = -miniMapRotationCameraPointStableRights[VARS.curMiniMapRotationCameraPointIndex];
+                tempVector = -camTransform.right;
                 break;
         }
+        Debug.Log("tempVector: " + tempVector);
+        for (int i = 0; i < 26; i++)
+        {
+            //Debug.Log("enter1");
 
-        //camTransform.Rotate(tempVector * rotationStep);
+            //if (i == 4)
+            //{
+            //    Debug.Log(Vector3.Angle(miniMapRotationCameraPoints[i].transform.position - VARS.curMiniMapRotationCameraPoint.transform.position, tempVector));
+            //    Debug.Log(Vector3.Dot(miniMapRotationCameraPoints[i].transform.position - VARS.curMiniMapRotationCameraPoint.transform.position, tempVector));
+            //}
 
-        camTransform.RotateAround(centerPosition, tempVector, rotationStep);
+            //ifIsNearlyOnTheLine
+            if (Vector3.Angle(miniMapRotationCameraPoints[i].transform.position - VARS.curMiniMapRotationCameraPoint.transform.position, tempVector) < 30)
+            {
+                Debug.Log("enter2: " + i);
+
+                Debug.Log("dot: " + Vector3.Dot(miniMapRotationCameraPoints[i].transform.position - VARS.curMiniMapRotationCameraPoint.transform.position, tempVector));
+
+                //ifIsTheRightDirection
+                if (Vector3.Dot(miniMapRotationCameraPoints[i].transform.position - VARS.curMiniMapRotationCameraPoint.transform.position, tempVector) > 0)
+                {
+                    Debug.Log("enter3");
+
+                    Debug.Log("curToIndex: " + i);
+
+                    //Debug.Log(VARS.curToMiniMapRotationCameraPoint.transform.position - VARS.curMiniMapRotationCameraPoint.transform.position);
+
+                    VARS.curToMiniMapRotationCameraPointIndex = i;
+                    VARS.curToMiniMapRotationCameraPoint = miniMapRotationCameraPoints[i];
+                    break;
+                }
+            }
+        }
     }
 
     public void SetCameraSize(float size)

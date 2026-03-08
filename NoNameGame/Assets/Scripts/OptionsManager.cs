@@ -84,15 +84,21 @@ public class OptionsManager : MonoBehaviour
     void Update()
     {
         //activateOptionPanel
-        if (VARS.IsBackKeyDown)
+        if (!VARS.IsRotating &&
+            !VARS.IsTwisting &&
+            !VARS.IsZoomedOut &&
+            !VARS.IsInMiniMap)
         {
-            if (!isInKeySetSub)
+            if (VARS.IsBackKeyDown)
             {
-                optionsPanel.SetActive(!optionsPanel.activeSelf);
+                if (!isInKeySetSub)
+                {
+                    optionsPanel.SetActive(!optionsPanel.activeSelf);
 
-                VARS.IsOptionPanelActivated = optionsPanel.activeSelf;
+                    VARS.IsOptionPanelActivated = optionsPanel.activeSelf;
 
-                curOptionIndex = 0;
+                    curOptionIndex = 0;
+                }
             }
         }
 

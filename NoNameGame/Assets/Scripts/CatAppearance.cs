@@ -14,6 +14,9 @@ public class CatAppearance : MonoBehaviour
     public float contractionSpeed;
     public float contractionMin;
 
+    Transform catLeftEyeTransform;
+    Transform catRightEyeTransform;
+
     Vector3 tempVector;
 
     #region ConstantsUsed
@@ -30,8 +33,11 @@ public class CatAppearance : MonoBehaviour
 
     GameObject catEnergyMask;
 
-    GameObject outerOutlinesEmpty;
-    GameObject outerGrayOutlinesEmpty;
+    //GameObject outerOutlinesEmpty;
+    //GameObject outerGrayOutlinesEmpty;
+
+    GameObject catLeftEye;
+    GameObject catRightEye;
     #endregion
 
     #region VariablesUsed
@@ -60,8 +66,13 @@ public class CatAppearance : MonoBehaviour
         catEnergyBar = CONS.catEnergyBar;
         catEnergyBarMask = CONS.catEnergyBarMask;
         catEnergyMask = CONS.catEnergyMask;
-        outerOutlinesEmpty = CONS.outerOutlinesEmpty;
-        outerGrayOutlinesEmpty = CONS.outerGrayOutlinesEmpty;
+        //outerOutlinesEmpty = CONS.outerOutlinesEmpty;
+        //outerGrayOutlinesEmpty = CONS.outerGrayOutlinesEmpty;
+        catLeftEye = CONS.catLeftEye;
+        catRightEye = CONS.catRightEye;
+
+        catLeftEyeTransform = catLeftEye.transform;
+        catRightEyeTransform = catRightEye.transform;
     }
 
     void Update()
@@ -191,15 +202,15 @@ public class CatAppearance : MonoBehaviour
         }
         else
         {
+            //position
+            catEnergyMask.transform.localPosition = -curRoomStableForward * 0.01f + curUp * (1 - (maxEnergy - VARS.curEnergy) / maxEnergy) / 2;
+
             //localScale
             //catEnergyMask.transform.localScale = Vector3.one + curUp * ((maxEnergy - curEnergy) / maxEnergy - 1);
             catEnergyMask.transform.localScale = new Vector3
-                (1+Mathf.Abs(curUp.x)*((maxEnergy-VARS.curEnergy)/maxEnergy-1),
+                (1 + Mathf.Abs(curUp.x) * ((maxEnergy - VARS.curEnergy) / maxEnergy - 1),
                 1 + Mathf.Abs(curUp.y) * ((maxEnergy - VARS.curEnergy) / maxEnergy - 1),
                 1 + Mathf.Abs(curUp.z) * ((maxEnergy - VARS.curEnergy) / maxEnergy - 1));
-
-            //position
-            catEnergyMask.transform.localPosition = -curRoomStableForward * 0.01f + curUp * (1 - (maxEnergy - VARS.curEnergy) / maxEnergy) / 2;
 
             catEnergyMask.SetActive(true);
         }
@@ -219,6 +230,60 @@ public class CatAppearance : MonoBehaviour
         //}
 
         //outerOutlinesEmpty.SetActive(VARS.IsOnGround && !VARS.IsInLiquid && !VARS.IsInGas);
+        #endregion
+
+        #region Eyes
+        if (VARS.IsCatStill)
+        {
+            //still
+            if (!VARS.IsInputtingUpKey &&
+                !VARS.IsInputtingDownKey)
+            {
+                //position
+                catLeftEyeTransform.localPosition = -curRoomStableForward * 0.1f - curUp * 0.25f - curRight * 0.175f;
+                catRightEyeTransform.localPosition = -curRoomStableForward * 0.1f - curUp * 0.25f + curRight * 0.175f;
+
+                //localScale
+                catLeftEyeTransform.localScale = UFL.Vector3Abs(curRoomStableForward) + UFL.Vector3Abs(curUp) * 0.2f + UFL.Vector3Abs(curRight) * 0.15f;
+                catRightEyeTransform.localScale = UFL.Vector3Abs(curRoomStableForward) + UFL.Vector3Abs(curUp) * 0.2f + UFL.Vector3Abs(curRight) * 0.15f;
+            }
+            //up
+            else if (VARS.IsInputtingUpKey)
+            {
+                catLeftEyeTransform.localPosition = -curRoomStableForward * 0.1f - curUp * 0.2f - curRight * 0.175f;
+                catRightEyeTransform.localPosition = -curRoomStableForward * 0.1f - curUp * 0.2f + curRight * 0.175f;
+
+                catLeftEyeTransform.localScale = UFL.Vector3Abs(curRoomStableForward) + UFL.Vector3Abs(curUp) * 0.2f + UFL.Vector3Abs(curRight) * 0.15f;
+                catRightEyeTransform.localScale = UFL.Vector3Abs(curRoomStableForward) + UFL.Vector3Abs(curUp) * 0.2f + UFL.Vector3Abs(curRight) * 0.15f;
+            }
+            //down
+            else if (VARS.IsInputtingDownKey)
+            {
+                catLeftEyeTransform.localPosition = -curRoomStableForward * 0.1f - curUp * 0.3f - curRight * 0.175f;
+                catRightEyeTransform.localPosition = -curRoomStableForward * 0.1f - curUp * 0.3f + curRight * 0.175f;
+
+                catLeftEyeTransform.localScale = UFL.Vector3Abs(curRoomStableForward) + UFL.Vector3Abs(curUp) * 0.2f + UFL.Vector3Abs(curRight) * 0.15f;
+                catRightEyeTransform.localScale = UFL.Vector3Abs(curRoomStableForward) + UFL.Vector3Abs(curUp) * 0.2f + UFL.Vector3Abs(curRight) * 0.15f;
+            }
+        }
+        //left
+        else if (VARS.horCurSpeed < 0)
+        {
+            catLeftEyeTransform.localPosition = -curRoomStableForward * 0.1f - curUp * 0.25f - curRight * 0.25f;
+            catRightEyeTransform.localPosition = -curRoomStableForward * 0.1f - curUp * 0.25f + curRight * 0.025f;
+
+            catLeftEyeTransform.localScale = UFL.Vector3Abs(curRoomStableForward) + UFL.Vector3Abs(curUp) * 0.2f + UFL.Vector3Abs(curRight) * 0.1f;
+            catRightEyeTransform.localScale = UFL.Vector3Abs(curRoomStableForward) + UFL.Vector3Abs(curUp) * 0.2f + UFL.Vector3Abs(curRight) * 0.15f;
+        }
+        //right
+        else if (VARS.horCurSpeed > 0)
+        {
+            catLeftEyeTransform.localPosition = -curRoomStableForward * 0.1f - curUp * 0.25f - curRight * 0.025f;
+            catRightEyeTransform.localPosition = -curRoomStableForward * 0.1f - curUp * 0.25f + curRight * 0.25f;
+
+            catLeftEyeTransform.localScale = UFL.Vector3Abs(curRoomStableForward) + UFL.Vector3Abs(curUp) * 0.2f + UFL.Vector3Abs(curRight) * 0.15f;
+            catRightEyeTransform.localScale = UFL.Vector3Abs(curRoomStableForward) + UFL.Vector3Abs(curUp) * 0.2f + UFL.Vector3Abs(curRight) * 0.1f;
+        }
         #endregion
     }
 }

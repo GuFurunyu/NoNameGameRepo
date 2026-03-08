@@ -33,6 +33,7 @@ public class RoomsManager : MonoBehaviour
 
     Vector3 curMiniMapRotationAxis;
 
+    Vector3 camMiniMapRotationStartEulerAngles;
     Quaternion curMiniMapRotationTargetQuaternion;
     Vector3 camMiniMapRotationTargetEulerAngles;
 
@@ -63,9 +64,11 @@ public class RoomsManager : MonoBehaviour
 
     float twistSpeed;
 
-    float miniMapRotationSpeed;
+    float miniMapRotationMovingSpeed;
 
     Transform camTransform;
+
+    float camMiniMapDistanceToCubeCore;
 
     Transform catTransform;
     #endregion
@@ -98,8 +101,9 @@ public class RoomsManager : MonoBehaviour
         roomPlanes = CONS.roomPlanes;
         twistingCenters = CONS.twistingCenters;
         twistSpeed = CONS.twistSpeed;
-        miniMapRotationSpeed = CONS.miniMapRotationSpeed;
+        miniMapRotationMovingSpeed = CONS.miniMapRotationMovingSpeed;
         camTransform = CONS.camTransform;
+        camMiniMapDistanceToCubeCore = CONS.camMiniMapDistanceToCubeCore;
         catTransform = CONS.catTransform;
 
 		roomCenters = VARS.roomCenters;
@@ -301,14 +305,15 @@ public class RoomsManager : MonoBehaviour
                     VARS.IsTwisting = false;
                 }
             }
-			#endregion
+            #endregion
 
-			#region MiniMap
+            #region MiniMap
             //intoMiniMap
             if (!VARS.IsInMiniMap)
             {
                 //HR
-                if (!VARS.IsZoomedOut)
+                if (!VARS.IsZoomedOut
+                    && VARS.IsIniRotation)
                 {
                     if (!VARS.IsInCenter)
                     {
@@ -319,6 +324,8 @@ public class RoomsManager : MonoBehaviour
                         if (VARS.IsConfirmKeyDown)
                         {
                             UFL.IntoMiniMap();
+
+                            VARS.IsMiniMapRotationCameraPointIndexNotInitialized = true;
 
                             VARS.IsInMiniMap = true;
                         }
@@ -338,37 +345,45 @@ public class RoomsManager : MonoBehaviour
                     {
                         VARS.IsMiniMapRotating = true;
                         curMiniMapRotatingDirIndex = 1;
-                        curMiniMapRotationTargetQuaternion = camTransform.rotation * Quaternion.AngleAxis(-90, Vector3.right);
-                        camMiniMapRotationTargetEulerAngles = curMiniMapRotationTargetQuaternion.eulerAngles;
-                        //Debug.Log(camMiniMapRotationTargetEulerAngles);
-                        accumulatedMiniMapRotationDegree = 0;
+                        UFL.GetCurToMiniMapRotationCameraPoint(1);
+                        //camMiniMapRotationStartEulerAngles = camTransform.eulerAngles;
+                        //curMiniMapRotationTargetQuaternion = camTransform.rotation * Quaternion.AngleAxis(-90, Vector3.right);
+                        //camMiniMapRotationTargetEulerAngles = curMiniMapRotationTargetQuaternion.eulerAngles;
+                        ////Debug.Log(camMiniMapRotationTargetEulerAngles);
+                        //accumulatedMiniMapRotationDegree = 0;
                     }
                     else if (VARS.IsDownKeyDown)
                     {
                         VARS.IsMiniMapRotating = true;
                         curMiniMapRotatingDirIndex = 2;
-                        curMiniMapRotationTargetQuaternion = camTransform.rotation * Quaternion.AngleAxis(90, Vector3.right);
-                        camMiniMapRotationTargetEulerAngles = curMiniMapRotationTargetQuaternion.eulerAngles;
-                        //Debug.Log(camMiniMapRotationTargetEulerAngles);
-                        accumulatedMiniMapRotationDegree = 0;
+                        UFL.GetCurToMiniMapRotationCameraPoint(2);
+                        //camMiniMapRotationStartEulerAngles = camTransform.eulerAngles;
+                        //curMiniMapRotationTargetQuaternion = camTransform.rotation * Quaternion.AngleAxis(90, Vector3.right);
+                        //camMiniMapRotationTargetEulerAngles = curMiniMapRotationTargetQuaternion.eulerAngles;
+                        ////Debug.Log(camMiniMapRotationTargetEulerAngles);
+                        //accumulatedMiniMapRotationDegree = 0;
                     }
                     else if (VARS.IsLeftKeyDown)
                     {
                         VARS.IsMiniMapRotating = true;
                         curMiniMapRotatingDirIndex = 3;
-                        curMiniMapRotationTargetQuaternion = camTransform.rotation * Quaternion.AngleAxis(-90, Vector3.up);
-                        camMiniMapRotationTargetEulerAngles = curMiniMapRotationTargetQuaternion.eulerAngles;
-                        //Debug.Log(camMiniMapRotationTargetEulerAngles);
-                        accumulatedMiniMapRotationDegree = 0;
+                        UFL.GetCurToMiniMapRotationCameraPoint(3);
+                        //camMiniMapRotationStartEulerAngles = camTransform.eulerAngles;
+                        //curMiniMapRotationTargetQuaternion = camTransform.rotation * Quaternion.AngleAxis(-90, Vector3.up);
+                        //camMiniMapRotationTargetEulerAngles = curMiniMapRotationTargetQuaternion.eulerAngles;
+                        ////Debug.Log(camMiniMapRotationTargetEulerAngles);
+                        //accumulatedMiniMapRotationDegree = 0;
                     }
                     else if (VARS.IsRightKeyDown)
                     {
                         VARS.IsMiniMapRotating = true;
                         curMiniMapRotatingDirIndex = 4;
-                        curMiniMapRotationTargetQuaternion = camTransform.rotation * Quaternion.AngleAxis(90, Vector3.up);
-                        camMiniMapRotationTargetEulerAngles = curMiniMapRotationTargetQuaternion.eulerAngles;
-                        //Debug.Log(camMiniMapRotationTargetEulerAngles);
-                        accumulatedMiniMapRotationDegree = 0;
+                        UFL.GetCurToMiniMapRotationCameraPoint(4);
+                        //camMiniMapRotationStartEulerAngles = camTransform.eulerAngles;
+                        //curMiniMapRotationTargetQuaternion = camTransform.rotation * Quaternion.AngleAxis(90, Vector3.up);
+                        //camMiniMapRotationTargetEulerAngles = curMiniMapRotationTargetQuaternion.eulerAngles;
+                        ////Debug.Log(camMiniMapRotationTargetEulerAngles);
+                        //accumulatedMiniMapRotationDegree = 0;
                     }
 
                     //outOfMiniMap
@@ -382,23 +397,53 @@ public class RoomsManager : MonoBehaviour
                 //miniMapRotationProcess
                 else
                 {
-                    if (accumulatedMiniMapRotationDegree < 90)
+                    //Debug.Log("distance: " + Vector3.Distance(camTransform.position, VARS.curToMiniMapRotationCameraPoint.transform.position));
+
+                    if (/*accumulatedMiniMapRotationDegree < 90*/
+                        Vector3.Distance(camTransform.position,VARS.curToMiniMapRotationCameraPoint.transform.position) > 3)
                     {
-                        UFL.CameraRotateAround(Vector3.zero, curMiniMapRotatingDirIndex, miniMapRotationSpeed * 90 * Time.deltaTime);
+                        UFL.MiniMapCameraRotate(curMiniMapRotatingDirIndex, miniMapRotationMovingSpeed * Time.deltaTime);
 
-                        accumulatedMiniMapRotationDegree += miniMapRotationSpeed * 90 * Time.deltaTime;
-
+                        //accumulatedMiniMapRotationDegree += miniMapRotationMovingSpeed * Time.deltaTime;
+                        //accumulatedMiniMapRotationDegree = Vector3.Angle(camTransform.eulerAngles, camMiniMapRotationStartEulerAngles);
                     }
                     else
                     {
-                        UFL.SetCameraEulerangles(camMiniMapRotationTargetEulerAngles);
+                        UFL.SetCameraPosition(VARS.curToMiniMapRotationCameraPoint.transform.position);
+
+                        //tempVector = camTransform.eulerAngles;
+
+                        ////Debug.Log("1: " + camTransform.eulerAngles);
+                        //camTransform.LookAt(Vector3.zero);
+                        ////Debug.Log("2: " + camTransform.eulerAngles);
+
+                        //UFL.SetCameraEulerangles(new Vector3(camTransform.eulerAngles.x, camTransform.eulerAngles.y, tempVector.z));
+                        ////Debug.Log("3: " + camTransform.eulerAngles);
+
+                        //// 保存LookAt前的z轴旋转
+                        //float z = camTransform.eulerAngles.z;
+                        ////// LookAt会重置rotation
+                        ////camTransform.LookAt(Vector3.zero);
+                        ////// 用四元数叠加z轴旋转
+                        ////camTransform.rotation = Quaternion.Euler(camTransform.eulerAngles.x, camTransform.eulerAngles.y, z);
+
+                        //Quaternion lookAtRotation = Quaternion.LookRotation(Vector3.zero - camTransform.position, Vector3.up);
+                        //Quaternion zRotation = Quaternion.AngleAxis(z, Vector3.forward);
+                        //camTransform.rotation = lookAtRotation * zRotation;
+
+                        camTransform.LookAt(Vector3.zero, camTransform.up);
+
+                        VARS.curMiniMapRotationCameraPointIndex = VARS.curToMiniMapRotationCameraPointIndex;
+                        //VARS.curMiniMapRotationCameraPoint = VARS.curToMiniMapRotationCameraPoint;
+
+                        //UFL.SetCameraEulerangles(camMiniMapRotationTargetEulerAngles);
 
                         VARS.IsMiniMapRotating = false;
                     }
                 }
             }
-			#endregion
-		}
+            #endregion
+        }
 	}
 
     //public bool IsInRoom(int roomIndex, Vector3 position)
