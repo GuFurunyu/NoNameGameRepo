@@ -1,4 +1,4 @@
 ________________________________________________________________________-This is a small personal exprimental game project
 ____________________________________________________________-in which my aim is to construct a surreal metroidvania world
-______________________________________________-that can be int structrure changed between 4.3e19 possible arrangements
+_______________________________________________-that can be in structrure changed between 4.3e19 possible arrangements
 _________________________________-with deliberately messed up directions and dimensions as in FEZ and MonumentValley
