@@ -15,5 +15,20 @@ public class ScriptsExecutionController : MonoBehaviour
 
         CONS = gameManager.GetComponent<Constants>();
         VARS = gameManager.GetComponent<Variables>();
+
+        #region ImportConstants
+
+        #endregion
+
+        #region ImportReferenceVariables
+
+        #endregion
+    }
+
+    private void Update()
+    {
+        #region ImportValueVariables
+
+        #endregion
     }
 }

@@ -59,6 +59,7 @@ public class CameraManager : MonoBehaviour
         UFL = gameManager.GetComponent<UniversalFunctionsLibrary>();
         SEC = gameManager.GetComponent<ScriptsExecutionController>();
 
+        #region ImportConstants
         gridBreadth = CONS.gridBreadth;
         roomCoordBreadth = CONS.roomCoordBreadth;
         roomPlanes = CONS.roomPlanes;
@@ -67,10 +68,14 @@ public class CameraManager : MonoBehaviour
         initialSightMasksSpeed = CONS.initialSightMasksSpeed;
         initialSightMasksMaxDistance = CONS.initialSightMasksMaxDistance;
         zoomSpeed = CONS.zoomSpeed;
-        zoomInAutoTriggerStartTime = CONS.zoomInAutoTriggerTime;
+        zoomInAutoTriggerTime = CONS.zoomInAutoTriggerTime;
         camNormalSize = CONS.camNormalSize;
         camZoomedOutMaxSize = CONS.camZoomedOutMaxSize;
         catTransform = CONS.catTransform;
+        #endregion
+
+        #region ImportReferenceVariables
+        #endregion
 
         //getInitialSightMasks
         for (int i = 0; i < 4; i++)
@@ -81,6 +86,9 @@ public class CameraManager : MonoBehaviour
 
     void Update()
     {
+        #region ImportValueVariables
+        #endregion
+
         //planeForward = VARS.planeForward;
         //planeUp = VARS.planeUp;
         //planeRight = VARS.planeRight;

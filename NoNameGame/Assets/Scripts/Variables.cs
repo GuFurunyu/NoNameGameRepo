@@ -183,19 +183,8 @@ public class Variables : MonoBehaviour
     [SerializeField] private bool _isZoomingIn;
     public bool IsZoomingIn { get { return _isZoomingIn; } set { _isZoomingIn = value; } }
 
+
     public Vector3 camEuleranglesBeforeIntoMiniMap;
-
-
-    public GameObject curMiniMapRotationCameraPoint;
-    public GameObject curToMiniMapRotationCameraPoint;
-
-    [SerializeField] private bool _isMiniMapRotationCameraPositionIndexNotInitialized;
-    public bool IsMiniMapRotationCameraPointIndexNotInitialized
-    { get { return _isMiniMapRotationCameraPositionIndexNotInitialized; } set { _isMiniMapRotationCameraPositionIndexNotInitialized = value; } }
-
-    public int curMiniMapRotationCameraPointIndex;
-    public int curToMiniMapRotationCameraPointIndex;
-
     #endregion
 
     #region Cat
@@ -519,6 +508,21 @@ public class Variables : MonoBehaviour
 
     #endregion
 
+    #region MiniMapManager
+    [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
+        "  \nMINIMAPMANAGER\n --- ")]
+
+    public GameObject curMiniMapRotationCameraPoint;
+    public GameObject curToMiniMapRotationCameraPoint;
+
+    [SerializeField] private bool _isMiniMapRotationCameraPositionIndexNotInitialized;
+    public bool IsMiniMapRotationCameraPointIndexNotInitialized
+    { get { return _isMiniMapRotationCameraPositionIndexNotInitialized; } set { _isMiniMapRotationCameraPositionIndexNotInitialized = value; } }
+
+    public int curMiniMapRotationCameraPointIndex;
+    public int curToMiniMapRotationCameraPointIndex;
+    #endregion
+
     #region OptionsManager
     [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
         "  \nOPTIONSMANAGER\n --- ")]
@@ -530,12 +534,6 @@ public class Variables : MonoBehaviour
     public bool IsOptionPanelActivated
     { get { return _isOptionPanelActivated; } set { _isOptionPanelActivated = value; } }
 
-    #endregion
-
-    #region ConstantsUsed
-    Transform catTransform;
-
-    float catBreadth;
     #endregion
 
     void Start()

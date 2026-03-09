@@ -61,17 +61,19 @@ public class CatRotate : MonoBehaviour
 
     Vector3 camIniEulerangles;
 
-    bool isOnGround;
-    bool isInLiquid;
-
     //float horCurSpeed;
     //float verCurSpeed;
-
-    bool isCatStill;
 
     int rotationRestNum;
 
     //float curEnergy;
+    #endregion
+
+    #region BoolVariablesUsed
+    bool isOnGround;
+    bool isInLiquid;
+
+    bool isCatStill;
     #endregion
 
     void Start()
@@ -82,6 +84,22 @@ public class CatRotate : MonoBehaviour
         VARS = gameManager.GetComponent<Variables>();
         UFL = gameManager.GetComponent<UniversalFunctionsLibrary>();
         SEC = gameManager.GetComponent<ScriptsExecutionController>();
+
+        #region ImportConstants
+        camTransform = CONS.camTransform;
+        leftRotationVector = CONS.leftRotationVector;
+        rightRotationVector = CONS.rightRotationVector;
+        rotationMaxNum = CONS.rotationMaxNum;
+        rotationNumRestoreThres = CONS.rotationNumRestoreThres;
+        rotationEndThres = CONS.rotationEndThres;
+        rotationSpeed = CONS.rotationSpeed;
+        rotationStep = CONS.rotationStep;
+        returnIniRotationTime = CONS.returnIniRotationTime;
+        rotationEnergyCost = CONS.rotationEnergyCost;
+        #endregion
+
+        #region ImportReferenceVariables
+        #endregion
 
         camTransform = CONS.camTransform;
         leftRotationVector = CONS.leftRotationVector;
@@ -97,22 +115,21 @@ public class CatRotate : MonoBehaviour
 
     void Update()
     {
-        //planeForward = VARS.planeForward;
-        //iniUp = VARS.iniUp;
-        //iniRight = VARS.iniRight;
+        #region ImportValueVariables
         curRoomStableForward = VARS.curRoomStableForward;
         curRoomStableUp = VARS.curRoomStableUp;
         curRoomStableRight = VARS.curRoomStableRight;
         curUp = VARS.curUp;
         curRight = VARS.curRight;
         camIniEulerangles = VARS.camIniEulerangles;
+        rotationRestNum = VARS.rotationRestNum;
+        #endregion
+
+        #region ImportBoolVariables
         isOnGround = VARS.IsOnGround;
         isInLiquid = VARS.IsInLiquid;
-        //horCurSpeed = VARS.horCurSpeed;
-        //verCurSpeed = VARS.verCurSpeed;
         isCatStill = VARS.IsCatStill;
-        rotationRestNum = VARS.rotationRestNum;
-        //curEnergy = VARS.curEnergy;
+        #endregion
 
         #region Rotate
         if (VARS.IsInNewRoom)

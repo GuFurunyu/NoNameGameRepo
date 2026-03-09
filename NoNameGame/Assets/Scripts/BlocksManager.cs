@@ -138,8 +138,6 @@ public class BlocksManager : MonoBehaviour
     #region VariablesUsed
     List<int> edgeGateLinkedToIndexes = new List<int>();
 
-    //Vector3 planeUp;
-    //Vector3 planeRight;
     Vector3 curRoomStableUp;
     Vector3 curRoomStableRight;
     Vector3 curUp;
@@ -160,6 +158,7 @@ public class BlocksManager : MonoBehaviour
         UFL = gameManager.GetComponent<UniversalFunctionsLibrary>();
         SEC = gameManager.GetComponent<ScriptsExecutionController>();
 
+        #region ImportConstants
         gridBreadth = CONS.gridBreadth;
         roomCoordBreadth = CONS.roomCoordBreadth;
         gates = CONS.gates;
@@ -172,8 +171,11 @@ public class BlocksManager : MonoBehaviour
         storedElectricMistBlocksEmpty = CONS.storedElectricMistBlocksEmpty;
         storedLightElectricMistBlocksEmpty = CONS.storedLightElectricMistBlocksEmpty;
         blocksManagerFixedDeltaTime = CONS.blocksManagerFixedDeltaTime;
+        #endregion
 
+        #region ImportReferenceVariables
         edgeGateLinkedToIndexes = VARS.edgeGateLinkedToIndexes;
+        #endregion
 
         #region loadStoredBlocks
         for (int i = 0; i < 512; i++)
@@ -209,12 +211,12 @@ public class BlocksManager : MonoBehaviour
     //void Update()
     void FixedUpdate()
     {
-        //planeUp = VARS.planeUp;
-        //planeRight = VARS.planeRight;
+        #region ImportValueVariables
         curRoomStableUp = VARS.curRoomStableUp;
         curRoomStableRight = VARS.curRoomStableRight;
         curUp = VARS.curUp;
         curRight = VARS.curRight;
+        #endregion
 
         if (VARS.IsInNewRoom)
         {

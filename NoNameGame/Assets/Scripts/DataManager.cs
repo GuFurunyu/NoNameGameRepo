@@ -89,6 +89,7 @@ public class DataManager : MonoBehaviour
         UFL = gameManager.GetComponent<UniversalFunctionsLibrary>();
         SEC = gameManager.GetComponent<ScriptsExecutionController>();
 
+        #region ImportConstants
         gridBreadth = CONS.gridBreadth;
         roomCoordBreadth = CONS.roomCoordBreadth;
         miniMapRoomCoordBreadth = CONS.miniMapRoomCoordBreadth;
@@ -99,6 +100,11 @@ public class DataManager : MonoBehaviour
         miniMapFaces = CONS.miniMapFaces;
         miniMapRoomPlanes = CONS.miniMapRoomPlanes;
         miniMapTwistingCenters = CONS.miniMapTwistingCenters;
+        #endregion
+
+        #region ImportReferenceVariables
+
+        #endregion
 
         ReadWorldData();
 
@@ -109,6 +115,10 @@ public class DataManager : MonoBehaviour
 
     void Update()
     {
+        #region ImportValueVariables
+
+        #endregion
+
         if (VARS.IsToWriteWorldData)
         {
             WriteWorldData();

@@ -46,7 +46,9 @@ public class ScriptsExecutionOrder : MonoBehaviour
         catAppearance,
         catDeath,
         blocksManager,//fixedUpdate
-        optionsManager
+        optionsManager,
+        miniMapManager,
+        test
     }
 
     //private void Start()

@@ -82,14 +82,6 @@ public class CatMove : MonoBehaviour
     Vector3 curRight;
     Vector3 curUp;
 
-    bool isOnGround;
-    bool isToCeiling;
-    bool isLeftBlocked;
-    bool isRightBlocked;
-    bool isInLiquid;
-    bool isInGas;
-    bool isInMist;
-
     TileData curDownTileData;
     TileData curUpTileData;
     TileData curLeftTileData;
@@ -108,6 +100,16 @@ public class CatMove : MonoBehaviour
     float curRoomGravity;
     #endregion
 
+    #region BoolVariablesUsed
+    bool isOnGround;
+    bool isToCeiling;
+    bool isLeftBlocked;
+    bool isRightBlocked;
+    bool isInLiquid;
+    bool isInGas;
+    bool isInMist;
+    #endregion
+
     void Start()
     {
         gameManager = GameObject.Find("GameManager");
@@ -117,6 +119,7 @@ public class CatMove : MonoBehaviour
         UFL = gameManager.GetComponent<UniversalFunctionsLibrary>();
         SEC = gameManager.GetComponent<ScriptsExecutionController>();
 
+        #region ImportConstants
         catTransform = CONS.catTransform;
         horAcce = CONS.horAcce;
         horReverseAcce = CONS.horReverseAcce;
@@ -140,6 +143,10 @@ public class CatMove : MonoBehaviour
         toCeilingEnergyDecreaseSpeed = CONS.toCeilingEnergyDecreaseSpeed;
         jumpEnergyCost = CONS.jumpEnergyCost;
         dashEnergyCost = CONS.dashEnergyCost;
+        #endregion
+
+        #region ImportReferenceVariables
+        #endregion
 
         VARS.horCurSpeed = 0;
         VARS.verCurSpeed = 0;
@@ -147,15 +154,9 @@ public class CatMove : MonoBehaviour
 
     void Update()
     {
+        #region ImportValueVariables
         curRight = VARS.curRight;
         curUp = VARS.curUp;
-        isOnGround = VARS.IsOnGround;
-        isToCeiling = VARS.IsToCeiling;
-        isLeftBlocked = VARS.IsLeftBlocked;
-        isRightBlocked = VARS.IsRightBlocked;
-        isInLiquid = VARS.IsInLiquid;
-        isInGas = VARS.IsInGas;
-        isInMist = VARS.IsInMist;
         curDownTileData = VARS.curDownTileData;
         curUpTileData = VARS.curUpTileData;
         curLeftTileData = VARS.curLeftTileData;
@@ -164,10 +165,18 @@ public class CatMove : MonoBehaviour
         curGasTileData = VARS.curGasTileData;
         curMistTileData = VARS.curMistTileData;
         buoyancyDistanceFixFloat = VARS.buoyancyDistanceFixFloat;
-        //horCurSpeed = VARS.horCurSpeed;
-        //verCurSpeed = VARS.verCurSpeed;
-        //curEnergy = VARS.curEnergy;
         curRoomGravity = VARS.curRoomGravity;
+        #endregion
+
+        #region ImportBoolVariables
+        isOnGround = VARS.IsOnGround;
+        isToCeiling = VARS.IsToCeiling;
+        isLeftBlocked = VARS.IsLeftBlocked;
+        isRightBlocked = VARS.IsRightBlocked;
+        isInLiquid = VARS.IsInLiquid;
+        isInGas = VARS.IsInGas;
+        isInMist = VARS.IsInMist;
+        #endregion
 
         #region Move
         if (!VARS.IsRotating && 

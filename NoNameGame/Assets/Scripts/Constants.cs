@@ -4,6 +4,13 @@ using UnityEngine;
 [DefaultExecutionOrder((int)ScriptsExecutionOrder.ExecutionOrder.constants)]
 public class Constants : MonoBehaviour
 {
+    #region Default
+    [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
+        "  \nDEFAULT\n --- ")]
+    //vector3
+    public Vector3 defaultVector = new Vector3(999, 999, 999);
+    #endregion
+
     #region ScriptsExecutionController
     [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
         "  \nSCRIPTSEXECUTIONCONTROLLER\n --- ")]
@@ -51,19 +58,6 @@ public class Constants : MonoBehaviour
     //twist
     public GameObject[] twistingCenters = new GameObject[6];
     public float twistSpeed;
-
-    //miniMap
-    public GameObject[] miniMapFaces = new GameObject[6];
-    public GameObject[] miniMapRoomPlanes = new GameObject[54];
-    public GameObject[] miniMapTwistingCenters = new GameObject[6];
-    public float miniMapRotationMovingSpeed;
-    public GameObject[] miniMapRotationCameraPoints = new GameObject[26];
-    //public Vector3[] miniMapRotationCameraPointStableUps = new Vector3[26];
-    //public Vector3[] miniMapRotationCameraPointStableRights = new Vector3[26];
-    public GameObject[] miniMapRotationCameraUpPoints = new GameObject[26];
-    public GameObject[] miniMapRotationCameraDownPoints = new GameObject[26];
-    public GameObject[] miniMapRotationCameraLeftPoints = new GameObject[26];
-    public GameObject[] miniMapRotationCameraRightPoints = new GameObject[26];
     #endregion
 
     #region CurRoomManager
@@ -283,11 +277,38 @@ public class Constants : MonoBehaviour
     public float blocksManagerFixedDeltaTime;
     #endregion
 
+    #region MiniMapManager
+    [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
+        "  \nMINIMAPMANAGER\n --- ")]
+    //faces
+    public GameObject[] miniMapFaces = new GameObject[6];
+
+    //roomPlanes
+    public GameObject[] miniMapRoomPlanes = new GameObject[54];
+
+    //twistingCenters
+    public GameObject[] miniMapTwistingCenters = new GameObject[6];
+
+    //rotationMovingSpeed
+    public float miniMapRotationMovingSpeed;
+
+    //rotationCameraPoints
+    public GameObject[] miniMapRotationCameraPoints = new GameObject[26];
+
+    //outVersion
+    //public Vector3[] miniMapRotationCameraPointStableUps = new Vector3[26];
+    //public Vector3[] miniMapRotationCameraPointStableRights = new Vector3[26];
+    //public GameObject[] miniMapRotationCameraUpPoints = new GameObject[26];
+    //public GameObject[] miniMapRotationCameraDownPoints = new GameObject[26];
+    //public GameObject[] miniMapRotationCameraLeftPoints = new GameObject[26];
+    //public GameObject[] miniMapRotationCameraRightPoints = new GameObject[26];
+    #endregion
+
     #region OptionsManager
     [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
         "  \nOPTIONSMANAGER\n --- ")]
     //optionsPanel
-    public GameObject OptionsPanel;
+    public GameObject optionsPanel;
 
     //options
     public GameObject optionsEmpty;

@@ -33,12 +33,19 @@ public class CurRoomManager : MonoBehaviour
         UFL = gameManager.GetComponent<UniversalFunctionsLibrary>();
         SEC = gameManager.GetComponent<ScriptsExecutionController>();
 
+        #region ImportConstants
         faces = CONS.faces;
+        #endregion
+
+        #region ImportReferenceVariables
+        #endregion
     }
 
     void Update()
     {
+        #region ImportValueVariables
         curRoomIndex = VARS.curRoomIndex;
+        #endregion
 
         //InitializeDirections();
 

@@ -18,10 +18,12 @@ public class CatEnergy : MonoBehaviour
     #endregion
 
     #region VariablesUsed
+    //float curEnergy;
+    #endregion
+
+    #region BoolVariablesUsed
     bool isOnGround;
     bool isInLiquid;
-
-    //float curEnergy;
     #endregion
 
     void Start()
@@ -33,15 +35,24 @@ public class CatEnergy : MonoBehaviour
         UFL = gameManager.GetComponent<UniversalFunctionsLibrary>();
         SEC = gameManager.GetComponent<ScriptsExecutionController>();
 
+        #region ImportConstants
         maxEnergy = CONS.maxEnergy;
         onGroundEnergyRestoreSpeed = CONS.onGroundEnergyRestoreSpeed;
+        #endregion
+
+        #region ImportReferenceVariables
+        #endregion
     }
 
     void Update()
     {
-        isOnGround=VARS.IsOnGround;
+        #region ImportValueVariables
+        #endregion
+
+        #region ImportBoolVariables
+        isOnGround = VARS.IsOnGround;
         isInLiquid = VARS.IsInLiquid;
-        //curEnergy = VARS.curEnergy;
+        #endregion
 
         #region OnGroundOrInLiquidReset
         if (!VARS.IsRotating && 

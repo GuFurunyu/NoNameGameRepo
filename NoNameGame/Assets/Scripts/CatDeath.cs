@@ -36,9 +36,14 @@ public class CatDeath : MonoBehaviour
         UFL = gameManager.GetComponent<UniversalFunctionsLibrary>();
         SEC = gameManager.GetComponent<ScriptsExecutionController>();
 
+        #region ImportConstants
         catTransform = CONS.catTransform;
         maxEnergy = CONS.maxEnergy;
         storedVoidBlocksEmpty = CONS.storedVoidBlocksEmpty;
+        #endregion
+
+        #region ImportReferenceVariables
+        #endregion
 
         VARS.catIniPosition = catTransform.position;
 
@@ -52,6 +57,9 @@ public class CatDeath : MonoBehaviour
 
     void Update()
     {
+        #region ImportValueVariables
+        #endregion
+
         if (VARS.IsToDie)
         {
             Die();

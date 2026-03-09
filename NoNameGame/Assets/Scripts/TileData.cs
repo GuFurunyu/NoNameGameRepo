@@ -10,9 +10,6 @@ public class TileData : MonoBehaviour
 
     GameObject gameManager;
 
-    public GameObject roomManager;
-    RoomsManager RM;
-
     public int inRoomIndex;
 
     Transform thisTransform;
@@ -112,11 +109,15 @@ public class TileData : MonoBehaviour
         UFL = gameManager.GetComponent<UniversalFunctionsLibrary>();
         SEC = gameManager.GetComponent<ScriptsExecutionController>();
 
-        roomManager = GameObject.Find("RoomManager");
-
-        RM = roomManager.GetComponent<RoomsManager>();
-
         thisTransform = this.transform;
+
+        #region ImportConstants
+
+        #endregion
+
+        #region ImportReferenceVariables
+
+        #endregion
 
         for (int i = 0; i < VARS.roomCenters.Length; i++)
         {
@@ -131,6 +132,8 @@ public class TileData : MonoBehaviour
 
     private void Update()
     {
-        
+        #region ImportValueVariables
+
+        #endregion
     }
 }

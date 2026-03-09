@@ -54,7 +54,8 @@ public class OptionsManager : MonoBehaviour
         UFL = gameManager.GetComponent<UniversalFunctionsLibrary>();
         SEC = gameManager.GetComponent<ScriptsExecutionController>();
 
-        optionsPanel = CONS.OptionsPanel;
+        #region ImportConstants
+        optionsPanel = CONS.optionsPanel;
         optionsEmpty = CONS.optionsEmpty;
         optionEmpties = CONS.optionEmpties;
         keySetSubEmpty = CONS.keySetSubEmpty;
@@ -62,8 +63,11 @@ public class OptionsManager : MonoBehaviour
         keyCodes = CONS.keyCodes;
         keySprites = CONS.keySprites;
         keyChosenSprites = CONS.keyChosenSprites;
+        #endregion
 
+        #region ImportReferenceVariables
         curKeyCodes = VARS.curKeyCodes;
+        #endregion
 
         //setKeySetSubKeysAppearance
         for (int i = 0; i < curKeyCodes.Count; i++)
@@ -83,6 +87,9 @@ public class OptionsManager : MonoBehaviour
 
     void Update()
     {
+        #region ImportValueVariables
+        #endregion
+
         //activateOptionPanel
         if (!VARS.IsRotating &&
             !VARS.IsTwisting &&

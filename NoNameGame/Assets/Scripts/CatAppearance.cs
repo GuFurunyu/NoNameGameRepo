@@ -58,6 +58,7 @@ public class CatAppearance : MonoBehaviour
         UFL = gameManager.GetComponent<UniversalFunctionsLibrary>();
         SEC = gameManager.GetComponent<ScriptsExecutionController>();
 
+        #region ImportConstants
         cat = CONS.cat;
         catTransform = CONS.catTransform;
         maxEnergy = CONS.maxEnergy;
@@ -66,22 +67,21 @@ public class CatAppearance : MonoBehaviour
         catEnergyBar = CONS.catEnergyBar;
         catEnergyBarMask = CONS.catEnergyBarMask;
         catEnergyMask = CONS.catEnergyMask;
-        //outerOutlinesEmpty = CONS.outerOutlinesEmpty;
-        //outerGrayOutlinesEmpty = CONS.outerGrayOutlinesEmpty;
         catLeftEye = CONS.catLeftEye;
         catRightEye = CONS.catRightEye;
+        #endregion
 
-        catLeftEyeTransform = catLeftEye.transform;
-        catRightEyeTransform = catRightEye.transform;
+        #region ImportReferenceVariables
+        #endregion
     }
 
     void Update()
     {
-        //planeForward = VARS.planeForward;
+        #region ImportValueVariables
         curRoomStableForward = VARS.curRoomStableForward;
         curUp = VARS.curUp;
         curRight = VARS.curRight;
-        //curEnergy = VARS.curEnergy;
+        #endregion
 
         #region contraction
         if (VARS.IsContracting)
@@ -233,7 +233,7 @@ public class CatAppearance : MonoBehaviour
         #endregion
 
         #region Eyes
-        if (VARS.IsCatStill)
+        if (VARS.horCurSpeed == 0)
         {
             //still
             if (!VARS.IsInputtingUpKey &&

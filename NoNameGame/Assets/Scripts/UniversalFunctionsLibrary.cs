@@ -69,6 +69,7 @@ public class UniversalFunctionsLibrary : MonoBehaviour
         CONS = gameManager.GetComponent<Constants>();
         VARS = gameManager.GetComponent<Variables>();
 
+        #region ImportConstants
         gridBreadth = CONS.gridBreadth;
         roomCoordBreadth = CONS.roomCoordBreadth;
         miniMapRoomCoordBreadth = CONS.miniMapRoomCoordBreadth;
@@ -82,28 +83,28 @@ public class UniversalFunctionsLibrary : MonoBehaviour
         miniMapRoomPlanes = CONS.miniMapRoomPlanes;
         miniMapTwistingCenters = CONS.miniMapTwistingCenters;
         miniMapRotationCameraPoints = CONS.miniMapRotationCameraPoints;
-        //miniMapRotationCameraPointStableUps = CONS.miniMapRotationCameraPointStableUps;
-        //miniMapRotationCameraPointStableRights = CONS.miniMapRotationCameraPointStableRights;
-        miniMapRotationCameraUpPoints = CONS.miniMapRotationCameraUpPoints;
-        miniMapRotationCameraDownPoints = CONS.miniMapRotationCameraDownPoints;
-        miniMapRotationCameraLeftPoints = CONS.miniMapRotationCameraLeftPoints;
-        miniMapRotationCameraRightPoints = CONS.miniMapRotationCameraRightPoints;
         cam = CONS.cam;
         camTransform = CONS.camTransform;
         camNormalSize = CONS.camNormalSize;
         camMiniMapSize = CONS.camMiniMapSize;
         camMiniMapDistanceToCubeCore = CONS.camMiniMapDistanceToCubeCore;
         cat = CONS.cat;
+        #endregion
 
+        #region ImportReferenceVariables
         roomCenters = VARS.roomCenters;
         roomStableForwards = VARS.roomStableForwards;
         roomStableUps = VARS.roomStableUps;
         roomStableRights = VARS.roomStableRights;
+        #endregion
     }
 
-    //private void Update()
-    //{
-    //}
+    private void Update()
+    {
+        #region ImportValueVariables
+
+        #endregion
+    }
 
     #region Universal
     public Vector3 Vector3Abs(Vector3 vector)

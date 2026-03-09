@@ -76,11 +76,13 @@ public class CatTrigger : MonoBehaviour
     Vector3 curRight;
     Vector3 curUp;
 
-    bool isOnGround;
-    bool isInLiquid;
-
     GameObject curTriggerTile;
     TileData curTriggerTileData;
+    #endregion
+
+    #region BoolVariablesUsed
+    bool isOnGround;
+    bool isInLiquid;
     #endregion
 
     void Start()
@@ -92,6 +94,7 @@ public class CatTrigger : MonoBehaviour
         UFL = gameManager.GetComponent<UniversalFunctionsLibrary>();
         SEC = gameManager.GetComponent<ScriptsExecutionController>();
 
+        #region ImportConstants
         faces = CONS.faces;
         camTransform = CONS.camTransform;
         catTransform = CONS.catTransform;
@@ -106,9 +109,12 @@ public class CatTrigger : MonoBehaviour
         edgeGates = CONS.edgeGates;
         savePoints = CONS.savePoints;
         storedActivatedSavePointBlockEmpty = CONS.storedActivatedSavePointBlockEmpty;
+        #endregion
 
+        #region ImportReferenceVariables
         roomStableForwards = VARS.roomStableForwards;
         edgeGateLinkedToIndexes = VARS.edgeGateLinkedToIndexes;
+        #endregion
 
         //loadStoredBlocks
         storedActivatedSavePointBlock = storedActivatedSavePointBlockEmpty.transform.GetChild(0).gameObject;
@@ -116,14 +122,19 @@ public class CatTrigger : MonoBehaviour
 
     void Update()
     {
+        #region ImportValueVariables
         curPlaneEmpty = VARS.curPlaneEmpty;
         curRoomStableForward = VARS.curRoomStableForward;
         curRight = VARS.curRight;
         curUp = VARS.curUp;
-        isOnGround = VARS.IsOnGround;
-        isInLiquid = VARS.IsInLiquid;
         curTriggerTile = VARS.curTriggerTile;
         curTriggerTileData = VARS.curTriggerTileData;
+        #endregion
+
+        #region ImportBoolVariables
+        isOnGround = VARS.IsOnGround;
+        isInLiquid = VARS.IsInLiquid;
+        #endregion
 
         #region Strawberries
         if (!VARS.IsRotating && 

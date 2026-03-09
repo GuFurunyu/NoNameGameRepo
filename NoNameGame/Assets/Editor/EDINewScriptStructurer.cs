@@ -50,6 +50,14 @@ public class {fileName} : MonoBehaviour
 
     GameObject gameManager;
 
+    #region ConstantsUsed
+
+    #endregion
+
+    #region VariablesUsed
+
+    #endregion
+
     void Start()
     {{
         gameManager = GameObject.Find(""GameManager"");
@@ -58,12 +66,19 @@ public class {fileName} : MonoBehaviour
         VARS = gameManager.GetComponent<Variables>();
         UFL = gameManager.GetComponent<UniversalFunctionsLibrary>();
         SEC = gameManager.GetComponent<ScriptsExecutionController>();
+
+        #region ImportConstants
+        #endregion
+
+        #region ImportReferenceVariable
+        #endregion
     }}
 
-    //void Update()
-    //{{
-    //    
-    //}}
+    void Update()
+    {{
+        #region ImportValueVariables
+        #endregion
+    }}
 }}
 ";
             File.WriteAllText(fullPath, template, System.Text.Encoding.UTF8);

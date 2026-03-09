@@ -121,6 +121,7 @@ public class CatCollision : MonoBehaviour
         UFL = gameManager.GetComponent<UniversalFunctionsLibrary>();
         SEC = gameManager.GetComponent<ScriptsExecutionController>();
 
+        #region ImportConstants
         catTransform = CONS.catTransform;
         catBreadth = CONS.catBreadth;
         rayDistance = CONS.rayDistance;
@@ -131,15 +132,18 @@ public class CatCollision : MonoBehaviour
         positionFixOffset = CONS.positionFixOffset;
         verMaxSpeed = CONS.verMaxSpeed;
         elasticEnergyRestoreAmount = CONS.elasticEnergyRestoreAmount;
+        #endregion
+
+        #region ImportReferenceVariables
+        #endregion
     }
 
     void Update()
     {
+        #region ImportValueVariables
         curRight = VARS.curRight;
         curUp = VARS.curUp;
-        //horCurSpeed = VARS.horCurSpeed;
-        //verCurSpeed = VARS.verCurSpeed;
-        //curEnergy = VARS.curEnergy;
+        #endregion
 
         #region Collision
 
