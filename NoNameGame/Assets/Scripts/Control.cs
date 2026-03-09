@@ -54,8 +54,6 @@ public class Control : MonoBehaviour
         //    Debug.Log("inputtingSpace");
         //}
 
-        int a;
-
         //if (isKeyCodeChanged)
         //{
         //    leftKeyCode = VARS.leftKeyCode;

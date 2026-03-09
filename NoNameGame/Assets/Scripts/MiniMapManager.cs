@@ -57,29 +57,22 @@ public class MiniMapManager : MonoBehaviour
 
         if (VARS.IsInNewRoomAllResetOver)
         {
-            Debug.Log("enter1");
-
             #region MiniMap
             //intoMiniMap
             if (!VARS.IsInMiniMap)
             {
-                Debug.Log("enter2");
-                //HR
                 if (!VARS.IsZoomedOut &&
                     VARS.IsIniRotation &&
                     !VARS.IsOptionPanelActivated)
                 {
-                    Debug.Log("enter3");
                     if (!VARS.IsInCenter)
                     {
-                        Debug.Log("enter4");
                         //if (VARS.IsInputtingUpKey)
                         //{
                         //    if (VARS.IsJumpKeyDown)
                         //    {
                         if (VARS.IsConfirmKeyDown)
                         {
-                            Debug.Log("enter5");
                             UFL.IntoMiniMap();
 
                             VARS.IsMiniMapRotationCameraPointIndexNotInitialized = true;

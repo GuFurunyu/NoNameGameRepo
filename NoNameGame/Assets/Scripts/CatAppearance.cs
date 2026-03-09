@@ -73,6 +73,9 @@ public class CatAppearance : MonoBehaviour
 
         #region ImportReferenceVariables
         #endregion
+
+        catLeftEyeTransform = catLeftEye.transform;
+        catRightEyeTransform = catRightEye.transform;
     }
 
     void Update()
