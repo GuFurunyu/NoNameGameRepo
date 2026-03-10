@@ -254,8 +254,8 @@ public class BlocksManager : MonoBehaviour
             //shaffleCurBlocks
             ShaffleCurBlocks();
 
-            //deactivateOutlineSquaresHidenInSurroundingBlocks
-            DeactivateOutlineSquaresHidenInSurroundingBlocks();
+            ////deactivateOutlineSquaresHidenInSurroundingBlocks
+            //DeactivateOutlineSquaresHidenInSurroundingBlocks();
 
             //lockNotConnectedGates
             for (int i = 0; i < gates.Count; i++)

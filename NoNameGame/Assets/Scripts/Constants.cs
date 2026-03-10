@@ -203,6 +203,9 @@ public class Constants : MonoBehaviour
     //energyRestoreSpeed
     public float onGroundEnergyRestoreSpeed;
     public float inLiquidEnergyRestoreSpeed;
+
+    //curEnergeChangeToTargetEnergySpeed
+    public float curEnergyChangeToTargetEnergySpeed;
     #endregion
 
     #region CatTrigger

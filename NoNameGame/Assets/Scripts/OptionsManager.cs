@@ -247,7 +247,7 @@ public class OptionsManager : MonoBehaviour
                                         VARS.jumpKeyCode = tempKeyCode;
                                         break;
                                     case 5:
-                                        VARS.dashKeyCode = tempKeyCode;
+                                        VARS.grabKeyCode = tempKeyCode;
                                         break;
                                 }
                                 curKeyCodes[curKeySetSubIndex] = tempKeyCode;

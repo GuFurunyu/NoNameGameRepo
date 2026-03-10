@@ -1,4 +1,3 @@
-using System.Threading;
 using UnityEngine;
 
 [DefaultExecutionOrder((int)ScriptsExecutionOrder.ExecutionOrder.scriptsExecutionController)]

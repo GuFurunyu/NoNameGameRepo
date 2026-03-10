@@ -3,7 +3,6 @@
 using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 
 public class EDIBlocksArranger : EditorWindow
 {
@@ -93,7 +92,6 @@ public class EDIBlocksArranger : EditorWindow
             Clear();
         }
     }
-
     void GenerateBlocks()
     {
         if (blocksArrangementTexture == null || curPlaneEmpty == null)
@@ -133,14 +131,7 @@ public class EDIBlocksArranger : EditorWindow
             }
         }
 
-        // 2. 检查明度种类数量
-        if (uniqueBrightness.Count < blockTypeCount)
-        {
-            Debug.LogError($"明度种类数量({uniqueBrightness.Count})少于方块种类({blockTypeCount})，请检查贴图或减少方块种类数。");
-            return;
-        }
-
-        // 3. 构建明度到block索引的映射
+        // 2. 构建明度到block索引的映射（只映射前几个方块，多余的方块不参与）
         Dictionary<float, int> brightnessToBlockIdx = new Dictionary<float, int>();
         int idx = 0;
         foreach (float b in uniqueBrightness)
@@ -148,12 +139,12 @@ public class EDIBlocksArranger : EditorWindow
             if (idx < blockTypeCount)
                 brightnessToBlockIdx[b] = idx++;
             else
-                brightnessToBlockIdx[b] = -1; // 多余的明度映射为空
+                break;
         }
 
         Undo.RegisterFullObjectHierarchyUndo(curPlaneEmpty, "Generate Blocks");
 
-        // 4. 生成方块
+        // 3. 生成方块
         for (int y = 0; y < height; y++)
         {
             for (int x = 0; x < width; x++)
@@ -163,8 +154,8 @@ public class EDIBlocksArranger : EditorWindow
                     continue;
 
                 int blockIdx;
-                if (!brightnessToBlockIdx.TryGetValue(brightness, out blockIdx) || blockIdx == -1)
-                    continue; // 不生成方块
+                if (!brightnessToBlockIdx.TryGetValue(brightness, out blockIdx))
+                    continue; // 没有映射的明度不生成方块
 
                 float offsetX = x - center.x;
                 float offsetY = y - center.y;
@@ -179,6 +170,7 @@ public class EDIBlocksArranger : EditorWindow
         EditorUtility.SetDirty(curPlaneEmpty);
         Debug.Log("Blocks generated based on texture.");
     }
+
 
     void Clear()
     {

@@ -15,6 +15,8 @@ public class CatEnergy : MonoBehaviour
     float maxEnergy;
 
     float onGroundEnergyRestoreSpeed;
+
+    float curEnergyChangeToTargetEnergySpeed;
     #endregion
 
     #region VariablesUsed
@@ -38,6 +40,7 @@ public class CatEnergy : MonoBehaviour
         #region ImportConstants
         maxEnergy = CONS.maxEnergy;
         onGroundEnergyRestoreSpeed = CONS.onGroundEnergyRestoreSpeed;
+        curEnergyChangeToTargetEnergySpeed = CONS.curEnergyChangeToTargetEnergySpeed;
         #endregion
 
         #region ImportReferenceVariables
@@ -54,23 +57,57 @@ public class CatEnergy : MonoBehaviour
         isInLiquid = VARS.IsInLiquid;
         #endregion
 
+        #region curEnergyChangeToTargetEnergy
+        //increase
+        if (VARS.curEnergy < VARS.curTargetEnergy)
+        {
+            UFL.AddCurEnergy(curEnergyChangeToTargetEnergySpeed * Time.deltaTime);
+
+            if (VARS.curEnergy > VARS.curTargetEnergy)
+            {
+                UFL.SetCurEnergy(VARS.curTargetEnergy);
+            }
+        }
+        //decrease
+        else if (VARS.curEnergy > VARS.curTargetEnergy)
+        {
+            UFL.AddCurEnergy(-curEnergyChangeToTargetEnergySpeed * Time.deltaTime);
+
+            if (VARS.curEnergy < VARS.curTargetEnergy)
+            {
+                UFL.SetCurEnergy(VARS.curTargetEnergy);
+            }
+        }
+        #endregion
+
+        #region OutOfBoundReset     
+        if (VARS.curEnergy > CONS.maxEnergy)
+        {
+            UFL.SetCurEnergy(CONS.maxEnergy);
+        }
+
+        if (VARS.curTargetEnergy > maxEnergy)
+        {
+            UFL.SetCurTargetEnergy(maxEnergy);
+        }
+        else if (VARS.curTargetEnergy < 0)
+        {
+            UFL.SetCurTargetEnergy(0);
+        }
+        #endregion
+
         #region OnGroundOrInLiquidReset
-        if (!VARS.IsRotating && 
+        if (!VARS.IsRotating &&
             !VARS.IsTwisting)
         {
             if (isOnGround ||
                 isInLiquid)
             {
                 //energyRestore
-                if (VARS.curEnergy < maxEnergy)
+                if (VARS.curTargetEnergy < maxEnergy)
                 {
                     //curEnergy += onGroundEnergyRestoreSpeed * Time.deltaTime;
-                    UFL.AddCurEnergy(onGroundEnergyRestoreSpeed * Time.deltaTime);
-                }
-                if (VARS.curEnergy > maxEnergy)
-                {
-                    //curEnergy = maxEnergy;
-                    UFL.SetCurEnergy(maxEnergy);
+                    UFL.AddCurTargetEnergy(onGroundEnergyRestoreSpeed * Time.deltaTime);
                 }
             }
             else
@@ -98,7 +135,7 @@ public class CatEnergy : MonoBehaviour
         }
         #endregion
 
-        //outOfEnergy
+        //ifOutOfEnergyDie
         if (VARS.curEnergy <= 0)
         {
             VARS.IsToDie = true;

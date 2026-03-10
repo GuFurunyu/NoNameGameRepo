@@ -271,7 +271,8 @@ public class CatMove : MonoBehaviour
                 //attachWall
                 if (!isOnGround)
                 {
-                    if (VARS.IsInputtingLeftKey)
+                    if (VARS.IsInputtingLeftKey &&
+                        VARS.IsInputtingGrabKey)
                     {
                         //lastHorDirectionInput = rightKeyCode;
                         VARS.curFacingDirectionIndex = 2;
@@ -305,7 +306,8 @@ public class CatMove : MonoBehaviour
                 //attachWall
                 if (!isOnGround)
                 {
-                    if (VARS.IsInputtingRightKey)
+                    if (VARS.IsInputtingRightKey &&
+                        VARS.IsInputtingGrabKey)
                     {
                         //lastHorDirectionInput = rightKeyCode;
                         VARS.curFacingDirectionIndex = 2;
@@ -340,7 +342,7 @@ public class CatMove : MonoBehaviour
             if (VARS.IsAttachWall)
             {
                 //curEnergy -= attachWallEnergyDecreaseSpeed * Time.deltaTime;
-                UFL.AddCurEnergy(-attachWallEnergyDecreaseSpeed * Time.deltaTime);
+                UFL.AddCurTargetEnergy(-attachWallEnergyDecreaseSpeed * Time.deltaTime);
             }
 
             //stop
@@ -580,7 +582,7 @@ public class CatMove : MonoBehaviour
                         UFL.SetVerCurSpeed(curClimbSpeed);
 
                         //curEnergy -= climbEnergyDecreaseSpeed * Time.deltaTime;
-                        UFL.AddCurEnergy(-climbEnergyDecreaseSpeed * Time.deltaTime);
+                        UFL.AddCurTargetEnergy(-climbEnergyDecreaseSpeed * Time.deltaTime);
 
                         ////climbJump
                         //if (VARS.IsJumpKeyDown)
@@ -611,7 +613,7 @@ public class CatMove : MonoBehaviour
                         UFL.SetVerCurSpeed(0);
 
                         //curEnergy -= toCeilingEnergyDecreaseSpeed * Time.deltaTime;
-                        UFL.AddCurEnergy(-toCeilingEnergyDecreaseSpeed * Time.deltaTime);
+                        UFL.AddCurTargetEnergy(-toCeilingEnergyDecreaseSpeed * Time.deltaTime);
                     }
                 }
             }
@@ -637,71 +639,74 @@ public class CatMove : MonoBehaviour
             #region Dash
             if (dashStartTime == 0)
             {
-                if (VARS.curEnergy > dashEnergyCost)
+                if (VARS.IsDashEnabled)
                 {
-                    if (VARS.IsDashKeyDown)
+                    if (VARS.curEnergy > dashEnergyCost)
                     {
-                        //dir
-                        if (VARS.IsInputtingLeftKey)
+                        if (VARS.IsDashKeyDown)
                         {
-                            dashVector = -curRight;
-                        }
-                        else if (VARS.IsInputtingRightKey)
-                        {
-                            dashVector = curRight;
-                        }
-                        else
-                        {
-                            if (/*lastHorDirectionInput == leftKeyCode*/
-                                VARS.curFacingDirectionIndex == 1)
+                            //dir
+                            if (VARS.IsInputtingLeftKey)
                             {
                                 dashVector = -curRight;
                             }
-                            else if (/*lastHorDirectionInput == rightKeyCode*/
-                                VARS.curFacingDirectionIndex == 2)
+                            else if (VARS.IsInputtingRightKey)
                             {
                                 dashVector = curRight;
                             }
-                        }
-
-                        //blockedReverse
-                        if (dashVector == -curRight)
-                        {
-                            if (isLeftBlocked)
+                            else
                             {
-                                dashVector = curRight;
+                                if (/*lastHorDirectionInput == leftKeyCode*/
+                                    VARS.curFacingDirectionIndex == 1)
+                                {
+                                    dashVector = -curRight;
+                                }
+                                else if (/*lastHorDirectionInput == rightKeyCode*/
+                                    VARS.curFacingDirectionIndex == 2)
+                                {
+                                    dashVector = curRight;
+                                }
                             }
-                        }
-                        else if (dashVector == curRight)
-                        {
-                            if (isRightBlocked)
+
+                            //blockedReverse
+                            if (dashVector == -curRight)
                             {
-                                dashVector = -curRight;
+                                if (isLeftBlocked)
+                                {
+                                    dashVector = curRight;
+                                }
                             }
+                            else if (dashVector == curRight)
+                            {
+                                if (isRightBlocked)
+                                {
+                                    dashVector = -curRight;
+                                }
+                            }
+
+                            //horCurSpeed += Vector3.Dot(dashVector, curRight) * dashIniSpeed;
+                            UFL.AddHorCurSpeed(Vector3.Dot(dashVector, curRight) * dashIniSpeed);
+
+                            //dashMaxSpeed
+                            if (VARS.horCurSpeed > dashIniSpeed)
+                            {
+                                //horCurSpeed = dashIniSpeed;
+                                UFL.SetHorCurSpeed(dashIniSpeed);
+                            }
+                            else if (VARS.horCurSpeed < -dashIniSpeed)
+                            {
+                                //horCurSpeed = -dashIniSpeed;
+                                UFL.SetHorCurSpeed(-dashIniSpeed);
+                            }
+
+                            //verCurSpeed = 0;
+                            UFL.SetVerCurSpeed(0);
+
+                            dashStartTime = Time.time;
+
+                            //curEnergy -= dashEnergyCost;
+                            UFL.AddCurTargetEnergy(-dashEnergyCost);
                         }
-
-                        //horCurSpeed += Vector3.Dot(dashVector, curRight) * dashIniSpeed;
-                        UFL.AddHorCurSpeed(Vector3.Dot(dashVector, curRight) * dashIniSpeed);
-
-                        //dashMaxSpeed
-                        if (VARS.horCurSpeed > dashIniSpeed)
-                        {
-                            //horCurSpeed = dashIniSpeed;
-                            UFL.SetHorCurSpeed(dashIniSpeed);
-                        }
-                        else if (VARS.horCurSpeed < -dashIniSpeed)
-                        {
-                            //horCurSpeed = -dashIniSpeed;
-                            UFL.SetHorCurSpeed(-dashIniSpeed);
-                        }
-
-                        //verCurSpeed = 0;
-                        UFL.SetVerCurSpeed(0);
-
-                        dashStartTime = Time.time;
-
-                        //curEnergy -= dashEnergyCost;
-                        UFL.AddCurEnergy(-dashEnergyCost);
                     }
                 }
             }
@@ -766,7 +771,7 @@ public class CatMove : MonoBehaviour
             VARS.IsContracting = true;
 
             //curEnergy -= jumpEnergyCost;
-            UFL.AddCurEnergy(-jumpEnergyCost);
+            UFL.AddCurTargetEnergy(-jumpEnergyCost);
         }
     }
 }

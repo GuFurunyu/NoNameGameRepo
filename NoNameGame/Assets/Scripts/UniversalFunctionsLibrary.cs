@@ -1,8 +1,3 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using JetBrains.Annotations;
-using UnityEditor.SceneTemplate;
 using UnityEngine;
 
 [DefaultExecutionOrder((int)ScriptsExecutionOrder.ExecutionOrder.universalFunctionsLibrary)]
@@ -39,10 +34,10 @@ public class UniversalFunctionsLibrary : MonoBehaviour
     GameObject[] miniMapRotationCameraPoints = new GameObject[26];
     //Vector3[] miniMapRotationCameraPointStableUps = new Vector3[26];
     //Vector3[] miniMapRotationCameraPointStableRights = new Vector3[26];
-    GameObject[] miniMapRotationCameraUpPoints = new GameObject[26];
-    GameObject[] miniMapRotationCameraDownPoints = new GameObject[26];
-    GameObject[] miniMapRotationCameraLeftPoints = new GameObject[26];
-    GameObject[] miniMapRotationCameraRightPoints = new GameObject[26];
+    //GameObject[] miniMapRotationCameraUpPoints = new GameObject[26];
+    //GameObject[] miniMapRotationCameraDownPoints = new GameObject[26];
+    //GameObject[] miniMapRotationCameraLeftPoints = new GameObject[26];
+    //GameObject[] miniMapRotationCameraRightPoints = new GameObject[26];
 
     Camera cam;
     Transform camTransform;
@@ -73,7 +68,7 @@ public class UniversalFunctionsLibrary : MonoBehaviour
         gridBreadth = CONS.gridBreadth;
         roomCoordBreadth = CONS.roomCoordBreadth;
         miniMapRoomCoordBreadth = CONS.miniMapRoomCoordBreadth;
-        inRoomMaxForwardDistance= CONS.inRoomMaxForwardDistance;
+        inRoomMaxForwardDistance = CONS.inRoomMaxForwardDistance;
         faceStableForwards = CONS.faceStableForwards;
         faceStableUps = CONS.faceStableUps;
         faceStableRights = CONS.faceStableRights;
@@ -102,7 +97,6 @@ public class UniversalFunctionsLibrary : MonoBehaviour
     private void Update()
     {
         #region ImportValueVariables
-
         #endregion
     }
 
@@ -493,6 +487,16 @@ public class UniversalFunctionsLibrary : MonoBehaviour
     #endregion
 
     #region CatEnergy
+    public void SetCurTargetEnergy(float value)
+    {
+        VARS.curTargetEnergy = value;
+    }
+
+    public void AddCurTargetEnergy(float value)
+    {
+        VARS.curTargetEnergy += value;
+    }
+
     public void SetCurEnergy(float value)
     {
         VARS.curEnergy = value;

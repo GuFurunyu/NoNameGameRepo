@@ -69,23 +69,24 @@ public class CatDeath : MonoBehaviour
     }
     void Die()
     {
-        //turnIntoVoid
-        storedVoidBlocks[curStoredVoidBlockIndex].transform.position = new Vector3
-            (Mathf.RoundToInt(catTransform.position.x), Mathf.RoundToInt(catTransform.position.y), Mathf.RoundToInt(catTransform.position.z));
+        ////turnIntoVoid
+        //storedVoidBlocks[curStoredVoidBlockIndex].transform.position = new Vector3
+        //    (Mathf.RoundToInt(catTransform.position.x), Mathf.RoundToInt(catTransform.position.y), Mathf.RoundToInt(catTransform.position.z));
 
-        //voidTempChildToCurPlaneEmpty
-        storedVoidBlocks[curStoredVoidBlockIndex].transform.SetParent(VARS.curPlaneEmpty.transform, true);
+        ////voidTempChildToCurPlaneEmpty
+        //storedVoidBlocks[curStoredVoidBlockIndex].transform.SetParent(VARS.curPlaneEmpty.transform, true);
 
-        //activateVoidBlock
-        storedVoidBlocks[curStoredVoidBlockIndex].SetActive(true);
+        ////activateVoidBlock
+        //storedVoidBlocks[curStoredVoidBlockIndex].SetActive(true);
 
-        curStoredVoidBlockIndex++;
+        //curStoredVoidBlockIndex++;
 
         catTransform.position = VARS.catIniPosition;
 
         //VARS.curEnergy = maxEnergy;
         //VARS.curEnergy = 0.1f;
         UFL.SetCurEnergy(0.1f);
+        UFL.SetCurTargetEnergy(0.1f);
         //VARS.horCurSpeed = 0;
         UFL.SetHorCurSpeed(0);
         //VARS.verCurSpeed = 0;

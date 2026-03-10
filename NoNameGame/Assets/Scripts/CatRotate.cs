@@ -141,7 +141,8 @@ public class CatRotate : MonoBehaviour
             VARS.IsInNewRoomCatRotateResetOver = true;
         }
 
-        if (!VARS.IsRotating &&
+        if (VARS.IsRotateEnabled &&
+            !VARS.IsRotating &&
             !VARS.IsTwisting &&
             !VARS.IsInMiniMap &&
             VARS.IsInNewRoomAllResetOver)
@@ -225,7 +226,7 @@ public class CatRotate : MonoBehaviour
                             rotationRestNum--;
 
                             //curEnergy -= rotationEnergyCost;
-                            UFL.AddCurEnergy(-rotationEnergyCost);
+                            UFL.AddCurTargetEnergy(-rotationEnergyCost);
                         }
                         else if (VARS.IsInputtingRightKey)
                         {
@@ -244,7 +245,7 @@ public class CatRotate : MonoBehaviour
                             rotationRestNum--;
 
                             //curEnergy -= rotationEnergyCost;
-                            UFL.AddCurEnergy(-rotationEnergyCost);
+                            UFL.AddCurTargetEnergy(-rotationEnergyCost);
                         }
                     }
                 }

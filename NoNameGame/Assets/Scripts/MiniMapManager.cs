@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [DefaultExecutionOrder((int)ScriptsExecutionOrder.ExecutionOrder.miniMapManager)]
@@ -62,7 +60,7 @@ public class MiniMapManager : MonoBehaviour
             if (!VARS.IsInMiniMap)
             {
                 if (!VARS.IsZoomedOut &&
-                    VARS.IsIniRotation &&
+                    //VARS.IsIniRotation &&
                     !VARS.IsOptionPanelActivated)
                 {
                     if (!VARS.IsInCenter)

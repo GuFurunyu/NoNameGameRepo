@@ -203,7 +203,8 @@ public class Variables : MonoBehaviour
     public KeyCode leftKeyCode = KeyCode.A;
     public KeyCode rightKeyCode = KeyCode.D;
     public KeyCode jumpKeyCode = KeyCode.K;
-    public KeyCode dashKeyCode = KeyCode.L;
+    //public KeyCode dashKeyCode = KeyCode.L;
+    public KeyCode grabKeyCode = KeyCode.J;
     public KeyCode confirmKeyCode = KeyCode.Space;
     public KeyCode backKeyCode = KeyCode.Escape;
 
@@ -229,6 +230,9 @@ public class Variables : MonoBehaviour
 
     [SerializeField] private bool _isInputtingDashKey;
     public bool IsInputtingDashKey { get { return _isInputtingDashKey; } set { _isInputtingDashKey = value; } }
+
+    [SerializeField] private bool _isInputtingGrabKey;
+    public bool IsInputtingGrabKey { get { return _isInputtingGrabKey; } set { _isInputtingGrabKey = value; } }
 
     [SerializeField] private bool _isInputtingConfirmKey;
     public bool IsInputtingConfirmKey { get { return _isInputtingConfirmKey; } set { _isInputtingConfirmKey = value; } }
@@ -256,6 +260,9 @@ public class Variables : MonoBehaviour
     [SerializeField] private bool _isDashKeyDown;
     public bool IsDashKeyDown { get { return _isDashKeyDown; } set { _isDashKeyDown = value; } }
 
+    [SerializeField] private bool _isGrabKeyDown;
+    public bool IsGrabKeyDown { get { return _isGrabKeyDown; } set { _isGrabKeyDown = value; } }
+
     [SerializeField] private bool _isConfirmKeyDown;
     public bool IsConfirmKeyDown { get { return _isConfirmKeyDown; } set { _isConfirmKeyDown = value; } }
 
@@ -280,6 +287,9 @@ public class Variables : MonoBehaviour
 
     [SerializeField] private bool _isDashKeyUp;
     public bool IsDashKeyUp { get { return _isDashKeyUp; } set { _isDashKeyUp = value; } }
+
+    [SerializeField] private bool _isGrabKeyUp;
+    public bool IsGrabKeyUp { get { return _isGrabKeyUp; } set { _isGrabKeyUp = value; } }
 
     [SerializeField] private bool _isConfirmKeyUp;
     public bool IsConfirmKeyUp { get { return _isConfirmKeyUp; } set { _isConfirmKeyUp = value; } }
@@ -393,6 +403,9 @@ public class Variables : MonoBehaviour
     [SerializeField] private bool _isCatStill;
     public bool IsCatStill { get { return _isCatStill; } set { _isCatStill = value; } }
 
+    [SerializeField] private bool _isDashEnabled;
+    public bool IsDashEnabled { get { return _isDashEnabled; } set { _isDashEnabled = value; } }
+
     #endregion
 
     #region CatRotate
@@ -411,13 +424,20 @@ public class Variables : MonoBehaviour
 
     //rotationNum
     public int rotationRestNum;
+
+    [SerializeField] private bool _isRotateEnabled;
+    public bool IsRotateEnabled { get { return _isRotateEnabled; } set { _isRotateEnabled = value; } }
+
     #endregion
 
     #region CatEnergy
     [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
         "  \nCATENERGY\n --- ")]
-    //energy
+    //curEnergy
     public float curEnergy;
+
+    //curTargetEnergy
+    public float curTargetEnergy;
     #endregion
 
     #region CatTrigger

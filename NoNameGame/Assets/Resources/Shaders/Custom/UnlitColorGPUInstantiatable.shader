@@ -1,3 +1,4 @@
+
 //ByCopilot
 Shader "Custom/UnlitColorGPUInstantiatable"
 {
@@ -53,3 +54,4 @@ Shader "Custom/UnlitColorGPUInstantiatable"
         }
     }
 }
+

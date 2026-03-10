@@ -614,7 +614,7 @@ public class CatCollision : MonoBehaviour
                             {
                                 //curEnergy += elasticEnergyRestoreAmount;
 
-                                UFL.AddCurEnergy(elasticEnergyRestoreAmount);
+                                UFL.AddCurTargetEnergy(elasticEnergyRestoreAmount);
                             }
                         }
                         else if (dirIndex == 3 ||

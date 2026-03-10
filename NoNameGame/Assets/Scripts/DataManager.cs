@@ -1,7 +1,4 @@
-using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
-using Unity.VisualScripting;
 using UnityEngine;
 
 
@@ -47,7 +44,10 @@ public class DataManager : MonoBehaviour
         public KeyCode leftKeyCode;
         public KeyCode rightKeyCode;
         public KeyCode jumpKeyCode;
-        public KeyCode dashKeyCode;
+        public KeyCode grabKeyCode;
+        //public KeyCode dashKeyCode;
+        public KeyCode confirmKeyCode;
+        public KeyCode backKeyCode;
     }
 
     KeyCodesData curKeyCodesData = new KeyCodesData();
@@ -103,7 +103,6 @@ public class DataManager : MonoBehaviour
         #endregion
 
         #region ImportReferenceVariables
-
         #endregion
 
         ReadWorldData();
@@ -116,7 +115,6 @@ public class DataManager : MonoBehaviour
     void Update()
     {
         #region ImportValueVariables
-
         #endregion
 
         if (VARS.IsToWriteWorldData)
@@ -276,7 +274,10 @@ public class DataManager : MonoBehaviour
             VARS.leftKeyCode = curKeyCodesData.leftKeyCode;
             VARS.rightKeyCode = curKeyCodesData.rightKeyCode;
             VARS.jumpKeyCode = curKeyCodesData.jumpKeyCode;
-            VARS.dashKeyCode = curKeyCodesData.dashKeyCode;
+            VARS.grabKeyCode = curKeyCodesData.grabKeyCode;
+            //VARS.dashKeyCode = curKeyCodesData.dashKeyCode;
+            //VARS.confirmKeyCode = curKeyCodesData.confirmKeyCode;
+            //VARS.backKeyCode = curKeyCodesData.backKeyCode;
 
             VARS.curKeyCodes.Clear();
 
@@ -285,12 +286,15 @@ public class DataManager : MonoBehaviour
             VARS.curKeyCodes.Add(VARS.leftKeyCode);
             VARS.curKeyCodes.Add(VARS.rightKeyCode);
             VARS.curKeyCodes.Add(VARS.jumpKeyCode);
-            VARS.curKeyCodes.Add(VARS.dashKeyCode);
+            VARS.curKeyCodes.Add(VARS.grabKeyCode);
+            //VARS.curKeyCodes.Add(VARS.dashKeyCode);
+            //VARS.curKeyCodes.Add(VARS.confirmKeyCode);
+            //VARS.curKeyCodes.Add(VARS.backKeyCode);
         }
-        //else
-        //{
-        //    Debug.Log("没有找到存档文件");
-        //}
+        else
+        {
+            VARS.IsToWriteKeyCodesData = true;
+        }
     }
 
     void WriteKeyCodesData()
@@ -302,7 +306,10 @@ public class DataManager : MonoBehaviour
         curKeyCodesData.leftKeyCode = VARS.leftKeyCode;
         curKeyCodesData.rightKeyCode = VARS.rightKeyCode;
         curKeyCodesData.jumpKeyCode = VARS.jumpKeyCode;
-        curKeyCodesData.dashKeyCode = VARS.dashKeyCode;
+        curKeyCodesData.grabKeyCode = VARS.grabKeyCode;
+        //curKeyCodesData.dashKeyCode = VARS.dashKeyCode;
+        //curKeyCodesData.confirmKeyCode = VARS.confirmKeyCode;
+        //curKeyCodesData.backKeyCode = VARS.backKeyCode;
 
         tempJsonString = JsonUtility.ToJson(curKeyCodesData);
 
