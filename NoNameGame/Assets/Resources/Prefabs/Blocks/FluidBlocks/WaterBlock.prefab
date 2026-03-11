@@ -289,11 +289,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c836e45a7c6f67342bb75ae36bcc44a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  roomManager: {fileID: 0}
   inRoomIndex: 0
   offsetThres: 0.2
   triggerTypeIndex: 0
-  stateOfMatterIndex: 1
+  stateOfMatterIndex: 2
   isMovable: 1
   isPositionDetermined: 0
   isAffectedByGravity: 1
@@ -309,7 +308,7 @@ MonoBehaviour:
   temperature: 0
   conductivity: 0
   toxicity: 0
-  blockTypeIndex: 310
+  blockTypeIndex: 3201
 --- !u!1 &8273609726376025567
 GameObject:
   m_ObjectHideFlags: 0

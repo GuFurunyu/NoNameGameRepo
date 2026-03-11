@@ -238,7 +238,8 @@ public class BlocksManager : MonoBehaviour
                 if (tempTransform.GetComponent<TileData>() != null &&
                     tempTransform.gameObject.activeSelf)
                 {
-                    if (tempTransform.GetComponent<TileData>().blockTypeIndex != 630)
+                    //notCountEdgeGateTriggers
+                    if (tempTransform.GetComponent<TileData>().blockTypeIndex != 7003)
                     {
                         curBlocks.Add(tempTransform.gameObject);
                         curBlockTileDatas.Add(tempTransform.GetComponent<TileData>());
@@ -278,19 +279,23 @@ public class BlocksManager : MonoBehaviour
                     }
                 }
 
-                //linkConnectedEdgeGates
+                //linkConnectedGates
                 if (curNearestGateDistance < 6 * gridBreadth)
                 {
-                    tempTransform.GetComponent<TileData>().triggerTypeIndex = 3;
+                    //tempTransform.GetComponent<TileData>().triggerTypeIndex = 3;
+                    //toTrigger
+                    tempTransform.GetComponent<TileData>().stateOfMatterIndex = 0;
                     for (int k = 0; k < tempTransform.childCount; k++)
                     {
                         tempTransform.GetChild(k).gameObject.SetActive(false);
                     }
                 }
-                //lockNotConnectedEdgeGates
+                //lockNotConnectedGates
                 else
                 {
-                    tempTransform.GetComponent<TileData>().triggerTypeIndex = 0;
+                    //tempTransform.GetComponent<TileData>().triggerTypeIndex = 0;
+                    //toSolid
+                    tempTransform.GetComponent<TileData>().stateOfMatterIndex = 1;
                     for (int k = 0; k < tempTransform.childCount; k++)
                     {
                         tempTransform.GetChild(k).gameObject.SetActive(true);
@@ -306,6 +311,7 @@ public class BlocksManager : MonoBehaviour
                 edgeGateLinkedToIndexes.Add(-1);
             }
 
+            //determineEdgeGatePassabilities
             for (int i = 0; i < edgeGates.Count; i++)
             {
                 if(edgeGates[i].transform.parent != VARS.curPlaneEmpty.transform)
@@ -342,7 +348,9 @@ public class BlocksManager : MonoBehaviour
                 //linkConnectedEdgeGates
                 if (curNearestEdgeGateDistance < 6 * gridBreadth)
                 {
-                    tempTransform.GetComponent<TileData>().triggerTypeIndex = 4;
+                    //tempTransform.GetComponent<TileData>().triggerTypeIndex = 4;
+                    //toTrigger
+                    tempTransform.GetComponent<TileData>().stateOfMatterIndex = 0;
                     edgeGateLinkedToIndexes[i] = curNearestEdgeGateIndex;
                     for (int k = 0; k < tempTransform.childCount; k++)
                     {
@@ -352,7 +360,9 @@ public class BlocksManager : MonoBehaviour
                 //lockNotConnectedEdgeGates
                 else
                 {
-                    tempTransform.GetComponent<TileData>().triggerTypeIndex = 0;
+                    //tempTransform.GetComponent<TileData>().triggerTypeIndex = 0;
+                    //toSolid
+                    tempTransform.GetComponent<TileData>().stateOfMatterIndex = 1;
                     edgeGateLinkedToIndexes[i] = -1;
                     for (int k = 0; k < tempTransform.childCount; k++)
                     {
@@ -380,10 +390,12 @@ public class BlocksManager : MonoBehaviour
                 curBlock = curBlocks[i];
                 curBlockTileData = curBlockTileDatas[i];
 
-                if (curBlockTileData.stateOfMatterIndex == 1)
+                //liquidHeight
+                if (curBlockTileData.stateOfMatterIndex == 2)
                 {
                     tempFloat = Vector3.Dot(curBlock.transform.localPosition, curUp);
 
+                    //curLiquidMaxHeight
                     if (curLiquidMaxHeight == 999)
                     {
                         curLiquidMaxHeight = tempFloat;
@@ -393,6 +405,7 @@ public class BlocksManager : MonoBehaviour
                         curLiquidMaxHeight = tempFloat;
                     }
 
+                    //curLiquidMinHeight
                     if (curLiquidMinHeight == 999)
                     {
                         curLiquidMinHeight = tempFloat;
@@ -403,10 +416,12 @@ public class BlocksManager : MonoBehaviour
                     }
                 }
 
-                if (curBlockTileData.stateOfMatterIndex == 2)
+                //gasHeight
+                if (curBlockTileData.stateOfMatterIndex == 3)
                 {
                     tempFloat = Vector3.Dot(curBlock.transform.localPosition, curUp);
 
+                    //curGasMinHeight
                     if (curGasMinHeight == 999)
                     {
                         curGasMinHeight = tempFloat;
@@ -416,6 +431,7 @@ public class BlocksManager : MonoBehaviour
                         curGasMinHeight = tempFloat;
                     }
 
+                    //curGasMaxHeight
                     if (curGasMaxHeight == 999)
                     {
                         curGasMaxHeight = tempFloat;
@@ -427,7 +443,7 @@ public class BlocksManager : MonoBehaviour
                 }
 
                 //getCurElectricMistCenterBlock
-                if (curBlockTileData.blockTypeIndex == 2070)
+                if (curBlockTileData.blockTypeIndex == 6103)
                 {
                     curElectricMistCenterBlock = curBlock;
                     curElectricMistCenterBlockCoordVector = curElectricMistCenterBlock.transform.localPosition;
@@ -442,7 +458,7 @@ public class BlocksManager : MonoBehaviour
                 //curBlockStateOfMatterIndex = curBlockStateOfMatterIndexes[i];
 
                 #region Solid
-                if (curBlockTileData.stateOfMatterIndex == 0)
+                if (curBlockTileData.stateOfMatterIndex == 1)
                 {
                     //affectedByGravitySolid
                     if (curBlockTileData.isAffectedByGravity)
@@ -460,7 +476,7 @@ public class BlocksManager : MonoBehaviour
                 #endregion
 
                 #region Liquid
-                else if (curBlockTileData.stateOfMatterIndex == 1)
+                else if (curBlockTileData.stateOfMatterIndex == 2)
                 {
                     curCoordVector = curCoordVectors[i];
 
@@ -505,7 +521,7 @@ public class BlocksManager : MonoBehaviour
                 #endregion
 
                 #region Gas
-                else if (curBlockTileData.stateOfMatterIndex == 2)
+                else if (curBlockTileData.stateOfMatterIndex == 3)
                 {
                     curCoordVector = curCoordVectors[i];
 
@@ -548,7 +564,7 @@ public class BlocksManager : MonoBehaviour
                 #endregion
 
                 #region Mist
-                else if (curBlockTileData.stateOfMatterIndex == 3)
+                else if (curBlockTileData.stateOfMatterIndex == 4)
                 {
                     curCoordVector = curCoordVectors[i];
 

@@ -21,15 +21,20 @@ public class TileData : MonoBehaviour
     Vector3 curCoordinates;
     public float offsetThres = 0.2f;
 
-    //0-not,
-    //1-strawberry, 2-energyCrystal,
-    //3-gate, 4-edgeGate, 5-edgeGateTrigger,
-    //6-savePoint, 7-activatedSavePoint,
-    //8-centerBlock
-    public int triggerTypeIndex;
+    ////0-not,
+    ////1-strawberry, 2-energyCrystal,
+    ////3-gate, 4-edgeGate, 5-edgeGateTrigger,
+    ////6-savePoint, 7-activatedSavePoint,
+    ////8-centerBlock
+    ////public int triggerTypeIndex;
+    //[SerializeField] private int _triggerTypeIndex;
+    //public int triggerTypeIndex { get { return _triggerTypeIndex; } set { _triggerTypeIndex = value; } }
 
-    //0-solid, 1-liquid, 2-gas
-    public int stateOfMatterIndex;
+
+    //0-trigger, 1-solid, 2-liquid, 3-gas, 4-mist
+    //public int stateOfMatterIndex;
+    [SerializeField] private int _stateOfMatterIndex;
+    public int stateOfMatterIndex { get { return _stateOfMatterIndex; } set { _stateOfMatterIndex = value; } }
 
     public bool isMovable;
 
@@ -71,9 +76,8 @@ public class TileData : MonoBehaviour
     //default: 0
     public float toxicity;
 
-    Vector3 tempVector;
-
     //blockTypeIndex:
+    //way1:
     //  1-NormalBlocks
     //      100-(White)Block, 110-RedBlock, 120-YellowBlock, 130-BlueBlock, 140-OrangeBlock, 150-GreenBlock, 160-PurpleBlock
     //  2-SpecialSolidBlocks
@@ -90,7 +94,31 @@ public class TileData : MonoBehaviour
     //      640-StrawberryBlock, 650-EnergyCrystalBlock,
     //      660-SavePointBlock, 670-ActivatedSavePointBlock,
     //      680-CenterBlock
-    public int blockTypeIndex;
+    //way2(x-x-xx(region-stateOfMatterIndex-mainType)):
+    //  1-RedRegionBlocks
+    //      1101-RedBlock, 1102-DarkRedBlock
+    //      1301-VaporBlock
+    //  2-YellowRegionBlocks
+    //      2101-YellowBlock, 2102-DarkYellow , 2102-SandBlock
+    //  3-BlueRegionBlocks
+    //      3101-BlueBlock, 3102-DarkBlueBlock , 3103-IceBlock, 3104-BreakableIceBlock
+    //      3201-WaterBlock
+    //  4-OrangeRegionBlocks
+    //      4101-OrangeBlock, 4102-DarkOrangeBlock
+    //  5-GreenRegionBlocks
+    //      5101-GreenBlock, 5102-DarkGreenBlock
+    //      5201-AcidBlock
+    //      5301-GasBlock
+    //  6-PurpleRegionBlocks
+    //      6101-PurpleBlock, 6102-DarkPurpleBlock, 6103-ElectricMistCenterBlock
+    //      6401-ElectricMistBlock, 6402-LightElectricMistBlock
+    //  7-UniversalBlocks
+    //      7001-GateBlock, 7002-EdgeGateBlock, 7003-EdgeGateTriggerBlock, 7004-SavePointBlock, 7005-ActivatedSavePointBlock, 7006-CenterBlock, 
+    //      7007-StrawberryBlock, 7008-EnergyCrystalBlock
+    //      7101-(White)Block, 7102-Dark(White)Block, 7102-VoidBlock, 7103-PlatformBlock
+    //public int blockTypeIndex;
+    [SerializeField] int _blockTypeIndex;
+    public int blockTypeIndex { get { return _blockTypeIndex; } set { _blockTypeIndex = value; } }
 
     #region ConstantsUsed
 
@@ -112,11 +140,9 @@ public class TileData : MonoBehaviour
         thisTransform = this.transform;
 
         #region ImportConstants
-
         #endregion
 
         #region ImportReferenceVariables
-
         #endregion
 
         for (int i = 0; i < VARS.roomCenters.Length; i++)
@@ -133,7 +159,6 @@ public class TileData : MonoBehaviour
     private void Update()
     {
         #region ImportValueVariables
-
         #endregion
     }
 }

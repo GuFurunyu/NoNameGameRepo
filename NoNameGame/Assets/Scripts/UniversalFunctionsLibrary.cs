@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using UnityEngine;
 
 [DefaultExecutionOrder((int)ScriptsExecutionOrder.ExecutionOrder.universalFunctionsLibrary)]
@@ -304,6 +305,23 @@ public class UniversalFunctionsLibrary : MonoBehaviour
         //camSize
         SetCameraSize(camNormalSize);
     }
+    #endregion
+
+    #region TileData
+    //public int GetBlockStateOfMatterIndex(GameObject block)
+    //{
+    //    if (block.GetComponent<TileData>() != null)
+    //    {
+    //        return block.GetComponent<TileData>().stateOfMatterIndex;
+    //    }
+
+    //    return 0;
+    //}
+
+    //public int GetBlocksStateOfMatterIndex(TileData tileData)
+    //{
+    //    return tileData.stateOfMatterIndex;
+    //}
     #endregion
 
     #region CameraManager

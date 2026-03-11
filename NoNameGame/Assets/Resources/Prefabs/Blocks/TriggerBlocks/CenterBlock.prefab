@@ -308,7 +308,7 @@ MonoBehaviour:
   temperature: 0
   conductivity: 0
   toxicity: 0
-  blockTypeIndex: 680
+  blockTypeIndex: 7006
 --- !u!1 &6224344512475621318
 GameObject:
   m_ObjectHideFlags: 0

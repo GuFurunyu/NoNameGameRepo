@@ -499,8 +499,9 @@ public class CatCollision : MonoBehaviour
         if (curTileData != null)
         {
             //notTrigger
-            if (curTileData.triggerTypeIndex == 0)
-            {
+            if (/*curTileData.triggerTypeIndex == 0*/
+                curTileData.stateOfMatterIndex != 0)
+            { 
                 //switch (dirIndex)
                 //{
                 //    case 1:
@@ -518,11 +519,11 @@ public class CatCollision : MonoBehaviour
                 //}
 
                 //solid
-                if (curTileData.stateOfMatterIndex == 0 &&
+                if (curTileData.stateOfMatterIndex == 1 &&
                     dirIndex <= 4)
                 {
                     //void
-                    if (curTileData.blockTypeIndex == 2010)
+                    if (curTileData.blockTypeIndex == 7102)
                     {
                         VARS.IsToDie = true;
                     }
@@ -631,7 +632,7 @@ public class CatCollision : MonoBehaviour
                     }
                 }
                 //liquid
-                else if (curTileData.stateOfMatterIndex == 1
+                else if (curTileData.stateOfMatterIndex == 2
                     && dirIndex == 5)
                 {
                     VARS.curLiquidTileData = curTileData;
@@ -650,7 +651,7 @@ public class CatCollision : MonoBehaviour
                     breakingPower = 0;
                 }
                 //gas
-                else if (curTileData.stateOfMatterIndex == 2
+                else if (curTileData.stateOfMatterIndex == 3
                     && dirIndex == 6)
                 {
                     VARS.curGasTileData = curTileData;
@@ -659,7 +660,7 @@ public class CatCollision : MonoBehaviour
 
                     breakingPower = 0;
                 }
-                else if (curTileData.stateOfMatterIndex == 3
+                else if (curTileData.stateOfMatterIndex == 4
                     && dirIndex == 7)
                 {
                     VARS.curMistTileData = curTileData;
@@ -676,7 +677,8 @@ public class CatCollision : MonoBehaviour
                 VARS.curTriggerTileData = curTileData;
 
                 //strawberry(get)
-                if (curTileData.triggerTypeIndex == 1)
+                if (/*curTileData.triggerTypeIndex == 1*/
+                    curTileData.blockTypeIndex == 7007)
                 {
                     //isCarryingStrawberries = true;
 
@@ -687,7 +689,8 @@ public class CatCollision : MonoBehaviour
                 }
 
                 //energyCrystal(get)
-                else if (curTileData.triggerTypeIndex == 2)
+                else if (/*curTileData.triggerTypeIndex == 2*/
+                    curTileData.blockTypeIndex == 7008)
                 {
                     if (curTile.transform.localScale != Vector3.one * 0.2f)
                     {
@@ -696,44 +699,53 @@ public class CatCollision : MonoBehaviour
                 }
 
                 //gate
-                else if (curTileData.triggerTypeIndex == 3)
+                else if (/*curTileData.triggerTypeIndex == 3*/
+                    curTileData.blockTypeIndex == 7001)
                 {
 
                 }
 
                 //edgeGate(enter)
-                else if (curTileData.triggerTypeIndex == 4)
+                else if (/*curTileData.triggerTypeIndex == 4*/
+                    curTileData.blockTypeIndex == 7002)
                 {
                     VARS.IsEnteringAnEdgeGate = true;
                 }
 
                 //edgeGateTrigger(triggerEdgeGate)
-                else if (curTileData.triggerTypeIndex == 5)
+                else if (/*curTileData.triggerTypeIndex == 5*/
+                    curTileData.blockTypeIndex == 7003)
                 {
                     VARS.IsEdgeGateTriggered = true;
                 }
 
                 //activateSavePoint(notActiavted)
-                else if (curTileData.triggerTypeIndex == 6)
+                //savePoint
+                else if (/*curTileData.triggerTypeIndex == 6*/
+                    curTileData.blockTypeIndex == 7004)
                 {
                     VARS.IsToActivateASavePoint = true;
                 }
 
                 //activatedSavePoint(~~?)
-                else if (curTileData.triggerTypeIndex == 7)
+                //activatedSavePoint
+                else if (/*curTileData.triggerTypeIndex == 7*/
+                    curTileData.blockTypeIndex == 7005)
                 {
 
                 }
 
                 //center(in)
-                else if (curTileData.triggerTypeIndex == 8)
+                else if (/*curTileData.triggerTypeIndex == 8*/
+                    curTileData.blockTypeIndex == 7006)
                 {
                     VARS.IsInCenter = true;
                 }
 			}
 
 			//center(out)
-			if (curTileData.triggerTypeIndex != 8)
+			if (/*curTileData.triggerTypeIndex != 8*/
+                curTileData.blockTypeIndex != 7006)
 			{
 				VARS.IsInCenter = false;
 			}
