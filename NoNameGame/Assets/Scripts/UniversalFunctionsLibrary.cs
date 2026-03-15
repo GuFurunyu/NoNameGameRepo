@@ -504,6 +504,38 @@ public class UniversalFunctionsLibrary : MonoBehaviour
     }
     #endregion
 
+    #region CatState
+    //temperature
+    public void SetCatCurTemperature(float value)
+    {
+        VARS.catCurTemperature = value;
+    }
+    public void AddCatCurTemperature(float value)
+    {
+        VARS.catCurTemperature += value;
+    }
+
+    //electricity
+    public void SetCatCurElectricity(float value)
+    {
+        VARS.catCurElectricity = value;
+    }
+    public void AddCatCurElectricity(float value)
+    {
+        VARS.catCurElectricity += value;
+    }
+
+    //toxicity
+    public void SetCatCurToxicity(float value)
+    {
+        VARS.catCurToxicity = value;
+    }
+    public void AddCatCurToxicity(float value)
+    {
+        VARS.catCurToxicity += value;
+    }
+    #endregion
+
     #region CatEnergy
     public void SetCurTargetEnergy(float value)
     {

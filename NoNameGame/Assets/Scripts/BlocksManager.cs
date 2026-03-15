@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 [DefaultExecutionOrder((int)ScriptsExecutionOrder.ExecutionOrder.blocksManager)]
@@ -124,6 +125,8 @@ public class BlocksManager : MonoBehaviour
 
     List<GameObject> edgeGates = new List<GameObject>();
 
+    float blocksManagerFixedDeltaTime;
+
     GameObject storedSandBlocksEmpty;
     GameObject storedWaterBlocksEmpty;
     GameObject storedAcidBlocksEmpty;
@@ -132,7 +135,8 @@ public class BlocksManager : MonoBehaviour
     GameObject storedElectricMistBlocksEmpty;
     GameObject storedLightElectricMistBlocksEmpty;
 
-    float blocksManagerFixedDeltaTime;
+    float fragileRustBlockToBeBrokenTime;
+    float fragileRustBlockRespawnTime;
     #endregion
 
     #region VariablesUsed
@@ -142,6 +146,11 @@ public class BlocksManager : MonoBehaviour
     Vector3 curRoomStableRight;
     Vector3 curUp;
     Vector3 curRight;
+
+    List<GameObject> curToBeBrokenFragileRustBlocks = new List<GameObject>();
+    List<float> curFragileRustBlockToBeBrokenStartTimes = new List<float>();
+    List<GameObject> curBrokenFragileRustBlocks = new List<GameObject>();
+    List<float> curFragileRustBlockBrokenTimes = new List<float>();
     #endregion
 
     //toDoLater:
@@ -163,6 +172,7 @@ public class BlocksManager : MonoBehaviour
         roomCoordBreadth = CONS.roomCoordBreadth;
         gates = CONS.gates;
         edgeGates = CONS.edgeGates;
+        blocksManagerFixedDeltaTime = CONS.blocksManagerFixedDeltaTime;
         storedSandBlocksEmpty = CONS.storedSandBlocksEmpty;
         storedWaterBlocksEmpty = CONS.storedWaterBlocksEmpty;
         storedAcidBlocksEmpty = CONS.storedAcidBlocksEmpty;
@@ -170,11 +180,16 @@ public class BlocksManager : MonoBehaviour
         storedGasBlocksEmpty = CONS.storedGasBlocksEmpty;
         storedElectricMistBlocksEmpty = CONS.storedElectricMistBlocksEmpty;
         storedLightElectricMistBlocksEmpty = CONS.storedLightElectricMistBlocksEmpty;
-        blocksManagerFixedDeltaTime = CONS.blocksManagerFixedDeltaTime;
+        fragileRustBlockToBeBrokenTime = CONS.fragileRustBlockToBeBrokenTime;
+        fragileRustBlockRespawnTime = CONS.fragileRustBlockRespawnTime;
         #endregion
 
         #region ImportReferenceVariables
         edgeGateLinkedToIndexes = VARS.edgeGateLinkedToIndexes;
+        curToBeBrokenFragileRustBlocks = VARS.curToBeBrokenFragileRustBlocks;
+        curFragileRustBlockToBeBrokenStartTimes = VARS.curFragileRustBlockToBeBrokenStartTimes;
+        curBrokenFragileRustBlocks = VARS.curBrokenFragileRustBlocks;
+        curFragileRustBlockBrokenTimes = VARS.curFragileRustBlockBrokenTimes;
         #endregion
 
         #region loadStoredBlocks
@@ -218,7 +233,7 @@ public class BlocksManager : MonoBehaviour
         curRight = VARS.curRight;
         #endregion
 
-        if (VARS.IsInNewRoom)
+        if (!VARS.IsInNewRoomBlocksManagerResetOver)
         {
             if (VARS.curPlaneEmpty == null)
                 VARS.curPlaneEmpty = CONS.roomPlanes[VARS.curRoomIndex].transform.GetChild(0).gameObject;
@@ -379,12 +394,12 @@ public class BlocksManager : MonoBehaviour
             ////sortCurBlocks
             //SortCurBlocks();
 
+            #region getCurFluidMaxAndMinHeight
             curLiquidMaxHeight = 999;
             curGasMinHeight = 999;
             curLiquidMinHeight = 999;
             curGasMaxHeight = 999;
 
-            //getCurFluidMaxAndMinHeight
             for (int i = 0; i < curBlocks.Count; i++)
             {
                 curBlock = curBlocks[i];
@@ -449,6 +464,7 @@ public class BlocksManager : MonoBehaviour
                     curElectricMistCenterBlockCoordVector = curElectricMistCenterBlock.transform.localPosition;
                 }
             }
+            #endregion
 
             #region BlocksMove
             for (int i = 0; i < curBlocks.Count; i++)
@@ -716,7 +732,6 @@ public class BlocksManager : MonoBehaviour
                 }
                 #endregion
             }
-            #endregion
 
             #region FluidContinuousnessOptimization
             if (VARS.IsFluidContinuousnessOptimizationActivated)
@@ -774,6 +789,47 @@ public class BlocksManager : MonoBehaviour
                 //curMovedBlockIndexes.Clear();
                 curMovedBlockCoordVectors.Clear();
                 curMovedBlockTypeIndexes.Clear();
+            }
+            #endregion
+
+            #endregion
+
+            #region FragileBlocks
+            //toBeBrokenToBeBroken
+            if(curToBeBrokenFragileRustBlocks.Count > 0)
+            {
+                for (int i = curToBeBrokenFragileRustBlocks.Count - 1; i >= 0; i--)
+                {
+                    if (Time.time - curFragileRustBlockToBeBrokenStartTimes[i] > fragileRustBlockToBeBrokenTime)
+                    {
+                        curToBeBrokenFragileRustBlocks[i].SetActive(false);
+
+                        curBrokenFragileRustBlocks.Add(curToBeBrokenFragileRustBlocks[i]);
+                        curFragileRustBlockBrokenTimes.Add(Time.time);
+
+                        curToBeBrokenFragileRustBlocks.RemoveAt(i);
+                        curFragileRustBlockToBeBrokenStartTimes.RemoveAt(i);
+
+                        VARS.IsInNewRoomBlocksManagerResetOver = false;
+                    }
+                }
+            }
+
+            //brokenToRespawn
+            if (curBrokenFragileRustBlocks.Count > 0)
+            {
+                for(int i=curBrokenFragileRustBlocks.Count - 1; i >= 0; i--)
+                {
+                    if (Time.time - curFragileRustBlockBrokenTimes[i] > fragileRustBlockRespawnTime)
+                    {
+                        curBrokenFragileRustBlocks[i].SetActive(true);
+
+                        curBrokenFragileRustBlocks.RemoveAt(i);
+                        curFragileRustBlockBrokenTimes.RemoveAt(i);
+
+                        VARS.IsInNewRoomBlocksManagerResetOver = false;
+                    }
+                }
             }
             #endregion
         }
@@ -850,6 +906,7 @@ public class BlocksManager : MonoBehaviour
         }
     }
 
+    //notApplied
     void DeactivateOutlineSquaresHidenInSurroundingBlocks()
     {
         int[] hollowOrMovableTypeIndexes = { 0, 2050, 310, 320, 410, 420, 510, 520 };

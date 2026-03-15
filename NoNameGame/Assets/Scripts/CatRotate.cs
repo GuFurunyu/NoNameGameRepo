@@ -132,7 +132,7 @@ public class CatRotate : MonoBehaviour
         #endregion
 
         #region Rotate
-        if (VARS.IsInNewRoom)
+        if (!VARS.IsInNewRoomCatRotateResetOver)
         {
             //ifNotByDeath
             if (VARS.outIniRotationStartTime != 0.1f)
@@ -141,195 +141,195 @@ public class CatRotate : MonoBehaviour
             VARS.IsInNewRoomCatRotateResetOver = true;
         }
 
-        if (!VARS.IsRotating &&
-            !VARS.IsTwisting &&
-            !VARS.IsInMiniMap &&
-            VARS.IsInNewRoomAllResetOver)
+        if (VARS.IsCatRotateMainPartExecutable)
         {
-            //ifIsIniRotation
-            if (/*curRight == iniRight*/
-                /*camTransform.eulerAngles == camIniEulerangles*/
-                /*(camTransform.eulerAngles.x + 360) % 360 == (camIniEulerangles.x + 360) % 360 &&
-                (camTransform.eulerAngles.y + 360) % 360 == (camIniEulerangles.y + 360) % 360 &&
-                (camTransform.eulerAngles.z + 360) % 360 == (camIniEulerangles.z + 360) % 360*/
-                curRight == curRoomStableRight)
+            if (!VARS.IsRotating)
             {
-                VARS.IsIniRotation = true;
-            }
-            else
-            {
-                //Debug.Log("enter");
-                //print(camTransform.eulerAngles);
-                //print(camIniEulerangles);
-
-                VARS.IsIniRotation = false;
-
-                outIniRotationDegree = Vector3.SignedAngle(curRoomStableRight, curRight, curRoomStableForward);
-
-                if (!VARS.IsRotating &&
-                    !VARS.IsTwisting)
+                //ifIsIniRotation
+                if (/*curRight == iniRight*/
+                    /*camTransform.eulerAngles == camIniEulerangles*/
+                    /*(camTransform.eulerAngles.x + 360) % 360 == (camIniEulerangles.x + 360) % 360 &&
+                    (camTransform.eulerAngles.y + 360) % 360 == (camIniEulerangles.y + 360) % 360 &&
+                    (camTransform.eulerAngles.z + 360) % 360 == (camIniEulerangles.z + 360) % 360*/
+                    curRight == curRoomStableRight)
                 {
-                    if (VARS.outIniRotationStartTime == 0)
-                    {
-                        VARS.outIniRotationStartTime = Time.time;
-                    }
-                }
-            }
-
-            //returnIniRotation
-            if (!VARS.IsIniRotation &&
-                Time.time - VARS.outIniRotationStartTime >= returnIniRotationTime &&
-                !isCatStill)
-            {
-                //startEulerangles = camTransform.eulerAngles;
-                targetEulerangles = camIniEulerangles;
-
-                targetDegree = Mathf.Abs(outIniRotationDegree);
-
-                VARS.IsRotating = true;
-
-                isIniRotated = true;
-
-                if (outIniRotationDegree > 0)
-                {
-                    isLeftRotated = true;
-                }
-                else if (outIniRotationDegree < 0)
-                {
-                    isLeftRotated = false;
-                }
-            }
-
-            //rotationControl
-            if (VARS.IsRotateEnabled &&
-                rotationRestNum > 0 &&
-                !VARS.IsInCenter)
-            {
-                if (VARS.curEnergy > rotationEnergyCost)
-                {
-                    if (VARS.IsInputtingDownKey)
-                    {
-                        if (VARS.IsInputtingLeftKey)
-                        {
-                            //startEulerangles = camTransform.eulerAngles;
-                            targetDegree = 90;
-                            targetEulerangles = camTransform.eulerAngles + leftRotationVector * targetDegree;
-
-                            VARS.IsRotating = true;
-
-                            isLeftRotated = true;
-
-                            isIniRotated = false;
-
-                            VARS.IsIniRotation = false;
-
-                            rotationRestNum--;
-
-                            //curEnergy -= rotationEnergyCost;
-                            UFL.AddCurTargetEnergy(-rotationEnergyCost);
-                        }
-                        else if (VARS.IsInputtingRightKey)
-                        {
-                            //startEulerangles = camTransform.eulerAngles;
-                            targetDegree = 90;
-                            targetEulerangles = camTransform.eulerAngles + rightRotationVector * targetDegree;
-
-                            VARS.IsRotating = true;
-
-                            isLeftRotated = false;
-
-                            isIniRotated = false;
-
-                            VARS.IsIniRotation = false;
-
-                            rotationRestNum--;
-
-                            //curEnergy -= rotationEnergyCost;
-                            UFL.AddCurTargetEnergy(-rotationEnergyCost);
-                        }
-                    }
-                }
-            }
-        }
-        //rotationProcess
-        else if (VARS.IsRotating)
-        {
-            if (accumulatedDegree - targetDegree < rotationEndThres &&
-                targetDegree != 0)
-            {
-                //camTransform.eulerAngles += (targetEulerangles - startEulerangles) * rotationSpeed * Time.deltaTime;
-
-                accumulatedDegree += targetDegree * rotationSpeed * Time.deltaTime;
-                //Debug.Log(accumulatedDegree);
-                //rotationStepAccumulatedDegree += targetDegree * rotationSpeed * Time.deltaTime;
-
-                //if (rotationStepAccumulatedDegree >= rotationStep)
-                //{
-                if (isLeftRotated)
-                {
-                    //camTransform.Rotate(0, 0, -rotationStep);
-                    //camTransform.Rotate(0, 0, -rotationSpeed * targetDegree * Time.deltaTime);
-                    UFL.CameraRotate(-rotationSpeed * targetDegree * Time.deltaTime);
-                    //camTransform.Rotate(leftRotationVector * rotationSpeed * targetDegree * Time.deltaTime);
+                    VARS.IsIniRotation = true;
                 }
                 else
                 {
-                    //camTransform.Rotate(0, 0, rotationStep);
-                    //camTransform.Rotate(0, 0, rotationSpeed * targetDegree * Time.deltaTime);
-                    UFL.CameraRotate(rotationSpeed * targetDegree * Time.deltaTime);
-                    //camTransform.Rotate(rightRotationVector * rotationSpeed * targetDegree * Time.deltaTime);
+                    //Debug.Log("enter");
+                    //print(camTransform.eulerAngles);
+                    //print(camIniEulerangles);
+
+                    VARS.IsIniRotation = false;
+
+                    outIniRotationDegree = Vector3.SignedAngle(curRoomStableRight, curRight, curRoomStableForward);
+
+                    if (!VARS.IsRotating &&
+                        !VARS.IsTwisting)
+                    {
+                        if (VARS.outIniRotationStartTime == 0)
+                        {
+                            VARS.outIniRotationStartTime = Time.time;
+                        }
+                    }
                 }
 
-                //rotationStepAccumulatedDegree -= rotationStep;
-                //}
-            }
-            else
-            {
-                //camTransform.eulerAngles = targetEulerangles;
-                UFL.SetCameraEulerangles(targetEulerangles);
-
-                accumulatedDegree = 0;
-                //rotationStepAccumulatedDegree = 0;
-
-                VARS.IsRotating = false;
-
-                VARS.outIniRotationStartTime = 0;
-
-                if (!isIniRotated)
+                //returnIniRotation
+                if (!VARS.IsIniRotation &&
+                    Time.time - VARS.outIniRotationStartTime >= returnIniRotationTime &&
+                    !isCatStill)
                 {
+                    //startEulerangles = camTransform.eulerAngles;
+                    targetEulerangles = camIniEulerangles;
+
+                    targetDegree = Mathf.Abs(outIniRotationDegree);
+
+                    VARS.IsRotating = true;
+
+                    isIniRotated = true;
+
+                    if (outIniRotationDegree > 0)
+                    {
+                        isLeftRotated = true;
+                    }
+                    else if (outIniRotationDegree < 0)
+                    {
+                        isLeftRotated = false;
+                    }
+                }
+
+                //rotationControl
+                if (VARS.IsRotateEnabled &&
+                    rotationRestNum > 0 &&
+                    !VARS.IsInCenter)
+                {
+                    if (VARS.curEnergy > rotationEnergyCost)
+                    {
+                        if (VARS.IsInputtingDownKey)
+                        {
+                            if (VARS.IsInputtingLeftKey)
+                            {
+                                //startEulerangles = camTransform.eulerAngles;
+                                targetDegree = 90;
+                                targetEulerangles = camTransform.eulerAngles + leftRotationVector * targetDegree;
+
+                                VARS.IsRotating = true;
+
+                                isLeftRotated = true;
+
+                                isIniRotated = false;
+
+                                VARS.IsIniRotation = false;
+
+                                rotationRestNum--;
+
+                                //curEnergy -= rotationEnergyCost;
+                                UFL.AddCurTargetEnergy(-rotationEnergyCost);
+                            }
+                            else if (VARS.IsInputtingRightKey)
+                            {
+                                //startEulerangles = camTransform.eulerAngles;
+                                targetDegree = 90;
+                                targetEulerangles = camTransform.eulerAngles + rightRotationVector * targetDegree;
+
+                                VARS.IsRotating = true;
+
+                                isLeftRotated = false;
+
+                                isIniRotated = false;
+
+                                VARS.IsIniRotation = false;
+
+                                rotationRestNum--;
+
+                                //curEnergy -= rotationEnergyCost;
+                                UFL.AddCurTargetEnergy(-rotationEnergyCost);
+                            }
+                        }
+                    }
+                }
+            }
+            //rotationProcess
+            else if (VARS.IsRotating)
+            {
+                if (accumulatedDegree - targetDegree < rotationEndThres &&
+                    targetDegree != 0)
+                {
+                    //camTransform.eulerAngles += (targetEulerangles - startEulerangles) * rotationSpeed * Time.deltaTime;
+
+                    accumulatedDegree += targetDegree * rotationSpeed * Time.deltaTime;
+                    //Debug.Log(accumulatedDegree);
+                    //rotationStepAccumulatedDegree += targetDegree * rotationSpeed * Time.deltaTime;
+
+                    //if (rotationStepAccumulatedDegree >= rotationStep)
+                    //{
                     if (isLeftRotated)
                     {
-                        tempVector = curRight;
-                        curRight = -curUp;
-                        curUp = tempVector;
-
-                        tempFloat = VARS.horCurSpeed;
-                        //horCurSpeed = -verCurSpeed;
-                        UFL.SetHorCurSpeed(-VARS.verCurSpeed);
-                        //verCurSpeed = tempFloat;
-                        UFL.SetVerCurSpeed(tempFloat);
-
-                        //catTransform.Rotate(0, 0, -90);
+                        //camTransform.Rotate(0, 0, -rotationStep);
+                        //camTransform.Rotate(0, 0, -rotationSpeed * targetDegree * Time.deltaTime);
+                        UFL.CameraRotate(-rotationSpeed * targetDegree * Time.deltaTime);
+                        //camTransform.Rotate(leftRotationVector * rotationSpeed * targetDegree * Time.deltaTime);
                     }
                     else
                     {
-                        tempVector = curRight;
-                        curRight = curUp;
-                        curUp = -tempVector;
-
-                        tempFloat = VARS.horCurSpeed;
-                        //horCurSpeed = verCurSpeed;
-                        UFL.SetHorCurSpeed(VARS.verCurSpeed);
-                        //verCurSpeed = -tempFloat;
-                        UFL.SetVerCurSpeed(-tempFloat);
-
-                        //catTransform.Rotate(0, 0, 90);
+                        //camTransform.Rotate(0, 0, rotationStep);
+                        //camTransform.Rotate(0, 0, rotationSpeed * targetDegree * Time.deltaTime);
+                        UFL.CameraRotate(rotationSpeed * targetDegree * Time.deltaTime);
+                        //camTransform.Rotate(rightRotationVector * rotationSpeed * targetDegree * Time.deltaTime);
                     }
+
+                    //rotationStepAccumulatedDegree -= rotationStep;
+                    //}
                 }
                 else
                 {
-                    curRight = curRoomStableRight;
-                    curUp = curRoomStableUp;
+                    //camTransform.eulerAngles = targetEulerangles;
+                    UFL.SetCameraEulerangles(targetEulerangles);
+
+                    accumulatedDegree = 0;
+                    //rotationStepAccumulatedDegree = 0;
+
+                    VARS.IsRotating = false;
+
+                    VARS.outIniRotationStartTime = 0;
+
+                    if (!isIniRotated)
+                    {
+                        if (isLeftRotated)
+                        {
+                            tempVector = curRight;
+                            curRight = -curUp;
+                            curUp = tempVector;
+
+                            tempFloat = VARS.horCurSpeed;
+                            //horCurSpeed = -verCurSpeed;
+                            UFL.SetHorCurSpeed(-VARS.verCurSpeed);
+                            //verCurSpeed = tempFloat;
+                            UFL.SetVerCurSpeed(tempFloat);
+
+                            //catTransform.Rotate(0, 0, -90);
+                        }
+                        else
+                        {
+                            tempVector = curRight;
+                            curRight = curUp;
+                            curUp = -tempVector;
+
+                            tempFloat = VARS.horCurSpeed;
+                            //horCurSpeed = verCurSpeed;
+                            UFL.SetHorCurSpeed(VARS.verCurSpeed);
+                            //verCurSpeed = -tempFloat;
+                            UFL.SetVerCurSpeed(-tempFloat);
+
+                            //catTransform.Rotate(0, 0, 90);
+                        }
+                    }
+                    else
+                    {
+                        curRight = curRoomStableRight;
+                        curUp = curRoomStableUp;
+                    }
                 }
             }
         }

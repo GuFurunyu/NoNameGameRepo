@@ -304,8 +304,8 @@ MonoBehaviour:
   friction: 1
   fluidDrag: 2
   mass: 1
-  temperature: 0
-  conductivity: 0
+  temperature: -150
+  electricity: 0
   toxicity: 0
   _blockTypeIndex: 3201
 --- !u!1 &8273609726376025567

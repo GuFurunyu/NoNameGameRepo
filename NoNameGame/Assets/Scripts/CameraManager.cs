@@ -94,7 +94,7 @@ public class CameraManager : MonoBehaviour
         //planeRight = VARS.planeRight;
         //iniRight = VARS.iniRight;
 
-        if (VARS.IsInNewRoom)
+        if (!VARS.IsInNewRoomCameraManagerResetOver)
         {
             //position
             camTransform.position = VARS.roomCenters[VARS.curRoomIndex] - VARS.curRoomStableForward * 7;

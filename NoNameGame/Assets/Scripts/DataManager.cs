@@ -46,6 +46,7 @@ public class DataManager : MonoBehaviour
         public KeyCode jumpKeyCode;
         public KeyCode grabKeyCode;
         //public KeyCode dashKeyCode;
+        public KeyCode acceKeyCode;
         public KeyCode confirmKeyCode;
         public KeyCode backKeyCode;
     }
@@ -274,6 +275,7 @@ public class DataManager : MonoBehaviour
             VARS.leftKeyCode = curKeyCodesData.leftKeyCode;
             VARS.rightKeyCode = curKeyCodesData.rightKeyCode;
             VARS.jumpKeyCode = curKeyCodesData.jumpKeyCode;
+            VARS.acceKeyCode = curKeyCodesData.acceKeyCode;
             VARS.grabKeyCode = curKeyCodesData.grabKeyCode;
             //VARS.dashKeyCode = curKeyCodesData.dashKeyCode;
             //VARS.confirmKeyCode = curKeyCodesData.confirmKeyCode;
@@ -286,6 +288,7 @@ public class DataManager : MonoBehaviour
             VARS.curKeyCodes.Add(VARS.leftKeyCode);
             VARS.curKeyCodes.Add(VARS.rightKeyCode);
             VARS.curKeyCodes.Add(VARS.jumpKeyCode);
+            VARS.curKeyCodes.Add(VARS.acceKeyCode);
             VARS.curKeyCodes.Add(VARS.grabKeyCode);
             //VARS.curKeyCodes.Add(VARS.dashKeyCode);
             //VARS.curKeyCodes.Add(VARS.confirmKeyCode);
@@ -306,6 +309,7 @@ public class DataManager : MonoBehaviour
         curKeyCodesData.leftKeyCode = VARS.leftKeyCode;
         curKeyCodesData.rightKeyCode = VARS.rightKeyCode;
         curKeyCodesData.jumpKeyCode = VARS.jumpKeyCode;
+        curKeyCodesData.acceKeyCode = VARS.acceKeyCode;
         curKeyCodesData.grabKeyCode = VARS.grabKeyCode;
         //curKeyCodesData.dashKeyCode = VARS.dashKeyCode;
         //curKeyCodesData.confirmKeyCode = VARS.confirmKeyCode;

@@ -135,6 +135,16 @@ public class RoomsManager : MonoBehaviour
         #endregion
 
         #region InNewRoomReset
+        if (VARS.IsInNewRoomAllResetOver)
+        {
+            if (!VARS.IsInNewRoomCurRoomManagerResetOver ||
+                !VARS.IsInNewRoomCameraManagerResetOver ||
+                !VARS.IsInNewRoomCatRotateResetOver ||
+                !VARS.IsInNewRoomBlocksManagerResetOver)
+            {
+                VARS.IsInNewRoomAllResetOver = false;
+            }
+        }
         if (!VARS.IsInNewRoomAllResetOver)
         {
             if (VARS.IsInNewRoomCurRoomManagerResetOver &&
@@ -313,7 +323,6 @@ public class RoomsManager : MonoBehaviour
         VARS.IsInNewRoomCameraManagerResetOver = false;
         VARS.IsInNewRoomCatRotateResetOver = false;
         VARS.IsInNewRoomBlocksManagerResetOver = false;
-        VARS.IsInNewRoomAllResetOver = false;
     }
 
     void ResetCurRelatedPlanes()

@@ -71,7 +71,7 @@ public class TileData : MonoBehaviour
     public float temperature = 20;
 
     //default: 0
-    public float conductivity;
+    public float electricity;
 
     //default: 0
     public float toxicity;
@@ -96,7 +96,7 @@ public class TileData : MonoBehaviour
     //      680-CenterBlock
     //way2(x-x-xx(region-stateOfMatterIndex-mainType)):
     //  1-RedRegionBlocks
-    //      1101-RedBlock, 1102-DarkRedBlock
+    //      1101-RedBlock, 1102-DarkRedBlock, 1103-CoalBlock
     //      1301-VaporBlock
     //  2-YellowRegionBlocks
     //      2101-YellowBlock, 2102-DarkYellow , 2103-SandBlock
@@ -104,7 +104,7 @@ public class TileData : MonoBehaviour
     //      3101-BlueBlock, 3102-DarkBlueBlock , 3103-IceBlock, 3104-BreakableIceBlock
     //      3201-WaterBlock
     //  4-OrangeRegionBlocks
-    //      4101-OrangeBlock, 4102-DarkOrangeBlock
+    //      4101-OrangeBlock, 4102-DarkOrangeBlock, 4103-FragileRustBlock
     //  5-GreenRegionBlocks
     //      5101-GreenBlock, 5102-DarkGreenBlock
     //      5201-AcidBlock

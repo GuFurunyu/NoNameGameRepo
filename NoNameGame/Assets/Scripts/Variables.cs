@@ -204,6 +204,7 @@ public class Variables : MonoBehaviour
     public KeyCode rightKeyCode = KeyCode.D;
     public KeyCode jumpKeyCode = KeyCode.K;
     //public KeyCode dashKeyCode = KeyCode.L;
+    public KeyCode acceKeyCode = KeyCode.L;
     public KeyCode grabKeyCode = KeyCode.J;
     public KeyCode confirmKeyCode = KeyCode.Space;
     public KeyCode backKeyCode = KeyCode.Escape;
@@ -230,6 +231,9 @@ public class Variables : MonoBehaviour
 
     [SerializeField] private bool _isInputtingDashKey;
     public bool IsInputtingDashKey { get { return _isInputtingDashKey; } set { _isInputtingDashKey = value; } }
+
+    [SerializeField] private bool _isInputtingAcceKey;
+    public bool IsInputtingAcceKey { get { return _isInputtingAcceKey; } set { _isInputtingAcceKey = value; } }
 
     [SerializeField] private bool _isInputtingGrabKey;
     public bool IsInputtingGrabKey { get { return _isInputtingGrabKey; } set { _isInputtingGrabKey = value; } }
@@ -260,6 +264,9 @@ public class Variables : MonoBehaviour
     [SerializeField] private bool _isDashKeyDown;
     public bool IsDashKeyDown { get { return _isDashKeyDown; } set { _isDashKeyDown = value; } }
 
+    [SerializeField] private bool _isAcceKeyDown;
+    public bool IsAcceKeyDown { get { return _isAcceKeyDown; } set { _isAcceKeyDown = value; } }
+
     [SerializeField] private bool _isGrabKeyDown;
     public bool IsGrabKeyDown { get { return _isGrabKeyDown; } set { _isGrabKeyDown = value; } }
 
@@ -288,6 +295,9 @@ public class Variables : MonoBehaviour
     [SerializeField] private bool _isDashKeyUp;
     public bool IsDashKeyUp { get { return _isDashKeyUp; } set { _isDashKeyUp = value; } }
 
+    [SerializeField] private bool _isAcceKeyUp;
+    public bool IsAcceKeyUp { get { return _isAcceKeyUp; } set { _isAcceKeyUp = value; } }
+
     [SerializeField] private bool _isGrabKeyUp;
     public bool IsGrabKeyUp { get { return _isGrabKeyUp; } set { _isGrabKeyUp = value; } }
 
@@ -310,6 +320,10 @@ public class Variables : MonoBehaviour
     #region CatCollision
     [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
         "  \nCATCOLLISION\n --- ")]
+    //executability
+    [SerializeField] private bool _isCatCollisionMainPartExecutable;
+    public bool IsCatCollisionMainPartExecutable { get { return _isCatCollisionMainPartExecutable; } set { _isCatCollisionMainPartExecutable = value; } }
+
     //solidCollisionState
     [SerializeField] private bool _isLeftBlocked;
     public bool IsLeftBlocked { get { return _isLeftBlocked; } set { _isLeftBlocked = value; } }
@@ -360,6 +374,17 @@ public class Variables : MonoBehaviour
     [SerializeField] private bool _isAttachWall;
     public bool IsAttachWall { get { return _isAttachWall; } set { _isAttachWall = value; } }
 
+    //attachCeiling
+    [SerializeField] private bool _isAttachCeiling;
+    public bool IsAttachCeiling { get { return _isAttachCeiling; } set { _isAttachCeiling = value; } }
+
+    //solidTile
+    public GameObject curUpTile;
+    public GameObject curDownTile;
+    public GameObject curLeftTile;
+    public GameObject curRightTile;
+    public GameObject curAttachedWallTile;
+    public GameObject curAttachedCeilingTile;
 
     //solidTileData
     public TileData curUpTileData;
@@ -387,12 +412,20 @@ public class Variables : MonoBehaviour
     #region CatMove
     [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
         "  \nCATMOVE\n --- ")]
+    //executability
+    [SerializeField] private bool _isCatMoveMainPartExecutable;
+    public bool IsCatMoveMainPartExecutable { get { return _isCatMoveMainPartExecutable; } set { _isCatMoveMainPartExecutable = value; } }
+
     //curSpeed
     public float horCurSpeed;
     public float verCurSpeed;
 
     [SerializeField] private bool _isHighJumping;
     public bool IsHighJumping { get { return _isHighJumping; } set { _isHighJumping = value; } }
+
+    //isAcced
+    [SerializeField] private bool _isInAcce;
+    public bool IsInAcce { get { return _isInAcce; } set { _isInAcce = value; } }
 
 
     //curFacingDirection
@@ -411,6 +444,10 @@ public class Variables : MonoBehaviour
     #region CatRotate
     [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
         "  \nCATROTATE\n --- ")]
+    //executability
+    [SerializeField] private bool _isCatRotateMainPartExecutable;
+    public bool IsCatRotateMainPartExecutable { get { return _isCatRotateMainPartExecutable; } set { _isCatRotateMainPartExecutable = value; } }
+
     //isRotating
     [SerializeField] private bool _isRotating;
     public bool IsRotating { get { return _isRotating; } set { _isRotating = value; } }
@@ -430,9 +467,39 @@ public class Variables : MonoBehaviour
 
     #endregion
 
+    #region CatState
+    [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
+        "  \nCATSTATE\n --- ")]
+    //temperature
+    public float catCurTemperature;
+
+    [SerializeField] private bool _isInHotState;
+    public bool IsInHotState { get { return _isInHotState; } set { _isInHotState = value; } }
+
+    [SerializeField] private bool _isInColdState;
+    public bool IsInColdState { get { return _isInColdState; } set { _isInColdState = value; } }
+
+    //electricity
+    public float catCurElectricity;
+
+    [SerializeField] private bool _isInElectricState;
+    public bool IsInElectricState { get { return _isInElectricState; } set { _isInElectricState = value; } }
+
+    //toxicity
+    public float catCurToxicity;
+
+    [SerializeField] private bool _isInToxicState;
+    public bool IsInToxicState { get { return _isInToxicState; } set { _isInToxicState = value; } }
+
+    #endregion
+
     #region CatEnergy
     [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
         "  \nCATENERGY\n --- ")]
+    //executability
+    [SerializeField] private bool _isCatEnergyResetExecutable;
+    public bool IsCatEnergyResetExecutable { get { return _isCatEnergyResetExecutable; } set { _isCatEnergyResetExecutable = value; } }
+
     //curEnergy
     public float curEnergy;
 
@@ -443,6 +510,10 @@ public class Variables : MonoBehaviour
     #region CatTrigger
     [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
         "  \nCATTRIGGER\n --- ")]
+    //executability
+    [SerializeField] private bool _isCatTriggerMainPartExecutable;
+    public bool IsCatTriggerMainPartExecutable { get { return _isCatTriggerMainPartExecutable; } set { _isCatTriggerMainPartExecutable = value; } }
+
     //strawberry
     [SerializeField] private bool _isCarryingStrawberries;
     public bool IsCarryingStrawberries { get { return _isCarryingStrawberries; } set { _isCarryingStrawberries = value; } }
@@ -526,6 +597,12 @@ public class Variables : MonoBehaviour
     public bool IsFluidContinuousnessOptimizationActivated 
     { get { return _isFluidContinuousnessOptimizationActivated; } set { _isFluidContinuousnessOptimizationActivated = value; } }
 
+    //fragileBlocks
+    public List<GameObject> curToBeBrokenFragileRustBlocks = new List<GameObject>();
+    public List<float> curFragileRustBlockToBeBrokenStartTimes = new List<float>();
+    public List<GameObject> curBrokenFragileRustBlocks = new List<GameObject>();
+    public List<float> curFragileRustBlockBrokenTimes = new List<float>();
+
     #endregion
 
     #region MiniMapManager
@@ -546,6 +623,10 @@ public class Variables : MonoBehaviour
     #region OptionsManager
     [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
         "  \nOPTIONSMANAGER\n --- ")]
+    //executability
+    [SerializeField] private bool _isOptionsManagerActivationExecutable;
+    public bool IsOptionsManagerActivationExecutable { get { return _isOptionsManagerActivationExecutable; } set { _isOptionsManagerActivationExecutable = value; } }
+
     //curKeyCodes
     public List<KeyCode> curKeyCodes = new List<KeyCode>();
 

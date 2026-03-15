@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 [DefaultExecutionOrder((int)ScriptsExecutionOrder.ExecutionOrder.catCollision)]
@@ -99,6 +101,10 @@ public class CatCollision : MonoBehaviour
 
     float verMaxSpeed;
 
+    float temperatureTransferSpeed;
+    float electricityTransferSpeed;
+    float toxicityTransferSpeed;
+
     float elasticEnergyRestoreAmount;
     #endregion
 
@@ -110,6 +116,9 @@ public class CatCollision : MonoBehaviour
     //float verCurSpeed;
 
     //float curEnergy;
+
+    List<GameObject> curToBeBrokenFragileRustBlocks = new List<GameObject>();
+    List<float> curFragileRustBlockToBeBrokenStartTimes = new List<float>();
     #endregion
 
     void Start()
@@ -131,10 +140,15 @@ public class CatCollision : MonoBehaviour
         shortRayDistance = CONS.shortRayDistance;
         positionFixOffset = CONS.positionFixOffset;
         verMaxSpeed = CONS.verMaxSpeed;
+        temperatureTransferSpeed = CONS.temperatureTransferSpeed;
+        electricityTransferSpeed = CONS.electricityTransferSpeed;
+        toxicityTransferSpeed = CONS.toxicityTransferSpeed;
         elasticEnergyRestoreAmount = CONS.elasticEnergyRestoreAmount;
         #endregion
 
         #region ImportReferenceVariables
+        curToBeBrokenFragileRustBlocks = VARS.curToBeBrokenFragileRustBlocks;
+        curFragileRustBlockToBeBrokenStartTimes = VARS.curFragileRustBlockToBeBrokenStartTimes;
         #endregion
     }
 
@@ -183,8 +197,7 @@ public class CatCollision : MonoBehaviour
         mistRightRay = new Ray(leftPoint, curRight);
         #endregion        
 
-        if (!VARS.IsRotating &&
-            !VARS.IsTwisting)
+        if (VARS.IsCatCollisionMainPartExecutable)
         {
             #region OnGroundDetect
             if (Physics.Raycast(downRay1, out downHit1, rayDistance - VARS.verCurSpeed / 1000) ||
@@ -393,19 +406,41 @@ public class CatCollision : MonoBehaviour
                 VARS.IsInMist = false;
             }
             #endregion
+
+            #region IfNothingDetected
+            #region AfflictionTransfer
+            //temperature
+            if (VARS.catCurTemperature != 0)
+            {
+                UFL.AddCatCurTemperature(-VARS.catCurTemperature * temperatureTransferSpeed * Time.deltaTime);
+            }
+
+            //electricity
+            if(VARS.catCurElectricity != 0)
+            {
+                UFL.AddCatCurElectricity(-VARS.catCurElectricity * electricityTransferSpeed * Time.deltaTime);
+            }
+
+            //toxicity
+            if (VARS.catCurToxicity != 0)
+            {
+                UFL.AddCatCurToxicity(-VARS.catCurToxicity * toxicityTransferSpeed * Time.deltaTime);
+            }
+            #endregion
+            #endregion
         }
         #endregion
 
         #region OnGroundOrInLiquidReset
-        if (!VARS.IsRotating &&
-            !VARS.IsTwisting)
-        {
-            if (VARS.IsOnGround ||
-                VARS.IsInLiquid)
-            {
-                VARS.IsAttachWall = false;
-            }
-        }
+        //if (!VARS.IsRotating &&
+        //    !VARS.IsTwisting)
+        //{
+        //    if (VARS.IsOnGround ||
+        //        VARS.IsInLiquid)
+        //    {
+        //        //VARS.IsAttachWall = false;
+        //    }
+        //}
         #endregion
     }
 
@@ -493,7 +528,7 @@ public class CatCollision : MonoBehaviour
                 tempHit = mistRightHit;
         }
 
-            curTile = tempHit.transform.gameObject;
+        curTile = tempHit.transform.gameObject;
         curTileData = curTile.GetComponent<TileData>();
 
         if (curTileData != null)
@@ -501,24 +536,8 @@ public class CatCollision : MonoBehaviour
             //notTrigger
             if (/*curTileData.triggerTypeIndex == 0*/
                 curTileData.stateOfMatterIndex != 0)
-            { 
-                //switch (dirIndex)
-                //{
-                //    case 1:
-                //        curUpTileData = curTileData;
-                //        break;
-                //    case 2:
-                //        curDownTileData = curTileData;
-                //        break;
-                //    case 3:
-                //        curLeftTileData = curTileData;
-                //        break;
-                //    case 4:
-                //        curRightTileData = curTileData;
-                //        break;
-                //}
-
-                //solid
+            {
+                #region Solid
                 if (curTileData.stateOfMatterIndex == 1 &&
                     dirIndex <= 4)
                 {
@@ -531,26 +550,31 @@ public class CatCollision : MonoBehaviour
                     switch (dirIndex)
                     {
                         case 1:
+                            VARS.curUpTile = curTile;
                             VARS.curUpTileData = curTileData;
                             if (!curTileData.isPlatform)
                                 VARS.IsCeilingDetected = true;
                             break;
                         case 2:
+                            VARS.curDownTile = curTile;
                             VARS.curDownTileData = curTileData;
                             VARS.IsGroundDetected = true; ;
                             break;
                         case 3:
+                            VARS.curLeftTile = curTile;
                             VARS.curLeftTileData = curTileData;
                             if (!curTileData.isPlatform)
                                 VARS.IsLeftBlockDetected = true;
                             break;
                         case 4:
+                            VARS.curRightTile = curTile;
                             VARS.curRightTileData = curTileData;
                             if (!curTileData.isPlatform)
                                 VARS.IsRightBlockDetected = true; ;
                             break;
                     }
 
+                    //platformOnlyOnGroundDetect
                     if (dirIndex == 2 ||
                         !curTileData.isPlatform)
                     {
@@ -611,12 +635,15 @@ public class CatCollision : MonoBehaviour
                             //verCurSpeed = -verCurSpeed * curTileData.elasticity;
                             UFL.SetVerCurSpeed(-VARS.verCurSpeed * curTileData.elasticity);
 
-                            if (dirIndex == 2)
-                            {
-                                //curEnergy += elasticEnergyRestoreAmount;
+                            ////elasticEnergyRestore
+                            //if (dirIndex == 2)
+                            //{
+                            //    //curEnergy += elasticEnergyRestoreAmount;
 
-                                UFL.AddCurTargetEnergy(elasticEnergyRestoreAmount);
-                            }
+                            //    Debug.Log("elasticEnergyRestore");
+
+                            //    UFL.AddCurTargetEnergy(elasticEnergyRestoreAmount);
+                            //}
                         }
                         else if (dirIndex == 3 ||
                             dirIndex == 4)
@@ -625,13 +652,42 @@ public class CatCollision : MonoBehaviour
 
                             UFL.SetHorCurSpeed(-VARS.horCurSpeed * curTileData.elasticity);
                         }
+
+                        //fragile
+                        if (curTileData.blockTypeIndex == 4103)
+                        {
+                            if (dirIndex == 2)
+                            {
+                                BreakCurTile(curToBeBrokenFragileRustBlocks, curFragileRustBlockToBeBrokenStartTimes);
+                            }
+                            else if (dirIndex == 3 &&
+                                VARS.IsAttachWall &&
+                                VARS.curAttachedWallTile == curTile)
+                            {
+                                BreakCurTile(curToBeBrokenFragileRustBlocks, curFragileRustBlockToBeBrokenStartTimes);
+                            }
+                            else if (dirIndex == 4 &&
+                                VARS.IsAttachWall &&
+                                VARS.curAttachedWallTile == curTile)
+                            {
+                                BreakCurTile(curToBeBrokenFragileRustBlocks, curFragileRustBlockToBeBrokenStartTimes);
+                            }
+                            else if (dirIndex == 1 &&
+                                VARS.IsToCeiling &&
+                                VARS.curUpTile == curTile)
+                            {
+                                BreakCurTile(curToBeBrokenFragileRustBlocks, curFragileRustBlockToBeBrokenStartTimes);
+                            }
+                        }
                     }
                     else
                     {
                         //Debug.Log("enter");
                     }
                 }
-                //liquid
+                #endregion
+
+                #region Liquid
                 else if (curTileData.stateOfMatterIndex == 2
                     && dirIndex == 5)
                 {
@@ -650,7 +706,9 @@ public class CatCollision : MonoBehaviour
 
                     breakingPower = 0;
                 }
-                //gas
+                #endregion
+
+                #region Gas
                 else if (curTileData.stateOfMatterIndex == 3
                     && dirIndex == 6)
                 {
@@ -660,6 +718,9 @@ public class CatCollision : MonoBehaviour
 
                     breakingPower = 0;
                 }
+                #endregion
+
+                #region Mist
                 else if (curTileData.stateOfMatterIndex == 4
                     && dirIndex == 7)
                 {
@@ -669,8 +730,30 @@ public class CatCollision : MonoBehaviour
 
                     breakingPower = 0;
                 }
+                #endregion
+
+                #region AfflictionTransfer
+                //temperature
+                if (!(curTileData.temperature == 0 &&
+                    VARS.catCurTemperature == 0))
+                {
+                    UFL.AddCatCurTemperature((curTileData.temperature - VARS.catCurTemperature) * temperatureTransferSpeed * Time.deltaTime);
+                }
+                //electricity
+                if (!(curTileData.electricity == 0 &&
+                    VARS.catCurElectricity == 0))
+                {
+                    UFL.AddCatCurElectricity((curTileData.electricity - VARS.catCurElectricity) * electricityTransferSpeed * Time.deltaTime);
+                }
+                //toxicity
+                if (!(curTileData.toxicity == 0 &&
+                    VARS.catCurToxicity == 0))
+                {
+                    UFL.AddCatCurToxicity((curTileData.toxicity - VARS.catCurToxicity) * toxicityTransferSpeed * Time.deltaTime);
+                }
+                #endregion
             }
-            //trigger
+            #region Trigger
             else
             {
                 VARS.curTriggerTile = curTile;
@@ -741,15 +824,21 @@ public class CatCollision : MonoBehaviour
                 {
                     VARS.IsInCenter = true;
                 }
-			}
+            }
 
-			//center(out)
-			if (/*curTileData.triggerTypeIndex != 8*/
+            //center(out)
+            if (/*curTileData.triggerTypeIndex != 8*/
                 curTileData.blockTypeIndex != 7006)
-			{
-				VARS.IsInCenter = false;
-			}
-		}
+            {
+                VARS.IsInCenter = false;
+            }
+            #endregion
+        }
     }
 
+    void BreakCurTile(List<GameObject> intoGameObjectList, List<float> intoTimeList)
+    {
+        intoGameObjectList.Add(curTile);
+        intoTimeList.Add(Time.time);
+    }
 }

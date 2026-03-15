@@ -29,5 +29,48 @@ public class ScriptsExecutionController : MonoBehaviour
         #region ImportValueVariables
 
         #endregion
+
+        //catCollision
+        VARS.IsCatCollisionMainPartExecutable =
+            !VARS.IsRotating &&
+            !VARS.IsTwisting;
+
+        //catMove
+        VARS.IsCatMoveMainPartExecutable = 
+            !VARS.IsRotating &&
+            !VARS.IsTwisting &&
+            !VARS.IsInMiniMap &&
+            !VARS.IsOptionPanelActivated &&
+            VARS.IsInNewRoomAllResetOver;
+
+        //catRotate
+        VARS.IsCatRotateMainPartExecutable =
+            !VARS.IsTwisting &&
+            !VARS.IsInMiniMap &&
+            VARS.IsInNewRoomAllResetOver;
+
+        //catEnergy
+        VARS.IsCatEnergyResetExecutable =
+            !VARS.IsRotating &&
+            !VARS.IsTwisting &&
+            !VARS.IsInAcce &&
+            !VARS.IsInHotState &&
+            !VARS.IsInColdState &&
+            !VARS.IsInElectricState &&
+            !VARS.IsInToxicState &&
+            (VARS.IsOnGround ||
+            VARS.IsInLiquid);
+
+        //catTrigger
+        VARS.IsCatTriggerMainPartExecutable =
+            !VARS.IsRotating &&
+            !VARS.IsTwisting;
+
+        //optionsManager
+        VARS.IsOptionsManagerActivationExecutable =
+            !VARS.IsRotating &&
+            !VARS.IsTwisting &&
+            !VARS.IsZoomedOut &&
+            !VARS.IsInMiniMap;
     }
 }

@@ -180,6 +180,26 @@ public class Constants : MonoBehaviour
     public float returnIniRotationTime;
     #endregion
 
+    #region CatState
+    [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
+        "  \nCATSTATE\n --- ")]
+    //temperature
+    public float intoHotStateTemperature;
+    public float intoColdStateTemperature;
+    public float temperatureTransferSpeed;
+    public float temperatureSetToZeroThres;
+
+    //electricity
+    public float intoElectricStateElectricity;
+    public float electricityTransferSpeed;
+    public float electricitySetToZeroThres;
+
+    //toxic
+    public float intoToxicStateToxicity;
+    public float toxicityTransferSpeed;
+    public float toxicitySetToZeroThres;
+    #endregion
+
     #region CatEnergy
     [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
         "  \nCATENERGY\n --- ")]
@@ -191,11 +211,18 @@ public class Constants : MonoBehaviour
     public float dashEnergyCost;
     public float rotationEnergyCost;
 
-    //energyDecreaseSpeed
+    //energyDecreaseSpeed1
     public float jumpEnergyDecreaseSpeedFixParameter;
     public float attachWallEnergyDecreaseSpeed;
     public float climbEnergyDecreaseSpeed;
-    public float toCeilingEnergyDecreaseSpeed;
+    public float attachCeilingEnergyDecreaseSpeed;
+    public float inAcceEnergyDecreaseSpeed;
+
+    //energyDecreaseSpeed2
+    public float inHotStateEnergyDecreaseSpeed;
+    public float inColdStateEnergyDecreaseSpeed;
+    public float inElectricStateEnergyDecreaseSpeed;
+    public float inToxicStateEnergyDecreaseSpeed;
 
     //energyRestoreAmount
     public float elasticEnergyRestoreAmount;
@@ -267,7 +294,10 @@ public class Constants : MonoBehaviour
     #region BlocksManager
     [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
         "  \nBLOCKSMANAGER\n --- ")]
-    //storedBlock
+    //fixedDeltaTime
+    public float blocksManagerFixedDeltaTime;
+
+    //storedBlocks
     public GameObject storedSandBlocksEmpty;
     public GameObject storedWaterBlocksEmpty;
     public GameObject storedAcidBlocksEmpty;
@@ -276,8 +306,9 @@ public class Constants : MonoBehaviour
     public GameObject storedElectricMistBlocksEmpty;
     public GameObject storedLightElectricMistBlocksEmpty;
 
-    //fixedDeltaTime
-    public float blocksManagerFixedDeltaTime;
+    //fragileBlocks
+    public float fragileRustBlockToBeBrokenTime;
+    public float fragileRustBlockRespawnTime;
     #endregion
 
     #region MiniMapManager

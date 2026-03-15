@@ -11,33 +11,36 @@ public class CatMove : MonoBehaviour
     GameObject gameManager;
 
     //horSpeed
-    public float horCurAcce;
-    public float horCurReverseAcce;
-    public float horCurMaxSpeed;
-    public float horCurWallJumpBonusSpeed;
+    float horCurAcce;
+    float horCurReverseAcce;
+    float horCurMaxSpeed;
+    float horCurWallJumpBonusSpeed;
 
     //verSpeed
-    public float verCurIniSpeed;
-    public float verCurAcce;
-    public float curGravityAcce;
-    public float curClimbSpeed;
-    public float verCurMaxSpeed;
+    float verCurIniSpeed;
+    float verCurAcce;
+    float curGravityAcce;
+    float curClimbSpeed;
+    float verCurMaxSpeed;
 
     //jumpPreInput
-    public bool isJumpPreInputed;
-    public float jumpPreInputStartTime;
+    bool isJumpPreInputed;
+    float jumpPreInputStartTime;
 
     //jumpPostInput
-    public float jumpPostInputStartTime;
+    float jumpPostInputStartTime;
 
     //wallJump
-    public float wallJumpPreInputStartTime;
-    public float wallJumpPostInputStartTime;
-    public bool isPostWallJumpToRight;
+    float wallJumpPreInputStartTime;
+    float wallJumpPostInputStartTime;
+    bool isPostWallJumpToRight;
 
     //dash
-    public Vector3 dashVector;
-    public float dashStartTime;
+    Vector3 dashVector;
+    float dashStartTime;
+
+    //acce
+    float acceBonus;
 
     #region ConstantsUsed
     Transform catTransform;
@@ -73,7 +76,9 @@ public class CatMove : MonoBehaviour
 
     float attachWallEnergyDecreaseSpeed;
     float climbEnergyDecreaseSpeed;
-    float toCeilingEnergyDecreaseSpeed;
+    float attachCeilingEnergyDecreaseSpeed;
+    float inAcceEnergyDecreaseSpeed;
+
     float jumpEnergyCost;
     float dashEnergyCost;
     #endregion
@@ -86,6 +91,7 @@ public class CatMove : MonoBehaviour
     TileData curUpTileData;
     TileData curLeftTileData;
     TileData curRightTileData;
+
     TileData curLiquidTileData;
     TileData curGasTileData;
     TileData curMistTileData;
@@ -140,7 +146,8 @@ public class CatMove : MonoBehaviour
         dashTime = CONS.dashTime;
         attachWallEnergyDecreaseSpeed = CONS.attachWallEnergyDecreaseSpeed;
         climbEnergyDecreaseSpeed = CONS.climbEnergyDecreaseSpeed;
-        toCeilingEnergyDecreaseSpeed = CONS.toCeilingEnergyDecreaseSpeed;
+        attachCeilingEnergyDecreaseSpeed = CONS.attachCeilingEnergyDecreaseSpeed;
+        inAcceEnergyDecreaseSpeed = CONS.inAcceEnergyDecreaseSpeed;
         jumpEnergyCost = CONS.jumpEnergyCost;
         dashEnergyCost = CONS.dashEnergyCost;
         #endregion
@@ -179,47 +186,43 @@ public class CatMove : MonoBehaviour
         #endregion
 
         #region Move
-        if (!VARS.IsRotating && 
-            !VARS.IsTwisting &&
-            !VARS.IsInMiniMap &&
-            VARS.IsInNewRoomAllResetOver)
+        if (VARS.IsCatMoveMainPartExecutable)
         {
             #region LeftAndRight
             if (!isInLiquid && !isInGas && !isInMist)
             {
                 if (isOnGround)
                 {
-                    horCurAcce = horAcce * curDownTileData.friction;
-                    horCurReverseAcce = horReverseAcce * curDownTileData.friction;
-                    horCurMaxSpeed = horMaxSpeed - curDownTileData.tackiness;
+                    horCurAcce = horAcce * curDownTileData.friction * acceBonus;
+                    horCurReverseAcce = horReverseAcce * curDownTileData.friction * acceBonus;
+                    horCurMaxSpeed = (horMaxSpeed - curDownTileData.tackiness) * acceBonus;
                 }
-                //HR: ~fluid
                 else
                 {
-                    horCurAcce = horAcce;
-                    horCurReverseAcce = horReverseAcce;
-                    horCurMaxSpeed = horMaxSpeed;
+                    horCurAcce = horAcce * acceBonus;
+                    horCurReverseAcce = horReverseAcce * acceBonus;
+                    horCurMaxSpeed = horMaxSpeed * acceBonus;
                 }
             }
             else
             {
                 if (isInLiquid)
                 {
-                    horCurAcce = horAcce / curLiquidTileData.fluidDrag;
-                    horCurReverseAcce = horReverseAcce / curLiquidTileData.fluidDrag;
-                    horCurMaxSpeed = horMaxSpeed / curLiquidTileData.fluidDrag;
+                    horCurAcce = (horAcce / curLiquidTileData.fluidDrag) * acceBonus;
+                    horCurReverseAcce = (horReverseAcce / curLiquidTileData.fluidDrag) * acceBonus;
+                    horCurMaxSpeed = (horMaxSpeed / curLiquidTileData.fluidDrag) * acceBonus;
                 }
                 else if (isInGas)
                 {
-                    horCurAcce = horAcce / curGasTileData.fluidDrag;
-                    horCurReverseAcce = horReverseAcce / curGasTileData.fluidDrag;
-                    horCurMaxSpeed = horMaxSpeed / curGasTileData.fluidDrag;
+                    horCurAcce = (horAcce / curGasTileData.fluidDrag) * acceBonus;
+                    horCurReverseAcce = (horReverseAcce / curGasTileData.fluidDrag) * acceBonus;
+                    horCurMaxSpeed = (horMaxSpeed / curGasTileData.fluidDrag) * acceBonus;
                 }
                 else if (isInMist)
                 {
-                    horCurAcce = horAcce / curMistTileData.fluidDrag;
-                    horCurReverseAcce = horReverseAcce / curMistTileData.fluidDrag;
-                    horCurMaxSpeed = horMaxSpeed / curMistTileData.fluidDrag;
+                    horCurAcce = (horAcce / curMistTileData.fluidDrag) * acceBonus;
+                    horCurReverseAcce = (horReverseAcce / curMistTileData.fluidDrag) * acceBonus;
+                    horCurMaxSpeed = (horMaxSpeed / curMistTileData.fluidDrag) * acceBonus;
                 }
             }
 
@@ -283,6 +286,8 @@ public class CatMove : MonoBehaviour
                             UFL.SetVerCurSpeed(0);
 
                             VARS.IsAttachWall = true;
+
+                            VARS.curAttachedWallTile = VARS.curLeftTile;
                         }
                         else
                         {
@@ -318,6 +323,8 @@ public class CatMove : MonoBehaviour
                             UFL.SetVerCurSpeed(0);
 
                             VARS.IsAttachWall = true;
+
+                            VARS.curAttachedWallTile = VARS.curRightTile;
                         }
                         else
                         {
@@ -330,13 +337,18 @@ public class CatMove : MonoBehaviour
                     }
                 }
             }
-
-            //awayFromWall
-            if (!isLeftBlocked &&
-                !isRightBlocked)
+            //awayFormWall
+            else
             {
                 VARS.IsAttachWall = false;
             }
+
+            ////awayFromWall
+            //if (!isLeftBlocked &&
+            //    !isRightBlocked)
+            //{
+            //    VARS.IsAttachWall = false;
+            //}
 
             //attachWallEnergyDecrease
             if (VARS.IsAttachWall)
@@ -612,10 +624,26 @@ public class CatMove : MonoBehaviour
                         //verCurSpeed = 0;
                         UFL.SetVerCurSpeed(0);
 
-                        //curEnergy -= toCeilingEnergyDecreaseSpeed * Time.deltaTime;
-                        UFL.AddCurTargetEnergy(-toCeilingEnergyDecreaseSpeed * Time.deltaTime);
+                        //curEnergy -= attachCeilingEnergyDecreaseSpeed * Time.deltaTime;
+                        UFL.AddCurTargetEnergy(-attachCeilingEnergyDecreaseSpeed * Time.deltaTime);
+
+                        VARS.IsAttachCeiling = true;
+
+                        VARS.curAttachedCeilingTile = VARS.curUpTile;
+                    }
+                    else
+                    {
+                        VARS.IsAttachCeiling = false;
                     }
                 }
+                else
+                {
+                    VARS.IsAttachCeiling = false;
+                }
+            }
+            else
+            {
+                VARS.IsAttachCeiling = false;
             }
 
             if (VARS.verCurSpeed != 0)
@@ -725,6 +753,30 @@ public class CatMove : MonoBehaviour
 
                     dashStartTime = 0;
                 }
+            }
+            #endregion
+
+            #region Acce
+            //acceControl
+            if (VARS.IsInputtingAcceKey)
+            {
+                VARS.IsInAcce = true;
+            }
+            else
+            {
+                VARS.IsInAcce = false;
+            }
+
+            //acceBonus
+            if (VARS.IsInAcce)
+            {
+                acceBonus = 1.5f;
+
+                UFL.AddCurTargetEnergy(-inAcceEnergyDecreaseSpeed * Time.deltaTime);
+            }
+            else
+            {
+                acceBonus = 1;
             }
             #endregion
 

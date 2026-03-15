@@ -81,6 +81,7 @@ public class Control : MonoBehaviour
                 VARS.IsInputtingRightKey = Input.GetKey(VARS.rightKeyCode);
                 VARS.IsInputtingJumpKey = Input.GetKey(VARS.jumpKeyCode);
                 //VARS.IsInputtingDashKey = Input.GetKey(VARS.dashKeyCode);
+                VARS.IsInputtingAcceKey = Input.GetKey(VARS.acceKeyCode);
                 VARS.IsInputtingGrabKey = Input.GetKey(VARS.grabKeyCode);
             }
             VARS.IsInputtingConfirmKey = Input.GetKey(VARS.confirmKeyCode);
@@ -94,6 +95,7 @@ public class Control : MonoBehaviour
                 VARS.IsRightKeyDown = Input.GetKeyDown(VARS.rightKeyCode);
                 VARS.IsJumpKeyDown = Input.GetKeyDown(VARS.jumpKeyCode);
                 //VARS.IsDashKeyDown = Input.GetKeyDown(VARS.dashKeyCode);
+                VARS.IsAcceKeyDown = Input.GetKeyDown(VARS.acceKeyCode);
                 VARS.IsGrabKeyDown = Input.GetKeyDown(VARS.grabKeyCode);
             }
             VARS.IsConfirmKeyDown = Input.GetKeyDown(VARS.confirmKeyCode);
@@ -107,6 +109,7 @@ public class Control : MonoBehaviour
                 VARS.IsRightKeyUp = Input.GetKeyUp(VARS.rightKeyCode);
                 VARS.IsJumpKeyUp = Input.GetKeyUp(VARS.jumpKeyCode);
                 //VARS.IsDashKeyUp = Input.GetKeyUp(VARS.dashKeyCode);
+                VARS.IsAcceKeyUp = Input.GetKeyUp(VARS.acceKeyCode);
                 VARS.IsGrabKeyUp = Input.GetKeyUp(VARS.grabKeyCode);
             }
             VARS.IsConfirmKeyUp = Input.GetKeyUp(VARS.upKeyCode);

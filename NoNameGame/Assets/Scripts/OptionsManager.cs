@@ -91,10 +91,7 @@ public class OptionsManager : MonoBehaviour
         #endregion
 
         //activateOptionPanel
-        if (!VARS.IsRotating &&
-            !VARS.IsTwisting &&
-            !VARS.IsZoomedOut &&
-            !VARS.IsInMiniMap)
+        if (VARS.IsOptionsManagerActivationExecutable)
         {
             if (VARS.IsBackKeyDown)
             {
@@ -247,6 +244,9 @@ public class OptionsManager : MonoBehaviour
                                         VARS.jumpKeyCode = tempKeyCode;
                                         break;
                                     case 5:
+                                        VARS.acceKeyCode = tempKeyCode;
+                                        break;
+                                    case 6:
                                         VARS.grabKeyCode = tempKeyCode;
                                         break;
                                 }

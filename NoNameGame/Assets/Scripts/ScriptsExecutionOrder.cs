@@ -42,6 +42,7 @@ public class ScriptsExecutionOrder : MonoBehaviour
         catMove,
         catRotate,
         catEnergy,
+        catState,
         catTrigger,
         catAppearance,
         catDeath,

@@ -476,7 +476,7 @@ MonoBehaviour:
   fluidDrag: 1
   mass: 1
   temperature: 0
-  conductivity: 0
+  electricity: 0
   toxicity: 0
   _blockTypeIndex: 4101
 --- !u!1 &5904544206195090613

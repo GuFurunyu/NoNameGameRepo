@@ -97,41 +97,16 @@ public class CatEnergy : MonoBehaviour
         #endregion
 
         #region OnGroundOrInLiquidReset
-        if (!VARS.IsRotating &&
-            !VARS.IsTwisting)
+        if (VARS.IsCatEnergyResetExecutable)
         {
-            if (isOnGround ||
-                isInLiquid)
+            //energyRestore
+            if (VARS.curTargetEnergy < maxEnergy)
             {
-                //energyRestore
-                if (VARS.curTargetEnergy < maxEnergy)
-                {
-                    //curEnergy += onGroundEnergyRestoreSpeed * Time.deltaTime;
-                    UFL.AddCurTargetEnergy(onGroundEnergyRestoreSpeed * Time.deltaTime);
-                }
-            }
-            else
-            {
-                //if (isIniRotation)
-                //{
-                //    if (rotationNumRestoreStartTime != 0)
-                //    {
-                //        rotationNumRestoreStartTime = 0;
-                //    }
-                //}
-            }
+                //Debug.Log("energyRestore");
 
-            //if (isInLiquid)
-            //{
-            //    if (curEnergy < maxEnergy)
-            //    {
-            //        curEnergy += inLiquidEnergyRestoreSpeed * Time.deltaTime;
-            //    }
-            //    if (curEnergy > maxEnergy)
-            //    {
-            //        curEnergy = maxEnergy;
-            //    }
-            //}
+                //curEnergy += onGroundEnergyRestoreSpeed * Time.deltaTime;
+                UFL.AddCurTargetEnergy(onGroundEnergyRestoreSpeed * Time.deltaTime);
+            }
         }
         #endregion
 

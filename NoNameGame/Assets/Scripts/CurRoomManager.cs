@@ -50,7 +50,7 @@ public class CurRoomManager : MonoBehaviour
 
         //CurRoomInitialize();
 
-        if (VARS.IsInNewRoom)
+        if (!VARS.IsInNewRoomCurRoomManagerResetOver)
         {
             CurRoomInitialize();
 

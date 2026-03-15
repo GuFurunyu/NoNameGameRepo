@@ -219,7 +219,7 @@ public class CatAppearance : MonoBehaviour
         }
         #endregion
 
-        #region Outlines
+        #region Outlines(NotApplied)
         //outerOutlinesEmpty.SetActive(!VARS.IsInLiquid && !VARS.IsInGas);
         //outerGrayOutlinesEmpty.SetActive(VARS.IsInLiquid || VARS.IsInGas);
 

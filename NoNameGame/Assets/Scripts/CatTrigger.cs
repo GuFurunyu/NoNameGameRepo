@@ -135,10 +135,9 @@ public class CatTrigger : MonoBehaviour
         isInLiquid = VARS.IsInLiquid;
         #endregion
 
-        #region Strawberries
-        if (!VARS.IsRotating && 
-            !VARS.IsTwisting)
+        if (VARS.IsCatTriggerMainPartExecutable)
         {
+            #region Strawberries
             //lose
             if (VARS.IsToLoseCarriedStrawberries)
             {
@@ -206,13 +205,9 @@ public class CatTrigger : MonoBehaviour
                     VARS.IsCollectingStrawberries = false;
                 }
             }
-        }
-        #endregion
+            #endregion
 
-        #region EnergyCrystals
-        if (!VARS.IsRotating && 
-            !VARS.IsTwisting)
-        {
+            #region EnergyCrystals
             if (VARS.IsGettingAnEnergyCrystal)
             {
                 gotEnergyCrystals.Add(curTriggerTile);
@@ -252,139 +247,139 @@ public class CatTrigger : MonoBehaviour
                     energyCrystalGotTimes.Clear();
                 }
             }
-        }
-        #endregion
+            #endregion
 
-        #region EdgeGate
-        if (VARS.IsEnteringAnEdgeGate)
-        {
-            //ifIsGapTimeOver
-            if (Time.time - throughEdgeGateTime > throughEdgeGateGapTime)
+            #region EdgeGate
+            if (VARS.IsEnteringAnEdgeGate)
             {
-                ////findCurNearestEdgeGate
-                //curNearestEdgeGateDistance = 999;
-
-                //for (int i = 0; i < edgeGates.Count; i++)
-                //{
-                //    if (edgeGates[i].transform.parent != curTriggerTile.transform.parent)
-                //    {
-                //        if (Vector3.Distance(edgeGates[i].transform.position, curTriggerTile.transform.position) < curNearestEdgeGateDistance)
-                //        {
-                //            curNearestEdgeGateDistance = Vector3.Distance(edgeGates[i].transform.position, curTriggerTile.transform.position);
-                //            curNearestEdgeGateIndex = i;
-                //        }
-                //    }
-                //}
-
-                //curToEdgeGate = edgeGates[curNearestEdgeGateIndex];
-                for(int i=0;i< edgeGates.Count; i++)
+                //ifIsGapTimeOver
+                if (Time.time - throughEdgeGateTime > throughEdgeGateGapTime)
                 {
-                    if (curTriggerTile == edgeGates[i])
+                    ////findCurNearestEdgeGate
+                    //curNearestEdgeGateDistance = 999;
+
+                    //for (int i = 0; i < edgeGates.Count; i++)
+                    //{
+                    //    if (edgeGates[i].transform.parent != curTriggerTile.transform.parent)
+                    //    {
+                    //        if (Vector3.Distance(edgeGates[i].transform.position, curTriggerTile.transform.position) < curNearestEdgeGateDistance)
+                    //        {
+                    //            curNearestEdgeGateDistance = Vector3.Distance(edgeGates[i].transform.position, curTriggerTile.transform.position);
+                    //            curNearestEdgeGateIndex = i;
+                    //        }
+                    //    }
+                    //}
+
+                    //curToEdgeGate = edgeGates[curNearestEdgeGateIndex];
+                    for (int i = 0; i < edgeGates.Count; i++)
                     {
-                        curToEdgeGate = edgeGates[edgeGateLinkedToIndexes[i]];
+                        if (curTriggerTile == edgeGates[i])
+                        {
+                            curToEdgeGate = edgeGates[edgeGateLinkedToIndexes[i]];
+                        }
                     }
-                }
-                //curEdgeGatesBetweenVector = curToEdgeGate.transform.position - curTile.transform.position;
+                    //curEdgeGatesBetweenVector = curToEdgeGate.transform.position - curTile.transform.position;
 
-                //toNewRoom
-                if (VARS.IsEdgeGateTriggered)
-                {
-                    catTransform.position = curToEdgeGate.transform.position - roomStableForwards[curToEdgeGate.GetComponent<TileData>().inRoomIndex] * 0.1f;
-
-                    curEdgeGatesCommonLineVector = Vector3.Cross(roomStableForwards[curTriggerTileData.inRoomIndex], roomStableForwards[curToEdgeGate.GetComponent<TileData>().inRoomIndex]);
-                    curEdgeGatesAngle = Vector3.Angle(roomStableForwards[curTriggerTileData.inRoomIndex], roomStableForwards[curToEdgeGate.GetComponent<TileData>().inRoomIndex]);
-
-                    camTransform.eulerAngles += curEdgeGatesCommonLineVector * curEdgeGatesAngle;
-                    //camIniEulerangles = curEdgeGatesCommonLineVector * curEdgeGatesAngle;
-
-                    if (Vector3.Dot(curUp, curEdgeGatesCommonLineVector) == 0)
+                    //toNewRoom
+                    if (VARS.IsEdgeGateTriggered)
                     {
-                        curUp = Vector3.Cross(curEdgeGatesCommonLineVector, curUp);
-                    }
-                    if (Vector3.Dot(curRight, curEdgeGatesCommonLineVector) == 0)
-                    {
-                        curRight = Vector3.Cross(curEdgeGatesCommonLineVector, curRight);
-                    }
+                        catTransform.position = curToEdgeGate.transform.position - roomStableForwards[curToEdgeGate.GetComponent<TileData>().inRoomIndex] * 0.1f;
 
-                    VARS.IsEdgeGateTriggered = false;
+                        curEdgeGatesCommonLineVector = Vector3.Cross(roomStableForwards[curTriggerTileData.inRoomIndex], roomStableForwards[curToEdgeGate.GetComponent<TileData>().inRoomIndex]);
+                        curEdgeGatesAngle = Vector3.Angle(roomStableForwards[curTriggerTileData.inRoomIndex], roomStableForwards[curToEdgeGate.GetComponent<TileData>().inRoomIndex]);
 
-                    throughEdgeGateTime = Time.time;
+                        camTransform.eulerAngles += curEdgeGatesCommonLineVector * curEdgeGatesAngle;
+                        //camIniEulerangles = curEdgeGatesCommonLineVector * curEdgeGatesAngle;
+
+                        if (Vector3.Dot(curUp, curEdgeGatesCommonLineVector) == 0)
+                        {
+                            curUp = Vector3.Cross(curEdgeGatesCommonLineVector, curUp);
+                        }
+                        if (Vector3.Dot(curRight, curEdgeGatesCommonLineVector) == 0)
+                        {
+                            curRight = Vector3.Cross(curEdgeGatesCommonLineVector, curRight);
+                        }
+
+                        VARS.IsEdgeGateTriggered = false;
+
+                        throughEdgeGateTime = Time.time;
+                    }
                 }
             }
+            #endregion
+
+            #region SavePoint
+            if (VARS.IsToActivateASavePoint)
+            {
+                //deactivateTheLastSavePoint
+                //if (VARS.curActivatedSavePoint != null)
+                //{
+                //    VARS.curActivatedSavePoint.SetActive(true);
+                //}
+
+                savePoints[VARS.curActivatedSavePointIndex].SetActive(true);
+
+                //determineCurActivatedSavePoint
+                for (int i = 0; i < savePoints.Count; i++)
+                {
+                    if (savePoints[i] == curTriggerTile)
+                    {
+                        VARS.curActivatedSavePointIndex = i;
+
+                        break;
+                    }
+                }
+
+                VARS.IsToDetermineCurActivatedSavePointPosition = true;
+
+                VARS.IsToActivateCurSavePoint = true;
+
+                VARS.IsToActivateASavePoint = false;
+            }
+
+            if (VARS.IsToDetermineCurActivatedSavePointPosition)
+            {
+                VARS.curActivatedSavePointPosition = CONS.savePoints[VARS.curActivatedSavePointIndex].transform.position;
+
+                //Debug.Log(VARS.curActivatedSavePointPosition);
+
+                VARS.IsToWriteCatWorldData = true;
+
+                VARS.IsToDetermineCurActivatedSavePointPosition = false;
+            }
+
+            if (VARS.IsToActivateCurSavePoint)
+            {
+                //activateCurSavePoint
+                //storedActivatedSavePointBlock.transform.position = VARS.curActivatedSavePoint.transform.position;
+                storedActivatedSavePointBlock.transform.position = savePoints[VARS.curActivatedSavePointIndex].transform.position;
+
+                //tempChildToCurPlaneEmpty
+                storedActivatedSavePointBlock.transform.SetParent(VARS.curPlaneEmpty.transform, true);
+
+                //VARS.curActivatedSavePoint.SetActive(false);
+                savePoints[VARS.curActivatedSavePointIndex].SetActive(false);
+
+                //setCatIniPosition
+                //VARS.catIniPosition = VARS.curActivatedSavePoint.transform.position - curRoomStableForward * 0.1f;
+                VARS.catIniPosition = VARS.curActivatedSavePointPosition - curRoomStableForward * 0.1f;
+
+                //Debug.Log("catIniPosition:" + VARS.catIniPosition);
+
+                //setCatPosition
+                if (VARS.horCurSpeed == 0 &&
+                    VARS.verCurSpeed == 0)
+                    catTransform.position = VARS.catIniPosition;
+
+                //Debug.Log("catPosition:" + catTransform.position);
+
+                VARS.IsToActivateCurSavePoint = false;
+            }
+            #endregion
         }
-        #endregion
-
-        #region SavePoint
-        if (VARS.IsToActivateASavePoint)
-        {
-			//deactivateTheLastSavePoint
-			//if (VARS.curActivatedSavePoint != null)
-			//{
-			//    VARS.curActivatedSavePoint.SetActive(true);
-			//}
-
-			savePoints[VARS.curActivatedSavePointIndex].SetActive(true);
-
-			//determineCurActivatedSavePoint
-			for (int i = 0; i < savePoints.Count; i++)
-			{
-				if (savePoints[i] == curTriggerTile)
-				{
-					VARS.curActivatedSavePointIndex = i;
-
-					break;
-				}
-			}
-
-			VARS.IsToDetermineCurActivatedSavePointPosition = true;
-
-            VARS.IsToActivateCurSavePoint = true;
-
-            VARS.IsToActivateASavePoint = false;
-        }
-
-        if (VARS.IsToDetermineCurActivatedSavePointPosition)
-		{
-			VARS.curActivatedSavePointPosition = CONS.savePoints[VARS.curActivatedSavePointIndex].transform.position;
-
-			//Debug.Log(VARS.curActivatedSavePointPosition);
-
-			VARS.IsToWriteCatWorldData = true;
-
-            VARS.IsToDetermineCurActivatedSavePointPosition = false;
-        }
-
-        if (VARS.IsToActivateCurSavePoint)
-        {
-            //activateCurSavePoint
-            //storedActivatedSavePointBlock.transform.position = VARS.curActivatedSavePoint.transform.position;
-            storedActivatedSavePointBlock.transform.position = savePoints[VARS.curActivatedSavePointIndex].transform.position;
-
-            //tempChildToCurPlaneEmpty
-            storedActivatedSavePointBlock.transform.SetParent(VARS.curPlaneEmpty.transform, true);
-
-            //VARS.curActivatedSavePoint.SetActive(false);
-            savePoints[VARS.curActivatedSavePointIndex].SetActive(false);
-
-            //setCatIniPosition
-            //VARS.catIniPosition = VARS.curActivatedSavePoint.transform.position - curRoomStableForward * 0.1f;
-            VARS.catIniPosition = VARS.curActivatedSavePointPosition - curRoomStableForward * 0.1f;
-
-            //Debug.Log("catIniPosition:" + VARS.catIniPosition);
-
-            //setCatPosition
-            if (VARS.horCurSpeed == 0 &&
-                VARS.verCurSpeed == 0)
-                catTransform.position = VARS.catIniPosition;
-
-            //Debug.Log("catPosition:" + catTransform.position);
-
-            VARS.IsToActivateCurSavePoint = false;
-        }
-        #endregion
 
         #region OnGroundOrInLiquidReset
-        if (!VARS.IsRotating && 
+        if (!VARS.IsRotating &&
             !VARS.IsTwisting)
         {
             if (VARS.IsOnGround ||

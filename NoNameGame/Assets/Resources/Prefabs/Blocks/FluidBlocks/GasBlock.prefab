@@ -305,8 +305,8 @@ MonoBehaviour:
   fluidDrag: 1.5
   mass: 1
   temperature: 0
-  conductivity: 0
-  toxicity: 0
+  electricity: 0
+  toxicity: 150
   _blockTypeIndex: 5301
 --- !u!1 &7596081863855460496
 GameObject:
