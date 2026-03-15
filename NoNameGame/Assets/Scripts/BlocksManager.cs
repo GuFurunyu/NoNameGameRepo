@@ -272,9 +272,9 @@ public class BlocksManager : MonoBehaviour
                 {
                     if (gates[j].transform.parent != tempTransform.parent)
                     {
-                        if (Vector3.Distance(gates[i].transform.position, tempTransform.position) < curNearestGateDistance)
+                        if (Vector3.Distance(gates[j].transform.position, tempTransform.position) < curNearestGateDistance)
                         {
-                            curNearestGateDistance = Vector3.Distance(gates[i].transform.position, tempTransform.position);
+                            curNearestGateDistance = Vector3.Distance(gates[j].transform.position, tempTransform.position);
                         }
                     }
                 }
@@ -314,8 +314,8 @@ public class BlocksManager : MonoBehaviour
             //determineEdgeGatePassabilities
             for (int i = 0; i < edgeGates.Count; i++)
             {
-                if(edgeGates[i].transform.parent != VARS.curPlaneEmpty.transform)
-                    continue;
+                //if(edgeGates[i].transform.parent != VARS.curPlaneEmpty.transform)
+                //    continue;
 
                 tempTransform = edgeGates[i].transform;
 
@@ -339,8 +339,8 @@ public class BlocksManager : MonoBehaviour
                     {
                         if (Vector3.Distance(edgeGates[i].transform.position, tempTransform.position) < curNearestEdgeGateDistance)
                         {
-                            curNearestEdgeGateDistance = Vector3.Distance(edgeGates[i].transform.position, tempTransform.position);
-                            curNearestEdgeGateIndex = i;
+                            curNearestEdgeGateDistance = Vector3.Distance(edgeGates[j].transform.position, tempTransform.position);
+                            curNearestEdgeGateIndex = j;
                         }
                     }
                 }

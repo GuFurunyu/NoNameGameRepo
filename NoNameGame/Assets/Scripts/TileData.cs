@@ -99,7 +99,7 @@ public class TileData : MonoBehaviour
     //      1101-RedBlock, 1102-DarkRedBlock
     //      1301-VaporBlock
     //  2-YellowRegionBlocks
-    //      2101-YellowBlock, 2102-DarkYellow , 2102-SandBlock
+    //      2101-YellowBlock, 2102-DarkYellow , 2103-SandBlock
     //  3-BlueRegionBlocks
     //      3101-BlueBlock, 3102-DarkBlueBlock , 3103-IceBlock, 3104-BreakableIceBlock
     //      3201-WaterBlock
@@ -154,11 +154,5 @@ public class TileData : MonoBehaviour
                 break;
             }
         }
-    }
-
-    private void Update()
-    {
-        #region ImportValueVariables
-        #endregion
     }
 }

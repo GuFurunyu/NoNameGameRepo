@@ -289,10 +289,6 @@ public class CatTrigger : MonoBehaviour
                 //toNewRoom
                 if (VARS.IsEdgeGateTriggered)
                 {
-                    Debug.Log("enter");
-
-                    print(curToEdgeGate.transform.position);
-
                     catTransform.position = curToEdgeGate.transform.position - roomStableForwards[curToEdgeGate.GetComponent<TileData>().inRoomIndex] * 0.1f;
 
                     curEdgeGatesCommonLineVector = Vector3.Cross(roomStableForwards[curTriggerTileData.inRoomIndex], roomStableForwards[curToEdgeGate.GetComponent<TileData>().inRoomIndex]);

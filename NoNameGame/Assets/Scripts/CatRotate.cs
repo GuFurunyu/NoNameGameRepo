@@ -141,8 +141,7 @@ public class CatRotate : MonoBehaviour
             VARS.IsInNewRoomCatRotateResetOver = true;
         }
 
-        if (VARS.IsRotateEnabled &&
-            !VARS.IsRotating &&
+        if (!VARS.IsRotating &&
             !VARS.IsTwisting &&
             !VARS.IsInMiniMap &&
             VARS.IsInNewRoomAllResetOver)
@@ -202,7 +201,8 @@ public class CatRotate : MonoBehaviour
             }
 
             //rotationControl
-            if (rotationRestNum > 0 &&
+            if (VARS.IsRotateEnabled &&
+                rotationRestNum > 0 &&
                 !VARS.IsInCenter)
             {
                 if (VARS.curEnergy > rotationEnergyCost)

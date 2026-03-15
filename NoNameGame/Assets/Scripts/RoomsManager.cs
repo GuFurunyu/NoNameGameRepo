@@ -144,7 +144,7 @@ public class RoomsManager : MonoBehaviour
             {
                 //hideOtherPlanes
                 if (!VARS.IsZoomedOut)
-                    UFL.HideOtherPlanes();
+                    //UFL.HideOtherPlanes();
 
                 VARS.IsInNewRoom = false;
 

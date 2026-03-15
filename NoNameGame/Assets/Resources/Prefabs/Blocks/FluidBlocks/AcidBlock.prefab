@@ -123,8 +123,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inRoomIndex: 0
   offsetThres: 0.2
-  triggerTypeIndex: 0
-  stateOfMatterIndex: 2
+  _stateOfMatterIndex: 2
   isMovable: 1
   isPositionDetermined: 0
   isAffectedByGravity: 1
@@ -140,7 +139,7 @@ MonoBehaviour:
   temperature: 0
   conductivity: 0
   toxicity: 0
-  blockTypeIndex: 5201
+  _blockTypeIndex: 5201
 --- !u!1 &6817422462093686340
 GameObject:
   m_ObjectHideFlags: 0
