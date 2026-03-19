@@ -128,39 +128,39 @@ public class RoomsManager : MonoBehaviour
             VARS.IsIntoNewRoom = true;
         }
 
-        if (VARS.IsIntoNewRoom)
-        {
-            IntoNewRoom();
-        }
+        //if (VARS.IsIntoNewRoom)
+        //{
+        //    IntoNewRoom();
+        //}
         #endregion
 
         #region InNewRoomReset
-        if (VARS.IsInNewRoomAllResetOver)
-        {
-            if (!VARS.IsInNewRoomCurRoomManagerResetOver ||
-                !VARS.IsInNewRoomCameraManagerResetOver ||
-                !VARS.IsInNewRoomCatRotateResetOver ||
-                !VARS.IsInNewRoomBlocksManagerResetOver)
-            {
-                VARS.IsInNewRoomAllResetOver = false;
-            }
-        }
-        if (!VARS.IsInNewRoomAllResetOver)
-        {
-            if (VARS.IsInNewRoomCurRoomManagerResetOver &&
-                VARS.IsInNewRoomCameraManagerResetOver &&
-                VARS.IsInNewRoomCatRotateResetOver &&
-                VARS.IsInNewRoomBlocksManagerResetOver)
-            {
-                //hideOtherPlanes
-                if (!VARS.IsZoomedOut)
-                    //UFL.HideOtherPlanes();
+        //if (VARS.IsInNewRoomAllResetOver)
+        //{
+        //    if (!VARS.IsInNewRoomCurRoomManagerResetOver ||
+        //        !VARS.IsInNewRoomCameraManagerResetOver ||
+        //        !VARS.IsInNewRoomCatRotateResetOver ||
+        //        !VARS.IsInNewRoomBlocksManagerResetOver)
+        //    {
+        //        VARS.IsInNewRoomAllResetOver = false;
+        //    }
+        //}
+        //if (!VARS.IsInNewRoomAllResetOver)
+        //{
+        //    if (VARS.IsInNewRoomCurRoomManagerResetOver &&
+        //        VARS.IsInNewRoomCameraManagerResetOver &&
+        //        VARS.IsInNewRoomCatRotateResetOver &&
+        //        VARS.IsInNewRoomBlocksManagerResetOver)
+        //    {
+        //        //hideOtherPlanes
+        //        if (!VARS.IsZoomedOut)
+        //            //UFL.HideOtherPlanes();
 
-                VARS.IsInNewRoom = false;
+        //        VARS.IsInNewRoom = false;
 
-                VARS.IsInNewRoomAllResetOver = true;
-            }
-        }
+        //        VARS.IsInNewRoomAllResetOver = true;
+        //    }
+        //}
         #endregion
 
         if (VARS.IsInNewRoomAllResetOver)

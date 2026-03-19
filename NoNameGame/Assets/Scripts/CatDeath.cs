@@ -109,6 +109,9 @@ public class CatDeath : MonoBehaviour
 
         VARS.IsToLoseCarriedStrawberries = true;
 
-        VARS.IsIntoNewRoom = true;
+        //VARS.IsIntoNewRoom = true;
+
+        VARS.IsInNewRoomCameraManagerResetOver = false;
+        VARS.IsInNewRoomCatRotateResetOver = false;
     }
 }

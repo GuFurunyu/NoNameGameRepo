@@ -44,31 +44,98 @@ public class Variables : MonoBehaviour
 
     //isInNewRoom
     [SerializeField] private bool _isIntoNewRoom = true;
-    public bool IsIntoNewRoom { get { return _isIntoNewRoom; } set { _isIntoNewRoom = value; } }
+    public bool IsIntoNewRoom
+    {
+        get { return _isIntoNewRoom; }
+        set
+        {
+            _isIntoNewRoom = value;
 
-    [SerializeField] private bool _isInNewRoom = true;
+            if (value == true)
+            {
+                IsIntoNewRoom = false;
+
+                IsInNewRoom = true;
+
+                IsInNewRoomCurRoomManagerResetOver = false;
+                IsInNewRoomCameraManagerResetOver = false;
+                IsInNewRoomCatRotateResetOver = false;
+                IsInNewRoomBlocksManagerResetOver = false;
+            }
+        }
+    }
+
+    [SerializeField] private bool _isInNewRoom = true; 
     public bool IsInNewRoom { get { return _isInNewRoom; } set { _isInNewRoom = value; } }
 
 
     //isInNewRoomResetOver
     [SerializeField] private bool _isInNewRoomCurRoomManagerResetOver;
-    public bool IsInNewRoomCurRoomManagerResetOver 
-    { get { return _isInNewRoomCurRoomManagerResetOver; } set { _isInNewRoomCurRoomManagerResetOver = value; } }
+    public bool IsInNewRoomCurRoomManagerResetOver
+    {
+        get { return _isInNewRoomCurRoomManagerResetOver; }
+        set
+        {
+            if (value == false) IsInNewRoomAllResetOver = false;
+            _isInNewRoomCurRoomManagerResetOver = value;
+        }
+    }
 
     [SerializeField] private bool _isInNewRoomCameraManagerResetOver;
-    public bool IsInNewRoomCameraManagerResetOver 
-    { get { return _isInNewRoomCameraManagerResetOver; } set { _isInNewRoomCameraManagerResetOver = value; } }
+    public bool IsInNewRoomCameraManagerResetOver
+    {
+        get { return _isInNewRoomCameraManagerResetOver; }
+        set
+        {
+            if (value == false) IsInNewRoomAllResetOver = false;
+            _isInNewRoomCameraManagerResetOver = value;
+        }
+    }
 
     [SerializeField] private bool _isInNewRoomCatRotateResetOver;
-    public bool IsInNewRoomCatRotateResetOver 
-    { get { return _isInNewRoomCatRotateResetOver; } set { _isInNewRoomCatRotateResetOver = value; } }
+    public bool IsInNewRoomCatRotateResetOver
+    {
+        get { return _isInNewRoomCatRotateResetOver; }
+        set
+        {
+            if (value == false) IsInNewRoomAllResetOver = false;
+            _isInNewRoomCatRotateResetOver = value;
+        }
+    }
 
     [SerializeField] private bool _isInNewRoomBlocksManagerResetOver;
-    public bool IsInNewRoomBlocksManagerResetOver 
-    { get { return _isInNewRoomBlocksManagerResetOver; } set { _isInNewRoomBlocksManagerResetOver = value; } }
+    public bool IsInNewRoomBlocksManagerResetOver
+    {
+        get { return _isInNewRoomBlocksManagerResetOver; }
+        set
+        {
+            if (value == false) IsInNewRoomAllResetOver = false;
+            _isInNewRoomBlocksManagerResetOver = value;
+        }
+    }
 
     [SerializeField] private bool _isInNewRoomAllResetOver;
-    public bool IsInNewRoomAllResetOver { get { return _isInNewRoomAllResetOver; } set { _isInNewRoomAllResetOver = value; } }
+    public bool IsInNewRoomAllResetOver
+    {
+        get
+        {
+            if (_isInNewRoomAllResetOver == false)
+            {
+                IsInNewRoomAllResetOver = 
+                    IsInNewRoomCurRoomManagerResetOver &&
+                    IsInNewRoomCameraManagerResetOver &&
+                    IsInNewRoomCatRotateResetOver &&
+                    IsInNewRoomBlocksManagerResetOver;
+            }
+
+            return _isInNewRoomAllResetOver;
+        }
+        set
+        {
+            if (value == true) IsInNewRoom = false;
+            _isInNewRoomAllResetOver = value;
+        }
+    }
 
 
     //roomsInfo
@@ -585,6 +652,12 @@ public class Variables : MonoBehaviour
     #region BlocksManager
     [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
         "  \nBLOCKSMANAGER\n --- ")]
+    //fixedDeltaTime
+    public float blocksManagerFixedDeltaTime;
+
+    public List<int> curRoomBlockStateOfMatterIndexes;
+    public List<int> curRoomBlockTypeIndexes;
+
     //gravity
     //~?
     public float curGravity;
@@ -602,7 +675,6 @@ public class Variables : MonoBehaviour
     public List<float> curFragileRustBlockToBeBrokenStartTimes = new List<float>();
     public List<GameObject> curBrokenFragileRustBlocks = new List<GameObject>();
     public List<float> curFragileRustBlockBrokenTimes = new List<float>();
-
     #endregion
 
     #region MiniMapManager

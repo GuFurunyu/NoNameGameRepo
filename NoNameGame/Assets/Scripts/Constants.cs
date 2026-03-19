@@ -294,9 +294,6 @@ public class Constants : MonoBehaviour
     #region BlocksManager
     [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
         "  \nBLOCKSMANAGER\n --- ")]
-    //fixedDeltaTime
-    public float blocksManagerFixedDeltaTime;
-
     //storedBlocks
     public GameObject storedSandBlocksEmpty;
     public GameObject storedWaterBlocksEmpty;

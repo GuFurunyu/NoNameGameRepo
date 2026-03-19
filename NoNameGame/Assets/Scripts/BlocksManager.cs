@@ -12,6 +12,9 @@ public class BlocksManager : MonoBehaviour
 
     GameObject gameManager;
 
+    //lastUpdateTime
+    float lastUpdateTime;
+
     //storedBlock
     GameObject[] storedSandBlocks = new GameObject[512];
     GameObject[] storedWaterBlocks = new GameObject[512];
@@ -125,8 +128,6 @@ public class BlocksManager : MonoBehaviour
 
     List<GameObject> edgeGates = new List<GameObject>();
 
-    float blocksManagerFixedDeltaTime;
-
     GameObject storedSandBlocksEmpty;
     GameObject storedWaterBlocksEmpty;
     GameObject storedAcidBlocksEmpty;
@@ -146,6 +147,9 @@ public class BlocksManager : MonoBehaviour
     Vector3 curRoomStableRight;
     Vector3 curUp;
     Vector3 curRight;
+
+    List<int> curRoomBlockStateOfMatterIndexes = new List<int>();
+    List<int> curRoomBlockTypeIndexes = new List<int>();
 
     List<GameObject> curToBeBrokenFragileRustBlocks = new List<GameObject>();
     List<float> curFragileRustBlockToBeBrokenStartTimes = new List<float>();
@@ -172,7 +176,6 @@ public class BlocksManager : MonoBehaviour
         roomCoordBreadth = CONS.roomCoordBreadth;
         gates = CONS.gates;
         edgeGates = CONS.edgeGates;
-        blocksManagerFixedDeltaTime = CONS.blocksManagerFixedDeltaTime;
         storedSandBlocksEmpty = CONS.storedSandBlocksEmpty;
         storedWaterBlocksEmpty = CONS.storedWaterBlocksEmpty;
         storedAcidBlocksEmpty = CONS.storedAcidBlocksEmpty;
@@ -186,6 +189,8 @@ public class BlocksManager : MonoBehaviour
 
         #region ImportReferenceVariables
         edgeGateLinkedToIndexes = VARS.edgeGateLinkedToIndexes;
+        curRoomBlockStateOfMatterIndexes = VARS.curRoomBlockStateOfMatterIndexes;
+        curRoomBlockTypeIndexes = VARS.curRoomBlockTypeIndexes;
         curToBeBrokenFragileRustBlocks = VARS.curToBeBrokenFragileRustBlocks;
         curFragileRustBlockToBeBrokenStartTimes = VARS.curFragileRustBlockToBeBrokenStartTimes;
         curBrokenFragileRustBlocks = VARS.curBrokenFragileRustBlocks;
@@ -220,11 +225,11 @@ public class BlocksManager : MonoBehaviour
         //    }
         //}
 
-        Time.fixedDeltaTime = blocksManagerFixedDeltaTime;
+        lastUpdateTime = Time.time;
     }
 
-    //void Update()
-    void FixedUpdate()
+    void Update()
+    //void FixedUpdate()
     {
         #region ImportValueVariables
         curRoomStableUp = VARS.curRoomStableUp;
@@ -232,6 +237,16 @@ public class BlocksManager : MonoBehaviour
         curUp = VARS.curUp;
         curRight = VARS.curRight;
         #endregion
+
+        //customFixedUpdateInUpdate
+        if (Time.time - lastUpdateTime < (VARS.blocksManagerFixedDeltaTime * 0.9f))
+        {
+            return;
+        }
+        else
+        {
+            lastUpdateTime = Time.time;
+        }
 
         if (!VARS.IsInNewRoomBlocksManagerResetOver)
         {
@@ -241,6 +256,9 @@ public class BlocksManager : MonoBehaviour
             curBlocks.Clear();
             curBlockTileDatas.Clear();
             curCoordVectors.Clear();
+
+            curRoomBlockStateOfMatterIndexes.Clear();
+            curRoomBlockTypeIndexes.Clear();
 
             ////blockInfoMatrix
             //blockInfoMatrixList.Clear();
@@ -256,13 +274,25 @@ public class BlocksManager : MonoBehaviour
                     //notCountEdgeGateTriggers
                     if (tempTransform.GetComponent<TileData>().blockTypeIndex != 7003)
                     {
+                        tempTileData = tempTransform.GetComponent<TileData>();
+
                         curBlocks.Add(tempTransform.gameObject);
-                        curBlockTileDatas.Add(tempTransform.GetComponent<TileData>());
+                        curBlockTileDatas.Add(tempTileData);
                         //curBlockStateOfMatterIndexes.Add(tempTransform.GetComponent<TileData>().stateOfMatterIndex);
 
                         //curCoordVector = tempTransform.localPosition;
                         curCoordVector = tempTransform.position - VARS.curPlaneEmpty.transform.position;
                         curCoordVectors.Add(curCoordVector);
+
+                        //getCurRoomBlockStateOfMatterIndexesAndTypeIndexes
+                        if (!curRoomBlockStateOfMatterIndexes.Contains(tempTileData.stateOfMatterIndex))
+                        {
+                            curRoomBlockStateOfMatterIndexes.Add(tempTileData.stateOfMatterIndex);
+                        }
+                        if (!curRoomBlockTypeIndexes.Contains(tempTileData.blockTypeIndex))
+                        {
+                            curRoomBlockTypeIndexes.Add(tempTileData.blockTypeIndex);
+                        }
                     }
                 }
             }
@@ -321,7 +351,7 @@ public class BlocksManager : MonoBehaviour
 
             //initializeEdgeGateLinkedToIndexes
             edgeGateLinkedToIndexes.Clear();
-            for (int i=0;i < edgeGates.Count; i++)
+            for (int i = 0; i < edgeGates.Count; i++)
             {
                 edgeGateLinkedToIndexes.Add(-1);
             }
