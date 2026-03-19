@@ -242,7 +242,8 @@ public class CatMove : MonoBehaviour
                 {
                     //drag
                     //horCurSpeed -= horCurAcce * Time.deltaTime;
-                    UFL.AddHorCurSpeed(-horCurAcce * Time.deltaTime);
+                    //UFL.AddHorCurSpeed(-horCurAcce * Time.deltaTime);
+                    VARS.horCurSpeed += -horCurAcce * Time.deltaTime;
                 }
 
                 VARS.IsHorInputting = true;
@@ -257,7 +258,8 @@ public class CatMove : MonoBehaviour
                 {
                     //drag
                     //horCurSpeed += horCurAcce * Time.deltaTime;
-                    UFL.AddHorCurSpeed(horCurAcce * Time.deltaTime);
+                    //UFL.AddHorCurSpeed(horCurAcce * Time.deltaTime);
+                    VARS.horCurSpeed += horCurAcce * Time.deltaTime;
                 }
 
                 VARS.IsHorInputting = true;
@@ -283,7 +285,8 @@ public class CatMove : MonoBehaviour
                         if (VARS.curEnergy > 0)
                         {
                             //verCurSpeed = 0;
-                            UFL.SetVerCurSpeed(0);
+                            //UFL.SetVerCurSpeed(0);
+                            VARS.verCurSpeed = 0;
 
                             VARS.IsAttachWall = true;
 
@@ -320,7 +323,8 @@ public class CatMove : MonoBehaviour
                         if (VARS.curEnergy > 0)
                         {
                             //verCurSpeed = 0;
-                            UFL.SetVerCurSpeed(0);
+                            //UFL.SetVerCurSpeed(0);
+                            VARS.verCurSpeed = 0;
 
                             VARS.IsAttachWall = true;
 
@@ -354,7 +358,8 @@ public class CatMove : MonoBehaviour
             if (VARS.IsAttachWall)
             {
                 //curEnergy -= attachWallEnergyDecreaseSpeed * Time.deltaTime;
-                UFL.AddCurTargetEnergy(-attachWallEnergyDecreaseSpeed * Time.deltaTime);
+                //UFL.AddCurTargetEnergy(-attachWallEnergyDecreaseSpeed * Time.deltaTime);
+                VARS.curTargetEnergy += -attachWallEnergyDecreaseSpeed * Time.deltaTime;
             }
 
             //stop
@@ -365,12 +370,14 @@ public class CatMove : MonoBehaviour
                     if (isOnGround)
                     {
                         //horCurSpeed += horCurReverseAcce * Time.deltaTime;
-                        UFL.AddHorCurSpeed(horCurReverseAcce * Time.deltaTime);
+                        //UFL.AddHorCurSpeed(horCurReverseAcce * Time.deltaTime);
+                        VARS.horCurSpeed += horCurReverseAcce * Time.deltaTime;
                     }
                     else
                     {
                         //horCurSpeed += horCurReverseAcce / 2 * Time.deltaTime;
-                        UFL.AddHorCurSpeed(horCurReverseAcce / 2 * Time.deltaTime);
+                        //UFL.AddHorCurSpeed(horCurReverseAcce / 2 * Time.deltaTime);
+                        VARS.horCurSpeed += horCurReverseAcce / 2 * Time.deltaTime;
                     }
                 }
                 else if (VARS.horCurSpeed > horStopThres)
@@ -378,18 +385,21 @@ public class CatMove : MonoBehaviour
                     if (isOnGround)
                     {
                         //horCurSpeed -= horCurReverseAcce * Time.deltaTime;
-                        UFL.AddHorCurSpeed(-horCurReverseAcce * Time.deltaTime);
+                        //UFL.AddHorCurSpeed(-horCurReverseAcce * Time.deltaTime);
+                        VARS.horCurSpeed += -horCurReverseAcce * Time.deltaTime;
                     }
                     else
                     {
                         //horCurSpeed -= horCurReverseAcce / 2 * Time.deltaTime;
-                        UFL.AddHorCurSpeed(-horCurReverseAcce / 2 * Time.deltaTime);
+                        //UFL.AddHorCurSpeed(-horCurReverseAcce / 2 * Time.deltaTime);
+                        VARS.horCurSpeed += -horCurReverseAcce / 2 * Time.deltaTime;
                     }
                 }
                 else
                 {
                     //horCurSpeed = 0;
-                    UFL.SetHorCurSpeed(0);
+                    //UFL.SetHorCurSpeed(0);
+                    VARS.horCurSpeed = 0;
                 }
             }
 
@@ -464,7 +474,8 @@ public class CatMove : MonoBehaviour
                     if (!VARS.IsAttachWall)
                     {
                         //verCurSpeed -= curGravityAcce * curRoomGravity * Time.deltaTime;
-                        UFL.AddVerCurSpeed(-curGravityAcce * curRoomGravity * Time.deltaTime);
+                        //UFL.AddVerCurSpeed(-curGravityAcce * curRoomGravity * Time.deltaTime);
+                        VARS.verCurSpeed += -curGravityAcce * curRoomGravity * Time.deltaTime;
                     }
                 }
 
@@ -488,7 +499,8 @@ public class CatMove : MonoBehaviour
                 if (!VARS.IsAttachWall)
                 {
                     //verCurSpeed -= curGravityAcce * curRoomGravity * Time.deltaTime;
-                    UFL.AddVerCurSpeed(-curGravityAcce * curRoomGravity * Time.deltaTime);
+                    //UFL.AddVerCurSpeed(-curGravityAcce * curRoomGravity * Time.deltaTime);
+                    VARS.verCurSpeed += -curGravityAcce * curRoomGravity * Time.deltaTime;
                 }
 
                 //highJump
@@ -500,7 +512,8 @@ public class CatMove : MonoBehaviour
                             VARS.verCurSpeed <= verCurMaxSpeed)
                         {
                             //verCurSpeed += verAcce * Time.deltaTime;
-                            UFL.AddVerCurSpeed(verAcce * Time.deltaTime);
+                            //UFL.AddVerCurSpeed(verAcce * Time.deltaTime);
+                            VARS.verCurSpeed += verAcce * Time.deltaTime;
                         }
                         else
                         {
@@ -535,14 +548,16 @@ public class CatMove : MonoBehaviour
                         if (isPostWallJumpToRight)
                         {
                             //horCurSpeed = horMaxSpeed + horWallJumpBonusSpeed - curLeftTileData.tackiness;
-                            UFL.SetHorCurSpeed(horMaxSpeed + horWallJumpBonusSpeed - curLeftTileData.tackiness);
+                            //UFL.SetHorCurSpeed(horMaxSpeed + horWallJumpBonusSpeed - curLeftTileData.tackiness);
+                            VARS.horCurSpeed = horMaxSpeed + horWallJumpBonusSpeed - curLeftTileData.tackiness;
 
                             Jump();
                         }
                         else
                         {
                             //horCurSpeed = -horMaxSpeed - horWallJumpBonusSpeed + curRightTileData.tackiness;
-                            UFL.SetHorCurSpeed(-horMaxSpeed - horWallJumpBonusSpeed + curRightTileData.tackiness);
+                            //UFL.SetHorCurSpeed(-horMaxSpeed - horWallJumpBonusSpeed + curRightTileData.tackiness);
+                            VARS.horCurSpeed = -horMaxSpeed - horWallJumpBonusSpeed + curRightTileData.tackiness;
 
                             Jump();
                         }
@@ -559,14 +574,16 @@ public class CatMove : MonoBehaviour
                         if (isLeftBlocked)
                         {
                             //horCurSpeed = horMaxSpeed + horWallJumpBonusSpeed - curLeftTileData.tackiness;
-                            UFL.SetHorCurSpeed(horMaxSpeed + horWallJumpBonusSpeed - curLeftTileData.tackiness);
+                            //UFL.SetHorCurSpeed(horMaxSpeed + horWallJumpBonusSpeed - curLeftTileData.tackiness);
+                            VARS.horCurSpeed = horMaxSpeed + horWallJumpBonusSpeed - curLeftTileData.tackiness;
 
                             Jump();
                         }
                         else if (isRightBlocked)
                         {
                             //horCurSpeed = -horMaxSpeed - horWallJumpBonusSpeed + curRightTileData.tackiness;
-                            UFL.SetHorCurSpeed(-horMaxSpeed - horWallJumpBonusSpeed + curRightTileData.tackiness);
+                            //UFL.SetHorCurSpeed(-horMaxSpeed - horWallJumpBonusSpeed + curRightTileData.tackiness);
+                            VARS.horCurSpeed = -horMaxSpeed - horWallJumpBonusSpeed + curRightTileData.tackiness;
 
                             Jump();
                         }
@@ -591,10 +608,12 @@ public class CatMove : MonoBehaviour
                     if (VARS.IsInputtingUpKey)
                     {
                         //verCurSpeed = curClimbSpeed;
-                        UFL.SetVerCurSpeed(curClimbSpeed);
+                        //UFL.SetVerCurSpeed(curClimbSpeed);
+                        VARS.verCurSpeed = curClimbSpeed;
 
                         //curEnergy -= climbEnergyDecreaseSpeed * Time.deltaTime;
-                        UFL.AddCurTargetEnergy(-climbEnergyDecreaseSpeed * Time.deltaTime);
+                        //UFL.AddCurTargetEnergy(-climbEnergyDecreaseSpeed * Time.deltaTime);
+                        VARS.curTargetEnergy += -climbEnergyDecreaseSpeed * Time.deltaTime;
 
                         ////climbJump
                         //if (VARS.IsJumpKeyDown)
@@ -613,7 +632,8 @@ public class CatMove : MonoBehaviour
                 if (VARS.verCurSpeed > 0)
                 {
                     //verCurSpeed = 0;
-                    UFL.SetVerCurSpeed(0);
+                    //UFL.SetVerCurSpeed(0);
+                    VARS.verCurSpeed = 0;
                 }
 
                 //toCeiling
@@ -622,10 +642,12 @@ public class CatMove : MonoBehaviour
                     if (VARS.curEnergy > 0)
                     {
                         //verCurSpeed = 0;
-                        UFL.SetVerCurSpeed(0);
+                        //UFL.SetVerCurSpeed(0);
+                        VARS.verCurSpeed = 0;
 
                         //curEnergy -= attachCeilingEnergyDecreaseSpeed * Time.deltaTime;
-                        UFL.AddCurTargetEnergy(-attachCeilingEnergyDecreaseSpeed * Time.deltaTime);
+                        //UFL.AddCurTargetEnergy(-attachCeilingEnergyDecreaseSpeed * Time.deltaTime);
+                        VARS.curTargetEnergy += -attachCeilingEnergyDecreaseSpeed * Time.deltaTime;
 
                         VARS.IsAttachCeiling = true;
 
@@ -713,27 +735,32 @@ public class CatMove : MonoBehaviour
                             }
 
                             //horCurSpeed += Vector3.Dot(dashVector, curRight) * dashIniSpeed;
-                            UFL.AddHorCurSpeed(Vector3.Dot(dashVector, curRight) * dashIniSpeed);
+                            //UFL.AddHorCurSpeed(Vector3.Dot(dashVector, curRight) * dashIniSpeed);
+                            VARS.horCurSpeed += Vector3.Dot(dashVector, curRight) * dashIniSpeed;
 
                             //dashMaxSpeed
                             if (VARS.horCurSpeed > dashIniSpeed)
                             {
                                 //horCurSpeed = dashIniSpeed;
-                                UFL.SetHorCurSpeed(dashIniSpeed);
+                                //UFL.SetHorCurSpeed(dashIniSpeed);
+                                VARS.horCurSpeed = dashIniSpeed;
                             }
                             else if (VARS.horCurSpeed < -dashIniSpeed)
                             {
                                 //horCurSpeed = -dashIniSpeed;
-                                UFL.SetHorCurSpeed(-dashIniSpeed);
+                                //UFL.SetHorCurSpeed(-dashIniSpeed);
+                                VARS.horCurSpeed = -dashIniSpeed;
                             }
 
                             //verCurSpeed = 0;
-                            UFL.SetVerCurSpeed(0);
+                            //UFL.SetVerCurSpeed(0);
+                            VARS.verCurSpeed = 0;
 
                             dashStartTime = Time.time;
 
                             //curEnergy -= dashEnergyCost;
-                            UFL.AddCurTargetEnergy(-dashEnergyCost);
+                            //UFL.AddCurTargetEnergy(-dashEnergyCost);
+                            VARS.curTargetEnergy += -dashEnergyCost;
                         }
                     }
                 }
@@ -747,9 +774,11 @@ public class CatMove : MonoBehaviour
                     //verCurSpeed -= Vector3.Dot(dashVector, curUp) * dashIniSpeed * 0.6f;
 
                     //horCurSpeed = 0;
-                    UFL.SetHorCurSpeed(0);
+                    //UFL.SetHorCurSpeed(0);
+                    VARS.horCurSpeed = 0;
                     //verCurSpeed = 0;
-                    UFL.SetVerCurSpeed(0);
+                    //UFL.SetVerCurSpeed(0);
+                    VARS.verCurSpeed = 0;
 
                     dashStartTime = 0;
                 }
@@ -772,7 +801,8 @@ public class CatMove : MonoBehaviour
             {
                 acceBonus = 1.5f;
 
-                UFL.AddCurTargetEnergy(-inAcceEnergyDecreaseSpeed * Time.deltaTime);
+                //UFL.AddCurTargetEnergy(-inAcceEnergyDecreaseSpeed * Time.deltaTime);
+                VARS.curTargetEnergy += -inAcceEnergyDecreaseSpeed * Time.deltaTime;
             }
             else
             {
@@ -816,14 +846,16 @@ public class CatMove : MonoBehaviour
             !VARS.IsHighJumping)
         {
             //verCurSpeed = verCurIniSpeed;
-            UFL.SetVerCurSpeed(verCurIniSpeed);
+            //UFL.SetVerCurSpeed(verCurIniSpeed);
+            VARS.verCurSpeed = verCurIniSpeed;
 
             VARS.IsHighJumping = true;
 
             VARS.IsContracting = true;
 
             //curEnergy -= jumpEnergyCost;
-            UFL.AddCurTargetEnergy(-jumpEnergyCost);
+            //UFL.AddCurTargetEnergy(-jumpEnergyCost);
+            VARS.curTargetEnergy += -jumpEnergyCost;
         }
     }
 }

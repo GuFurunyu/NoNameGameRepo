@@ -484,8 +484,13 @@ public class Variables : MonoBehaviour
     public bool IsCatMoveMainPartExecutable { get { return _isCatMoveMainPartExecutable; } set { _isCatMoveMainPartExecutable = value; } }
 
     //curSpeed
-    public float horCurSpeed;
-    public float verCurSpeed;
+    //public float horCurSpeed;
+    //public float verCurSpeed;
+    [SerializeField] private float _horCurSpeed;
+    public float horCurSpeed { get { return _horCurSpeed; } set { _horCurSpeed = value; } }
+
+    [SerializeField] private float _verCurSpeed;
+    public float verCurSpeed { get { return _verCurSpeed; } set { _verCurSpeed = value; } }
 
     [SerializeField] private bool _isHighJumping;
     public bool IsHighJumping { get { return _isHighJumping; } set { _isHighJumping = value; } }
@@ -537,26 +542,95 @@ public class Variables : MonoBehaviour
     #region CatState
     [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
         "  \nCATSTATE\n --- ")]
+    //afflicted
+    [SerializeField] private bool _isAfflicted;
+    public bool IsAfflicted
+    {
+        get
+        {
+            if (_isAfflicted == true)
+            {
+                IsAfflicted=
+                    IsInHotState ||
+                    IsInColdState ||
+                    IsInElectricState ||
+                    IsInToxicState;
+            }
+
+            return _isAfflicted;
+        }
+        set
+        {
+            if (value == true) IsInNormalColor = false;
+
+            _isAfflicted = value;
+        }
+    }
+
     //temperature
-    public float catCurTemperature;
+    //public float catCurTemperature;
+    [SerializeField] private float _catCurTemperature;
+    public float catCurTemperature { get { return _catCurTemperature; } set { _catCurTemperature = value; } }
 
     [SerializeField] private bool _isInHotState;
-    public bool IsInHotState { get { return _isInHotState; } set { _isInHotState = value; } }
+    public bool IsInHotState
+    {
+        get { return _isInHotState; }
+        set
+        {
+            if (value == true) IsAfflicted = true;
+
+            _isInHotState = value;
+        }
+    }
 
     [SerializeField] private bool _isInColdState;
-    public bool IsInColdState { get { return _isInColdState; } set { _isInColdState = value; } }
+    public bool IsInColdState
+    {
+        get { return _isInColdState; }
+        set
+        {
+            if (value == true) IsAfflicted = true;
+
+            _isInColdState = value;
+        }
+    }
+
 
     //electricity
-    public float catCurElectricity;
+    //public float catCurElectricity;
+    [SerializeField] private float _catCurElectricity;
+    public float catCurElectricity { get { return _catCurElectricity; } set { _catCurElectricity = value; } }
 
     [SerializeField] private bool _isInElectricState;
-    public bool IsInElectricState { get { return _isInElectricState; } set { _isInElectricState = value; } }
+    public bool IsInElectricState
+    {
+        get { return _isInElectricState; }
+        set
+        {
+            if (value == true) IsAfflicted = true;
+
+            _isInElectricState = value;
+        }
+    }
+
 
     //toxicity
-    public float catCurToxicity;
+    //public float catCurToxicity;
+    [SerializeField] private float _catCurToxicity;
+    public float catCurToxicity { get { return _catCurToxicity; } set { _catCurToxicity = value; } }
 
     [SerializeField] private bool _isInToxicState;
-    public bool IsInToxicState { get { return _isInToxicState; } set { _isInToxicState = value; } }
+    public bool IsInToxicState
+    {
+        get { return _isInToxicState; }
+        set
+        {
+            if (value == true) IsAfflicted = true;
+
+            _isInToxicState = value;
+        }
+    }
 
     #endregion
 
@@ -568,10 +642,15 @@ public class Variables : MonoBehaviour
     public bool IsCatEnergyResetExecutable { get { return _isCatEnergyResetExecutable; } set { _isCatEnergyResetExecutable = value; } }
 
     //curEnergy
-    public float curEnergy;
+    //public float curEnergy;
+    [SerializeField] private float _curEnergy;
+    public float curEnergy { get { return _curEnergy; } set { _curEnergy = value; } }
 
     //curTargetEnergy
-    public float curTargetEnergy;
+    //public float curTargetEnergy;
+    [SerializeField] private float _curTargetEnergy;
+    public float curTargetEnergy { get { return _curTargetEnergy; } set { _curTargetEnergy = value; } }
+
     #endregion
 
     #region CatTrigger
@@ -633,8 +712,32 @@ public class Variables : MonoBehaviour
     public bool IsContracting { get { return _isContracting; } set { _isContracting = value; } }
 
     //color
+    [SerializeField] private bool _isInNormalColor;
+    public bool IsInNormalColor
+    {
+        get
+        {
+            if (_isInNormalColor == false)
+                IsInNormalColor =
+                    !IsAfflicted &&
+                    !IsInFadedColor;
+
+            return _isInNormalColor;
+        }
+        set { _isInNormalColor = value; }
+    }
+
     [SerializeField] private bool _isInFadedColor;
-    public bool IsInFadedColor { get { return _isInFadedColor; } set { _isInFadedColor = value; } }
+    public bool IsInFadedColor
+    {
+        get { return _isInFadedColor; }
+        set
+        {
+            if (value == true) IsInNormalColor = false;
+
+            _isInFadedColor = value;
+        }
+    }
 
     #endregion
 

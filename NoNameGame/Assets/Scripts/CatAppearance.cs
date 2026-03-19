@@ -22,11 +22,16 @@ public class CatAppearance : MonoBehaviour
     #region ConstantsUsed
     GameObject cat;
     Transform catTransform;
+    MeshRenderer catMeshRenderer;
 
     float maxEnergy;
 
     Material normalColor;
     Material fadedColor;
+    Material hotColor;
+    Material coldColor;
+    Material electricColor;
+    Material toxicColor;
 
     GameObject catEnergyBar;
     GameObject catEnergyBarMask;
@@ -61,9 +66,14 @@ public class CatAppearance : MonoBehaviour
         #region ImportConstants
         cat = CONS.cat;
         catTransform = CONS.catTransform;
+        catMeshRenderer = CONS.catMeshRenderer;
         maxEnergy = CONS.maxEnergy;
         normalColor = CONS.normalColor;
         fadedColor = CONS.fadedColor;
+        hotColor = CONS.hotColor;
+        coldColor = CONS.coldColor;
+        electricColor = CONS.electricColor;
+        toxicColor = CONS.toxicColor;
         catEnergyBar = CONS.catEnergyBar;
         catEnergyBarMask = CONS.catEnergyBarMask;
         catEnergyMask = CONS.catEnergyMask;
@@ -86,7 +96,7 @@ public class CatAppearance : MonoBehaviour
         curRight = VARS.curRight;
         #endregion
 
-        #region contraction
+        #region Contraction
         if (VARS.IsContracting)
         {
             catTransform.localScale -= new Vector3
@@ -117,14 +127,44 @@ public class CatAppearance : MonoBehaviour
         #endregion
 
         #region Color
-        if (VARS.IsInFadedColor)
+        if (VARS.IsInNormalColor)
         {
-            cat.GetComponent<MeshRenderer>().material = fadedColor;
+            catMeshRenderer.material = normalColor;
         }
         else
         {
-            cat.GetComponent<MeshRenderer>().material = normalColor;
+            //faded(rotationRestNumZero)
+            if (VARS.IsInFadedColor)
+            {
+                catMeshRenderer.material = fadedColor;
+            }
+            //afflicted
+            if (VARS.IsAfflicted)
+            {
+                //temperature
+                if (VARS.IsInHotState)
+                {
+                    catMeshRenderer.material = hotColor;
+                }
+                else if (VARS.IsInColdState)
+                {
+                    catMeshRenderer.material = coldColor;
+                }
+
+                //electricity
+                else if (VARS.IsInElectricState)
+                {
+                    catMeshRenderer.material = electricColor;
+                }
+
+                //toxicity
+                else if (VARS.IsInToxicState)
+                {
+                    catMeshRenderer.material = toxicColor;
+                }
+            }
         }
+
         #endregion
 
         #region EnergyBar(OutVersion)
@@ -196,7 +236,8 @@ public class CatAppearance : MonoBehaviour
         if (VARS.curEnergy < 0)
         {
             //curEnergy = 0;
-            UFL.SetCurEnergy(0);
+            //UFL.SetCurEnergy(0);
+            VARS.curEnergy = 0;
         }
 
         if (VARS.curEnergy >= maxEnergy)

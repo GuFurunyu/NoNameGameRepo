@@ -101,9 +101,10 @@ public class Constants : MonoBehaviour
     #region Cat
     [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
         "  \nCAT\n --- ")]
-    //objectAndTransform
+    //access
     public GameObject cat;
     public Transform catTransform;
+    public MeshRenderer catMeshRenderer;
 
     //catInfo
     public float catBreadth;
@@ -266,6 +267,10 @@ public class Constants : MonoBehaviour
     //color
     public Material normalColor;
     public Material fadedColor;
+    public Material hotColor;
+    public Material coldColor;
+    public Material electricColor;
+    public Material toxicColor;
 
     //energyBar
     public GameObject catEnergyBar;

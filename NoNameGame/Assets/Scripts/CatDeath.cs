@@ -85,12 +85,16 @@ public class CatDeath : MonoBehaviour
 
         //VARS.curEnergy = maxEnergy;
         //VARS.curEnergy = 0.1f;
-        UFL.SetCurEnergy(0.1f);
-        UFL.SetCurTargetEnergy(0.1f);
+        //UFL.SetCurEnergy(0.1f);
+        VARS.curEnergy = 0.1f;
+        //UFL.SetCurTargetEnergy(0.1f);
+        VARS.curTargetEnergy = 0.1f;
         //VARS.horCurSpeed = 0;
-        UFL.SetHorCurSpeed(0);
+        //UFL.SetHorCurSpeed(0);
+        VARS.horCurSpeed = 0;
         //VARS.verCurSpeed = 0;
-        UFL.SetVerCurSpeed(0);
+        //UFL.SetVerCurSpeed(0);
+        VARS.verCurSpeed = 0;
 
         VARS.IsToInitializeSight = true;
 

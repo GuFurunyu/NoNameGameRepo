@@ -71,7 +71,8 @@ public class CatState : MonoBehaviour
         {
             VARS.IsInHotState = true;
 
-            UFL.AddCurTargetEnergy(-inHotStateEnergyDecreaseSpeed * Time.deltaTime);
+            //UFL.AddCurTargetEnergy(-inHotStateEnergyDecreaseSpeed * Time.deltaTime);
+            VARS.curTargetEnergy += -inHotStateEnergyDecreaseSpeed * Time.deltaTime;
         }
         else
         {
@@ -82,7 +83,8 @@ public class CatState : MonoBehaviour
         {
             VARS.IsInColdState = true;
 
-            UFL.AddCurTargetEnergy(-inColdStateEnergyDecreaseSpeed * Time.deltaTime);
+            //UFL.AddCurTargetEnergy(-inColdStateEnergyDecreaseSpeed * Time.deltaTime);
+            VARS.curTargetEnergy += -inColdStateEnergyDecreaseSpeed * Time.deltaTime;
         }
         else
         {
@@ -92,7 +94,8 @@ public class CatState : MonoBehaviour
         //setToZero
         if (Mathf.Abs(VARS.catCurTemperature) < temperatureSetToZeroThres)
         {
-            UFL.SetCatCurTemperature(0);
+            //UFL.SetCatCurTemperature(0);
+            VARS.catCurTemperature = 0;
         }
         #endregion
 
@@ -101,7 +104,8 @@ public class CatState : MonoBehaviour
         {
             VARS.IsInElectricState = true;
 
-            UFL.AddCurTargetEnergy(-inElectricStateEnergyDecreaseSpeed * Time.deltaTime);
+            //UFL.AddCurTargetEnergy(-inElectricStateEnergyDecreaseSpeed * Time.deltaTime);
+            VARS.curTargetEnergy += -inElectricStateEnergyDecreaseSpeed * Time.deltaTime;
         }
         else
         {
@@ -111,7 +115,8 @@ public class CatState : MonoBehaviour
         //setToZero
         if(Mathf.Abs(VARS.catCurElectricity) < electricitySetToZeroThres)
         {
-            UFL.SetCatCurElectricity(0);
+            //UFL.SetCatCurElectricity(0);
+            VARS.catCurElectricity = 0;
         }
         #endregion
 
@@ -120,7 +125,8 @@ public class CatState : MonoBehaviour
         {
             VARS.IsInToxicState = true;
 
-            UFL.AddCurTargetEnergy(-inToxicStateEnergyDecreaseSpeed * Time.deltaTime);
+            //UFL.AddCurTargetEnergy(-inToxicStateEnergyDecreaseSpeed * Time.deltaTime);
+            VARS.curTargetEnergy += -inToxicStateEnergyDecreaseSpeed * Time.deltaTime;
         }
         else
         {
@@ -130,7 +136,8 @@ public class CatState : MonoBehaviour
         //setToZero
         if(Mathf.Abs(VARS.catCurToxicity) < toxicitySetToZeroThres)
         {
-            UFL.SetCatCurToxicity(0);
+            //UFL.SetCatCurToxicity(0);
+            VARS.catCurToxicity = 0;
         }
         #endregion
     }

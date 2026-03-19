@@ -61,38 +61,45 @@ public class CatEnergy : MonoBehaviour
         //increase
         if (VARS.curEnergy < VARS.curTargetEnergy)
         {
-            UFL.AddCurEnergy(curEnergyChangeToTargetEnergySpeed * Time.deltaTime);
+            //UFL.AddCurEnergy(curEnergyChangeToTargetEnergySpeed * Time.deltaTime);
+            VARS.curEnergy += curEnergyChangeToTargetEnergySpeed * Time.deltaTime;
 
             if (VARS.curEnergy > VARS.curTargetEnergy)
             {
-                UFL.SetCurEnergy(VARS.curTargetEnergy);
+                //UFL.SetCurEnergy(VARS.curTargetEnergy);
+                VARS.curEnergy = VARS.curTargetEnergy;
             }
         }
         //decrease
         else if (VARS.curEnergy > VARS.curTargetEnergy)
         {
-            UFL.AddCurEnergy(-curEnergyChangeToTargetEnergySpeed * Time.deltaTime);
+            //UFL.AddCurEnergy(-curEnergyChangeToTargetEnergySpeed * Time.deltaTime);
+            VARS.curEnergy += -curEnergyChangeToTargetEnergySpeed * Time.deltaTime;
 
             if (VARS.curEnergy < VARS.curTargetEnergy)
             {
-                UFL.SetCurEnergy(VARS.curTargetEnergy);
+                //UFL.SetCurEnergy(VARS.curTargetEnergy);
+                VARS.curEnergy = VARS.curTargetEnergy;
             }
         }
         #endregion
 
         #region OutOfBoundReset     
-        if (VARS.curEnergy > CONS.maxEnergy)
+        if (VARS.curEnergy > maxEnergy)
         {
-            UFL.SetCurEnergy(CONS.maxEnergy);
+            //UFL.SetCurEnergy(CONS.maxEnergy);
+            VARS.curEnergy = maxEnergy;
         }
 
         if (VARS.curTargetEnergy > maxEnergy)
         {
-            UFL.SetCurTargetEnergy(maxEnergy);
+            //UFL.SetCurTargetEnergy(maxEnergy);
+            VARS.curTargetEnergy = maxEnergy;
         }
         else if (VARS.curTargetEnergy < 0)
         {
-            UFL.SetCurTargetEnergy(0);
+            //UFL.SetCurTargetEnergy(0);
+            VARS.curTargetEnergy = 0;
         }
         #endregion
 
@@ -105,7 +112,8 @@ public class CatEnergy : MonoBehaviour
                 //Debug.Log("energyRestore");
 
                 //curEnergy += onGroundEnergyRestoreSpeed * Time.deltaTime;
-                UFL.AddCurTargetEnergy(onGroundEnergyRestoreSpeed * Time.deltaTime);
+                //UFL.AddCurTargetEnergy(onGroundEnergyRestoreSpeed * Time.deltaTime);
+                VARS.curTargetEnergy += onGroundEnergyRestoreSpeed * Time.deltaTime;
             }
         }
         #endregion

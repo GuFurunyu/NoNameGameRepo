@@ -830,6 +830,7 @@ public class BlocksManager : MonoBehaviour
             {
                 for (int i = curToBeBrokenFragileRustBlocks.Count - 1; i >= 0; i--)
                 {
+                    //break
                     if (Time.time - curFragileRustBlockToBeBrokenStartTimes[i] > fragileRustBlockToBeBrokenTime)
                     {
                         curToBeBrokenFragileRustBlocks[i].SetActive(false);
@@ -840,7 +841,9 @@ public class BlocksManager : MonoBehaviour
                         curToBeBrokenFragileRustBlocks.RemoveAt(i);
                         curFragileRustBlockToBeBrokenStartTimes.RemoveAt(i);
 
-                        VARS.IsInNewRoomBlocksManagerResetOver = false;
+                        UFL.ClearCurCollisionTileDatas();
+
+                        //VARS.IsInNewRoomBlocksManagerResetOver = false;
                     }
                 }
             }
@@ -857,7 +860,7 @@ public class BlocksManager : MonoBehaviour
                         curBrokenFragileRustBlocks.RemoveAt(i);
                         curFragileRustBlockBrokenTimes.RemoveAt(i);
 
-                        VARS.IsInNewRoomBlocksManagerResetOver = false;
+                        //VARS.IsInNewRoomBlocksManagerResetOver = false;
                     }
                 }
             }

@@ -225,7 +225,8 @@ public class CatRotate : MonoBehaviour
                                 rotationRestNum--;
 
                                 //curEnergy -= rotationEnergyCost;
-                                UFL.AddCurTargetEnergy(-rotationEnergyCost);
+                                //UFL.AddCurTargetEnergy(-rotationEnergyCost);
+                                VARS.curTargetEnergy += -rotationEnergyCost;
                             }
                             else if (VARS.IsInputtingRightKey)
                             {
@@ -244,7 +245,8 @@ public class CatRotate : MonoBehaviour
                                 rotationRestNum--;
 
                                 //curEnergy -= rotationEnergyCost;
-                                UFL.AddCurTargetEnergy(-rotationEnergyCost);
+                                //UFL.AddCurTargetEnergy(-rotationEnergyCost);
+                                VARS.curTargetEnergy += -rotationEnergyCost;
                             }
                         }
                     }
@@ -304,9 +306,11 @@ public class CatRotate : MonoBehaviour
 
                             tempFloat = VARS.horCurSpeed;
                             //horCurSpeed = -verCurSpeed;
-                            UFL.SetHorCurSpeed(-VARS.verCurSpeed);
+                            //UFL.SetHorCurSpeed(-VARS.verCurSpeed);
+                            VARS.horCurSpeed = -VARS.verCurSpeed;
                             //verCurSpeed = tempFloat;
-                            UFL.SetVerCurSpeed(tempFloat);
+                            //UFL.SetVerCurSpeed(tempFloat);
+                            VARS.verCurSpeed = tempFloat;
 
                             //catTransform.Rotate(0, 0, -90);
                         }
@@ -318,9 +322,11 @@ public class CatRotate : MonoBehaviour
 
                             tempFloat = VARS.horCurSpeed;
                             //horCurSpeed = verCurSpeed;
-                            UFL.SetHorCurSpeed(VARS.verCurSpeed);
+                            //UFL.SetHorCurSpeed(VARS.verCurSpeed);
+                            VARS.horCurSpeed = VARS.verCurSpeed;
                             //verCurSpeed = -tempFloat;
-                            UFL.SetVerCurSpeed(-tempFloat);
+                            //UFL.SetVerCurSpeed(-tempFloat);
+                            VARS.verCurSpeed = -tempFloat;
 
                             //catTransform.Rotate(0, 0, 90);
                         }

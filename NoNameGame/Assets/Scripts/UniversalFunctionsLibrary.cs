@@ -113,9 +113,6 @@ public class UniversalFunctionsLibrary : MonoBehaviour
     }
     #endregion
 
-    //#region DataManager
-    //#endregion
-
     #region RoomsManager
     public bool IsInRoom(int roomIndex, Vector3 position)
     {
@@ -474,87 +471,100 @@ public class UniversalFunctionsLibrary : MonoBehaviour
     }
     #endregion
 
+    #region CatCollision
+    public void ClearCurCollisionTileDatas()
+    {
+        VARS.curUpTileData = null;
+        VARS.curDownTileData = null;
+        VARS.curLeftTileData = null;
+        VARS.curRightTileData = null;
+        VARS.curLiquidTileData = null;
+        VARS.curGasTileData = null;
+        VARS.curMistTileData = null;
+    }
+    #endregion
+
     #region CatMove
-    public void SetHorCurSpeed(float value)
-    {
-        //Debug.Log("setHorCurSpeed: " + value);
+    //public void SetHorCurSpeed(float value)
+    //{
+    //    //Debug.Log("setHorCurSpeed: " + value);
 
-        VARS.horCurSpeed = value;
-    }
+    //    VARS.horCurSpeed = value;
+    //}
 
-    public void AddHorCurSpeed(float value)
-    {
-        //Debug.Log("addHorCurSpeed: " + value);
+    //public void AddHorCurSpeed(float value)
+    //{
+    //    //Debug.Log("addHorCurSpeed: " + value);
 
-        VARS.horCurSpeed += value;
-    }
+    //    VARS.horCurSpeed += value;
+    //}
 
-    public void SetVerCurSpeed(float value)
-    {
-        //Debug.Log("setVerCurSpeed: " + value);
+    //public void SetVerCurSpeed(float value)
+    //{
+    //    //Debug.Log("setVerCurSpeed: " + value);
 
-        VARS.verCurSpeed = value;
-    }
+    //    VARS.verCurSpeed = value;
+    //}
 
-    public void AddVerCurSpeed(float value)
-    {
-        //Debug.Log("addVerCurSpeed: " + value);
+    //public void AddVerCurSpeed(float value)
+    //{
+    //    //Debug.Log("addVerCurSpeed: " + value);
 
-        VARS.verCurSpeed += value;
-    }
+    //    VARS.verCurSpeed += value;
+    //}
     #endregion
 
     #region CatState
-    //temperature
-    public void SetCatCurTemperature(float value)
-    {
-        VARS.catCurTemperature = value;
-    }
-    public void AddCatCurTemperature(float value)
-    {
-        VARS.catCurTemperature += value;
-    }
+    ////temperature
+    //public void SetCatCurTemperature(float value)
+    //{
+    //    VARS.catCurTemperature = value;
+    //}
+    //public void AddCatCurTemperature(float value)
+    //{
+    //    VARS.catCurTemperature += value;
+    //}
 
-    //electricity
-    public void SetCatCurElectricity(float value)
-    {
-        VARS.catCurElectricity = value;
-    }
-    public void AddCatCurElectricity(float value)
-    {
-        VARS.catCurElectricity += value;
-    }
+    ////electricity
+    //public void SetCatCurElectricity(float value)
+    //{
+    //    VARS.catCurElectricity = value;
+    //}
+    //public void AddCatCurElectricity(float value)
+    //{
+    //    VARS.catCurElectricity += value;
+    //}
 
-    //toxicity
-    public void SetCatCurToxicity(float value)
-    {
-        VARS.catCurToxicity = value;
-    }
-    public void AddCatCurToxicity(float value)
-    {
-        VARS.catCurToxicity += value;
-    }
+    ////toxicity
+    //public void SetCatCurToxicity(float value)
+    //{
+    //    VARS.catCurToxicity = value;
+    //}
+    //public void AddCatCurToxicity(float value)
+    //{
+    //    VARS.catCurToxicity += value;
+    //}
     #endregion
 
     #region CatEnergy
-    public void SetCurTargetEnergy(float value)
-    {
-        VARS.curTargetEnergy = value;
-    }
+    //public void SetCurTargetEnergy(float value)
+    //{
+    //    VARS.curTargetEnergy = value;
+    //}
 
-    public void AddCurTargetEnergy(float value)
-    {
-        VARS.curTargetEnergy += value;
-    }
+    //public void AddCurTargetEnergy(float value)
+    //{
+    //    VARS.curTargetEnergy += value;
+    //}
 
-    public void SetCurEnergy(float value)
-    {
-        VARS.curEnergy = value;
-    }
+    //public void SetCurEnergy(float value)
+    //{
+    //    VARS.curEnergy = value;
+    //}
 
-    public void AddCurEnergy(float value)
-    {
-        VARS.curEnergy += value;
-    }
+    //public void AddCurEnergy(float value)
+    //{
+    //    VARS.curEnergy += value;
+    //}
     #endregion
 }

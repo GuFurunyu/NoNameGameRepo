@@ -313,17 +313,17 @@ public class RoomsManager : MonoBehaviour
         }
 	}
 
-    void IntoNewRoom()
-    {
-        VARS.IsIntoNewRoom = false;
+    //void IntoNewRoom()
+    //{
+    //    VARS.IsIntoNewRoom = false;
 
-        VARS.IsInNewRoom = true;
+    //    VARS.IsInNewRoom = true;
 
-        VARS.IsInNewRoomCurRoomManagerResetOver = false;
-        VARS.IsInNewRoomCameraManagerResetOver = false;
-        VARS.IsInNewRoomCatRotateResetOver = false;
-        VARS.IsInNewRoomBlocksManagerResetOver = false;
-    }
+    //    VARS.IsInNewRoomCurRoomManagerResetOver = false;
+    //    VARS.IsInNewRoomCameraManagerResetOver = false;
+    //    VARS.IsInNewRoomCatRotateResetOver = false;
+    //    VARS.IsInNewRoomBlocksManagerResetOver = false;
+    //}
 
     void ResetCurRelatedPlanes()
     {

@@ -320,7 +320,8 @@ public class CatCollision : MonoBehaviour
                     {
                         if (curTileData != null)
                             //verCurSpeed = verCurSpeed / curTileData.fluidDrag;
-                            UFL.SetVerCurSpeed(VARS.verCurSpeed / curTileData.fluidDrag);
+                            //UFL.SetVerCurSpeed(VARS.verCurSpeed / curTileData.fluidDrag);
+                            VARS.verCurSpeed = VARS.verCurSpeed / curTileData.fluidDrag;
                     }
                 }
 
@@ -335,7 +336,8 @@ public class CatCollision : MonoBehaviour
                     if (Mathf.Abs(VARS.verCurSpeed) > verMaxSpeed / 2)
                     {
                         //verCurSpeed = verCurSpeed / 2;
-                        UFL.SetVerCurSpeed(VARS.verCurSpeed / 2);
+                        //UFL.SetVerCurSpeed(VARS.verCurSpeed / 2);
+                        VARS.verCurSpeed = VARS.verCurSpeed / 2;
                     }
                 }
 
@@ -412,19 +414,23 @@ public class CatCollision : MonoBehaviour
             //temperature
             if (VARS.catCurTemperature != 0)
             {
-                UFL.AddCatCurTemperature(-VARS.catCurTemperature * temperatureTransferSpeed * Time.deltaTime);
+                //UFL.AddCatCurTemperature(-VARS.catCurTemperature * temperatureTransferSpeed * Time.deltaTime);
+                VARS.catCurTemperature += -VARS.catCurTemperature * temperatureTransferSpeed * Time.deltaTime;
+
             }
 
             //electricity
             if(VARS.catCurElectricity != 0)
             {
-                UFL.AddCatCurElectricity(-VARS.catCurElectricity * electricityTransferSpeed * Time.deltaTime);
+                //UFL.AddCatCurElectricity(-VARS.catCurElectricity * electricityTransferSpeed * Time.deltaTime);
+                VARS.catCurElectricity += -VARS.catCurElectricity * electricityTransferSpeed * Time.deltaTime;
             }
 
             //toxicity
             if (VARS.catCurToxicity != 0)
             {
-                UFL.AddCatCurToxicity(-VARS.catCurToxicity * toxicityTransferSpeed * Time.deltaTime);
+                //UFL.AddCatCurToxicity(-VARS.catCurToxicity * toxicityTransferSpeed * Time.deltaTime);
+                VARS.catCurToxicity += -VARS.catCurToxicity * toxicityTransferSpeed * Time.deltaTime;
             }
             #endregion
             #endregion
@@ -633,7 +639,8 @@ public class CatCollision : MonoBehaviour
                             dirIndex == 2)
                         {
                             //verCurSpeed = -verCurSpeed * curTileData.elasticity;
-                            UFL.SetVerCurSpeed(-VARS.verCurSpeed * curTileData.elasticity);
+                            //UFL.SetVerCurSpeed(-VARS.verCurSpeed * curTileData.elasticity);
+                            VARS.verCurSpeed = -VARS.verCurSpeed * curTileData.elasticity;
 
                             ////elasticEnergyRestore
                             //if (dirIndex == 2)
@@ -650,7 +657,8 @@ public class CatCollision : MonoBehaviour
                         {
                             //horCurSpeed = -horCurSpeed * curTileData.elasticity;
 
-                            UFL.SetHorCurSpeed(-VARS.horCurSpeed * curTileData.elasticity);
+                            //UFL.SetHorCurSpeed(-VARS.horCurSpeed * curTileData.elasticity);
+                            VARS.horCurSpeed = -VARS.horCurSpeed * curTileData.elasticity;
                         }
 
                         //fragile
@@ -737,19 +745,22 @@ public class CatCollision : MonoBehaviour
                 if (!(curTileData.temperature == 0 &&
                     VARS.catCurTemperature == 0))
                 {
-                    UFL.AddCatCurTemperature((curTileData.temperature - VARS.catCurTemperature) * temperatureTransferSpeed * Time.deltaTime);
+                    //UFL.AddCatCurTemperature((curTileData.temperature - VARS.catCurTemperature) * temperatureTransferSpeed * Time.deltaTime);
+                    VARS.catCurTemperature += (curTileData.temperature - VARS.catCurTemperature) * temperatureTransferSpeed * Time.deltaTime;
                 }
                 //electricity
                 if (!(curTileData.electricity == 0 &&
                     VARS.catCurElectricity == 0))
                 {
-                    UFL.AddCatCurElectricity((curTileData.electricity - VARS.catCurElectricity) * electricityTransferSpeed * Time.deltaTime);
+                    //UFL.AddCatCurElectricity((curTileData.electricity - VARS.catCurElectricity) * electricityTransferSpeed * Time.deltaTime);
+                    VARS.catCurElectricity += (curTileData.electricity - VARS.catCurElectricity) * electricityTransferSpeed * Time.deltaTime;
                 }
                 //toxicity
                 if (!(curTileData.toxicity == 0 &&
                     VARS.catCurToxicity == 0))
                 {
-                    UFL.AddCatCurToxicity((curTileData.toxicity - VARS.catCurToxicity) * toxicityTransferSpeed * Time.deltaTime);
+                    //UFL.AddCatCurToxicity((curTileData.toxicity - VARS.catCurToxicity) * toxicityTransferSpeed * Time.deltaTime);
+                    VARS.catCurToxicity += (curTileData.toxicity - VARS.catCurToxicity) * toxicityTransferSpeed * Time.deltaTime;
                 }
                 #endregion
             }
