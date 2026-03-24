@@ -36,18 +36,18 @@ public class ScriptsExecutionController : MonoBehaviour
             !VARS.IsTwisting;
 
         //catMove
-        VARS.IsCatMoveMainPartExecutable = 
+        VARS.IsCatMoveMainPartExecutable =
+            VARS.IsInNewRoomAllResetOver &&
             !VARS.IsRotating &&
             !VARS.IsTwisting &&
             !VARS.IsInMiniMap &&
-            !VARS.IsOptionPanelActivated &&
-            VARS.IsInNewRoomAllResetOver;
+            !VARS.IsOptionPanelActivated;
 
         //catRotate
         VARS.IsCatRotateMainPartExecutable =
+            VARS.IsInNewRoomAllResetOver &&
             !VARS.IsTwisting &&
-            !VARS.IsInMiniMap &&
-            VARS.IsInNewRoomAllResetOver;
+            !VARS.IsInMiniMap;
 
         //catEnergy
         VARS.IsCatEnergyResetExecutable =
@@ -65,6 +65,11 @@ public class ScriptsExecutionController : MonoBehaviour
         VARS.IsCatTriggerMainPartExecutable =
             !VARS.IsRotating &&
             !VARS.IsTwisting;
+
+        //blocksManager
+        VARS.IsBlocksManagerBlocksMoveExecutable =
+            VARS.IsInNewRoomAllResetOver &&
+            VARS.IsIniRotation;
 
         //optionsManager
         VARS.IsOptionsManagerActivationExecutable =

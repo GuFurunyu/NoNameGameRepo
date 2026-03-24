@@ -661,32 +661,21 @@ public class CatCollision : MonoBehaviour
                             VARS.horCurSpeed = -VARS.horCurSpeed * curTileData.elasticity;
                         }
 
-                        //fragile
-                        if (curTileData.blockTypeIndex == 4103)
+                        if (IsOnOrToCurTile(dirIndex))
                         {
-                            if (dirIndex == 2)
+                            //fragile
+                            if (curTileData.isFragile)
                             {
                                 BreakCurTile(curToBeBrokenFragileRustBlocks, curFragileRustBlockToBeBrokenStartTimes);
                             }
-                            else if (dirIndex == 3 &&
-                                VARS.IsAttachWall &&
-                                VARS.curAttachedWallTile == curTile)
+
+                            //railBlock
+                            if (curTileData.railBlockIndex > 0)
                             {
-                                BreakCurTile(curToBeBrokenFragileRustBlocks, curFragileRustBlockToBeBrokenStartTimes);
+                                VARS.curOnOrToRailBlock = curTile;
+                                VARS.IsOnOrToARailBlock = true;
                             }
-                            else if (dirIndex == 4 &&
-                                VARS.IsAttachWall &&
-                                VARS.curAttachedWallTile == curTile)
-                            {
-                                BreakCurTile(curToBeBrokenFragileRustBlocks, curFragileRustBlockToBeBrokenStartTimes);
-                            }
-                            else if (dirIndex == 1 &&
-                                VARS.IsToCeiling &&
-                                VARS.curUpTile == curTile)
-                            {
-                                BreakCurTile(curToBeBrokenFragileRustBlocks, curFragileRustBlockToBeBrokenStartTimes);
-                            }
-                        }
+                        }                        
                     }
                     else
                     {
@@ -845,6 +834,20 @@ public class CatCollision : MonoBehaviour
             }
             #endregion
         }
+    }
+
+    bool IsOnOrToCurTile(int dirIndex)
+    {
+        return dirIndex == 2 ||
+            (dirIndex == 3 &&
+            VARS.IsAttachWall &&
+            VARS.curAttachedWallTile == curTile) ||
+            (dirIndex == 4 &&
+            VARS.IsAttachWall &&
+            VARS.curAttachedWallTile == curTile) ||
+            (dirIndex == 1 &&
+            VARS.IsToCeiling &&
+            VARS.curUpTile == curTile);
     }
 
     void BreakCurTile(List<GameObject> intoGameObjectList, List<float> intoTimeList)

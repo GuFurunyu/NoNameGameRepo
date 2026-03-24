@@ -46,6 +46,14 @@ public class TileData : MonoBehaviour
 
     public bool isNotClimbable;
 
+    public bool isFragile;
+
+    //default: 0
+    public int railBlockIndex;
+
+    //default: 0
+    public int railBlockMoveStringStartIndex;
+
     //0-not...
     public Vector3 sharpDirVector;
 
@@ -104,7 +112,7 @@ public class TileData : MonoBehaviour
     //      3101-BlueBlock, 3102-DarkBlueBlock , 3103-IceBlock, 3104-BreakableIceBlock
     //      3201-WaterBlock
     //  4-OrangeRegionBlocks
-    //      4101-OrangeBlock, 4102-DarkOrangeBlock, 4103-FragileRustBlock
+    //      4101-OrangeBlock, 4102-DarkOrangeBlock, 4103-FragileRustBlock, 4104-RailRustBlock
     //  5-GreenRegionBlocks
     //      5101-GreenBlock, 5102-DarkGreenBlock
     //      5201-AcidBlock

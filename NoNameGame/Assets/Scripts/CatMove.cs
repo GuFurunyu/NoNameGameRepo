@@ -59,6 +59,7 @@ public class CatMove : MonoBehaviour
     float gravityAcce;
     float climbSpeed;
     float verMaxSpeed;
+    float verFallMaxSpeed;
 
     //jumpPreInput
     float jumpPreInputThres;
@@ -138,6 +139,7 @@ public class CatMove : MonoBehaviour
         gravityAcce = CONS.gravityAcce;
         climbSpeed = CONS.climbSpeed;
         verMaxSpeed = CONS.verMaxSpeed;
+        verFallMaxSpeed = CONS.verFallMaxSpeed;
         jumpPreInputThres = CONS.jumpPreInputThres;
         jumpPostInputTres = CONS.jumpPostInputTres;
         wallJumpPreInputThres = CONS.wallJumpPreInputThres;
@@ -189,6 +191,7 @@ public class CatMove : MonoBehaviour
         if (VARS.IsCatMoveMainPartExecutable)
         {
             #region LeftAndRight
+            //setCurParameters
             if (!isInLiquid && !isInGas && !isInMist)
             {
                 if (isOnGround)
@@ -411,6 +414,7 @@ public class CatMove : MonoBehaviour
             #endregion
 
             #region UpAndDown
+            //setCurParameters
             if (!isInLiquid && !isInGas && !isInMist)
             {
                 if (isOnGround)
@@ -670,6 +674,12 @@ public class CatMove : MonoBehaviour
 
             if (VARS.verCurSpeed != 0)
             {
+                //fallMaxSpeed
+                if (VARS.verCurSpeed < -verFallMaxSpeed)
+                {
+                    VARS.verCurSpeed = -verFallMaxSpeed;
+                }
+
                 //verSpeedSum
                 catTransform.position += curUp * VARS.verCurSpeed * Time.deltaTime;
 

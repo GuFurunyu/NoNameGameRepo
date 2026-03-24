@@ -147,6 +147,7 @@ public class Constants : MonoBehaviour
     public float gravityAcce;
     public float climbSpeed;
     public float verMaxSpeed;
+    public float verFallMaxSpeed;
 
     //jumpPreInput
     public float jumpPreInputThres;
@@ -311,6 +312,9 @@ public class Constants : MonoBehaviour
     //fragileBlocks
     public float fragileRustBlockToBeBrokenTime;
     public float fragileRustBlockRespawnTime;
+
+    //railBlocks
+    public List<string> railBlockMoveStrings = new List<string>();
     #endregion
 
     #region MiniMapManager

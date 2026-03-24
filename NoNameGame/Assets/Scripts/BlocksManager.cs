@@ -104,16 +104,21 @@ public class BlocksManager : MonoBehaviour
     //BlockInfoInMatrix curLeftBlockInfoInMatrix;
     //BlockInfoInMatrix curRightBlockInfoInMatrix;
 
-    //gate
+    //gates
     float curNearestGateDistance;
 
-    //edgeGate
+    //edgeGates
     float curNearestEdgeGateDistance;
     int curNearestEdgeGateIndex;
+
+    //railBlocks
+    int curRailBlockMoveStringIndex;
 
     bool tempBool;
     int tempInt;
     float tempFloat;
+    char tempChar;
+    string tempString;
     Vector3 tempVector;
     Transform tempTransform;
     GameObject tempGameObject;
@@ -138,6 +143,8 @@ public class BlocksManager : MonoBehaviour
 
     float fragileRustBlockToBeBrokenTime;
     float fragileRustBlockRespawnTime;
+
+    List<string> railBlockMoveStrings = new List<string>();
     #endregion
 
     #region VariablesUsed
@@ -155,6 +162,9 @@ public class BlocksManager : MonoBehaviour
     List<float> curFragileRustBlockToBeBrokenStartTimes = new List<float>();
     List<GameObject> curBrokenFragileRustBlocks = new List<GameObject>();
     List<float> curFragileRustBlockBrokenTimes = new List<float>();
+
+    List<GameObject> curRailBlocks = new List<GameObject>();
+    List<Vector3> curRailBlockInitialPositions = new List<Vector3>();
     #endregion
 
     //toDoLater:
@@ -185,6 +195,7 @@ public class BlocksManager : MonoBehaviour
         storedLightElectricMistBlocksEmpty = CONS.storedLightElectricMistBlocksEmpty;
         fragileRustBlockToBeBrokenTime = CONS.fragileRustBlockToBeBrokenTime;
         fragileRustBlockRespawnTime = CONS.fragileRustBlockRespawnTime;
+        railBlockMoveStrings = CONS.railBlockMoveStrings;
         #endregion
 
         #region ImportReferenceVariables
@@ -195,6 +206,8 @@ public class BlocksManager : MonoBehaviour
         curFragileRustBlockToBeBrokenStartTimes = VARS.curFragileRustBlockToBeBrokenStartTimes;
         curBrokenFragileRustBlocks = VARS.curBrokenFragileRustBlocks;
         curFragileRustBlockBrokenTimes = VARS.curFragileRustBlockBrokenTimes;
+        curRailBlocks = VARS.curRailBlocks;
+        curRailBlockInitialPositions = VARS.curRailBlockInitialPositions;
         #endregion
 
         #region loadStoredBlocks
@@ -260,6 +273,15 @@ public class BlocksManager : MonoBehaviour
             curRoomBlockStateOfMatterIndexes.Clear();
             curRoomBlockTypeIndexes.Clear();
 
+            //railBlocks
+            for (int i = 0; i < curRailBlocks.Count; i++)
+            {
+                curRailBlocks[i].transform.position = curRailBlockInitialPositions[i];
+            }
+            curRailBlocks.Clear();
+            curRailBlockInitialPositions.Clear();
+            curRailBlockMoveStringIndex = -1;
+
             ////blockInfoMatrix
             //blockInfoMatrixList.Clear();
 
@@ -292,6 +314,13 @@ public class BlocksManager : MonoBehaviour
                         if (!curRoomBlockTypeIndexes.Contains(tempTileData.blockTypeIndex))
                         {
                             curRoomBlockTypeIndexes.Add(tempTileData.blockTypeIndex);
+                        }
+
+                        //getRailBlocks
+                        if (tempTileData.railBlockIndex > 0)
+                        {
+                            curRailBlocks.Add(tempTransform.gameObject);
+                            curRailBlockInitialPositions.Add(tempTransform.position);
                         }
                     }
                 }
@@ -419,7 +448,7 @@ public class BlocksManager : MonoBehaviour
             VARS.IsInNewRoomBlocksManagerResetOver = true;
         }
 
-        if (VARS.IsInNewRoomAllResetOver)
+        if (VARS.IsBlocksManagerBlocksMoveExecutable)
         {
             ////sortCurBlocks
             //SortCurBlocks();
@@ -497,6 +526,9 @@ public class BlocksManager : MonoBehaviour
             #endregion
 
             #region BlocksMove
+            //curRailBlockMoveStringIndex
+            curRailBlockMoveStringIndex++;
+
             for (int i = 0; i < curBlocks.Count; i++)
             {
                 curBlock = curBlocks[i];
@@ -516,6 +548,82 @@ public class BlocksManager : MonoBehaviour
                         if (curDownBlockTypeIndex == 0)
                         {
                             CurBlockMove(i, 2, true);
+                        }
+                    }
+
+                    //railBlocks
+                    if (curBlockTileData.railBlockIndex > 0)
+                    {
+                        tempString = railBlockMoveStrings[curBlockTileData.railBlockIndex - 1];
+                        tempInt = curRailBlockMoveStringIndex + curBlockTileData.railBlockMoveStringStartIndex;
+
+                        //forwardMove
+                        if(tempInt % tempString.Length != 0 ||
+                            tempInt == 0)
+                        {
+                            tempInt = tempInt % tempString.Length;
+                            tempChar = tempString[tempInt];
+
+                            switch (tempChar)
+                            {
+                                case 'u':
+                                    CurBlockMove(i, 1, false);
+                                    tempVector = curUp;
+                                    break;
+                                case 'd':
+                                    CurBlockMove(i, 2, false);
+                                    tempVector = -curUp;
+                                    break;
+                                case 'l':
+                                    CurBlockMove(i, 3, false);
+                                    tempVector = -curRight;
+                                    break;
+                                case 'r':
+                                    CurBlockMove(i, 4, false);
+                                    tempVector = curRight;
+                                    break;
+                            }
+
+                            if (VARS.IsOnOrToARailBlock &&
+                                curBlock == VARS.curOnOrToRailBlock)
+                            {
+                                UFL.AddCatPosition(tempVector);
+                            }
+                        }
+                        //back
+                        else
+                        {
+                            tempInt = tempString.Length;
+
+                            while (tempInt > 0)
+                            {
+                                tempInt--;
+
+                                tempChar = tempString[tempInt];
+
+                                switch (tempChar)
+                                {
+                                    case 'u':
+                                        CurBlockMove(i, 2, false);
+                                        tempVector = curUp;
+                                        break;
+                                    case 'd':
+                                        CurBlockMove(i, 1, false);
+                                        tempVector = -curUp;
+                                        break;
+                                    case 'l':
+                                        CurBlockMove(i, 4, false);
+                                        tempVector = -curRight;
+                                        break;
+                                    case 'r':
+                                        CurBlockMove(i, 3, false);
+                                        tempVector = curRight;
+                                        break;
+                                }
+                            }
+
+                            VARS.curOnOrToRailBlock = null;
+                            VARS.IsOnOrToARailBlock = false;
                         }
                     }
                 }

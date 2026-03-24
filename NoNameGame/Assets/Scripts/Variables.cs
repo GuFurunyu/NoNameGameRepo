@@ -76,7 +76,6 @@ public class Variables : MonoBehaviour
         get { return _isInNewRoomCurRoomManagerResetOver; }
         set
         {
-            if (value == false) IsInNewRoomAllResetOver = false;
             _isInNewRoomCurRoomManagerResetOver = value;
         }
     }
@@ -87,7 +86,6 @@ public class Variables : MonoBehaviour
         get { return _isInNewRoomCameraManagerResetOver; }
         set
         {
-            if (value == false) IsInNewRoomAllResetOver = false;
             _isInNewRoomCameraManagerResetOver = value;
         }
     }
@@ -98,7 +96,6 @@ public class Variables : MonoBehaviour
         get { return _isInNewRoomCatRotateResetOver; }
         set
         {
-            if (value == false) IsInNewRoomAllResetOver = false;
             _isInNewRoomCatRotateResetOver = value;
         }
     }
@@ -109,7 +106,6 @@ public class Variables : MonoBehaviour
         get { return _isInNewRoomBlocksManagerResetOver; }
         set
         {
-            if (value == false) IsInNewRoomAllResetOver = false;
             _isInNewRoomBlocksManagerResetOver = value;
         }
     }
@@ -119,14 +115,11 @@ public class Variables : MonoBehaviour
     {
         get
         {
-            if (_isInNewRoomAllResetOver == false)
-            {
-                IsInNewRoomAllResetOver = 
-                    IsInNewRoomCurRoomManagerResetOver &&
-                    IsInNewRoomCameraManagerResetOver &&
-                    IsInNewRoomCatRotateResetOver &&
-                    IsInNewRoomBlocksManagerResetOver;
-            }
+            IsInNewRoomAllResetOver =
+                IsInNewRoomCurRoomManagerResetOver &&
+                IsInNewRoomCameraManagerResetOver &&
+                IsInNewRoomCatRotateResetOver &&
+                IsInNewRoomBlocksManagerResetOver;
 
             return _isInNewRoomAllResetOver;
         }
@@ -391,30 +384,50 @@ public class Variables : MonoBehaviour
     [SerializeField] private bool _isCatCollisionMainPartExecutable;
     public bool IsCatCollisionMainPartExecutable { get { return _isCatCollisionMainPartExecutable; } set { _isCatCollisionMainPartExecutable = value; } }
 
+    //notTouchingAnything
+    [SerializeField] private bool _isNotTouchingAnything;
+    public bool IsNotTouchingAnything
+    {
+        get
+        {
+            IsNotTouchingAnything =
+                !IsOnGround &&
+                !IsToCeiling &&
+                !IsLeftBlocked &&
+                !IsRightBlocked &&
+                !IsInLiquid &&
+                !IsInGas &&
+                !IsInMist;
+
+            return _isNotTouchingAnything;
+        }
+        set { _isNotTouchingAnything = value; }
+    }
+
     //solidCollisionState
-    [SerializeField] private bool _isLeftBlocked;
-    public bool IsLeftBlocked { get { return _isLeftBlocked; } set { _isLeftBlocked = value; } }
-
-    [SerializeField] private bool _isRightBlocked;
-    public bool IsRightBlocked { get { return _isRightBlocked; } set { _isRightBlocked = value; } }
-
     [SerializeField] private bool _isOnGround;
     public bool IsOnGround { get { return _isOnGround; } set { _isOnGround = value; } }
 
     [SerializeField] private bool _isToCeiling;
     public bool IsToCeiling { get { return _isToCeiling; } set { _isToCeiling = value; } }
 
+    [SerializeField] private bool _isLeftBlocked;
+    public bool IsLeftBlocked { get { return _isLeftBlocked; } set { _isLeftBlocked = value; } }
+
+    [SerializeField] private bool _isRightBlocked;
+    public bool IsRightBlocked { get { return _isRightBlocked; } set { _isRightBlocked = value; } }
+
+    [SerializeField] private bool _isGroundDetected;
+    public bool IsGroundDetected { get { return _isGroundDetected; } set { _isGroundDetected = value; } }
+
+    [SerializeField] private bool _isCeilingDetected;
+    public bool IsCeilingDetected { get { return _isCeilingDetected; } set { _isCeilingDetected = value; } }
+
     [SerializeField] private bool _isLeftBlockDetected;
     public bool IsLeftBlockDetected { get { return _isLeftBlockDetected; } set { _isLeftBlockDetected = value; } }
 
     [SerializeField] private bool _isRightBlockDetected;
-    public bool IsRightBlockDetected { get { return _isLeftBlockDetected; } set { _isLeftBlockDetected = value; } }
-
-    [SerializeField] private bool _isGroundDetected;
-    public bool IsGroundDetected { get { return _isLeftBlockDetected; } set { _isLeftBlockDetected = value; } }
-
-    [SerializeField] private bool _isCeilingDetected;
-    public bool IsCeilingDetected { get { return _isLeftBlockDetected; } set { _isLeftBlockDetected = value; } }
+    public bool IsRightBlockDetected { get { return _isRightBlockDetected; } set { _isRightBlockDetected = value; } }
 
 
     //fluidCollisionState
@@ -470,6 +483,22 @@ public class Variables : MonoBehaviour
 
     //~?
     public float buoyancyDistanceFixFloat;
+
+    //railBlock
+    [SerializeField] private bool _isOnOrToARailBlock;
+    public bool IsOnOrToARailBlock
+    {
+        get
+        {
+            if(IsNotTouchingAnything)
+                _isOnOrToARailBlock = false;
+
+            return _isOnOrToARailBlock;
+        }
+        set { _isOnOrToARailBlock = value; }
+    }
+
+    public GameObject curOnOrToRailBlock;
 
     //triggerTile
     public GameObject curTriggerTile;
@@ -548,14 +577,11 @@ public class Variables : MonoBehaviour
     {
         get
         {
-            if (_isAfflicted == true)
-            {
-                IsAfflicted=
-                    IsInHotState ||
-                    IsInColdState ||
-                    IsInElectricState ||
-                    IsInToxicState;
-            }
+            IsAfflicted =
+                IsInHotState ||
+                IsInColdState ||
+                IsInElectricState ||
+                IsInToxicState;
 
             return _isAfflicted;
         }
@@ -578,8 +604,6 @@ public class Variables : MonoBehaviour
         get { return _isInHotState; }
         set
         {
-            if (value == true) IsAfflicted = true;
-
             _isInHotState = value;
         }
     }
@@ -590,8 +614,6 @@ public class Variables : MonoBehaviour
         get { return _isInColdState; }
         set
         {
-            if (value == true) IsAfflicted = true;
-
             _isInColdState = value;
         }
     }
@@ -608,8 +630,6 @@ public class Variables : MonoBehaviour
         get { return _isInElectricState; }
         set
         {
-            if (value == true) IsAfflicted = true;
-
             _isInElectricState = value;
         }
     }
@@ -626,8 +646,6 @@ public class Variables : MonoBehaviour
         get { return _isInToxicState; }
         set
         {
-            if (value == true) IsAfflicted = true;
-
             _isInToxicState = value;
         }
     }
@@ -717,10 +735,9 @@ public class Variables : MonoBehaviour
     {
         get
         {
-            if (_isInNormalColor == false)
-                IsInNormalColor =
-                    !IsAfflicted &&
-                    !IsInFadedColor;
+            IsInNormalColor =
+                !IsAfflicted &&
+                !IsInFadedColor;
 
             return _isInNormalColor;
         }
@@ -755,6 +772,10 @@ public class Variables : MonoBehaviour
     #region BlocksManager
     [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
         "  \nBLOCKSMANAGER\n --- ")]
+    //executability
+    [SerializeField] private bool _isBlocksManagerBlocksMoveExecutable;
+    public bool IsBlocksManagerBlocksMoveExecutable { get { return _isBlocksManagerBlocksMoveExecutable; } set { _isBlocksManagerBlocksMoveExecutable = value; } }
+
     //fixedDeltaTime
     public float blocksManagerFixedDeltaTime;
 
@@ -778,6 +799,10 @@ public class Variables : MonoBehaviour
     public List<float> curFragileRustBlockToBeBrokenStartTimes = new List<float>();
     public List<GameObject> curBrokenFragileRustBlocks = new List<GameObject>();
     public List<float> curFragileRustBlockBrokenTimes = new List<float>();
+
+    //railBlocks
+    public List<GameObject> curRailBlocks = new List<GameObject>();
+    public List<Vector3> curRailBlockInitialPositions = new List<Vector3>();
     #endregion
 
     #region MiniMapManager

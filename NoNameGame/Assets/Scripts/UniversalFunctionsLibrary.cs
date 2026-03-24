@@ -49,6 +49,7 @@ public class UniversalFunctionsLibrary : MonoBehaviour
     float camMiniMapDistanceToCubeCore;
 
     GameObject cat;
+    Transform catTransform;
     #endregion
 
     #region VariablesUsed
@@ -85,6 +86,7 @@ public class UniversalFunctionsLibrary : MonoBehaviour
         camMiniMapSize = CONS.camMiniMapSize;
         camMiniMapDistanceToCubeCore = CONS.camMiniMapDistanceToCubeCore;
         cat = CONS.cat;
+        catTransform = CONS.catTransform;
         #endregion
 
         #region ImportReferenceVariables
@@ -286,9 +288,9 @@ public class UniversalFunctionsLibrary : MonoBehaviour
             if (i == VARS.curRoomIndex)
             {
                 miniMapRoomPlanes[i].GetComponent<MeshRenderer>().material.SetColor("_MainColor", VARS.curMiniMapRoomPlaneColor);
-
-                roomPlanes[i].SetActive(true);
             }
+
+            roomPlanes[i].SetActive(true);
         }
 
         cat.GetComponent<MeshRenderer>().enabled = true;
@@ -425,7 +427,7 @@ public class UniversalFunctionsLibrary : MonoBehaviour
                 tempVector = -camTransform.right;
                 break;
         }
-        Debug.Log("tempVector: " + tempVector);
+        //Debug.Log("tempVector: " + tempVector);
         for (int i = 0; i < 26; i++)
         {
             //Debug.Log("enter1");
@@ -439,16 +441,16 @@ public class UniversalFunctionsLibrary : MonoBehaviour
             //ifIsNearlyOnTheLine
             if (Vector3.Angle(miniMapRotationCameraPoints[i].transform.position - VARS.curMiniMapRotationCameraPoint.transform.position, tempVector) < 30)
             {
-                Debug.Log("enter2: " + i);
+                //Debug.Log("enter2: " + i);
 
-                Debug.Log("dot: " + Vector3.Dot(miniMapRotationCameraPoints[i].transform.position - VARS.curMiniMapRotationCameraPoint.transform.position, tempVector));
+                //Debug.Log("dot: " + Vector3.Dot(miniMapRotationCameraPoints[i].transform.position - VARS.curMiniMapRotationCameraPoint.transform.position, tempVector));
 
                 //ifIsTheRightDirection
                 if (Vector3.Dot(miniMapRotationCameraPoints[i].transform.position - VARS.curMiniMapRotationCameraPoint.transform.position, tempVector) > 0)
                 {
-                    Debug.Log("enter3");
+                    //Debug.Log("enter3");
 
-                    Debug.Log("curToIndex: " + i);
+                    //Debug.Log("curToIndex: " + i);
 
                     //Debug.Log(VARS.curToMiniMapRotationCameraPoint.transform.position - VARS.curMiniMapRotationCameraPoint.transform.position);
 
@@ -512,6 +514,16 @@ public class UniversalFunctionsLibrary : MonoBehaviour
 
     //    VARS.verCurSpeed += value;
     //}
+
+    public void SetCatPosition(Vector3 position)
+    {
+        catTransform.position = position;
+    }
+
+    public void AddCatPosition(Vector3 offset)
+    {
+        catTransform.position += offset;
+    }
     #endregion
 
     #region CatState
