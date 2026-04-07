@@ -123,9 +123,10 @@ public class TileData : MonoBehaviour
     //      6101-PurpleBlock, 6102-DarkPurpleBlock, 6103-ElectricMistCenterBlock
     //      6401-ElectricMistBlock, 6402-LightElectricMistBlock
     //  7-UniversalBlocks
-    //      7001-GateBlock, 7002-EdgeGateBlock, 7003-EdgeGateTriggerBlock, 7004-SavePointBlock, 7005-ActivatedSavePointBlock, 7006-CenterBlock, 
-    //      7007-StrawberryBlock, 7008-EnergyCrystalBlock
-    //      7101-(White)Block, 7102-Dark(White)Block, 7102-VoidBlock, 7103-PlatformBlock
+    //      7001-GateBlock, 7002-EdgeGateBlock, 7003-EdgeGateTriggerBlock, 7004-SavePointBlock, 7005-ActivatedSavePointBlock, 7006-CenterBlock, 7007-KeyBlock
+    //      7008-StrawberryBlock, 7009-EnergyCrystalBlock,
+    //      7010-VoidBlock
+    //      7101-(White)Block, 7102-Dark(White)Block, 7103-PlatformBlock, 7104-LockedBlock
     //public int blockTypeIndex;
     [SerializeField] int _blockTypeIndex;
     public int blockTypeIndex { get { return _blockTypeIndex; } set { _blockTypeIndex = value; } }

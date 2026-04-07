@@ -58,6 +58,8 @@ public class RoomsManager : MonoBehaviour
     float camMiniMapDistanceToCubeCore;
 
     Transform catTransform;
+
+    GameObject catIniPositionPoint;
     #endregion
 
     #region VariablesUsed
@@ -93,6 +95,7 @@ public class RoomsManager : MonoBehaviour
         camTransform = CONS.camTransform;
         camMiniMapDistanceToCubeCore = CONS.camMiniMapDistanceToCubeCore;
         catTransform = CONS.catTransform;
+        catIniPositionPoint = CONS.catIniPositionPoint;
         #endregion
         catTransform = CONS.catTransform;
 
@@ -101,7 +104,7 @@ public class RoomsManager : MonoBehaviour
         roomStableForwards = VARS.roomStableForwards;
         roomStableUps = VARS.roomStableUps;
         roomStableRights = VARS.roomStableRights;
-        #endregion
+        #endregion        
     }
 
     void Update()
@@ -134,7 +137,7 @@ public class RoomsManager : MonoBehaviour
         //}
         #endregion
 
-        #region InNewRoomReset
+        #region InNewRoomReset(OutVersion)
         //if (VARS.IsInNewRoomAllResetOver)
         //{
         //    if (!VARS.IsInNewRoomCurRoomManagerResetOver ||
@@ -166,7 +169,8 @@ public class RoomsManager : MonoBehaviour
         if (VARS.IsInNewRoomAllResetOver)
         {
             //hideOtherPlanes
-            if (!VARS.IsZoomedOut)
+            if (!VARS.IsZoomedOut &&
+                !VARS.IsInMiniMap)
                 UFL.HideOtherPlanes();
 
             #region Twist
@@ -253,6 +257,7 @@ public class RoomsManager : MonoBehaviour
                     //catAndCamTempChildToCurTwistingCenter
                     //camTransform.SetParent(curTwistingCenter.transform, true);
                     catTransform.SetParent(curTwistingCenter.transform, true);
+                    catIniPositionPoint.transform.SetParent(curTwistingCenter.transform, true);
 
                     //setTargetEulerangles
                     if (VARS.IsClockwiseTwisting)
@@ -293,6 +298,7 @@ public class RoomsManager : MonoBehaviour
                     //freeCatAndCam
                     //camTransform.SetParent(null);
                     catTransform.SetParent(null);
+                    catIniPositionPoint.transform.SetParent(null);
 
                     //resetCatEulerangles
                     catTransform.eulerAngles = Vector3.zero;
@@ -306,11 +312,11 @@ public class RoomsManager : MonoBehaviour
 
                     VARS.IsIntoNewRoom = true;
 
-                    VARS.IsToWriteWorldData = true;
-
                     VARS.IsToDetermineCurActivatedSavePointPosition = true;
 
                     VARS.IsTwisting = false;
+
+                    VARS.IsToWriteWorldData = true;
                 }
             }
             #endregion

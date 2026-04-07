@@ -33,7 +33,8 @@ public class ScriptsExecutionController : MonoBehaviour
         //catCollision
         VARS.IsCatCollisionMainPartExecutable =
             !VARS.IsRotating &&
-            !VARS.IsTwisting;
+            !VARS.IsTwisting &&
+            !VARS.IsExiting;
 
         //catMove
         VARS.IsCatMoveMainPartExecutable =
@@ -41,13 +42,15 @@ public class ScriptsExecutionController : MonoBehaviour
             !VARS.IsRotating &&
             !VARS.IsTwisting &&
             !VARS.IsInMiniMap &&
-            !VARS.IsOptionPanelActivated;
+            !VARS.IsOptionPanelActivated &&
+            !VARS.IsExiting;
 
         //catRotate
         VARS.IsCatRotateMainPartExecutable =
             VARS.IsInNewRoomAllResetOver &&
             !VARS.IsTwisting &&
-            !VARS.IsInMiniMap;
+            !VARS.IsInMiniMap &&
+            !VARS.IsExiting;
 
         //catEnergy
         VARS.IsCatEnergyResetExecutable =
@@ -59,16 +62,19 @@ public class ScriptsExecutionController : MonoBehaviour
             !VARS.IsInElectricState &&
             !VARS.IsInToxicState &&
             (VARS.IsOnGround ||
-            VARS.IsInLiquid);
+            VARS.IsInLiquid) &&
+            !VARS.IsExiting;
 
         //catTrigger
         VARS.IsCatTriggerMainPartExecutable =
             !VARS.IsRotating &&
-            !VARS.IsTwisting;
+            !VARS.IsTwisting &&
+            !VARS.IsExiting;
 
         //blocksManager
         VARS.IsBlocksManagerBlocksMoveExecutable =
-            VARS.IsInNewRoomAllResetOver;
+            VARS.IsInNewRoomAllResetOver &&
+            !VARS.IsExiting;
 
         //optionsManager
         VARS.IsOptionsManagerActivationExecutable =

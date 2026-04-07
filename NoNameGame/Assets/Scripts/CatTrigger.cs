@@ -35,6 +35,9 @@ public class CatTrigger : MonoBehaviour
     GameObject storedSavePointBlock;
     GameObject storedActivatedSavePointBlock;
 
+    int tempInt;
+    float tempFloat;
+    Vector3 tempVector;
     GameObject tempGameObject;
 
     #region ConstantsUsed
@@ -44,15 +47,9 @@ public class CatTrigger : MonoBehaviour
 
     Transform catTransform;
 
+    GameObject catIniPositionPoint;
+
     float maxEnergy;
-
-    float strawberriesDistance;
-    float strawberriesSpeed;
-    float strawberriesContractionMin;
-    float strawberriesContractionSpeed;
-
-    float energyCrystalPower;
-    float energyCrystalRespawnTime;
 
     float throughEdgeGateGapTime;
 
@@ -61,6 +58,20 @@ public class CatTrigger : MonoBehaviour
     List<GameObject> savePoints = new List<GameObject>();
 
     GameObject storedActivatedSavePointBlockEmpty;
+
+    List<GameObject> keys = new List<GameObject>();
+    List<GameObject> locks = new List<GameObject>();
+
+    float keySpeed;
+    float keyDistance;
+
+    float strawberriesDistance;
+    float strawberriesSpeed;
+    float strawberriesContractionMin;
+    float strawberriesContractionSpeed;
+
+    float energyCrystalPower;
+    float energyCrystalRespawnTime;
     #endregion
 
     #region VariablesUsed
@@ -71,6 +82,9 @@ public class CatTrigger : MonoBehaviour
     Vector3 curRoomStableForward;
 
     List<int> edgeGateLinkedToIndexes = new List<int>();
+
+    List<int> deactivatedKeyIndexes = new List<int>();
+    List<int> deactivatedLockIndexes = new List<int>();
 
     Vector3 curRight;
     Vector3 curUp;
@@ -97,22 +111,29 @@ public class CatTrigger : MonoBehaviour
         faces = CONS.faces;
         camTransform = CONS.camTransform;
         catTransform = CONS.catTransform;
+        catIniPositionPoint = CONS.catIniPositionPoint;
         maxEnergy = CONS.maxEnergy;
+        throughEdgeGateGapTime = CONS.throughEdgeGateGapTime;
+        edgeGates = CONS.edgeGates;
+        savePoints = CONS.savePoints;
+        storedActivatedSavePointBlockEmpty = CONS.storedActivatedSavePointBlockEmpty;
+        keys = CONS.keys;
+        locks = CONS.locks;
+        keySpeed = CONS.keySpeed;
+        keyDistance = CONS.keyDistance;
         strawberriesDistance = CONS.strawberriesDistance;
         strawberriesSpeed = CONS.strawberriesSpeed;
         strawberriesContractionMin = CONS.strawberriesContractionMin;
         strawberriesContractionSpeed = CONS.strawberriesContractionSpeed;
         energyCrystalPower = CONS.energyCrystalPower;
         energyCrystalRespawnTime = CONS.energyCrystalRespawnTime;
-        throughEdgeGateGapTime = CONS.throughEdgeGateGapTime;
-        edgeGates = CONS.edgeGates;
-        savePoints = CONS.savePoints;
-        storedActivatedSavePointBlockEmpty = CONS.storedActivatedSavePointBlockEmpty;
         #endregion
 
         #region ImportReferenceVariables
         roomStableForwards = VARS.roomStableForwards;
         edgeGateLinkedToIndexes = VARS.edgeGateLinkedToIndexes;
+        deactivatedKeyIndexes = VARS.deactivatedKeyIndexes;
+        deactivatedLockIndexes = VARS.deactivatedLockIndexes;
         #endregion
 
         //loadStoredBlocks
@@ -137,118 +158,6 @@ public class CatTrigger : MonoBehaviour
 
         if (VARS.IsCatTriggerMainPartExecutable)
         {
-            #region Strawberries
-            //lose
-            if (VARS.IsToLoseCarriedStrawberries)
-            {
-                VARS.IsCarryingStrawberries = false;
-
-                for (int i = 0; i < carriedStrawberries.Count; i++)
-                {
-                    carriedStrawberries[i].transform.position = carriedStrawberriesIniPositions[i];
-                }
-
-                carriedStrawberries.Clear();
-                carriedStrawberriesIniPositions.Clear();
-            }
-
-            //get
-            if (VARS.IsGettingAStrawberry)
-            {
-                VARS.IsCarryingStrawberries = true;
-
-                carriedStrawberries.Add(curTriggerTile);
-                carriedStrawberriesIniPositions.Add(curTriggerTile.transform.position);
-
-                VARS.IsGettingAStrawberry = false;
-            }
-
-            //carry
-            if (VARS.IsCarryingStrawberries)
-            {
-                for (int i = 0; i < carriedStrawberries.Count; i++)
-                {
-                    if (Vector3.Distance(catTransform.position, carriedStrawberries[i].transform.position) > strawberriesDistance)
-                    {
-                        carriedStrawberries[i].transform.position = Vector3.MoveTowards(carriedStrawberries[i].transform.position, catTransform.position, strawberriesSpeed * Time.deltaTime);
-                    }
-                }
-            }
-            //collect
-            else if (VARS.IsCollectingStrawberries)
-            {
-                if (carriedStrawberries.Count > 0)
-                {
-                    if (carriedStrawberries[0].transform.localScale.magnitude > strawberriesContractionMin)
-                    {
-                        for (int i = 0; i < carriedStrawberries.Count; i++)
-                        {
-                            carriedStrawberries[i].transform.localScale -= Vector3.one * strawberriesContractionSpeed * Time.deltaTime;
-                            carriedStrawberries[i].transform.position = Vector3.MoveTowards(carriedStrawberries[i].transform.position, catTransform.position, strawberriesSpeed / 6 * Time.deltaTime);
-                        }
-                    }
-                    else
-                    {
-                        for (int i = 0; i < carriedStrawberries.Count; i++)
-                        {
-                            Destroy(carriedStrawberries[i]);
-                        }
-
-                        carriedStrawberries.Clear();
-                        carriedStrawberriesIniPositions.Clear();
-
-                        VARS.IsCollectingStrawberries = false;
-                    }
-                }
-                else
-                {
-                    VARS.IsCollectingStrawberries = false;
-                }
-            }
-            #endregion
-
-            #region EnergyCrystals
-            if (VARS.IsGettingAnEnergyCrystal)
-            {
-                gotEnergyCrystals.Add(curTriggerTile);
-                energyCrystalGotTimes.Add(Time.time);
-
-                curTriggerTile.transform.localScale = Vector3.one * 0.2f;
-
-                VARS.curEnergy += energyCrystalPower;
-                if (VARS.curEnergy > maxEnergy)
-                {
-                    VARS.curEnergy = maxEnergy;
-                }
-
-                VARS.IsGettingAnEnergyCrystal = false;
-            }
-
-            if (gotEnergyCrystals.Count > 0)
-            {
-                isAllGotEnergyCrystalsRespawned = true;
-
-                for (int i = 0; i < gotEnergyCrystals.Count; i++)
-                {
-                    if (gotEnergyCrystals[i].transform.localScale == Vector3.one * 0.2f)
-                    {
-                        isAllGotEnergyCrystalsRespawned = false;
-
-                        if (Time.time - energyCrystalGotTimes[i] > energyCrystalRespawnTime)
-                        {
-                            gotEnergyCrystals[i].transform.localScale = Vector3.one;
-                        }
-                    }
-                }
-
-                if (isAllGotEnergyCrystalsRespawned)
-                {
-                    gotEnergyCrystals.Clear();
-                    energyCrystalGotTimes.Clear();
-                }
-            }
-            #endregion
-
             #region EdgeGate
             if (VARS.IsEnteringAnEdgeGate)
             {
@@ -330,6 +239,9 @@ public class CatTrigger : MonoBehaviour
                     }
                 }
 
+                //curActivatedSavePointRoomIndex
+                VARS.curActivatedSavePointRoomIndex = VARS.curRoomIndex;
+
                 VARS.IsToDetermineCurActivatedSavePointPosition = true;
 
                 VARS.IsToActivateCurSavePoint = true;
@@ -343,9 +255,9 @@ public class CatTrigger : MonoBehaviour
 
                 //Debug.Log(VARS.curActivatedSavePointPosition);
 
-                VARS.IsToWriteCatWorldData = true;
-
                 VARS.IsToDetermineCurActivatedSavePointPosition = false;
+
+                VARS.IsToWriteCatWorldData = true;
             }
 
             if (VARS.IsToActivateCurSavePoint)
@@ -369,11 +281,210 @@ public class CatTrigger : MonoBehaviour
                 //setCatPosition
                 if (VARS.horCurSpeed == 0 &&
                     VARS.verCurSpeed == 0)
-                    catTransform.position = VARS.catIniPosition;
+                {
+                    //catTransform.position = VARS.catIniPosition;
+                    catIniPositionPoint.transform.position = catTransform.position;
+                }
 
                 //Debug.Log("catPosition:" + catTransform.position);
 
                 VARS.IsToActivateCurSavePoint = false;
+            }
+            #endregion
+
+            #region Key
+            //carry
+            if (VARS.IsToCarryAKey)
+            {
+                VARS.curCarriedKey = VARS.curTriggerTile;
+                VARS.curCarriedKeyIniParent = VARS.curCarriedKey.transform.parent.gameObject;
+                VARS.curCarriedKeyIniLocalPosition = VARS.curCarriedKey.transform.localPosition;
+                VARS.curCarriedKey.transform.SetParent(null, true);
+
+                VARS.IsCarryingAKey = true;
+
+                VARS.IsToCarryAKey = false;
+
+                VARS.IsToWriteCatWorldData = true;
+            }
+            if (VARS.IsCarryingAKey)
+            {
+                tempVector = VARS.curCarriedKey.transform.position - catTransform.position - VARS.roomStableForwards[VARS.curRoomIndex] * 0.2f;
+                tempFloat = Vector3.Magnitude(tempVector);
+
+                if (tempFloat > keyDistance * 1.5f)
+                {
+                    VARS.curCarriedKey.transform.position += -tempVector.normalized * keySpeed * tempFloat * Time.deltaTime;
+                }
+                else if (tempFloat < keyDistance * 0.75f)
+                {
+                    VARS.curCarriedKey.transform.position += tempVector.normalized * keySpeed * tempFloat * Time.deltaTime;
+                }
+            }
+
+            //unlock
+            if (VARS.IsUnlocking)
+            {
+                VARS.IsCarryingAKey = false;
+
+                tempVector = VARS.curUnlockingBlock.transform.position - VARS.curCarriedKey.transform.position - VARS.roomStableForwards[VARS.curRoomIndex] * 0.2f;
+                tempFloat = Vector3.Magnitude(tempVector);
+
+                if (tempFloat > 0.1f)
+                {
+                    VARS.curCarriedKey.transform.position += tempVector.normalized * keySpeed * (tempFloat + 1) * Time.deltaTime;
+                }
+                else
+                {
+                    //getCurNearestLock
+                    for (int i = 0; i < locks.Count; i++)
+                    {
+                        if (locks[i] != VARS.curUnlockingBlock &&
+                            locks[i].transform.parent == VARS.curUnlockingBlock.transform.parent &&
+                            Vector3.Distance(locks[i].transform.position, VARS.curUnlockingBlock.transform.position) < 1.5f)
+                        {
+                            tempGameObject = locks[i];
+                            tempInt = i;
+                            break;
+                        }              
+                    }
+
+                    //deactivate
+                    for (int i = 0; i < locks.Count; i++)
+                    {
+                        if (locks[i] == VARS.curUnlockingBlock)
+                        {
+                            deactivatedLockIndexes.Add(i);
+                        }
+                    }
+                    deactivatedLockIndexes.Add(tempInt);
+                    for (int i = 0; i < keys.Count; i++)
+                    {
+                        if (keys[i] == VARS.curCarriedKey)
+                        {
+                            deactivatedKeyIndexes.Add(i);
+                        }
+                    }
+                    VARS.curUnlockingBlock.SetActive(false);
+                    tempGameObject.SetActive(false);
+                    VARS.curCarriedKey.SetActive(false);
+
+                    VARS.IsUnlocking = false;
+
+                    VARS.IsToWriteCatWorldData = true;
+                }
+            }
+            #endregion
+
+            #region Strawberry
+            //lose
+            if (VARS.IsToLoseCarriedStrawberries)
+            {
+                VARS.IsCarryingStrawberries = false;
+
+                for (int i = 0; i < carriedStrawberries.Count; i++)
+                {
+                    carriedStrawberries[i].transform.position = carriedStrawberriesIniPositions[i];
+                }
+
+                carriedStrawberries.Clear();
+                carriedStrawberriesIniPositions.Clear();
+            }
+
+            //get
+            if (VARS.IsGettingAStrawberry)
+            {
+                VARS.IsCarryingStrawberries = true;
+
+                carriedStrawberries.Add(curTriggerTile);
+                carriedStrawberriesIniPositions.Add(curTriggerTile.transform.position);
+
+                VARS.IsGettingAStrawberry = false;
+            }
+
+            //carry
+            if (VARS.IsCarryingStrawberries)
+            {
+                for (int i = 0; i < carriedStrawberries.Count; i++)
+                {
+                    if (Vector3.Distance(catTransform.position, carriedStrawberries[i].transform.position) > strawberriesDistance)
+                    {
+                        carriedStrawberries[i].transform.position = Vector3.MoveTowards(carriedStrawberries[i].transform.position, catTransform.position, strawberriesSpeed * Time.deltaTime);
+                    }
+                }
+            }
+            //collect
+            else if (VARS.IsCollectingStrawberries)
+            {
+                if (carriedStrawberries.Count > 0)
+                {
+                    if (carriedStrawberries[0].transform.localScale.magnitude > strawberriesContractionMin)
+                    {
+                        for (int i = 0; i < carriedStrawberries.Count; i++)
+                        {
+                            carriedStrawberries[i].transform.localScale -= Vector3.one * strawberriesContractionSpeed * Time.deltaTime;
+                            carriedStrawberries[i].transform.position = Vector3.MoveTowards(carriedStrawberries[i].transform.position, catTransform.position, strawberriesSpeed / 6 * Time.deltaTime);
+                        }
+                    }
+                    else
+                    {
+                        for (int i = 0; i < carriedStrawberries.Count; i++)
+                        {
+                            Destroy(carriedStrawberries[i]);
+                        }
+
+                        carriedStrawberries.Clear();
+                        carriedStrawberriesIniPositions.Clear();
+
+                        VARS.IsCollectingStrawberries = false;
+                    }
+                }
+                else
+                {
+                    VARS.IsCollectingStrawberries = false;
+                }
+            }
+            #endregion
+
+            #region EnergyCrystal
+            if (VARS.IsGettingAnEnergyCrystal)
+            {
+                gotEnergyCrystals.Add(curTriggerTile);
+                energyCrystalGotTimes.Add(Time.time);
+
+                curTriggerTile.transform.localScale = Vector3.one * 0.2f;
+
+                VARS.curEnergy += energyCrystalPower;
+                if (VARS.curEnergy > maxEnergy)
+                {
+                    VARS.curEnergy = maxEnergy;
+                }
+
+                VARS.IsGettingAnEnergyCrystal = false;
+            }
+
+            if (gotEnergyCrystals.Count > 0)
+            {
+                isAllGotEnergyCrystalsRespawned = true;
+
+                for (int i = 0; i < gotEnergyCrystals.Count; i++)
+                {
+                    if (gotEnergyCrystals[i].transform.localScale == Vector3.one * 0.2f)
+                    {
+                        isAllGotEnergyCrystalsRespawned = false;
+
+                        if (Time.time - energyCrystalGotTimes[i] > energyCrystalRespawnTime)
+                        {
+                            gotEnergyCrystals[i].transform.localScale = Vector3.one;
+                        }
+                    }
+                }
+
+                if (isAllGotEnergyCrystalsRespawned)
+                {
+                    gotEnergyCrystals.Clear();
+                    energyCrystalGotTimes.Clear();
+                }
             }
             #endregion
         }

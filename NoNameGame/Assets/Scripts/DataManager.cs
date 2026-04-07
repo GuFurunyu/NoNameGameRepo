@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using UnityEngine;
 
 
@@ -27,12 +29,24 @@ public class DataManager : MonoBehaviour
 
     public class CatWorldData
     {
-        //savePoint
+        //curRoom
+        public int curRoomIndex;
+
+        //curPosition
+        public Vector3 curCatPosition;
+
+        //savePoints
         public int curActivatedSavePointIndex;
         public Vector3 curActivatedSavePointPosition;
 
         //exploredRooms
         public bool[] isRoomExplored = new bool[54];
+
+        //keysAndLocks
+        public List<int> deactivatedKeyIndexes = new List<int>();
+        public List<int> deactivatedLockIndexes = new List<int>();
+        public bool isCarryingAKey;
+        public GameObject curCarriedKey;
     }
 
     CatWorldData curCatWorldData = new CatWorldData();
@@ -74,6 +88,11 @@ public class DataManager : MonoBehaviour
     GameObject[] miniMapFaces = new GameObject[6];
     GameObject[] miniMapRoomPlanes = new GameObject[54];
     GameObject[] miniMapTwistingCenters = new GameObject[6];
+
+    List<GameObject> keys = new List<GameObject>();
+    List<GameObject> locks = new List<GameObject>();
+
+    Transform catTransform;
     #endregion
 
     #region VariablesUsed
@@ -101,12 +120,17 @@ public class DataManager : MonoBehaviour
         miniMapFaces = CONS.miniMapFaces;
         miniMapRoomPlanes = CONS.miniMapRoomPlanes;
         miniMapTwistingCenters = CONS.miniMapTwistingCenters;
+        keys = CONS.keys;
+        locks = CONS.locks;
+        catTransform = CONS.catTransform;
         #endregion
 
         #region ImportReferenceVariables
         #endregion
 
         ReadWorldData();
+
+        //WriteCatWorldData();
 
         ReadCatWorldData();
 
@@ -138,6 +162,8 @@ public class DataManager : MonoBehaviour
 
             VARS.IsToWriteKeyCodesData = false;
         }
+
+        VARS.IsWritingAllData = false;
     }
 
     #region WorldData
@@ -232,12 +258,38 @@ public class DataManager : MonoBehaviour
             tempJsonString = File.ReadAllText(tempPath);
             curCatWorldData = JsonUtility.FromJson<CatWorldData>(tempJsonString);
 
+            //curRoom
+            VARS.curRoomIndex = curCatWorldData.curRoomIndex;
+
+            //curPosition
+            catTransform.position = curCatWorldData.curCatPosition;
+
             //savePoint
             VARS.curActivatedSavePointIndex = curCatWorldData.curActivatedSavePointIndex;
             VARS.curActivatedSavePointPosition = curCatWorldData.curActivatedSavePointPosition;
 
             //isRoomExplored
             VARS.IsRoomExplored = curCatWorldData.isRoomExplored;
+
+            //keysAndLocks
+            VARS.deactivatedKeyIndexes = curCatWorldData.deactivatedKeyIndexes;
+            VARS.deactivatedLockIndexes = curCatWorldData.deactivatedLockIndexes;
+            VARS.IsCarryingAKey = curCatWorldData.isCarryingAKey;
+            VARS.curCarriedKey = curCatWorldData.curCarriedKey;
+            for (int i = 0; i < keys.Count; i++)
+            {
+                if (curCatWorldData.deactivatedKeyIndexes.Contains(i))
+                {
+                    keys[i].SetActive(false);
+                }
+            }
+            for (int i = 0; i < locks.Count; i++)
+            {
+                if (curCatWorldData.deactivatedLockIndexes.Contains(i))
+                {
+                    locks[i].SetActive(false);
+                }
+            }
 
             VARS.IsToActivateCurSavePoint = true;
         }
@@ -247,12 +299,24 @@ public class DataManager : MonoBehaviour
     {
         tempPath = Path.Combine(Application.persistentDataPath, "Datas", "CatWorldData.txt");
 
+        //curRoom
+        curCatWorldData.curRoomIndex = VARS.curRoomIndex;
+
+        //curPosition
+        curCatWorldData.curCatPosition = catTransform.position;
+
         //savePoint
         curCatWorldData.curActivatedSavePointIndex = VARS.curActivatedSavePointIndex;
         curCatWorldData.curActivatedSavePointPosition = VARS.curActivatedSavePointPosition;
 
         //isRoomExplored
         curCatWorldData.isRoomExplored = VARS.IsRoomExplored;
+
+        //keysAndLocks
+        curCatWorldData.deactivatedKeyIndexes = VARS.deactivatedKeyIndexes;
+        curCatWorldData.deactivatedLockIndexes = VARS.deactivatedLockIndexes;
+        curCatWorldData.isCarryingAKey = VARS.IsCarryingAKey;
+        curCatWorldData.curCarriedKey = VARS.curCarriedKey;
 
         tempJsonString = JsonUtility.ToJson(curCatWorldData);
 

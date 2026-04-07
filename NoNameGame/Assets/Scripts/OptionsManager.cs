@@ -294,11 +294,19 @@ public class OptionsManager : MonoBehaviour
             {
                 if (VARS.IsConfirmKeyDown)
                 {
-                    #if UNITY_EDITOR
-                    UnityEditor.EditorApplication.isPlaying = false;
-                    #endif
+                    VARS.IsWritingAllData = true;
+                    VARS.IsExiting = true;
+                }
+                if (VARS.IsExiting)
+                {
+                    if (!VARS.IsWritingAllData)
+                    {
+                        #if UNITY_EDITOR
+                        UnityEditor.EditorApplication.isPlaying = false;
+                        #endif
 
-                    Application.Quit();
+                        Application.Quit();
+                    }
                 }
             }
             #endregion

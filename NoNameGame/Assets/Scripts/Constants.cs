@@ -55,9 +55,16 @@ public class Constants : MonoBehaviour
     //edgeGates
     public List<GameObject> edgeGates = new List<GameObject>();
 
+    //savePoint
+    public List<GameObject> savePoints = new List<GameObject>();
+
     //twist
     public GameObject[] twistingCenters = new GameObject[6];
     public float twistSpeed;
+
+    //lockAndKeys
+    public List<GameObject> keys = new List<GameObject>();
+    public List<GameObject> locks = new List<GameObject>();
     #endregion
 
     #region CurRoomManager
@@ -108,6 +115,9 @@ public class Constants : MonoBehaviour
 
     //catInfo
     public float catBreadth;
+
+    //iniposition
+    public GameObject catIniPositionPoint;
     #endregion
 
     #region Control
@@ -241,6 +251,13 @@ public class Constants : MonoBehaviour
     #region CatTrigger
     [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
         "  \nCATTRIGGER\n --- ")]
+    //edgeGate
+    public float throughEdgeGateGapTime;
+
+    //key
+    public float keySpeed;
+    public float keyDistance;
+
     //strawberry
     public float strawberriesDistance;
     public float strawberriesSpeed;
@@ -252,12 +269,6 @@ public class Constants : MonoBehaviour
     //energyCrystal
     public float energyCrystalPower;
     public float energyCrystalRespawnTime;
-
-    //edgeGate
-    public float throughEdgeGateGapTime;
-
-    //savePoints
-    public List<GameObject> savePoints = new List<GameObject>();
 
     //storedBlocks
     public GameObject storedActivatedSavePointBlockEmpty;
@@ -311,6 +322,9 @@ public class Constants : MonoBehaviour
     public GameObject storedGasBlocksEmpty;
     public GameObject storedElectricMistBlocksEmpty;
     public GameObject storedLightElectricMistBlocksEmpty;
+
+    //lockedBlocks
+    public float unlockDistance;
 
     //fragileBlocks
     public float fragileRustBlockToBeBrokenTime;

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using Unity.VisualScripting;
 using UnityEngine;
 //using ECB = Variables.ExecutionControlBool;
 
@@ -34,6 +35,28 @@ public class Variables : MonoBehaviour
     [SerializeField] private bool _isToWriteCatWorldData;
     public bool IsToWriteCatWorldData { get { return _isToWriteCatWorldData; } set { _isToWriteCatWorldData = value; } }
 
+
+    //isToWriteAllData
+    [SerializeField] private bool _isWritingAllData;
+    public bool IsWritingAllData
+    {
+        get
+        {
+            return _isWritingAllData;
+        }
+        set
+        {
+            if (value == true)
+            {
+                IsToWriteWorldData = true;
+                IsToWriteCatWorldData = true;
+                IsToWriteKeyCodesData = true;
+            }
+
+            _isWritingAllData = value;
+        }
+    }
+
     #endregion
 
     #region RoomsManager
@@ -65,7 +88,7 @@ public class Variables : MonoBehaviour
         }
     }
 
-    [SerializeField] private bool _isInNewRoom = true; 
+    [SerializeField] private bool _isInNewRoom = true;
     public bool IsInNewRoom { get { return _isInNewRoom; } set { _isInNewRoom = value; } }
 
 
@@ -162,14 +185,9 @@ public class Variables : MonoBehaviour
     //[SerializeField] private bool _isIntoMiniMap;
     //public bool IsIntoMiniMap { get { return _isIntoMiniMap; } set { _isIntoMiniMap = value; } }
 
-    [SerializeField] private bool _isInMiniMap;
-    public bool IsInMiniMap { get { return _isInMiniMap; } set { _isInMiniMap = value; } }
-
-    [SerializeField] private bool _isMiniMapRotating;
-    public bool IsMiniMapRotating { get { return _isMiniMapRotating; } set { _isMiniMapRotating = value; } }
-
-    public Color curMiniMapRoomPlaneColor;
-
+    //keysAndLocks
+    public List<int> deactivatedKeyIndexes = new List<int>();
+    public List<int> deactivatedLockIndexes = new List<int>();
     #endregion
 
     #region CurRoomManager
@@ -490,7 +508,7 @@ public class Variables : MonoBehaviour
     {
         get
         {
-            if(IsNotTouchingAnything)
+            if (IsNotTouchingAnything)
                 _isOnOrToARailBlock = false;
 
             return _isOnOrToARailBlock;
@@ -727,7 +745,27 @@ public class Variables : MonoBehaviour
 
     //public GameObject curActivatedSavePoint;//~?
     public int curActivatedSavePointIndex;
+    public int curActivatedSavePointRoomIndex;
     public Vector3 curActivatedSavePointPosition;
+
+    //key
+    [SerializeField] private bool _isToCarryAKey;
+    public bool IsToCarryAKey { get { return _isToCarryAKey; } set { _isToCarryAKey = value; } }
+
+    [SerializeField] private bool _isCarryingAKey;
+    public bool IsCarryingAKey { get { return _isCarryingAKey; } set { _isCarryingAKey = value; } }
+
+    public GameObject curCarriedKey;
+    public GameObject curCarriedKeyIniParent;
+    public Vector3 curCarriedKeyIniLocalPosition;
+
+    //[SerializeField] private bool _isToUnlock;
+    //public bool IsToUnlock { get { return _isToUnlock; } set { _isToUnlock = value; } }
+
+    [SerializeField] private bool _isUnlocking;
+    public bool IsUnlocking { get { return _isUnlocking; } set { _isUnlocking = value; } }
+
+    public GameObject curUnlockingBlock;
 
     #endregion
 
@@ -804,7 +842,7 @@ public class Variables : MonoBehaviour
 
     //fluidContinuosnessOptimization
     [SerializeField] private bool _isFluidContinuousnessOptimizationActivated = true;
-    public bool IsFluidContinuousnessOptimizationActivated 
+    public bool IsFluidContinuousnessOptimizationActivated
     { get { return _isFluidContinuousnessOptimizationActivated; } set { _isFluidContinuousnessOptimizationActivated = value; } }
 
     //fragileBlocks
@@ -822,6 +860,15 @@ public class Variables : MonoBehaviour
     #region MiniMapManager
     [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
         "  \nMINIMAPMANAGER\n --- ")]
+
+    [SerializeField] private bool _isInMiniMap;
+    public bool IsInMiniMap { get { return _isInMiniMap; } set { _isInMiniMap = value; } }
+
+    [SerializeField] private bool _isMiniMapRotating;
+    public bool IsMiniMapRotating { get { return _isMiniMapRotating; } set { _isMiniMapRotating = value; } }
+
+
+    public Color curMiniMapRoomPlaneColor;
 
     public GameObject curMiniMapRotationCameraPoint;
     public GameObject curToMiniMapRotationCameraPoint;
@@ -848,6 +895,10 @@ public class Variables : MonoBehaviour
     [SerializeField] private bool _isOptionPanelActivated;
     public bool IsOptionPanelActivated
     { get { return _isOptionPanelActivated; } set { _isOptionPanelActivated = value; } }
+
+    //isExiting
+    [SerializeField] private bool _isExiting;
+    public bool IsExiting { get { return _isExiting; } set { _isExiting = value; } }
 
     #endregion
 

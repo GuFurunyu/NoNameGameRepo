@@ -10,6 +10,7 @@ public class UniversalFunctionsLibrary : MonoBehaviour
 
     GameObject gameManager;
 
+    int tempInt;
     float tempFloat;
     float[] tempFloats = new float[3];
     Vector3 tempVector;
@@ -257,6 +258,7 @@ public class UniversalFunctionsLibrary : MonoBehaviour
 
     public void IntoMiniMap()
     {
+        roomPlanes[VARS.curRoomIndex].SetActive(false);
         for (int i = 0; i < 54; i++)
         {
             miniMapRoomPlanes[i].SetActive(IsRoomExplored(i));
@@ -285,6 +287,7 @@ public class UniversalFunctionsLibrary : MonoBehaviour
 
     public void OutOfMiniMap()
     {
+        roomPlanes[VARS.curRoomIndex].SetActive(true);
         for (int i = 0; i < 54; i++)
         {
             miniMapRoomPlanes[i].SetActive(false);
@@ -386,7 +389,7 @@ public class UniversalFunctionsLibrary : MonoBehaviour
             VARS.IsMiniMapRotationCameraPointIndexNotInitialized = false;
         }
         VARS.curMiniMapRotationCameraPoint = miniMapRotationCameraPoints[VARS.curMiniMapRotationCameraPointIndex];
-        Debug.Log("curIndex: " + VARS.curMiniMapRotationCameraPointIndex);
+        //Debug.Log("curIndex: " + VARS.curMiniMapRotationCameraPointIndex);
 
         //switch (dirIndex)
         //{
@@ -609,6 +612,20 @@ public class UniversalFunctionsLibrary : MonoBehaviour
         }
 
         return -1;
+    }
+
+    public bool IsCatInVoidBlock()
+    {
+        tempInt = CatInBlockIndex();
+        if (tempInt >= 0)
+        {
+            if (curBlocks[tempInt].GetComponent<TileData>().blockTypeIndex == 7010)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
     #endregion
 }

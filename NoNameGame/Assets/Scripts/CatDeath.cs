@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Threading.Tasks.Sources;
 using UnityEngine;
 
 [DefaultExecutionOrder((int)ScriptsExecutionOrder.ExecutionOrder.catDeath)]
@@ -17,7 +19,11 @@ public class CatDeath : MonoBehaviour
     Transform tempTransform;
 
     #region ConstantsUsed
+    List<GameObject> savePoints = new List<GameObject>();
+
     Transform catTransform;
+
+    GameObject catIniPositionPoint;
 
     float maxEnergy;
 
@@ -37,7 +43,9 @@ public class CatDeath : MonoBehaviour
         SEC = gameManager.GetComponent<ScriptsExecutionController>();
 
         #region ImportConstants
+        savePoints = CONS.savePoints;
         catTransform = CONS.catTransform;
+        catIniPositionPoint = CONS.catIniPositionPoint;
         maxEnergy = CONS.maxEnergy;
         storedVoidBlocksEmpty = CONS.storedVoidBlocksEmpty;
         #endregion
@@ -81,7 +89,21 @@ public class CatDeath : MonoBehaviour
 
         //curStoredVoidBlockIndex++;
 
-        catTransform.position = VARS.catIniPosition;
+        //clearKey
+        if (VARS.IsCarryingAKey)
+        {
+            VARS.curCarriedKey.transform.parent = VARS.curCarriedKeyIniParent.transform;
+            VARS.curCarriedKey.transform.localPosition = VARS.curCarriedKeyIniLocalPosition;
+
+            VARS.curCarriedKey = null;
+
+            VARS.IsCarryingAKey = false;
+        }
+
+        //catTransform.position = VARS.catIniPosition;
+        catTransform.position = catIniPositionPoint.transform.position;
+
+        catIniPositionPoint.transform.position = savePoints[VARS.curActivatedSavePointIndex].transform.position - VARS.roomStableForwards[VARS.curActivatedSavePointRoomIndex] * 0.1f;
 
         //VARS.curEnergy = maxEnergy;
         //VARS.curEnergy = 0.1f;
@@ -117,5 +139,7 @@ public class CatDeath : MonoBehaviour
 
         VARS.IsInNewRoomCameraManagerResetOver = false;
         VARS.IsInNewRoomCatRotateResetOver = false;
+
+        VARS.IsToWriteCatWorldData = true;
     }
 }

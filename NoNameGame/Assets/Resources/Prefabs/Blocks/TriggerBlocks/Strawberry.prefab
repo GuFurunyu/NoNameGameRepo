@@ -468,6 +468,10 @@ MonoBehaviour:
   isAffectedByGravity: 0
   isPlatform: 0
   isNotClimbable: 0
+  isFragile: 0
+  railBlockIndex: 0
+  railBlockMoveStringStartIndex: 0
+  isLoop: 0
   sharpDirVector: {x: 0, y: 0, z: 0}
   toughness: 999
   elasticity: 0
@@ -476,9 +480,9 @@ MonoBehaviour:
   fluidDrag: 1
   mass: 1
   temperature: 0
-  conductivity: 0
+  electricity: 0
   toxicity: 0
-  _blockTypeIndex: 7007
+  _blockTypeIndex: 7008
 --- !u!1 &6279010003030879948
 GameObject:
   m_ObjectHideFlags: 0

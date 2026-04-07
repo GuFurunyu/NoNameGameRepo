@@ -211,8 +211,6 @@ public class CatCollision : MonoBehaviour
             if (Physics.Raycast(downRay1, out downHit1, longPlusRayDistance - VARS.verCurSpeed / 1000) ||
                 Physics.Raycast(downRay2, out downHit2, longPlusRayDistance - VARS.verCurSpeed / 1000))
             {
-                Debug.Log("onGroundDetect");
-
                 if (Physics.Raycast(downRay1, out downHit1, longPlusRayDistance - VARS.verCurSpeed / 1000))
                 {
                     Detect(2, 1);
@@ -451,36 +449,36 @@ public class CatCollision : MonoBehaviour
             {
                 tempVector = catTransform.position - VARS.curDownTile.transform.position;
                 tempFloat = Vector3.Dot(tempVector, curUp);
-                if (tempFloat < gridBreadth - 0.01f)
+                if (tempFloat < gridBreadth)
                 {
-                    Debug.Log("distanceFix1:" + catTransform.position);
-                    UFL.AddCatPosition(curUp * (gridBreadth - tempFloat));
-                    Debug.Log("distanceFix2:" + catTransform.position);
+                    //Debug.Log("distanceFix1:" + catTransform.position);
+                    UFL.AddCatPosition(curUp * (gridBreadth - tempFloat + 0.01f));
+                    //Debug.Log("distanceFix2:" + catTransform.position);
                 }
             }
-            else if (VARS.IsToCeiling)
+            if (VARS.IsToCeiling)
             {
                 tempVector = catTransform.position - VARS.curUpTile.transform.position;
                 tempFloat = Vector3.Dot(tempVector, -curUp);
-                if (tempFloat < gridBreadth - 0.01f)
+                if (tempFloat < gridBreadth)
                 {
                     UFL.AddCatPosition(-curUp * (gridBreadth - tempFloat));
                 }
             }
-            else if (VARS.IsLeftBlocked)
+            if (VARS.IsLeftBlocked)
             {
                 tempVector = catTransform.position - VARS.curLeftTile.transform.position;
                 tempFloat = Vector3.Dot(tempVector, curRight);
-                if (tempFloat < gridBreadth - 0.01f)
+                if (tempFloat < gridBreadth)
                 {
                     UFL.AddCatPosition(curRight * (gridBreadth - tempFloat));
                 }
             }
-            else if (VARS.IsRightBlocked)
+            if (VARS.IsRightBlocked)
             {
                 tempVector = catTransform.position - VARS.curRightTile.transform.position;
                 tempFloat = Vector3.Dot(tempVector, -curRight);
-                if (tempFloat < gridBreadth - 0.01f)
+                if (tempFloat < gridBreadth)
                 {
                     UFL.AddCatPosition(-curRight * (gridBreadth - tempFloat));
                 }
@@ -490,14 +488,18 @@ public class CatCollision : MonoBehaviour
             tempInt = UFL.CatInBlockIndex();
             if (tempInt >= 0)
             {
-                Debug.Log("enter1");
                 if (curBlocks[tempInt].GetComponent<TileData>().railBlockIndex > 0)
                 {
-                    Debug.Log("enter2");
                     UFL.AddCatPosition(VARS.curCatMovedByRailBlockVector);
                 }
             }
             #endregion
+
+            //voidBlocks
+            if (UFL.IsCatInVoidBlock())
+            {
+                VARS.IsToDie = true;
+            }
 
             //#region Squeeze
             //tempInt = UFL.CatInBlockIndex();
@@ -619,11 +621,11 @@ public class CatCollision : MonoBehaviour
                 if (curTileData.stateOfMatterIndex == 1 &&
                     dirIndex <= 4)
                 {
-                    //void
-                    if (curTileData.blockTypeIndex == 7102)
-                    {
-                        VARS.IsToDie = true;
-                    }
+                    ////void
+                    //if (curTileData.blockTypeIndex == 7010)
+                    //{
+                    //    VARS.IsToDie = true;
+                    //}
 
                     switch (dirIndex)
                     {
@@ -663,10 +665,10 @@ public class CatCollision : MonoBehaviour
                             positionFixOffset += 0.001f * tempFloat;
                         }
 
-                        //UFL.SetCatPosition(new Vector3
-                        //    (catTransform.position.x * Mathf.Abs(Mathf.Abs(tempVector.x) - 1) + VARS.curTilePosition.x * Mathf.Abs(tempVector.x) + tempInt * (positionFixOffset - 0.001f * tempFloat) * tempVector.x,
-                        //    catTransform.position.y * Mathf.Abs(Mathf.Abs(tempVector.y) - 1) + VARS.curTilePosition.y * Mathf.Abs(tempVector.y) + tempInt * (positionFixOffset - 0.001f * tempFloat) * tempVector.y,
-                        //    catTransform.position.z * Mathf.Abs(Mathf.Abs(tempVector.z) - 1) + VARS.curTilePosition.z * Mathf.Abs(tempVector.z) + tempInt * (positionFixOffset - 0.001f * tempFloat) * tempVector.z));
+                        UFL.SetCatPosition(new Vector3
+                            (catTransform.position.x * Mathf.Abs(Mathf.Abs(tempVector.x) - 1) + VARS.curTilePosition.x * Mathf.Abs(tempVector.x) + tempInt * (positionFixOffset - 0.001f * tempFloat) * tempVector.x,
+                            catTransform.position.y * Mathf.Abs(Mathf.Abs(tempVector.y) - 1) + VARS.curTilePosition.y * Mathf.Abs(tempVector.y) + tempInt * (positionFixOffset - 0.001f * tempFloat) * tempVector.y,
+                            catTransform.position.z * Mathf.Abs(Mathf.Abs(tempVector.z) - 1) + VARS.curTilePosition.z * Mathf.Abs(tempVector.z) + tempInt * (positionFixOffset - 0.001f * tempFloat) * tempVector.z));
 
                         if (dirIndex == 1)
                         {
@@ -831,30 +833,8 @@ public class CatCollision : MonoBehaviour
                 VARS.curTriggerTile = curTile;
                 VARS.curTriggerTileData = curTileData;
 
-                //strawberry(get)
-                if (/*curTileData.triggerTypeIndex == 1*/
-                    curTileData.blockTypeIndex == 7007)
-                {
-                    //isCarryingStrawberries = true;
-
-                    //carriedStrawberries.Add(curTile);
-                    //carriedStrawberriesIniPositions.Add(curTile.transform.position);
-
-                    VARS.IsGettingAStrawberry = true;
-                }
-
-                //energyCrystal(get)
-                else if (/*curTileData.triggerTypeIndex == 2*/
-                    curTileData.blockTypeIndex == 7008)
-                {
-                    if (curTile.transform.localScale != Vector3.one * 0.2f)
-                    {
-                        VARS.IsGettingAnEnergyCrystal = true;
-                    }
-                }
-
                 //gate
-                else if (/*curTileData.triggerTypeIndex == 3*/
+                if (/*curTileData.triggerTypeIndex == 3*/
                     curTileData.blockTypeIndex == 7001)
                 {
 
@@ -895,6 +875,38 @@ public class CatCollision : MonoBehaviour
                     curTileData.blockTypeIndex == 7006)
                 {
                     VARS.IsInCenter = true;
+                }
+
+                //key
+                else if (curTileData.blockTypeIndex == 7007)
+                {
+                    if (!VARS.IsCarryingAKey &&
+                        !VARS.IsUnlocking)
+                    {
+                        VARS.IsToCarryAKey = true;
+                    }
+                }
+
+                //strawberry(get)
+                else if (/*curTileData.triggerTypeIndex == 1*/
+                    curTileData.blockTypeIndex == 7008)
+                {
+                    //isCarryingStrawberries = true;
+
+                    //carriedStrawberries.Add(curTile);
+                    //carriedStrawberriesIniPositions.Add(curTile.transform.position);
+
+                    VARS.IsGettingAStrawberry = true;
+                }
+
+                //energyCrystal(get)
+                else if (/*curTileData.triggerTypeIndex == 2*/
+                    curTileData.blockTypeIndex == 7009)
+                {
+                    if (curTile.transform.localScale != Vector3.one * 0.2f)
+                    {
+                        VARS.IsGettingAnEnergyCrystal = true;
+                    }
                 }
             }
 

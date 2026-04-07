@@ -146,6 +146,8 @@ public class BlocksManager : MonoBehaviour
     GameObject storedElectricMistBlocksEmpty;
     GameObject storedLightElectricMistBlocksEmpty;
 
+    float unlockDistance;
+
     float fragileRustBlockToBeBrokenTime;
     float fragileRustBlockRespawnTime;
 
@@ -201,6 +203,7 @@ public class BlocksManager : MonoBehaviour
         storedGasBlocksEmpty = CONS.storedGasBlocksEmpty;
         storedElectricMistBlocksEmpty = CONS.storedElectricMistBlocksEmpty;
         storedLightElectricMistBlocksEmpty = CONS.storedLightElectricMistBlocksEmpty;
+        unlockDistance = CONS.unlockDistance;
         fragileRustBlockToBeBrokenTime = CONS.fragileRustBlockToBeBrokenTime;
         fragileRustBlockRespawnTime = CONS.fragileRustBlockRespawnTime;
         railBlockMoveStrings = CONS.railBlockMoveStrings;
@@ -534,7 +537,7 @@ public class BlocksManager : MonoBehaviour
             }
             #endregion
 
-            #region BlocksMove
+            #region BlocksTraverse
             //curRailBlockMoveStringIndex
             curRailBlockMoveStringIndex++;
             VARS.IsCatBeingMovedByRailBlock = VARS.IsCatMovedByRailBlock;
@@ -546,6 +549,7 @@ public class BlocksManager : MonoBehaviour
                 curBlockTileData = curBlockTileDatas[i];
                 //curBlockStateOfMatterIndex = curBlockStateOfMatterIndexes[i];
 
+                #region BlocksMove
                 #region Solid
                 if (curBlockTileData.stateOfMatterIndex == 1)
                 {
@@ -629,24 +633,19 @@ public class BlocksManager : MonoBehaviour
                                 tempFloat < gridBreadth * 1.5 &&
                                 tempFloat > gridBreadth * -0.2f)
                                 {
-                                    Debug.Log("enter2");
-                                    Debug.Log("tempFloat:" + tempFloat);
-                                    Debug.Log("move:" + tempVector * (2 - tempFloat));
+                                    //Debug.Log("enter2");
+                                    //Debug.Log("tempFloat:" + tempFloat);
+                                    //Debug.Log("move:" + tempVector * (2 - tempFloat));
 
-                                    Debug.Log("catPosition1:" + catTransform.position);
+                                    //Debug.Log("catPosition1:" + catTransform.position);
                                     UFL.AddCatPosition(tempVector * (2 - tempFloat + 0.001f));
-                                    Debug.Log("catPosition2:" + catTransform.position);
+                                    //Debug.Log("catPosition2:" + catTransform.position);
                                 }
                                 else if (VARS.IsOnOrToARailBlock &&
                                     curBlock == VARS.curOnOrToRailBlock)
                                 {
-                                    Debug.Log("enter1");
-
                                     UFL.AddCatPosition(tempVector);
                                 }
-
-                                Debug.Log("catMoved");
-
                                 VARS.curCatMovedByRailBlockVector = tempVector;
 
                                 VARS.IsCatMovedByRailBlock = true;
@@ -1010,6 +1009,20 @@ public class BlocksManager : MonoBehaviour
                     }
                 }
                 #endregion
+                #endregion
+
+                #region LockedBlocks
+                if (curBlockTileData.blockTypeIndex == 7104)
+                {
+                    if (Vector3.Distance(curBlock.transform.position,catTransform.position) < unlockDistance &&
+                        VARS.IsCarryingAKey)
+                    {
+                        VARS.curUnlockingBlock = curBlock;
+
+                        VARS.IsUnlocking = true;
+                    }
+                }
+                #endregion
             }
 
             #region FluidContinuousnessOptimization
@@ -1075,7 +1088,7 @@ public class BlocksManager : MonoBehaviour
 
             #region FragileBlocks
             //toBeBrokenToBeBroken
-            if(curToBeBrokenFragileRustBlocks.Count > 0)
+            if (curToBeBrokenFragileRustBlocks.Count > 0)
             {
                 for (int i = curToBeBrokenFragileRustBlocks.Count - 1; i >= 0; i--)
                 {
