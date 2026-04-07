@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using JetBrains.Annotations;
 using UnityEngine;
 
@@ -57,6 +58,8 @@ public class UniversalFunctionsLibrary : MonoBehaviour
     Vector3[] roomStableForwards = new Vector3[54];
     Vector3[] roomStableUps = new Vector3[54];
     Vector3[] roomStableRights = new Vector3[54];
+
+    List<GameObject> curBlocks = new List<GameObject>();
     #endregion
 
     private void Start()
@@ -94,6 +97,7 @@ public class UniversalFunctionsLibrary : MonoBehaviour
         roomStableForwards = VARS.roomStableForwards;
         roomStableUps = VARS.roomStableUps;
         roomStableRights = VARS.roomStableRights;
+        curBlocks = VARS.curBlocks;
         #endregion
     }
 
@@ -578,5 +582,33 @@ public class UniversalFunctionsLibrary : MonoBehaviour
     //{
     //    VARS.curEnergy += value;
     //}
+    #endregion
+
+    #region BlocksManager
+    public bool IsCatInBlock(int curBlockIndex)
+    {
+        tempVector = catTransform.position - curBlocks[curBlockIndex].transform.position;
+
+        if (Mathf.Abs(Vector3.Dot(tempVector, VARS.curUp)) < gridBreadth - 0.01f &&
+            Mathf.Abs(Vector3.Dot(tempVector, VARS.curRight)) < gridBreadth - 0.01f)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    public int CatInBlockIndex()
+    {
+        for (int i = 0; i < curBlocks.Count; i++)
+        {
+            if (IsCatInBlock(i))
+            {
+                return i;
+            }
+        }
+
+        return -1;
+    }
     #endregion
 }

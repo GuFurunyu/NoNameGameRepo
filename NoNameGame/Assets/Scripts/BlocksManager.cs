@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 
@@ -47,7 +48,6 @@ public class BlocksManager : MonoBehaviour
 
     //curBlock
     //HR: toBeMadeDynamic
-    public List<GameObject> curBlocks = new List<GameObject>();
     List<TileData> curBlockTileDatas = new List<TileData>();
     //public List<int> curBlockStateOfMatterIndexes = new List<int>();
     GameObject curBlock;
@@ -113,6 +113,7 @@ public class BlocksManager : MonoBehaviour
 
     //railBlocks
     int curRailBlockMoveStringIndex;
+    int curCarryCatRailBlockIndex = -1;
 
     bool tempBool;
     int tempInt;
@@ -120,6 +121,8 @@ public class BlocksManager : MonoBehaviour
     char tempChar;
     string tempString;
     Vector3 tempVector;
+    Vector3 tempVector1;
+    Vector3 tempVector2;
     Transform tempTransform;
     GameObject tempGameObject;
     TileData tempTileData;
@@ -132,6 +135,8 @@ public class BlocksManager : MonoBehaviour
     List<GameObject> gates = new List<GameObject>();
 
     List<GameObject> edgeGates = new List<GameObject>();
+
+    Transform catTransform;
 
     GameObject storedSandBlocksEmpty;
     GameObject storedWaterBlocksEmpty;
@@ -154,6 +159,8 @@ public class BlocksManager : MonoBehaviour
     Vector3 curRoomStableRight;
     Vector3 curUp;
     Vector3 curRight;
+
+    List<GameObject> curBlocks = new List<GameObject>();
 
     List<int> curRoomBlockStateOfMatterIndexes = new List<int>();
     List<int> curRoomBlockTypeIndexes = new List<int>();
@@ -186,6 +193,7 @@ public class BlocksManager : MonoBehaviour
         roomCoordBreadth = CONS.roomCoordBreadth;
         gates = CONS.gates;
         edgeGates = CONS.edgeGates;
+        catTransform = CONS.catTransform;
         storedSandBlocksEmpty = CONS.storedSandBlocksEmpty;
         storedWaterBlocksEmpty = CONS.storedWaterBlocksEmpty;
         storedAcidBlocksEmpty = CONS.storedAcidBlocksEmpty;
@@ -200,6 +208,7 @@ public class BlocksManager : MonoBehaviour
 
         #region ImportReferenceVariables
         edgeGateLinkedToIndexes = VARS.edgeGateLinkedToIndexes;
+        curBlocks = VARS.curBlocks;
         curRoomBlockStateOfMatterIndexes = VARS.curRoomBlockStateOfMatterIndexes;
         curRoomBlockTypeIndexes = VARS.curRoomBlockTypeIndexes;
         curToBeBrokenFragileRustBlocks = VARS.curToBeBrokenFragileRustBlocks;
@@ -528,6 +537,8 @@ public class BlocksManager : MonoBehaviour
             #region BlocksMove
             //curRailBlockMoveStringIndex
             curRailBlockMoveStringIndex++;
+            VARS.IsCatBeingMovedByRailBlock = VARS.IsCatMovedByRailBlock;
+            VARS.IsCatMovedByRailBlock = false;
 
             for (int i = 0; i < curBlocks.Count; i++)
             {
@@ -558,7 +569,7 @@ public class BlocksManager : MonoBehaviour
                         tempInt = curRailBlockMoveStringIndex + curBlockTileData.railBlockMoveStringStartIndex;
 
                         //forwardMove
-                        if(tempInt % tempString.Length != 0 ||
+                        if (tempInt % tempString.Length != 0 ||
                             tempInt == 0)
                         {
                             tempInt = tempInt % tempString.Length;
@@ -567,63 +578,193 @@ public class BlocksManager : MonoBehaviour
                             switch (tempChar)
                             {
                                 case 'u':
-                                    CurBlockMove(i, 1, false);
-                                    tempVector = curUp;
+                                    tempVector = VARS.roomStableUps[VARS.curRoomIndex];
+                                    tempVector1 = VARS.roomStableRights[VARS.curRoomIndex];
+                                    tempInt = 1;
                                     break;
                                 case 'd':
-                                    CurBlockMove(i, 2, false);
-                                    tempVector = -curUp;
+                                    tempVector = -VARS.roomStableUps[VARS.curRoomIndex];
+                                    tempVector1 = VARS.roomStableRights[VARS.curRoomIndex];
+                                    tempInt = 2;
                                     break;
                                 case 'l':
-                                    CurBlockMove(i, 3, false);
-                                    tempVector = -curRight;
+                                    tempVector = -VARS.roomStableRights[VARS.curRoomIndex];
+                                    tempVector1 = VARS.roomStableUps[VARS.curRoomIndex];
+                                    tempInt = 3;
                                     break;
                                 case 'r':
-                                    CurBlockMove(i, 4, false);
-                                    tempVector = curRight;
+                                    tempVector = VARS.roomStableRights[VARS.curRoomIndex];
+                                    tempVector1 = VARS.roomStableUps[VARS.curRoomIndex];
+                                    tempInt = 4;
                                     break;
                             }
 
-                            if (VARS.IsOnOrToARailBlock &&
-                                curBlock == VARS.curOnOrToRailBlock)
+                            //if (i == curCarryCatRailBlockIndex)
+                            //{
+                            //    UFL.AddCatPosition(tempVector);
+
+                            //    VARS.IsCatMovedByRailBlock = true;
+
+                            //    if (Vector3.Dot(tempVector, curRight) == 0)
+                            //    {
+                            //        VARS.verCurSpeed = 0;
+                            //    }
+                            //    else if (Vector3.Dot(tempVector, curUp) == 0)
+                            //    {
+                            //        VARS.horCurSpeed = 0;
+                            //    }
+                            //}
+
+                            //moveCat
+                            tempVector2 = catTransform.position - curBlock.transform.position;
+                            tempFloat = Vector3.Dot(tempVector2, tempVector);
+                            if (!VARS.IsCatMovedByRailBlock &&
+                                ((VARS.IsOnOrToARailBlock &&
+                                curBlock == VARS.curOnOrToRailBlock) ||
+                                (Mathf.Abs(Vector3.Dot(tempVector2, tempVector1)) < gridBreadth &&
+                                tempFloat < gridBreadth * 1.5 &&
+                                tempFloat > gridBreadth * -0.2f)))
                             {
-                                UFL.AddCatPosition(tempVector);
+                                if (Mathf.Abs(Vector3.Dot(tempVector2, tempVector1)) < gridBreadth &&
+                                tempFloat < gridBreadth * 1.5 &&
+                                tempFloat > gridBreadth * -0.2f)
+                                {
+                                    Debug.Log("enter2");
+                                    Debug.Log("tempFloat:" + tempFloat);
+                                    Debug.Log("move:" + tempVector * (2 - tempFloat));
+
+                                    Debug.Log("catPosition1:" + catTransform.position);
+                                    UFL.AddCatPosition(tempVector * (2 - tempFloat + 0.001f));
+                                    Debug.Log("catPosition2:" + catTransform.position);
+                                }
+                                else if (VARS.IsOnOrToARailBlock &&
+                                    curBlock == VARS.curOnOrToRailBlock)
+                                {
+                                    Debug.Log("enter1");
+
+                                    UFL.AddCatPosition(tempVector);
+                                }
+
+                                Debug.Log("catMoved");
+
+                                VARS.curCatMovedByRailBlockVector = tempVector;
+
+                                VARS.IsCatMovedByRailBlock = true;
+
+                                curCarryCatRailBlockIndex = i;
+
+                                //if (Vector3.Dot(tempVector, curRight) == 0)
+                                //{
+                                //    VARS.verCurSpeed = 0;
+                                //}
+                                //else if (Vector3.Dot(tempVector, curUp) == 0)
+                                //{
+                                //    VARS.horCurSpeed = 0;
+                                //}
+
+                                CurBlockMove(i, tempInt, false, true);
+
+                                //avoidCatIntoWall
+                                for (int j = 0; j < curBlocks.Count; j++)
+                                {
+                                    //notRailBlock
+                                    if (curBlockTileDatas[j].railBlockIndex == 0)
+                                    {
+                                        tempFloat = Mathf.Abs(Vector3.Dot(catTransform.position - curBlocks[j].transform.position, tempVector));
+                                        if (tempFloat < gridBreadth)
+                                        {
+                                            UFL.AddCatPosition(-tempVector * (gridBreadth - tempFloat));
+
+                                            curCarryCatRailBlockIndex = -1;
+
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                CurBlockMove(i, tempInt, false, true);
                             }
                         }
                         //back
                         else
                         {
-                            tempInt = tempString.Length;
-
-                            while (tempInt > 0)
+                            if (!curBlockTileData.isLoop)
                             {
-                                tempInt--;
+                                VARS.curOnOrToRailBlock = null;
+                                VARS.IsOnOrToARailBlock = false;
 
-                                tempChar = tempString[tempInt];
+                                tempInt = tempString.Length;
 
-                                switch (tempChar)
+                                tempChar = tempString[tempInt - 1];
+
+                                //catOffset
+                                if (i == curCarryCatRailBlockIndex)
                                 {
-                                    case 'u':
-                                        CurBlockMove(i, 2, false);
-                                        tempVector = curUp;
-                                        break;
-                                    case 'd':
-                                        CurBlockMove(i, 1, false);
-                                        tempVector = -curUp;
-                                        break;
-                                    case 'l':
-                                        CurBlockMove(i, 4, false);
-                                        tempVector = -curRight;
-                                        break;
-                                    case 'r':
-                                        CurBlockMove(i, 3, false);
-                                        tempVector = curRight;
-                                        break;
+                                    switch (tempChar)
+                                    {
+                                        case 'u':
+                                            tempVector = VARS.roomStableUps[VARS.curRoomIndex];
+                                            break;
+                                        case 'd':
+                                            tempVector = -VARS.roomStableUps[VARS.curRoomIndex];
+                                            break;
+                                        case 'l':
+                                            tempVector = -VARS.roomStableRights[VARS.curRoomIndex];
+                                            break;
+                                        case 'r':
+                                            tempVector = VARS.roomStableRights[VARS.curRoomIndex];
+                                            break;
+                                    }
+                                    UFL.AddCatPosition(tempVector * 0.02f);
+
+                                    curCarryCatRailBlockIndex = -1;
+                                }
+
+                                while (tempInt > 0)
+                                {
+                                    tempInt--;
+
+                                    tempChar = tempString[tempInt];
+
+                                    switch (tempChar)
+                                    {
+                                        case 'u':
+                                            CurBlockMove(i, 2, false, true);
+                                            tempVector = VARS.roomStableUps[VARS.curRoomIndex];
+                                            break;
+                                        case 'd':
+                                            CurBlockMove(i, 1, false, true);
+                                            tempVector = -VARS.roomStableUps[VARS.curRoomIndex];
+                                            break;
+                                        case 'l':
+                                            CurBlockMove(i, 4, false, true);
+                                            tempVector = -VARS.roomStableRights[VARS.curRoomIndex];
+                                            break;
+                                        case 'r':
+                                            CurBlockMove(i, 3, false, true);
+                                            tempVector = VARS.roomStableRights[VARS.curRoomIndex];
+                                            break;
+                                    }
                                 }
                             }
+                        }
 
-                            VARS.curOnOrToRailBlock = null;
-                            VARS.IsOnOrToARailBlock = false;
+                        //makeHiddenRailBlocksVisible
+                        if (curBlock.GetComponent<MeshRenderer>().enabled == false)
+                        {
+                            curBlock.GetComponent<MeshRenderer>().enabled = true;
+                            curBlock.transform.localScale = Vector3.one;
+                        }
+
+                        //hideRailBlocksOutOfRoomBoundary
+                        tempVector = curBlock.transform.position - VARS.roomCenters[VARS.curRoomIndex];
+                        if (Mathf.Abs(Vector3.Dot(tempVector, curUp)) > (roomCoordBreadth / 2) * gridBreadth ||
+                            Mathf.Abs(Vector3.Dot(tempVector, curRight)) > (roomCoordBreadth / 2) * gridBreadth)
+                        {
+                            curBlock.GetComponent<MeshRenderer>().enabled = false;
+                            curBlock.transform.localScale = Vector3.one * 0.01f;
                         }
                     }
                 }
@@ -959,16 +1100,26 @@ public class BlocksManager : MonoBehaviour
             //brokenToRespawn
             if (curBrokenFragileRustBlocks.Count > 0)
             {
-                for(int i=curBrokenFragileRustBlocks.Count - 1; i >= 0; i--)
+                for (int i = curBrokenFragileRustBlocks.Count - 1; i >= 0; i--)
                 {
                     if (Time.time - curFragileRustBlockBrokenTimes[i] > fragileRustBlockRespawnTime)
                     {
-                        curBrokenFragileRustBlocks[i].SetActive(true);
+                        //ifCatInPutOff
+                        tempVector = catTransform.position - curBrokenFragileRustBlocks[i].transform.position;
+                        if (Mathf.Abs(Vector3.Dot(tempVector, curUp)) < gridBreadth &&
+                            Mathf.Abs(Vector3.Dot(tempVector, curRight)) < gridBreadth)
+                        {
+                            curFragileRustBlockBrokenTimes[i] = Time.time;
+                        }
+                        else
+                        {
+                            curBrokenFragileRustBlocks[i].SetActive(true);
 
-                        curBrokenFragileRustBlocks.RemoveAt(i);
-                        curFragileRustBlockBrokenTimes.RemoveAt(i);
+                            curBrokenFragileRustBlocks.RemoveAt(i);
+                            curFragileRustBlockBrokenTimes.RemoveAt(i);
 
-                        //VARS.IsInNewRoomBlocksManagerResetOver = false;
+                            //VARS.IsInNewRoomBlocksManagerResetOver = false;
+                        }
                     }
                 }
             }
@@ -1114,8 +1265,11 @@ public class BlocksManager : MonoBehaviour
         return 0;
     }
 
-    void CurBlockMove(int curBlockIndex, int dirIndex, bool isFluid = true)
+    void CurBlockMove(int curBlockIndex, int dirIndex, bool isFluid = true, bool isStableDir = false)
     {
+        Vector3 upVector;
+        Vector3 rightVector;
+
         if (VARS.IsFluidContinuousnessOptimizationActivated &&
             isFluid)
         {
@@ -1125,25 +1279,37 @@ public class BlocksManager : MonoBehaviour
             curMovedBlockTypeIndexes.Add(curBlockTileDatas[curBlockIndex].blockTypeIndex);
         }
 
+        //ifIsStableDir
+        if (isStableDir)
+        {
+            upVector = VARS.roomStableUps[VARS.curRoomIndex];
+            rightVector = VARS.roomStableRights[VARS.curRoomIndex];
+        }
+        else
+        {
+            upVector = curUp;
+            rightVector = curRight;
+        }
+
         if (dirIndex == 1)
         {
-            curBlock.transform.position += curUp;
-            curCoordVectors[curBlockIndex] += curUp;
+            curBlock.transform.position += upVector;
+            curCoordVectors[curBlockIndex] += upVector;
         }
         else if (dirIndex == 2)
         {
-            curBlock.transform.position -= curUp;
-            curCoordVectors[curBlockIndex] -= curUp;
+            curBlock.transform.position -= upVector;
+            curCoordVectors[curBlockIndex] -= upVector;
         }
         else if (dirIndex == 3)
         {
-            curBlock.transform.position -= curRight;
-            curCoordVectors[curBlockIndex] -= curRight;
+            curBlock.transform.position -= rightVector;
+            curCoordVectors[curBlockIndex] -= rightVector;
         }
         else if (dirIndex == 4)
         {
-            curBlock.transform.position += curRight;
-            curCoordVectors[curBlockIndex] += curRight;
+            curBlock.transform.position += rightVector;
+            curCoordVectors[curBlockIndex] += rightVector;
         }
     }
 

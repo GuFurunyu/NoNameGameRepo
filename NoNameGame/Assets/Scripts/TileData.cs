@@ -54,6 +54,8 @@ public class TileData : MonoBehaviour
     //default: 0
     public int railBlockMoveStringStartIndex;
 
+    public bool isLoop;
+
     //0-not...
     public Vector3 sharpDirVector;
 

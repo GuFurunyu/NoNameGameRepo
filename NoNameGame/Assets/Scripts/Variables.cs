@@ -500,6 +500,12 @@ public class Variables : MonoBehaviour
 
     public GameObject curOnOrToRailBlock;
 
+    [SerializeField] private bool _isCatMovedByRailBlock;
+    public bool IsCatMovedByRailBlock { get { return _isCatMovedByRailBlock; } set { _isCatMovedByRailBlock = value; } }
+
+    [SerializeField] private bool _isCatBeingMovedByRailBlock;
+    public bool IsCatBeingMovedByRailBlock { get { return _isCatBeingMovedByRailBlock; } set { _isCatBeingMovedByRailBlock = value; } }
+
     //triggerTile
     public GameObject curTriggerTile;
     public TileData curTriggerTileData;
@@ -539,6 +545,9 @@ public class Variables : MonoBehaviour
 
     [SerializeField] private bool _isDashEnabled;
     public bool IsDashEnabled { get { return _isDashEnabled; } set { _isDashEnabled = value; } }
+
+    [SerializeField] private bool _isAcceEnabled;
+    public bool IsAcceEnabled { get { return _isAcceEnabled; } set { _isAcceEnabled = value; } }
 
     #endregion
 
@@ -779,6 +788,10 @@ public class Variables : MonoBehaviour
     //fixedDeltaTime
     public float blocksManagerFixedDeltaTime;
 
+    //curBlocks
+    public List<GameObject> curBlocks = new List<GameObject>();
+
+    //curRoomBlockStateOfMatterIndexesAndTypeIndexes
     public List<int> curRoomBlockStateOfMatterIndexes;
     public List<int> curRoomBlockTypeIndexes;
 
@@ -803,6 +816,7 @@ public class Variables : MonoBehaviour
     //railBlocks
     public List<GameObject> curRailBlocks = new List<GameObject>();
     public List<Vector3> curRailBlockInitialPositions = new List<Vector3>();
+    public Vector3 curCatMovedByRailBlockVector;
     #endregion
 
     #region MiniMapManager

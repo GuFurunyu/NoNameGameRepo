@@ -27,16 +27,18 @@ public class CatAppearance : MonoBehaviour
     float maxEnergy;
 
     Material normalColor;
+    Material energyMaskNormalColor;
     Material fadedColor;
     Material hotColor;
     Material coldColor;
     Material electricColor;
     Material toxicColor;
 
-    GameObject catEnergyBar;
-    GameObject catEnergyBarMask;
+    //GameObject catEnergyBar;
+    //GameObject catEnergyBarMask;
 
     GameObject catEnergyMask;
+    MeshRenderer catEnergyMaskMeshRenderer;
 
     //GameObject outerOutlinesEmpty;
     //GameObject outerGrayOutlinesEmpty;
@@ -69,14 +71,14 @@ public class CatAppearance : MonoBehaviour
         catMeshRenderer = CONS.catMeshRenderer;
         maxEnergy = CONS.maxEnergy;
         normalColor = CONS.normalColor;
+        energyMaskNormalColor = CONS.energyMaskNormalColor;
         fadedColor = CONS.fadedColor;
         hotColor = CONS.hotColor;
         coldColor = CONS.coldColor;
         electricColor = CONS.electricColor;
         toxicColor = CONS.toxicColor;
-        catEnergyBar = CONS.catEnergyBar;
-        catEnergyBarMask = CONS.catEnergyBarMask;
         catEnergyMask = CONS.catEnergyMask;
+        catEnergyMaskMeshRenderer = CONS.catEnergyMaskMeshRenderer;
         catLeftEye = CONS.catLeftEye;
         catRightEye = CONS.catRightEye;
         #endregion
@@ -129,14 +131,14 @@ public class CatAppearance : MonoBehaviour
         #region Color
         if (VARS.IsInNormalColor)
         {
-            catMeshRenderer.material = normalColor;
+            catEnergyMaskMeshRenderer.material = energyMaskNormalColor;
         }
         else
         {
             //faded(rotationRestNumZero)
             if (VARS.IsInFadedColor)
             {
-                catMeshRenderer.material = fadedColor;
+                catEnergyMaskMeshRenderer.material = fadedColor;
             }
             //afflicted
             if (VARS.IsAfflicted)
@@ -144,23 +146,23 @@ public class CatAppearance : MonoBehaviour
                 //temperature
                 if (VARS.IsInHotState)
                 {
-                    catMeshRenderer.material = hotColor;
+                    catEnergyMaskMeshRenderer.material = hotColor;
                 }
                 else if (VARS.IsInColdState)
                 {
-                    catMeshRenderer.material = coldColor;
+                    catEnergyMaskMeshRenderer.material = coldColor;
                 }
 
                 //electricity
                 else if (VARS.IsInElectricState)
                 {
-                    catMeshRenderer.material = electricColor;
+                    catEnergyMaskMeshRenderer.material = electricColor;
                 }
 
                 //toxicity
                 else if (VARS.IsInToxicState)
                 {
-                    catMeshRenderer.material = toxicColor;
+                    catEnergyMaskMeshRenderer.material = toxicColor;
                 }
             }
         }

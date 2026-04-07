@@ -121,6 +121,7 @@ public class Constants : MonoBehaviour
     //rayDistance
     public float rayDistance;
     public float longRayDistance;
+    public float longPlusRayDistance;
     public float longLongRayDistance;
     public float longLongLongRayDistance;
     public float shortRayDistance;
@@ -267,18 +268,20 @@ public class Constants : MonoBehaviour
         "  \nCATAPPEARANCE\n --- ")]
     //color
     public Material normalColor;
+    public Material energyMaskNormalColor;
     public Material fadedColor;
     public Material hotColor;
     public Material coldColor;
     public Material electricColor;
     public Material toxicColor;
 
-    //energyBar
-    public GameObject catEnergyBar;
-    public GameObject catEnergyBarMask;
+    ////energyBar
+    //public GameObject catEnergyBar;
+    //public GameObject catEnergyBarMask;
 
     //energyMask
     public GameObject catEnergyMask;
+    public MeshRenderer catEnergyMaskMeshRenderer;
 
     //outlines
     public GameObject innerOutlinesEmpty;

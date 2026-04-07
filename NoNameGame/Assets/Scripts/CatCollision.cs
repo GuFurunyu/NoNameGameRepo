@@ -87,12 +87,15 @@ public class CatCollision : MonoBehaviour
     RaycastHit tempHit;
 
     #region ConstantsUsed
+    float gridBreadth;
+
     Transform catTransform;
 
     float catBreadth;
 
     float rayDistance;
     float longRayDistance;
+    float longPlusRayDistance;
     float longLongRayDistance;
     float longLongLongRayDistance;
     float shortRayDistance;
@@ -117,6 +120,8 @@ public class CatCollision : MonoBehaviour
 
     //float curEnergy;
 
+    List<GameObject> curBlocks = new List<GameObject>();
+
     List<GameObject> curToBeBrokenFragileRustBlocks = new List<GameObject>();
     List<float> curFragileRustBlockToBeBrokenStartTimes = new List<float>();
     #endregion
@@ -131,10 +136,12 @@ public class CatCollision : MonoBehaviour
         SEC = gameManager.GetComponent<ScriptsExecutionController>();
 
         #region ImportConstants
+        gridBreadth = CONS.gridBreadth;
         catTransform = CONS.catTransform;
         catBreadth = CONS.catBreadth;
         rayDistance = CONS.rayDistance;
         longRayDistance = CONS.longRayDistance;
+        longPlusRayDistance = CONS.longPlusRayDistance;
         longLongRayDistance = CONS.longLongRayDistance;
         longLongLongRayDistance = CONS.longLongLongRayDistance;
         shortRayDistance = CONS.shortRayDistance;
@@ -147,6 +154,7 @@ public class CatCollision : MonoBehaviour
         #endregion
 
         #region ImportReferenceVariables
+        curBlocks = VARS.curBlocks;
         curToBeBrokenFragileRustBlocks = VARS.curToBeBrokenFragileRustBlocks;
         curFragileRustBlockToBeBrokenStartTimes = VARS.curFragileRustBlockToBeBrokenStartTimes;
         #endregion
@@ -177,14 +185,14 @@ public class CatCollision : MonoBehaviour
         leftPoint = catTransform.position - curRight * (catBreadth / 2 - 0.02f);
         rightPoint = catTransform.position + curRight * (catBreadth / 2 - 0.02f);
 
-        leftRay1 = new Ray(leftTopPoint, -curRight);
-        leftRay2 = new Ray(leftBottomPoint, -curRight);
-        rightRay1 = new Ray(rightTopPoint, curRight);
-        rightRay2 = new Ray(rightBottomPoint, curRight);
-        upRay1 = new Ray(topLeftPoint, curUp);
-        upRay2 = new Ray(topRightPoint, curUp);
-        downRay1 = new Ray(bottomLeftPoint, -curUp);
-        downRay2 = new Ray(bottomRightPoint, -curUp);
+        leftRay1 = new Ray(rightTopPoint, -curRight);
+        leftRay2 = new Ray(rightBottomPoint, -curRight);
+        rightRay1 = new Ray(leftTopPoint, curRight);
+        rightRay2 = new Ray(leftBottomPoint, curRight);
+        upRay1 = new Ray(bottomLeftPoint, curUp);
+        upRay2 = new Ray(bottomRightPoint, curUp);
+        downRay1 = new Ray(topLeftPoint, -curUp);
+        downRay2 = new Ray(topRightPoint, -curUp);
         //liquidCenterRay = new Ray(liquidCenterPoint, -curUp);
         //gasCenterRay = new Ray(gasCenterPoint, curUp);
         liquidDownRay = new Ray(topPoint, -curUp);
@@ -200,14 +208,16 @@ public class CatCollision : MonoBehaviour
         if (VARS.IsCatCollisionMainPartExecutable)
         {
             #region OnGroundDetect
-            if (Physics.Raycast(downRay1, out downHit1, rayDistance - VARS.verCurSpeed / 1000) ||
-                Physics.Raycast(downRay2, out downHit2, rayDistance - VARS.verCurSpeed / 1000))
+            if (Physics.Raycast(downRay1, out downHit1, longPlusRayDistance - VARS.verCurSpeed / 1000) ||
+                Physics.Raycast(downRay2, out downHit2, longPlusRayDistance - VARS.verCurSpeed / 1000))
             {
-                if (Physics.Raycast(downRay1, out downHit1, rayDistance - VARS.verCurSpeed / 1000))
+                Debug.Log("onGroundDetect");
+
+                if (Physics.Raycast(downRay1, out downHit1, longPlusRayDistance - VARS.verCurSpeed / 1000))
                 {
                     Detect(2, 1);
                 }
-                if (Physics.Raycast(downRay2, out downHit2, rayDistance - VARS.verCurSpeed / 1000))
+                if (Physics.Raycast(downRay2, out downHit2, longPlusRayDistance - VARS.verCurSpeed / 1000))
                 {
                     Detect(2, 2);
                 }
@@ -225,14 +235,14 @@ public class CatCollision : MonoBehaviour
             #endregion
 
             #region ToCeilingDetect
-            if (Physics.Raycast(upRay1, out upHit1, rayDistance + VARS.verCurSpeed / 1000) ||
-                Physics.Raycast(upRay2, out upHit2, rayDistance + VARS.verCurSpeed / 1000))
+            if (Physics.Raycast(upRay1, out upHit1, longPlusRayDistance + VARS.verCurSpeed / 1000) ||
+                Physics.Raycast(upRay2, out upHit2, longPlusRayDistance + VARS.verCurSpeed / 1000))
             {
-                if (Physics.Raycast(upRay1, out upHit1, rayDistance + VARS.verCurSpeed / 1000))
+                if (Physics.Raycast(upRay1, out upHit1, longPlusRayDistance + VARS.verCurSpeed / 1000))
                 {
                     Detect(1, 1);
                 }
-                if (Physics.Raycast(upRay2, out upHit2, rayDistance + VARS.verCurSpeed / 1000))
+                if (Physics.Raycast(upRay2, out upHit2, longPlusRayDistance + VARS.verCurSpeed / 1000))
                 {
                     Detect(1, 2);
                 }
@@ -250,14 +260,14 @@ public class CatCollision : MonoBehaviour
             #endregion
 
             #region BlockDetect
-            if (Physics.Raycast(leftRay1, out leftHit1, rayDistance - VARS.horCurSpeed / 1000) ||
-                    Physics.Raycast(leftRay2, out leftHit2, rayDistance - VARS.horCurSpeed / 1000))
+            if (Physics.Raycast(leftRay1, out leftHit1, longPlusRayDistance - VARS.horCurSpeed / 1000) ||
+                    Physics.Raycast(leftRay2, out leftHit2, longPlusRayDistance - VARS.horCurSpeed / 1000))
             {
-                if (Physics.Raycast(leftRay1, out leftHit1, rayDistance - VARS.horCurSpeed / 1000))
+                if (Physics.Raycast(leftRay1, out leftHit1, longPlusRayDistance - VARS.horCurSpeed / 1000))
                 {
                     Detect(3, 1);
                 }
-                if (Physics.Raycast(leftRay2, out leftHit2, rayDistance - VARS.horCurSpeed / 1000))
+                if (Physics.Raycast(leftRay2, out leftHit2, longPlusRayDistance - VARS.horCurSpeed / 1000))
                 {
                     Detect(3, 2);
                 }
@@ -273,14 +283,14 @@ public class CatCollision : MonoBehaviour
                 VARS.IsLeftBlocked = false;
             }
 
-            if (Physics.Raycast(rightRay1, out rightHit1, rayDistance + VARS.horCurSpeed / 1000) ||
-                Physics.Raycast(rightRay2, out rightHit2, rayDistance + VARS.horCurSpeed / 1000))
+            if (Physics.Raycast(rightRay1, out rightHit1, longPlusRayDistance + VARS.horCurSpeed / 1000) ||
+                Physics.Raycast(rightRay2, out rightHit2, longPlusRayDistance + VARS.horCurSpeed / 1000))
             {
-                if (Physics.Raycast(rightRay1, out rightHit1, rayDistance + VARS.horCurSpeed / 1000))
+                if (Physics.Raycast(rightRay1, out rightHit1, longPlusRayDistance + VARS.horCurSpeed / 1000))
                 {
                     Detect(4, 1);
                 }
-                if (Physics.Raycast(rightRay2, out rightHit2, rayDistance + VARS.horCurSpeed / 1000))
+                if (Physics.Raycast(rightRay2, out rightHit2, longPlusRayDistance + VARS.horCurSpeed / 1000))
                 {
                     Detect(4, 2);
                 }
@@ -434,6 +444,68 @@ public class CatCollision : MonoBehaviour
             }
             #endregion
             #endregion
+
+            #region DistanceFix
+            //ifCatInTileGetItOut
+            if (VARS.IsOnGround)
+            {
+                tempVector = catTransform.position - VARS.curDownTile.transform.position;
+                tempFloat = Vector3.Dot(tempVector, curUp);
+                if (tempFloat < gridBreadth - 0.01f)
+                {
+                    Debug.Log("distanceFix1:" + catTransform.position);
+                    UFL.AddCatPosition(curUp * (gridBreadth - tempFloat));
+                    Debug.Log("distanceFix2:" + catTransform.position);
+                }
+            }
+            else if (VARS.IsToCeiling)
+            {
+                tempVector = catTransform.position - VARS.curUpTile.transform.position;
+                tempFloat = Vector3.Dot(tempVector, -curUp);
+                if (tempFloat < gridBreadth - 0.01f)
+                {
+                    UFL.AddCatPosition(-curUp * (gridBreadth - tempFloat));
+                }
+            }
+            else if (VARS.IsLeftBlocked)
+            {
+                tempVector = catTransform.position - VARS.curLeftTile.transform.position;
+                tempFloat = Vector3.Dot(tempVector, curRight);
+                if (tempFloat < gridBreadth - 0.01f)
+                {
+                    UFL.AddCatPosition(curRight * (gridBreadth - tempFloat));
+                }
+            }
+            else if (VARS.IsRightBlocked)
+            {
+                tempVector = catTransform.position - VARS.curRightTile.transform.position;
+                tempFloat = Vector3.Dot(tempVector, -curRight);
+                if (tempFloat < gridBreadth - 0.01f)
+                {
+                    UFL.AddCatPosition(-curRight * (gridBreadth - tempFloat));
+                }
+            }
+
+            //railBlockFix
+            tempInt = UFL.CatInBlockIndex();
+            if (tempInt >= 0)
+            {
+                Debug.Log("enter1");
+                if (curBlocks[tempInt].GetComponent<TileData>().railBlockIndex > 0)
+                {
+                    Debug.Log("enter2");
+                    UFL.AddCatPosition(VARS.curCatMovedByRailBlockVector);
+                }
+            }
+            #endregion
+
+            //#region Squeeze
+            //tempInt = UFL.CatInBlockIndex();
+            //if (tempInt >= 0)
+            //{
+            //    VARS.IsToDie = true;
+            //}
+            //#endregion
         }
         #endregion
 
@@ -591,10 +663,10 @@ public class CatCollision : MonoBehaviour
                             positionFixOffset += 0.001f * tempFloat;
                         }
 
-                        catTransform.position = new Vector3
-                            (catTransform.position.x * Mathf.Abs(Mathf.Abs(tempVector.x) - 1) + VARS.curTilePosition.x * Mathf.Abs(tempVector.x) + tempInt * (positionFixOffset - 0.001f * tempFloat) * tempVector.x,
-                            catTransform.position.y * Mathf.Abs(Mathf.Abs(tempVector.y) - 1) + VARS.curTilePosition.y * Mathf.Abs(tempVector.y) + tempInt * (positionFixOffset - 0.001f * tempFloat) * tempVector.y,
-                            catTransform.position.z * Mathf.Abs(Mathf.Abs(tempVector.z) - 1) + VARS.curTilePosition.z * Mathf.Abs(tempVector.z) + tempInt * (positionFixOffset - 0.001f * tempFloat) * tempVector.z);
+                        //UFL.SetCatPosition(new Vector3
+                        //    (catTransform.position.x * Mathf.Abs(Mathf.Abs(tempVector.x) - 1) + VARS.curTilePosition.x * Mathf.Abs(tempVector.x) + tempInt * (positionFixOffset - 0.001f * tempFloat) * tempVector.x,
+                        //    catTransform.position.y * Mathf.Abs(Mathf.Abs(tempVector.y) - 1) + VARS.curTilePosition.y * Mathf.Abs(tempVector.y) + tempInt * (positionFixOffset - 0.001f * tempFloat) * tempVector.y,
+                        //    catTransform.position.z * Mathf.Abs(Mathf.Abs(tempVector.z) - 1) + VARS.curTilePosition.z * Mathf.Abs(tempVector.z) + tempInt * (positionFixOffset - 0.001f * tempFloat) * tempVector.z));
 
                         if (dirIndex == 1)
                         {

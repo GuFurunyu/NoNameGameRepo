@@ -40,7 +40,7 @@ public class CatMove : MonoBehaviour
     float dashStartTime;
 
     //acce
-    float acceBonus;
+    float acceBonus = 1;
 
     #region ConstantsUsed
     Transform catTransform;
@@ -409,7 +409,8 @@ public class CatMove : MonoBehaviour
             //horSpeedSum
             if (VARS.horCurSpeed != 0)
             {
-                catTransform.position += curRight * VARS.horCurSpeed * Time.deltaTime;
+                //catTransform.position += curRight * VARS.horCurSpeed * Time.deltaTime;
+                UFL.AddCatPosition(curRight * VARS.horCurSpeed * Time.deltaTime);
             }
             #endregion
 
@@ -475,7 +476,8 @@ public class CatMove : MonoBehaviour
                 if (isInLiquid)
                 {
                     //gravity
-                    if (!VARS.IsAttachWall)
+                    if (!VARS.IsAttachWall &&
+                        !VARS.IsCatMovedByRailBlock)
                     {
                         //verCurSpeed -= curGravityAcce * curRoomGravity * Time.deltaTime;
                         //UFL.AddVerCurSpeed(-curGravityAcce * curRoomGravity * Time.deltaTime);
@@ -500,7 +502,8 @@ public class CatMove : MonoBehaviour
             else
             {
                 //gravity
-                if (!VARS.IsAttachWall)
+                if (!VARS.IsAttachWall &&
+                    !VARS.IsCatMovedByRailBlock)
                 {
                     //verCurSpeed -= curGravityAcce * curRoomGravity * Time.deltaTime;
                     //UFL.AddVerCurSpeed(-curGravityAcce * curRoomGravity * Time.deltaTime);
@@ -681,7 +684,8 @@ public class CatMove : MonoBehaviour
                 }
 
                 //verSpeedSum
-                catTransform.position += curUp * VARS.verCurSpeed * Time.deltaTime;
+                //catTransform.position += curUp * VARS.verCurSpeed * Time.deltaTime;
+                UFL.AddCatPosition(curUp * VARS.verCurSpeed * Time.deltaTime);
 
                 //energyDecrease
                 if (VARS.verCurSpeed > 0)
@@ -697,9 +701,9 @@ public class CatMove : MonoBehaviour
             #endregion
 
             #region Dash
-            if (dashStartTime == 0)
+            if (VARS.IsDashEnabled)
             {
-                if (VARS.IsDashEnabled)
+                if (dashStartTime == 0)
                 {
                     if (VARS.curEnergy > dashEnergyCost)
                     {
@@ -774,49 +778,51 @@ public class CatMove : MonoBehaviour
                         }
                     }
                 }
-            }
-
-            else
-            {
-                if (Time.time - dashStartTime > dashTime)
+                else
                 {
-                    //horCurSpeed -= Vector3.Dot(dashVector, curRight) * dashIniSpeed * 0.6f;
-                    //verCurSpeed -= Vector3.Dot(dashVector, curUp) * dashIniSpeed * 0.6f;
+                    if (Time.time - dashStartTime > dashTime)
+                    {
+                        //horCurSpeed -= Vector3.Dot(dashVector, curRight) * dashIniSpeed * 0.6f;
+                        //verCurSpeed -= Vector3.Dot(dashVector, curUp) * dashIniSpeed * 0.6f;
 
-                    //horCurSpeed = 0;
-                    //UFL.SetHorCurSpeed(0);
-                    VARS.horCurSpeed = 0;
-                    //verCurSpeed = 0;
-                    //UFL.SetVerCurSpeed(0);
-                    VARS.verCurSpeed = 0;
+                        //horCurSpeed = 0;
+                        //UFL.SetHorCurSpeed(0);
+                        VARS.horCurSpeed = 0;
+                        //verCurSpeed = 0;
+                        //UFL.SetVerCurSpeed(0);
+                        VARS.verCurSpeed = 0;
 
-                    dashStartTime = 0;
+                        dashStartTime = 0;
+                    }
                 }
             }
             #endregion
 
             #region Acce
-            //acceControl
-            if (VARS.IsInputtingAcceKey)
+            if (VARS.IsAcceEnabled)
             {
-                VARS.IsInAcce = true;
-            }
-            else
-            {
-                VARS.IsInAcce = false;
-            }
+                //acceControl
+                if (VARS.IsInputtingAcceKey)
+                {
+                    VARS.IsInAcce = true;
+                }
+                else
+                {
+                    VARS.IsInAcce = false;
+                }
 
-            //acceBonus
-            if (VARS.IsInAcce)
-            {
-                acceBonus = 1.5f;
+                //acceBonus
+                if (VARS.IsInAcce)
+                {
+                    acceBonus = 1.5f;
 
-                //UFL.AddCurTargetEnergy(-inAcceEnergyDecreaseSpeed * Time.deltaTime);
-                VARS.curTargetEnergy += -inAcceEnergyDecreaseSpeed * Time.deltaTime;
-            }
-            else
-            {
-                acceBonus = 1;
+                    //UFL.AddCurTargetEnergy(-inAcceEnergyDecreaseSpeed * Time.deltaTime);
+                    VARS.curTargetEnergy += -inAcceEnergyDecreaseSpeed * Time.deltaTime;
+                }
+                else
+                {
+                    acceBonus = 1;
+                }
             }
             #endregion
 

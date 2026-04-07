@@ -68,8 +68,7 @@ public class ScriptsExecutionController : MonoBehaviour
 
         //blocksManager
         VARS.IsBlocksManagerBlocksMoveExecutable =
-            VARS.IsInNewRoomAllResetOver &&
-            VARS.IsIniRotation;
+            VARS.IsInNewRoomAllResetOver;
 
         //optionsManager
         VARS.IsOptionsManagerActivationExecutable =

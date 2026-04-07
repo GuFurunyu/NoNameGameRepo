@@ -165,6 +165,10 @@ public class RoomsManager : MonoBehaviour
 
         if (VARS.IsInNewRoomAllResetOver)
         {
+            //hideOtherPlanes
+            if (!VARS.IsZoomedOut)
+                UFL.HideOtherPlanes();
+
             #region Twist
             //control
             if (!VARS.IsTwisting)
