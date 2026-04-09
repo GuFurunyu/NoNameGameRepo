@@ -50,6 +50,7 @@ public class ScriptsExecutionOrder : MonoBehaviour
         miniMapManager,
         optionsManager,
         screenPostProcessor,
+        audioManager,
         test
     }
 

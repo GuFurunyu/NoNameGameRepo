@@ -116,7 +116,7 @@ public class TileData : MonoBehaviour
     //  4-OrangeRegionBlocks
     //      4101-OrangeBlock, 4102-DarkOrangeBlock, 4103-FragileRustBlock, 4104-RailRustBlock
     //  5-GreenRegionBlocks
-    //      5101-GreenBlock, 5102-DarkGreenBlock
+    //      5101-GreenBlock, 5102-DarkGreenBlock, 5103-ElasticBlock
     //      5201-AcidBlock
     //      5301-GasBlock
     //  6-PurpleRegionBlocks

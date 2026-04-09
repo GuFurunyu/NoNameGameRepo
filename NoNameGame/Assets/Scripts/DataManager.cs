@@ -83,6 +83,8 @@ public class DataManager : MonoBehaviour
 
     GameObject[] roomPlanes = new GameObject[54];
 
+    GameObject storedActivatedSavePointBlock;
+
     GameObject[] twistingCenters = new GameObject[6];
 
     GameObject[] miniMapFaces = new GameObject[6];
@@ -116,6 +118,7 @@ public class DataManager : MonoBehaviour
         faces = CONS.faces;
         faceStableForwards = CONS.faceStableForwards;
         roomPlanes = CONS.roomPlanes;
+        storedActivatedSavePointBlock = CONS.storedActivatedSavePointBlock;
         twistingCenters = CONS.twistingCenters;
         miniMapFaces = CONS.miniMapFaces;
         miniMapRoomPlanes = CONS.miniMapRoomPlanes;
@@ -308,6 +311,7 @@ public class DataManager : MonoBehaviour
         //savePoint
         curCatWorldData.curActivatedSavePointIndex = VARS.curActivatedSavePointIndex;
         curCatWorldData.curActivatedSavePointPosition = VARS.curActivatedSavePointPosition;
+        storedActivatedSavePointBlock.transform.position = curCatWorldData.curActivatedSavePointPosition;
 
         //isRoomExplored
         curCatWorldData.isRoomExplored = VARS.IsRoomExplored;

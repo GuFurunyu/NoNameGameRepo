@@ -43,7 +43,9 @@ public class ScriptsExecutionController : MonoBehaviour
             !VARS.IsTwisting &&
             !VARS.IsInMiniMap &&
             !VARS.IsOptionPanelActivated &&
-            !VARS.IsExiting;
+            !VARS.IsExiting &&
+            !(VARS.IsJustEnterNewFace &&
+            !VARS.IsOnGround);
 
         //catRotate
         VARS.IsCatRotateMainPartExecutable =
@@ -72,8 +74,9 @@ public class ScriptsExecutionController : MonoBehaviour
             !VARS.IsExiting;
 
         //blocksManager
-        VARS.IsBlocksManagerBlocksMoveExecutable =
+        VARS.IsBlocksManagerMainPartExecutable =
             VARS.IsInNewRoomAllResetOver &&
+            VARS.IsIniRotation &&
             !VARS.IsExiting;
 
         //optionsManager

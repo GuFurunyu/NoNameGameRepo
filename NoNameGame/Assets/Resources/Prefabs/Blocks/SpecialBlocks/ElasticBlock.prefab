@@ -405,7 +405,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 2a5b7288fea15d84b8c01d0f0fb2d772, type: 2}
+  - {fileID: 2100000, guid: 094c706dd7f1d6645b70ce71320d21fa, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -462,13 +462,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inRoomIndex: 0
   offsetThres: 0.2
-  triggerTypeIndex: 0
-  stateOfMatterIndex: 1
+  _stateOfMatterIndex: 1
   isMovable: 0
   isPositionDetermined: 0
   isAffectedByGravity: 0
   isPlatform: 0
   isNotClimbable: 0
+  isFragile: 0
+  railBlockIndex: 0
+  railBlockMoveStringStartIndex: 0
+  isLoop: 0
   sharpDirVector: {x: 0, y: 0, z: 0}
   toughness: 999
   elasticity: 1
@@ -477,9 +480,9 @@ MonoBehaviour:
   fluidDrag: 1
   mass: 1
   temperature: 0
-  conductivity: 0
+  electricity: 0
   toxicity: 0
-  blockTypeIndex: 2040
+  _blockTypeIndex: 5103
 --- !u!1 &5751099962307025200
 GameObject:
   m_ObjectHideFlags: 0

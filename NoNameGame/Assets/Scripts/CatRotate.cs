@@ -29,7 +29,12 @@ public class CatRotate : MonoBehaviour
     Vector3 tempVector;
 
     #region ConstantsUsed
+    float gridBreadth;
+    int roomCoordBreadth;
+
     Transform camTransform;
+
+    Transform catTransform;
 
     Vector3 leftRotationVector;
     Vector3 rightRotationVector;
@@ -86,7 +91,10 @@ public class CatRotate : MonoBehaviour
         SEC = gameManager.GetComponent<ScriptsExecutionController>();
 
         #region ImportConstants
+        gridBreadth = CONS.gridBreadth;
+        roomCoordBreadth = CONS.roomCoordBreadth;
         camTransform = CONS.camTransform;
+        catTransform = CONS.catTransform;
         leftRotationVector = CONS.leftRotationVector;
         rightRotationVector = CONS.rightRotationVector;
         rotationMaxNum = CONS.rotationMaxNum;
@@ -139,6 +147,9 @@ public class CatRotate : MonoBehaviour
                 VARS.outIniRotationStartTime = 0;
 
             VARS.IsInNewRoomCatRotateResetOver = true;
+
+            VARS.horCurSpeed = 0;
+            VARS.verCurSpeed = 0;
         }
 
         if (VARS.IsCatRotateMainPartExecutable)
@@ -177,8 +188,9 @@ public class CatRotate : MonoBehaviour
 
                 //returnIniRotation
                 if (!VARS.IsIniRotation &&
-                    Time.time - VARS.outIniRotationStartTime >= returnIniRotationTime &&
-                    !isCatStill)
+                    Time.time - VARS.outIniRotationStartTime >= returnIniRotationTime /*&&*/
+                    /*!isCatStill*/
+                    /*Vector3.Distance(catTransform.position, VARS.roomCenters[VARS.curRoomIndex]) < (roomCoordBreadth / 2) * gridBreadth*/)
                 {
                     //startEulerangles = camTransform.eulerAngles;
                     targetEulerangles = camIniEulerangles;

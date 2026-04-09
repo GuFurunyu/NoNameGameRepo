@@ -7,12 +7,13 @@ using System.Collections.Generic;
 public class EDIBlocksArranger : EditorWindow
 {
     public GameObject curPlaneEmpty;
+    public Texture2D blocksArrangementTexture;
 
-    public int maxBlockTypes = 5;
-    public int blockTypeCount = 2;
+    // 颜色到方块的映射列表
+    public List<ColorMapping> colorMappings = new List<ColorMapping>();
 
-    public List<GameObject> blocks = new List<GameObject>();
-    public List<float> blockDepths = new List<float>();
+    // 滚动位置
+    private Vector2 scrollPosition;
 
     private string[] faceDirectionStrings = new string[6]
         {"Front","Back","Left","Right","Top","Bottom" };
@@ -28,7 +29,20 @@ public class EDIBlocksArranger : EditorWindow
     private Vector3 curRoomStableUp;
     private Vector3 curRoomStableRight;
 
-    public Texture2D blocksArrangementTexture;
+    [System.Serializable]
+    public class ColorMapping
+    {
+        public Color color;
+        public GameObject block;
+        public float depth;
+
+        public ColorMapping()
+        {
+            color = Color.white;
+            block = null;
+            depth = 0f;
+        }
+    }
 
     void AutoSetRoomStableDirections()
     {
@@ -40,8 +54,6 @@ public class EDIBlocksArranger : EditorWindow
         {
             if (parent2Name.Contains(faceDirectionStrings[i]))
             {
-                Debug.Log("enter");
-
                 curRoomStableForward = faceStableForwards[i];
                 curRoomStableUp = faceStableUps[i];
                 curRoomStableRight = faceStableRights[i];
@@ -49,7 +61,6 @@ public class EDIBlocksArranger : EditorWindow
             }
         }
     }
-
 
     [MenuItem("Tools/BlocksArranger")]
     static void Init()
@@ -59,118 +70,170 @@ public class EDIBlocksArranger : EditorWindow
 
     void OnGUI()
     {
-        maxBlockTypes = EditorGUILayout.IntField("Block Type Max", maxBlockTypes);
-        blockTypeCount = EditorGUILayout.IntSlider("Block Type Count", blockTypeCount, 2, maxBlockTypes);
+        // 开始滚动视图
+        scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
 
-        // 保证列表长度（~？）
-        while (blocks.Count < blockTypeCount) blocks.Add(null);
-        while (blocks.Count > blockTypeCount) blocks.RemoveAt(blocks.Count - 1);
-        while (blockDepths.Count < blockTypeCount) blockDepths.Add(0f);
-        while (blockDepths.Count > blockTypeCount) blockDepths.RemoveAt(blockDepths.Count - 1);
+        EditorGUILayout.LabelField("Color Mappings", EditorStyles.boldLabel);
+        EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
 
-        for (int i = 0; i < blockTypeCount; i++)
+        // 显示所有颜色映射
+        for (int i = 0; i < colorMappings.Count; i++)
         {
-            blocks[i] = (GameObject)EditorGUILayout.ObjectField($"Block {i + 1}", blocks[i], typeof(GameObject), false);
-            blockDepths[i] = EditorGUILayout.FloatField($"Block {i + 1} Depth", blockDepths[i]);
+            EditorGUILayout.BeginVertical("box");
+
+            // 映射标题和删除按钮
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField($"Mapping {i + 1}", EditorStyles.boldLabel);
+            if (GUILayout.Button("Remove", GUILayout.Width(60)))
+            {
+                colorMappings.RemoveAt(i);
+                i--;
+                EditorGUILayout.EndHorizontal();
+                EditorGUILayout.EndVertical();
+                continue;
+            }
+            EditorGUILayout.EndHorizontal();
+
+            // 颜色选择
+            colorMappings[i].color = EditorGUILayout.ColorField("Color", colorMappings[i].color);
+
+            // 方块选择
+            colorMappings[i].block = (GameObject)EditorGUILayout.ObjectField("Block", colorMappings[i].block, typeof(GameObject), false);
+
+            // 深度设置
+            colorMappings[i].depth = EditorGUILayout.FloatField("Depth", colorMappings[i].depth);
+
+            EditorGUILayout.EndVertical();
+            EditorGUILayout.Space();
         }
 
+        // 添加新映射的按钮
+        if (GUILayout.Button("Add New Mapping"))
+        {
+            colorMappings.Add(new ColorMapping());
+        }
+
+        // 清空所有映射的按钮
+        if (GUILayout.Button("Clear All Mappings"))
+        {
+            colorMappings.Clear();
+        }
+
+        EditorGUILayout.Space();
+        EditorGUILayout.LabelField("Scene Settings", EditorStyles.boldLabel);
+        EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+
         curPlaneEmpty = (GameObject)EditorGUILayout.ObjectField("Cur Plane Empty", curPlaneEmpty, typeof(GameObject), true);
+        blocksArrangementTexture = (Texture2D)EditorGUILayout.ObjectField("Blocks Arrangement Texture", blocksArrangementTexture, typeof(Texture2D), false);
 
         AutoSetRoomStableDirections();
 
-        blocksArrangementTexture = (Texture2D)EditorGUILayout.ObjectField("Blocks Arrangement Texture", blocksArrangementTexture, typeof(Texture2D), false);
-
         EditorGUILayout.Space();
 
-        if (GUILayout.Button("Generate"))
+        // 生成和清除按钮
+        EditorGUILayout.BeginHorizontal();
+        if (GUILayout.Button("Generate Blocks"))
         {
             GenerateBlocks();
         }
 
-        if (GUILayout.Button("Clear"))
+        if (GUILayout.Button("Clear Generated Blocks"))
         {
             Clear();
         }
+        EditorGUILayout.EndHorizontal();
+
+        // 结束滚动视图
+        EditorGUILayout.EndScrollView();
     }
+
     void GenerateBlocks()
     {
-        if (blocksArrangementTexture == null || curPlaneEmpty == null)
+        // 验证必要参数
+        if (blocksArrangementTexture == null)
         {
-            Debug.LogError("请确保所有必要的变量都已赋值！");
+            Debug.LogError("请选择 Blocks Arrangement Texture！");
             return;
         }
+
+        if (curPlaneEmpty == null)
+        {
+            Debug.LogError("请选择 Cur Plane Empty！");
+            return;
+        }
+
         if (curPlaneEmpty.transform.childCount > 0)
         {
             Debug.LogError("curPlaneEmpty 必须没有子物体才能生成方块，请先清空其子物体！");
             return;
         }
-        for (int i = 0; i < blockTypeCount; i++)
+
+        // 验证映射
+        List<ColorMapping> validMappings = new List<ColorMapping>();
+        for (int i = 0; i < colorMappings.Count; i++)
         {
-            if (blocks[i] == null)
+            var mapping = colorMappings[i];
+            if (mapping.block == null)
             {
-                Debug.LogError($"Block {i + 1} 未赋值！");
-                return;
+                Debug.LogWarning($"Mapping {i + 1} 没有指定方块，已跳过");
+                continue;
             }
+            validMappings.Add(mapping);
+        }
+
+        if (validMappings.Count == 0)
+        {
+            Debug.LogError("没有有效的颜色映射！请至少添加一个带有方块的映射。");
+            return;
         }
 
         int width = blocksArrangementTexture.width;
         int height = blocksArrangementTexture.height;
         Vector2 center = new Vector2((width - 1) / 2f, (height - 1) / 2f);
 
-        // 1. 收集所有明度种类
-        SortedSet<float> uniqueBrightness = new SortedSet<float>();
-        for (int y = 0; y < height; y++)
+        // 构建颜色到映射的字典
+        Dictionary<Color, ColorMapping> colorToMapping = new Dictionary<Color, ColorMapping>();
+        foreach (var mapping in validMappings)
         {
-            for (int x = 0; x < width; x++)
+            if (!colorToMapping.ContainsKey(mapping.color))
             {
-                float brightness = blocksArrangementTexture.GetPixel(x, y).grayscale;
-                // 纯白色不生成方块
-                if (brightness >= 0.999f)
-                    continue;
-                uniqueBrightness.Add(brightness);
+                colorToMapping.Add(mapping.color, mapping);
             }
-        }
-
-        // 2. 构建明度到block索引的映射（只映射前几个方块，多余的方块不参与）
-        Dictionary<float, int> brightnessToBlockIdx = new Dictionary<float, int>();
-        int idx = 0;
-        foreach (float b in uniqueBrightness)
-        {
-            if (idx < blockTypeCount)
-                brightnessToBlockIdx[b] = idx++;
             else
-                break;
+            {
+                Debug.LogWarning($"颜色 {mapping.color} 有多个映射，将使用第一个匹配的映射");
+            }
         }
 
         Undo.RegisterFullObjectHierarchyUndo(curPlaneEmpty, "Generate Blocks");
 
-        // 3. 生成方块
+        int generatedCount = 0;
+
+        // 生成方块
         for (int y = 0; y < height; y++)
         {
             for (int x = 0; x < width; x++)
             {
-                float brightness = blocksArrangementTexture.GetPixel(x, y).grayscale;
-                if (brightness >= 0.999f)
-                    continue;
+                Color pixelColor = blocksArrangementTexture.GetPixel(x, y);
 
-                int blockIdx;
-                if (!brightnessToBlockIdx.TryGetValue(brightness, out blockIdx))
-                    continue; // 没有映射的明度不生成方块
+                ColorMapping mapping;
+                if (!colorToMapping.TryGetValue(pixelColor, out mapping))
+                    continue;
 
                 float offsetX = x - center.x;
                 float offsetY = y - center.y;
-                Vector3 localPos = offsetX * curRoomStableRight + offsetY * curRoomStableUp + blockDepths[blockIdx] * curRoomStableForward;
+                Vector3 localPos = offsetX * curRoomStableRight + offsetY * curRoomStableUp + mapping.depth * curRoomStableForward;
 
-                GameObject obj = (GameObject)PrefabUtility.InstantiatePrefab(blocks[blockIdx], curPlaneEmpty.transform);
+                GameObject obj = (GameObject)PrefabUtility.InstantiatePrefab(mapping.block, curPlaneEmpty.transform);
                 obj.transform.localPosition = localPos;
                 obj.transform.localRotation = Quaternion.identity;
+                generatedCount++;
             }
         }
 
         EditorUtility.SetDirty(curPlaneEmpty);
-        Debug.Log("Blocks generated based on texture.");
+        Debug.Log($"方块生成完成！共生成了 {generatedCount} 个方块。");
     }
-
 
     void Clear()
     {
@@ -179,13 +242,16 @@ public class EDIBlocksArranger : EditorWindow
             Debug.LogError("curPlaneEmpty 未赋值！");
             return;
         }
+
         Undo.RegisterFullObjectHierarchyUndo(curPlaneEmpty, "Clear Blocks");
+
         // 逆序删除所有子物体
         for (int i = curPlaneEmpty.transform.childCount - 1; i >= 0; i--)
         {
             GameObject child = curPlaneEmpty.transform.GetChild(i).gameObject;
             Undo.DestroyObjectImmediate(child);
         }
+
         EditorUtility.SetDirty(curPlaneEmpty);
         Debug.Log("curPlaneEmpty 的所有子物体已清空。");
     }

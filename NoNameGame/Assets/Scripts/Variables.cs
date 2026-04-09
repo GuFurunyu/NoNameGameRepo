@@ -188,6 +188,12 @@ public class Variables : MonoBehaviour
     //keysAndLocks
     public List<int> deactivatedKeyIndexes = new List<int>();
     public List<int> deactivatedLockIndexes = new List<int>();
+
+    //justEnterNewFace
+    [SerializeField] bool _isJustEnterNewFace;
+    public bool IsJustEnterNewFace { get { return _isJustEnterNewFace; } set { _isJustEnterNewFace = value; } }
+
+    public float justEnterNewFaceStartTime;
     #endregion
 
     #region CurRoomManager
@@ -821,13 +827,16 @@ public class Variables : MonoBehaviour
         "  \nBLOCKSMANAGER\n --- ")]
     //executability
     [SerializeField] private bool _isBlocksManagerBlocksMoveExecutable;
-    public bool IsBlocksManagerBlocksMoveExecutable { get { return _isBlocksManagerBlocksMoveExecutable; } set { _isBlocksManagerBlocksMoveExecutable = value; } }
+    public bool IsBlocksManagerMainPartExecutable { get { return _isBlocksManagerBlocksMoveExecutable; } set { _isBlocksManagerBlocksMoveExecutable = value; } }
 
     //fixedDeltaTime
     public float blocksManagerFixedDeltaTime;
 
     //curBlocks
     public List<GameObject> curBlocks = new List<GameObject>();
+
+    //curBlockUpdateTimes
+    public List<float> curBlockLastUpdateTimes = new List<float>();
 
     //curRoomBlockStateOfMatterIndexesAndTypeIndexes
     public List<int> curRoomBlockStateOfMatterIndexes;
@@ -853,6 +862,7 @@ public class Variables : MonoBehaviour
 
     //railBlocks
     public List<GameObject> curRailBlocks = new List<GameObject>();
+    public float railBlocksLastUpdateTime;
     public List<Vector3> curRailBlockInitialPositions = new List<Vector3>();
     public Vector3 curCatMovedByRailBlockVector;
     #endregion
@@ -900,6 +910,13 @@ public class Variables : MonoBehaviour
     [SerializeField] private bool _isExiting;
     public bool IsExiting { get { return _isExiting; } set { _isExiting = value; } }
 
+    #endregion
+
+    #region AudioManager
+    [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
+        "  \nAUDIOMANAGER\n --- ")]
+    //curAudioClipIndex
+    public int curAudioClipIndex;
     #endregion
 
     void Start()

@@ -13,7 +13,8 @@ public class CurRoomManager : MonoBehaviour
     Transform tempTransform;
     GameObject tempGameObject;
 
-    //directions
+    //storedFaceIndex
+    int storedFaceIndex = -1;
 
     #region ConstantsUsed
     GameObject[] faces = new GameObject[6];
@@ -53,6 +54,14 @@ public class CurRoomManager : MonoBehaviour
         if (!VARS.IsInNewRoomCurRoomManagerResetOver)
         {
             CurRoomInitialize();
+
+            if (storedFaceIndex != VARS.curFaceIndex)
+            {
+                VARS.justEnterNewFaceStartTime = Time.time;
+
+                VARS.IsJustEnterNewFace = true;
+            }
+            storedFaceIndex = VARS.curFaceIndex;
 
             //ifCurRoomNotExploredMarkItExplored
             if (!VARS.IsRoomExplored[curRoomIndex])

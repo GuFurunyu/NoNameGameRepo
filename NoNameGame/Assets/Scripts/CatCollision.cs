@@ -449,36 +449,36 @@ public class CatCollision : MonoBehaviour
             {
                 tempVector = catTransform.position - VARS.curDownTile.transform.position;
                 tempFloat = Vector3.Dot(tempVector, curUp);
-                if (tempFloat < gridBreadth)
+                if (tempFloat < gridBreadth - 0.1f)
                 {
                     //Debug.Log("distanceFix1:" + catTransform.position);
                     UFL.AddCatPosition(curUp * (gridBreadth - tempFloat + 0.01f));
                     //Debug.Log("distanceFix2:" + catTransform.position);
                 }
             }
-            if (VARS.IsToCeiling)
+            else if (VARS.IsToCeiling)
             {
                 tempVector = catTransform.position - VARS.curUpTile.transform.position;
                 tempFloat = Vector3.Dot(tempVector, -curUp);
-                if (tempFloat < gridBreadth)
+                if (tempFloat < gridBreadth - 0.1f)
                 {
                     UFL.AddCatPosition(-curUp * (gridBreadth - tempFloat));
                 }
             }
-            if (VARS.IsLeftBlocked)
+            else if (VARS.IsLeftBlocked)
             {
                 tempVector = catTransform.position - VARS.curLeftTile.transform.position;
                 tempFloat = Vector3.Dot(tempVector, curRight);
-                if (tempFloat < gridBreadth)
+                if (tempFloat < gridBreadth - 0.1f)
                 {
                     UFL.AddCatPosition(curRight * (gridBreadth - tempFloat));
                 }
             }
-            if (VARS.IsRightBlocked)
+            else if (VARS.IsRightBlocked)
             {
                 tempVector = catTransform.position - VARS.curRightTile.transform.position;
                 tempFloat = Vector3.Dot(tempVector, -curRight);
-                if (tempFloat < gridBreadth)
+                if (tempFloat < gridBreadth - 0.1f)
                 {
                     UFL.AddCatPosition(-curRight * (gridBreadth - tempFloat));
                 }
@@ -859,7 +859,10 @@ public class CatCollision : MonoBehaviour
                 else if (/*curTileData.triggerTypeIndex == 6*/
                     curTileData.blockTypeIndex == 7004)
                 {
-                    VARS.IsToActivateASavePoint = true;
+                    if (UFL.IsCatInSavePointBlock())
+                    {
+                        VARS.IsToActivateASavePoint = true;
+                    }
                 }
 
                 //activatedSavePoint(~~?)

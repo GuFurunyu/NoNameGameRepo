@@ -33,7 +33,7 @@ public class CatTrigger : MonoBehaviour
 
     //savePoint
     GameObject storedSavePointBlock;
-    GameObject storedActivatedSavePointBlock;
+    //GameObject storedActivatedSavePointBlock;
 
     int tempInt;
     float tempFloat;
@@ -57,7 +57,9 @@ public class CatTrigger : MonoBehaviour
 
     List<GameObject> savePoints = new List<GameObject>();
 
-    GameObject storedActivatedSavePointBlockEmpty;
+    GameObject storedActivatedSavePointBlock;
+
+    //GameObject storedActivatedSavePointBlockEmpty;
 
     List<GameObject> keys = new List<GameObject>();
     List<GameObject> locks = new List<GameObject>();
@@ -116,7 +118,7 @@ public class CatTrigger : MonoBehaviour
         throughEdgeGateGapTime = CONS.throughEdgeGateGapTime;
         edgeGates = CONS.edgeGates;
         savePoints = CONS.savePoints;
-        storedActivatedSavePointBlockEmpty = CONS.storedActivatedSavePointBlockEmpty;
+        storedActivatedSavePointBlock = CONS.storedActivatedSavePointBlock;
         keys = CONS.keys;
         locks = CONS.locks;
         keySpeed = CONS.keySpeed;
@@ -136,8 +138,8 @@ public class CatTrigger : MonoBehaviour
         deactivatedLockIndexes = VARS.deactivatedLockIndexes;
         #endregion
 
-        //loadStoredBlocks
-        storedActivatedSavePointBlock = storedActivatedSavePointBlockEmpty.transform.GetChild(0).gameObject;
+        ////loadStoredBlocks
+        //storedActivatedSavePointBlock = storedActivatedSavePointBlockEmpty.transform.GetChild(0).gameObject;
     }
 
     void Update()
@@ -251,7 +253,7 @@ public class CatTrigger : MonoBehaviour
 
             if (VARS.IsToDetermineCurActivatedSavePointPosition)
             {
-                VARS.curActivatedSavePointPosition = CONS.savePoints[VARS.curActivatedSavePointIndex].transform.position;
+                VARS.curActivatedSavePointPosition = savePoints[VARS.curActivatedSavePointIndex].transform.position;
 
                 //Debug.Log(VARS.curActivatedSavePointPosition);
 
@@ -264,7 +266,7 @@ public class CatTrigger : MonoBehaviour
             {
                 //activateCurSavePoint
                 //storedActivatedSavePointBlock.transform.position = VARS.curActivatedSavePoint.transform.position;
-                storedActivatedSavePointBlock.transform.position = savePoints[VARS.curActivatedSavePointIndex].transform.position;
+                storedActivatedSavePointBlock.transform.position = VARS.curActivatedSavePointPosition;
 
                 //tempChildToCurPlaneEmpty
                 storedActivatedSavePointBlock.transform.SetParent(VARS.curPlaneEmpty.transform, true);
@@ -274,7 +276,8 @@ public class CatTrigger : MonoBehaviour
 
                 //setCatIniPosition
                 //VARS.catIniPosition = VARS.curActivatedSavePoint.transform.position - curRoomStableForward * 0.1f;
-                VARS.catIniPosition = VARS.curActivatedSavePointPosition - curRoomStableForward * 0.1f;
+                //VARS.catIniPosition = VARS.curActivatedSavePointPosition - curRoomStableForward * 0.1f;
+                catIniPositionPoint.transform.position = VARS.curActivatedSavePointPosition - curRoomStableForward * 0.1f;
 
                 //Debug.Log("catIniPosition:" + VARS.catIniPosition);
 

@@ -40,9 +40,11 @@ public class CatMove : MonoBehaviour
     float dashStartTime;
 
     //acce
-    float acceBonus = 1;
+    float curAcceBonus = 1;
 
     #region ConstantsUsed
+    float justEnterNewFaceTime;
+
     Transform catTransform;
 
     //horSpeed
@@ -74,6 +76,9 @@ public class CatMove : MonoBehaviour
     //dash
     float dashIniSpeed;
     float dashTime;
+
+    //curAcceBonus
+    float acceBonus;
 
     float attachWallEnergyDecreaseSpeed;
     float climbEnergyDecreaseSpeed;
@@ -127,6 +132,7 @@ public class CatMove : MonoBehaviour
         SEC = gameManager.GetComponent<ScriptsExecutionController>();
 
         #region ImportConstants
+        justEnterNewFaceTime = CONS.justEnterNewFaceTime;
         catTransform = CONS.catTransform;
         horAcce = CONS.horAcce;
         horReverseAcce = CONS.horReverseAcce;
@@ -146,6 +152,7 @@ public class CatMove : MonoBehaviour
         wallJumpPostInputThres = CONS.wallJumpPostInputThres;
         dashIniSpeed = CONS.dashIniSpeed;
         dashTime = CONS.dashTime;
+        acceBonus = CONS.acceBonus;
         attachWallEnergyDecreaseSpeed = CONS.attachWallEnergyDecreaseSpeed;
         climbEnergyDecreaseSpeed = CONS.climbEnergyDecreaseSpeed;
         attachCeilingEnergyDecreaseSpeed = CONS.attachCeilingEnergyDecreaseSpeed;
@@ -187,6 +194,31 @@ public class CatMove : MonoBehaviour
         isInMist = VARS.IsInMist;
         #endregion
 
+        //justEnterNewFaceFix
+        if (VARS.IsJustEnterNewFace)
+        {
+            if (VARS.IsOnGround ||
+                VARS.IsJumpKeyDown ||
+                Time.time - VARS.justEnterNewFaceStartTime > justEnterNewFaceTime)
+            {
+                VARS.IsJustEnterNewFace = false;
+
+                VARS.IsCatMoveMainPartExecutable =
+                    VARS.IsInNewRoomAllResetOver &&
+                    !VARS.IsRotating &&
+                    !VARS.IsTwisting &&
+                    !VARS.IsInMiniMap &&
+                    !VARS.IsOptionPanelActivated &&
+                    !VARS.IsExiting &&
+                    !(VARS.IsJustEnterNewFace &&
+                    !VARS.IsOnGround);
+            }
+            //else
+            //{
+            //    return;
+            //}
+        }
+
         #region Move
         if (VARS.IsCatMoveMainPartExecutable)
         {
@@ -196,36 +228,36 @@ public class CatMove : MonoBehaviour
             {
                 if (isOnGround)
                 {
-                    horCurAcce = horAcce * curDownTileData.friction * acceBonus;
-                    horCurReverseAcce = horReverseAcce * curDownTileData.friction * acceBonus;
-                    horCurMaxSpeed = (horMaxSpeed - curDownTileData.tackiness) * acceBonus;
+                    horCurAcce = horAcce * curDownTileData.friction * curAcceBonus;
+                    horCurReverseAcce = horReverseAcce * curDownTileData.friction * curAcceBonus;
+                    horCurMaxSpeed = (horMaxSpeed - curDownTileData.tackiness) * curAcceBonus;
                 }
                 else
                 {
-                    horCurAcce = horAcce * acceBonus;
-                    horCurReverseAcce = horReverseAcce * acceBonus;
-                    horCurMaxSpeed = horMaxSpeed * acceBonus;
+                    horCurAcce = horAcce * curAcceBonus;
+                    horCurReverseAcce = horReverseAcce * curAcceBonus;
+                    horCurMaxSpeed = horMaxSpeed * curAcceBonus;
                 }
             }
             else
             {
                 if (isInLiquid)
                 {
-                    horCurAcce = (horAcce / curLiquidTileData.fluidDrag) * acceBonus;
-                    horCurReverseAcce = (horReverseAcce / curLiquidTileData.fluidDrag) * acceBonus;
-                    horCurMaxSpeed = (horMaxSpeed / curLiquidTileData.fluidDrag) * acceBonus;
+                    horCurAcce = (horAcce / curLiquidTileData.fluidDrag) * curAcceBonus;
+                    horCurReverseAcce = (horReverseAcce / curLiquidTileData.fluidDrag) * curAcceBonus;
+                    horCurMaxSpeed = (horMaxSpeed / curLiquidTileData.fluidDrag) * curAcceBonus;
                 }
                 else if (isInGas)
                 {
-                    horCurAcce = (horAcce / curGasTileData.fluidDrag) * acceBonus;
-                    horCurReverseAcce = (horReverseAcce / curGasTileData.fluidDrag) * acceBonus;
-                    horCurMaxSpeed = (horMaxSpeed / curGasTileData.fluidDrag) * acceBonus;
+                    horCurAcce = (horAcce / curGasTileData.fluidDrag) * curAcceBonus;
+                    horCurReverseAcce = (horReverseAcce / curGasTileData.fluidDrag) * curAcceBonus;
+                    horCurMaxSpeed = (horMaxSpeed / curGasTileData.fluidDrag) * curAcceBonus;
                 }
                 else if (isInMist)
                 {
-                    horCurAcce = (horAcce / curMistTileData.fluidDrag) * acceBonus;
-                    horCurReverseAcce = (horReverseAcce / curMistTileData.fluidDrag) * acceBonus;
-                    horCurMaxSpeed = (horMaxSpeed / curMistTileData.fluidDrag) * acceBonus;
+                    horCurAcce = (horAcce / curMistTileData.fluidDrag) * curAcceBonus;
+                    horCurReverseAcce = (horReverseAcce / curMistTileData.fluidDrag) * curAcceBonus;
+                    horCurMaxSpeed = (horMaxSpeed / curMistTileData.fluidDrag) * curAcceBonus;
                 }
             }
 
@@ -811,17 +843,17 @@ public class CatMove : MonoBehaviour
                     VARS.IsInAcce = false;
                 }
 
-                //acceBonus
+                //curAcceBonus
                 if (VARS.IsInAcce)
                 {
-                    acceBonus = 1.5f;
+                    curAcceBonus = acceBonus;
 
                     //UFL.AddCurTargetEnergy(-inAcceEnergyDecreaseSpeed * Time.deltaTime);
                     VARS.curTargetEnergy += -inAcceEnergyDecreaseSpeed * Time.deltaTime;
                 }
                 else
                 {
-                    acceBonus = 1;
+                    curAcceBonus = 1;
                 }
             }
             #endregion

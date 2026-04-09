@@ -97,7 +97,8 @@ public class CameraManager : MonoBehaviour
         if (!VARS.IsInNewRoomCameraManagerResetOver)
         {
             //position
-            camTransform.position = VARS.roomCenters[VARS.curRoomIndex] - VARS.curRoomStableForward * 7;
+            //camTransform.position = VARS.roomCenters[VARS.curRoomIndex] - VARS.curRoomStableForward * 7;
+            UFL.SetCameraPosition(VARS.curRoomCenter - VARS.curRoomStableForward * 7);
 
             //tempFloat = camTransform.eulerAngles.z;
             //camTransform.LookAt(CONS.roomPlanes[VARS.curRoomIndex].transform.position);
@@ -107,10 +108,11 @@ public class CameraManager : MonoBehaviour
 
             //eulerangles
             tempFloat = camTransform.eulerAngles.z;
-            camTransform.LookAt(CONS.roomPlanes[VARS.curRoomIndex].transform.position);
-            VARS.camIniEulerangles = camTransform.eulerAngles;
-            VARS.camIniEulerangles += Vector3.forward * Vector3.SignedAngle(camTransform.right, VARS.curRoomStableRight, VARS.curRoomStableForward);
-            camTransform.eulerAngles = new Vector3(camTransform.eulerAngles.x, camTransform.eulerAngles.y, tempFloat);
+            //camTransform.LookAt(CONS.roomPlanes[VARS.curRoomIndex].transform.position, VARS.curRoomStableUp);
+            camTransform.LookAt(VARS.curRoomCenter, VARS.curRoomStableUp);
+            //VARS.camIniEulerangles = camTransform.eulerAngles;
+            //VARS.camIniEulerangles += Vector3.forward * Vector3.SignedAngle(camTransform.right, VARS.curRoomStableRight, VARS.curRoomStableForward);
+            //camTransform.eulerAngles = new Vector3(camTransform.eulerAngles.x, camTransform.eulerAngles.y, tempFloat);
 
             VARS.curUp = new Vector3
                 (Mathf.RoundToInt(camTransform.up.x), Mathf.RoundToInt(camTransform.up.y), Mathf.RoundToInt(camTransform.up.z));

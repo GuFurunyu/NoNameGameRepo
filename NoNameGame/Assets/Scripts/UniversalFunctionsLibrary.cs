@@ -15,6 +15,7 @@ public class UniversalFunctionsLibrary : MonoBehaviour
     float[] tempFloats = new float[3];
     Vector3 tempVector;
     Quaternion tempQuaternion;
+    GameObject tempGameObject;
 
     #region ConstantsUsed
     float gridBreadth;
@@ -41,6 +42,8 @@ public class UniversalFunctionsLibrary : MonoBehaviour
     //GameObject[] miniMapRotationCameraDownPoints = new GameObject[26];
     //GameObject[] miniMapRotationCameraLeftPoints = new GameObject[26];
     //GameObject[] miniMapRotationCameraRightPoints = new GameObject[26];
+
+    GameObject[] minimapCenterTriangleEmpties = new GameObject[6];
 
     Camera cam;
     Transform camTransform;
@@ -84,6 +87,7 @@ public class UniversalFunctionsLibrary : MonoBehaviour
         miniMapRoomPlanes = CONS.miniMapRoomPlanes;
         miniMapTwistingCenters = CONS.miniMapTwistingCenters;
         miniMapRotationCameraPoints = CONS.miniMapRotationCameraPoints;
+        minimapCenterTriangleEmpties = CONS.minimapCenterTriangleEmpties;
         cam = CONS.cam;
         camTransform = CONS.camTransform;
         camNormalSize = CONS.camNormalSize;
@@ -264,13 +268,26 @@ public class UniversalFunctionsLibrary : MonoBehaviour
             miniMapRoomPlanes[i].SetActive(IsRoomExplored(i));
             //miniMapRoomPlanes[i].SetActive(true);
 
+            //setCurRoomMinimapPlaneWhite
             if (i == VARS.curRoomIndex)
             {
                 VARS.curMiniMapRoomPlaneColor = miniMapRoomPlanes[i].GetComponent<MeshRenderer>().material.GetColor("_MainColor");
                 miniMapRoomPlanes[i].GetComponent<MeshRenderer>().material.SetColor("_MainColor", Color.white);
+
+                if ((i - 4) % 9 == 0)
+                {
+                    tempGameObject = minimapCenterTriangleEmpties[(i - 4) / 9];
+                    tempGameObject.transform.GetChild(0).gameObject.SetActive(false);
+                    tempGameObject.transform.GetChild(1).gameObject.SetActive(true);
+                }
+            }
+            else if ((i - 4) % 9 == 0)
+            {
+                tempGameObject = minimapCenterTriangleEmpties[(i - 4) / 9];
+                tempGameObject.SetActive(IsRoomExplored(i));
             }
 
-            roomPlanes[i].SetActive(false);
+            //roomPlanes[i].SetActive(false);
         }
 
         cat.GetComponent<MeshRenderer>().enabled = false;
@@ -292,12 +309,20 @@ public class UniversalFunctionsLibrary : MonoBehaviour
         {
             miniMapRoomPlanes[i].SetActive(false);
 
+            //resetMinimapPlaneColor
             if (i == VARS.curRoomIndex)
             {
                 miniMapRoomPlanes[i].GetComponent<MeshRenderer>().material.SetColor("_MainColor", VARS.curMiniMapRoomPlaneColor);
+
+                if ((i - 4) % 9 == 0)
+                {
+                    tempGameObject = minimapCenterTriangleEmpties[(i - 4) / 9];
+                    tempGameObject.transform.GetChild(0).gameObject.SetActive(true);
+                    tempGameObject.transform.GetChild(1).gameObject.SetActive(false);
+                }
             }
 
-            roomPlanes[i].SetActive(true);
+            //roomPlanes[i].SetActive(true);
         }
 
         cat.GetComponent<MeshRenderer>().enabled = true;
@@ -620,6 +645,20 @@ public class UniversalFunctionsLibrary : MonoBehaviour
         if (tempInt >= 0)
         {
             if (curBlocks[tempInt].GetComponent<TileData>().blockTypeIndex == 7010)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public bool IsCatInSavePointBlock()
+    {
+        tempInt = CatInBlockIndex();
+        if (tempInt >= 0)
+        {
+            if (curBlocks[tempInt].GetComponent<TileData>().blockTypeIndex == 7004)
             {
                 return true;
             }

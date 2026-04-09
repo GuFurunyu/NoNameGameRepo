@@ -57,6 +57,7 @@ public class Constants : MonoBehaviour
 
     //savePoint
     public List<GameObject> savePoints = new List<GameObject>();
+    public GameObject storedActivatedSavePointBlock;
 
     //twist
     public GameObject[] twistingCenters = new GameObject[6];
@@ -65,6 +66,9 @@ public class Constants : MonoBehaviour
     //lockAndKeys
     public List<GameObject> keys = new List<GameObject>();
     public List<GameObject> locks = new List<GameObject>();
+
+    //justEnterNewFace
+    public float justEnterNewFaceTime;
     #endregion
 
     #region CurRoomManager
@@ -173,6 +177,9 @@ public class Constants : MonoBehaviour
     //dash
     public float dashIniSpeed;
     public float dashTime;
+
+    //acceBonus
+    public float acceBonus;
     #endregion
 
     #region CatRotate
@@ -323,6 +330,13 @@ public class Constants : MonoBehaviour
     public GameObject storedElectricMistBlocksEmpty;
     public GameObject storedLightElectricMistBlocksEmpty;
 
+    //fixedUpdateTime
+    public float liquidFixedUpdateTime;
+    public float gasFixedUpdateTime;
+    public float mistFixedUpdateTime;
+    public float sandFixedUpdateTime;
+    public float railBlockFixedUpdateTime;
+
     //lockedBlocks
     public float unlockDistance;
 
@@ -359,6 +373,9 @@ public class Constants : MonoBehaviour
     //public GameObject[] miniMapRotationCameraDownPoints = new GameObject[26];
     //public GameObject[] miniMapRotationCameraLeftPoints = new GameObject[26];
     //public GameObject[] miniMapRotationCameraRightPoints = new GameObject[26];
+
+    //centerTriangles
+    public GameObject[] minimapCenterTriangleEmpties = new GameObject[6];
     #endregion
 
     #region OptionsManager
@@ -389,6 +406,16 @@ public class Constants : MonoBehaviour
         keyP, keyQ, keyR, keyS, keyT, keyU, keyV, keyW, keyX, keyY, keyZ,
         keyUpArrow, keyDownArrow, keyLeftArrow, keyRightArrow
     }
+    #endregion
+
+    #region AudioManager
+    [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
+        "  \nAUDIOMANAGER\n --- ")]
+    //audioSource
+    public AudioSource audioSource;
+
+    //audioclips
+    public List<AudioClip> audioClips = new List<AudioClip>();
     #endregion
 
     void Start()
