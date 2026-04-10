@@ -20,7 +20,7 @@ public class UniversalFunctionsLibrary : MonoBehaviour
     #region ConstantsUsed
     float gridBreadth;
     int roomCoordBreadth;
-    int miniMapRoomCoordBreadth;
+    int minimapRoomCoordBreadth;
 
     float inRoomMaxForwardDistance;
 
@@ -32,16 +32,18 @@ public class UniversalFunctionsLibrary : MonoBehaviour
 
     GameObject[] twistingCenters = new GameObject[6];
 
-    GameObject[] miniMapFaces = new GameObject[6];
-    GameObject[] miniMapRoomPlanes = new GameObject[54];
-    GameObject[] miniMapTwistingCenters = new GameObject[6];
-    GameObject[] miniMapRotationCameraPoints = new GameObject[26];
-    //Vector3[] miniMapRotationCameraPointStableUps = new Vector3[26];
-    //Vector3[] miniMapRotationCameraPointStableRights = new Vector3[26];
-    //GameObject[] miniMapRotationCameraUpPoints = new GameObject[26];
-    //GameObject[] miniMapRotationCameraDownPoints = new GameObject[26];
-    //GameObject[] miniMapRotationCameraLeftPoints = new GameObject[26];
-    //GameObject[] miniMapRotationCameraRightPoints = new GameObject[26];
+    List<GameObject> edgeGateTriggers = new List<GameObject>();
+
+    GameObject[] minimapFaces = new GameObject[6];
+    GameObject[] minimapRoomPlanes = new GameObject[54];
+    GameObject[] minimapTwistingCenters = new GameObject[6];
+    GameObject[] minimapRotationCameraPoints = new GameObject[26];
+    //Vector3[] minimapRotationCameraPointStableUps = new Vector3[26];
+    //Vector3[] minimapRotationCameraPointStableRights = new Vector3[26];
+    //GameObject[] minimapRotationCameraUpPoints = new GameObject[26];
+    //GameObject[] minimapRotationCameraDownPoints = new GameObject[26];
+    //GameObject[] minimapRotationCameraLeftPoints = new GameObject[26];
+    //GameObject[] minimapRotationCameraRightPoints = new GameObject[26];
 
     GameObject[] minimapCenterTriangleEmpties = new GameObject[6];
 
@@ -49,9 +51,9 @@ public class UniversalFunctionsLibrary : MonoBehaviour
     Transform camTransform;
 
     float camNormalSize;
-    float camMiniMapSize;
+    float camMinimapSize;
 
-    float camMiniMapDistanceToCubeCore;
+    float camMinimapDistanceToCubeCore;
 
     GameObject cat;
     Transform catTransform;
@@ -76,23 +78,24 @@ public class UniversalFunctionsLibrary : MonoBehaviour
         #region ImportConstants
         gridBreadth = CONS.gridBreadth;
         roomCoordBreadth = CONS.roomCoordBreadth;
-        miniMapRoomCoordBreadth = CONS.miniMapRoomCoordBreadth;
+        minimapRoomCoordBreadth = CONS.minimapRoomCoordBreadth;
         inRoomMaxForwardDistance = CONS.inRoomMaxForwardDistance;
         faceStableForwards = CONS.faceStableForwards;
         faceStableUps = CONS.faceStableUps;
         faceStableRights = CONS.faceStableRights;
         roomPlanes = CONS.roomPlanes;
         twistingCenters = CONS.twistingCenters;
-        miniMapFaces = CONS.miniMapFaces;
-        miniMapRoomPlanes = CONS.miniMapRoomPlanes;
-        miniMapTwistingCenters = CONS.miniMapTwistingCenters;
-        miniMapRotationCameraPoints = CONS.miniMapRotationCameraPoints;
+        edgeGateTriggers = CONS.edgeGateTriggers;
+        minimapFaces = CONS.minimapFaces;
+        minimapRoomPlanes = CONS.minimapRoomPlanes;
+        minimapTwistingCenters = CONS.minimapTwistingCenters;
+        minimapRotationCameraPoints = CONS.minimapRotationCameraPoints;
         minimapCenterTriangleEmpties = CONS.minimapCenterTriangleEmpties;
         cam = CONS.cam;
         camTransform = CONS.camTransform;
         camNormalSize = CONS.camNormalSize;
-        camMiniMapSize = CONS.camMiniMapSize;
-        camMiniMapDistanceToCubeCore = CONS.camMiniMapDistanceToCubeCore;
+        camMinimapSize = CONS.camMinimapSize;
+        camMinimapDistanceToCubeCore = CONS.camMinimapDistanceToCubeCore;
         cat = CONS.cat;
         catTransform = CONS.catTransform;
         #endregion
@@ -121,6 +124,11 @@ public class UniversalFunctionsLibrary : MonoBehaviour
     public Vector3 Vector3RoundToInt(Vector3 vector)
     {
         return new Vector3(Mathf.RoundToInt(vector.x), Mathf.RoundToInt(vector.y), Mathf.RoundToInt(vector.z));
+    }
+
+    public Vector3 Vector3WorldToMinimap(Vector3 vector)
+    {
+        return (vector / roomCoordBreadth) * minimapRoomCoordBreadth;
     }
     #endregion
 
@@ -198,7 +206,7 @@ public class UniversalFunctionsLibrary : MonoBehaviour
         return VARS.IsRoomExplored[roomIndex];
     }
 
-    public void SetMiniMapRoomPlanesByRoomPlanes()
+    public void SetMinimapRoomPlanesByRoomPlanes()
     {
         for (int i = 0; i < 54; i++)
         {
@@ -213,29 +221,29 @@ public class UniversalFunctionsLibrary : MonoBehaviour
                 if (tempFloats[j] == (roomCoordBreadth + 1) * gridBreadth ||
                     tempFloats[j] == -(roomCoordBreadth + 1) * gridBreadth)
                 {
-                    tempFloats[j] *= ((miniMapRoomCoordBreadth + 1) * gridBreadth) / ((roomCoordBreadth + 1) * gridBreadth);
+                    tempFloats[j] *= ((minimapRoomCoordBreadth + 1) * gridBreadth) / ((roomCoordBreadth + 1) * gridBreadth);
                 }
                 else if (tempFloats[j] == (roomCoordBreadth * 1.5f + 2) * gridBreadth ||
                     tempFloats[j] == -(roomCoordBreadth * 1.5f + 2) * gridBreadth)
                 {
-                    tempFloats[j] *= ((miniMapRoomCoordBreadth * 1.5f + 2) * gridBreadth) / ((roomCoordBreadth * 1.5f + 2) * gridBreadth);
+                    tempFloats[j] *= ((minimapRoomCoordBreadth * 1.5f + 2) * gridBreadth) / ((roomCoordBreadth * 1.5f + 2) * gridBreadth);
                 }
             }
 
             tempVector = new Vector3(tempFloats[0], tempFloats[1], tempFloats[2]);
-            miniMapRoomPlanes[i].transform.position = Vector3RoundToInt(tempVector);
+            minimapRoomPlanes[i].transform.position = Vector3RoundToInt(tempVector);
 
             //eulerangles
-            miniMapRoomPlanes[i].transform.eulerAngles = roomPlanes[i].transform.eulerAngles;
+            minimapRoomPlanes[i].transform.eulerAngles = roomPlanes[i].transform.eulerAngles;
         }
     }
 
-    public bool IsMiniMapPlaneInTheFace(int planeIndex, int faceIndex)
+    public bool IsMinimapPlaneInTheFace(int planeIndex, int faceIndex)
     {
-        tempVector = miniMapRoomPlanes[planeIndex].transform.position - miniMapTwistingCenters[faceIndex - 1].transform.position;
+        tempVector = minimapRoomPlanes[planeIndex].transform.position - minimapTwistingCenters[faceIndex - 1].transform.position;
         tempFloat = Mathf.Abs(Vector3.Dot(tempVector, faceStableForwards[faceIndex - 1]));
 
-        if (tempFloat <= (miniMapRoomCoordBreadth / 2 + 2) * gridBreadth &&
+        if (tempFloat <= (minimapRoomCoordBreadth / 2 + 2) * gridBreadth &&
             tempFloat > 3 * gridBreadth)
         {
             return true;
@@ -244,35 +252,35 @@ public class UniversalFunctionsLibrary : MonoBehaviour
         return false;
     }
 
-    public void HideAllMiniMapPlanes()
+    public void HideAllMinimapPlanes()
     {
         for (int i = 0; i < 54; i++)
         {
-            miniMapRoomPlanes[i].SetActive(false);
+            minimapRoomPlanes[i].SetActive(false);
         }
     }
 
-    public void ActivateMiniMapPlanes()
+    public void ActivateMinimapPlanes()
     {
         for (int i = 0; i < 54; i++)
         {
-            miniMapRoomPlanes[i].SetActive(IsRoomExplored(i));
+            minimapRoomPlanes[i].SetActive(IsRoomExplored(i));
         }
     }
 
-    public void IntoMiniMap()
+    public void IntoMinimap()
     {
         roomPlanes[VARS.curRoomIndex].SetActive(false);
         for (int i = 0; i < 54; i++)
         {
-            miniMapRoomPlanes[i].SetActive(IsRoomExplored(i));
-            //miniMapRoomPlanes[i].SetActive(true);
+            minimapRoomPlanes[i].SetActive(IsRoomExplored(i));
+            //minimapRoomPlanes[i].SetActive(true);
 
             //setCurRoomMinimapPlaneWhite
             if (i == VARS.curRoomIndex)
             {
-                VARS.curMiniMapRoomPlaneColor = miniMapRoomPlanes[i].GetComponent<MeshRenderer>().material.GetColor("_MainColor");
-                miniMapRoomPlanes[i].GetComponent<MeshRenderer>().material.SetColor("_MainColor", Color.white);
+                VARS.curMinimapRoomPlaneColor = minimapRoomPlanes[i].GetComponent<MeshRenderer>().material.GetColor("_MainColor");
+                minimapRoomPlanes[i].GetComponent<MeshRenderer>().material.SetColor("_MainColor", Color.white);
 
                 if ((i - 4) % 9 == 0)
                 {
@@ -293,26 +301,26 @@ public class UniversalFunctionsLibrary : MonoBehaviour
         cat.GetComponent<MeshRenderer>().enabled = false;
 
         //camPosition
-        SetCameraPosition(-VARS.curRoomStableForward * camMiniMapDistanceToCubeCore);
+        SetCameraPosition(-VARS.curRoomStableForward * camMinimapDistanceToCubeCore);
 
         //camEulerangles
-        VARS.camEuleranglesBeforeIntoMiniMap = camTransform.eulerAngles;
+        VARS.camEuleranglesBeforeIntoMinimap = camTransform.eulerAngles;
 
         //camSize
-        SetCameraSize(camMiniMapSize);
+        SetCameraSize(camMinimapSize);
     }
 
-    public void OutOfMiniMap()
+    public void OutOfMinimap()
     {
         roomPlanes[VARS.curRoomIndex].SetActive(true);
         for (int i = 0; i < 54; i++)
         {
-            miniMapRoomPlanes[i].SetActive(false);
+            minimapRoomPlanes[i].SetActive(false);
 
             //resetMinimapPlaneColor
             if (i == VARS.curRoomIndex)
             {
-                miniMapRoomPlanes[i].GetComponent<MeshRenderer>().material.SetColor("_MainColor", VARS.curMiniMapRoomPlaneColor);
+                minimapRoomPlanes[i].GetComponent<MeshRenderer>().material.SetColor("_MainColor", VARS.curMinimapRoomPlaneColor);
 
                 if ((i - 4) % 9 == 0)
                 {
@@ -331,7 +339,7 @@ public class UniversalFunctionsLibrary : MonoBehaviour
         SetCameraPosition(VARS.curRoomCenter - VARS.curRoomStableForward * 7);
 
         //camEulerangles
-        SetCameraEulerangles(VARS.camEuleranglesBeforeIntoMiniMap);
+        SetCameraEulerangles(VARS.camEuleranglesBeforeIntoMinimap);
 
         //camSize
         SetCameraSize(camNormalSize);
@@ -378,9 +386,9 @@ public class UniversalFunctionsLibrary : MonoBehaviour
 
     //dirIndex:
     //1-up, 2-down, 3-left, 4-right
-    public void MiniMapCameraRotate(int dirIndex, float rotationMovingStep)
+    public void MinimapCameraRotate(int dirIndex, float rotationMovingStep)
     {
-        tempVector = (VARS.curToMiniMapRotationCameraPoint.transform.position - VARS.curMiniMapRotationCameraPoint.transform.position).normalized;
+        tempVector = (VARS.curToMinimapRotationCameraPoint.transform.position - VARS.curMinimapRotationCameraPoint.transform.position).normalized;
 
         CameraMove(tempVector * rotationMovingStep);
 
@@ -404,31 +412,31 @@ public class UniversalFunctionsLibrary : MonoBehaviour
         camTransform.LookAt(Vector3.zero,camTransform.up);
     }
 
-    public void GetCurToMiniMapRotationCameraPoint(int dirIndex)
+    public void GetCurToMinimapRotationCameraPoint(int dirIndex)
     {
         //getCurIndexAndCurPoint
-        if (VARS.IsMiniMapRotationCameraPointIndexNotInitialized)
+        if (VARS.IsMinimapRotationCameraPointIndexNotInitialized)
         {
-            VARS.curMiniMapRotationCameraPointIndex = VARS.curFaceIndex - 1;
+            VARS.curMinimapRotationCameraPointIndex = VARS.curFaceIndex - 1;
 
-            VARS.IsMiniMapRotationCameraPointIndexNotInitialized = false;
+            VARS.IsMinimapRotationCameraPointIndexNotInitialized = false;
         }
-        VARS.curMiniMapRotationCameraPoint = miniMapRotationCameraPoints[VARS.curMiniMapRotationCameraPointIndex];
-        //Debug.Log("curIndex: " + VARS.curMiniMapRotationCameraPointIndex);
+        VARS.curMinimapRotationCameraPoint = minimapRotationCameraPoints[VARS.curMinimapRotationCameraPointIndex];
+        //Debug.Log("curIndex: " + VARS.curMinimapRotationCameraPointIndex);
 
         //switch (dirIndex)
         //{
         //    case 1:
-        //        VARS.curToMiniMapRotationCameraPoint = miniMapRotationCameraDownPoints[VARS.curMiniMapRotationCameraPointIndex];
+        //        VARS.curToMinimapRotationCameraPoint = minimapRotationCameraDownPoints[VARS.curMinimapRotationCameraPointIndex];
         //        break;
         //    case 2:
-        //        VARS.curToMiniMapRotationCameraPoint = miniMapRotationCameraUpPoints[VARS.curMiniMapRotationCameraPointIndex];
+        //        VARS.curToMinimapRotationCameraPoint = minimapRotationCameraUpPoints[VARS.curMinimapRotationCameraPointIndex];
         //        break;
         //    case 3:
-        //        VARS.curToMiniMapRotationCameraPoint = miniMapRotationCameraRightPoints[VARS.curMiniMapRotationCameraPointIndex];
+        //        VARS.curToMinimapRotationCameraPoint = minimapRotationCameraRightPoints[VARS.curMinimapRotationCameraPointIndex];
         //        break;
         //    case 4:
-        //        VARS.curToMiniMapRotationCameraPoint = miniMapRotationCameraLeftPoints[VARS.curMiniMapRotationCameraPointIndex];
+        //        VARS.curToMinimapRotationCameraPoint = minimapRotationCameraLeftPoints[VARS.curMinimapRotationCameraPointIndex];
         //        break;
         //}
 
@@ -441,21 +449,21 @@ public class UniversalFunctionsLibrary : MonoBehaviour
         switch (dirIndex)
         {
             case 1:
-                //tempVector = -miniMapRotationCameraPointStableUps[VARS.curMiniMapRotationCameraPointIndex];
+                //tempVector = -minimapRotationCameraPointStableUps[VARS.curMinimapRotationCameraPointIndex];
                 tempVector = -camTransform.up;
                 //tempQuaternion = camTransform.rotation * Quaternion.AngleAxis(camTransform.eulerAngles.z, camTransform.forward);
                 //tempVector = tempQuaternion.eulerAngles;
                 break;
             case 2:
-                //tempVector = miniMapRotationCameraPointStableUps[VARS.curMiniMapRotationCameraPointIndex];
+                //tempVector = minimapRotationCameraPointStableUps[VARS.curMinimapRotationCameraPointIndex];
                 tempVector = camTransform.up;
                 break;
             case 3:
-                //tempVector = miniMapRotationCameraPointStableRights[VARS.curMiniMapRotationCameraPointIndex];
+                //tempVector = minimapRotationCameraPointStableRights[VARS.curMinimapRotationCameraPointIndex];
                 tempVector = camTransform.right;
                 break;
             case 4:
-                //tempVector = -miniMapRotationCameraPointStableRights[VARS.curMiniMapRotationCameraPointIndex];
+                //tempVector = -minimapRotationCameraPointStableRights[VARS.curMinimapRotationCameraPointIndex];
                 tempVector = -camTransform.right;
                 break;
         }
@@ -466,28 +474,28 @@ public class UniversalFunctionsLibrary : MonoBehaviour
 
             //if (i == 4)
             //{
-            //    Debug.Log(Vector3.Angle(miniMapRotationCameraPoints[i].transform.position - VARS.curMiniMapRotationCameraPoint.transform.position, tempVector));
-            //    Debug.Log(Vector3.Dot(miniMapRotationCameraPoints[i].transform.position - VARS.curMiniMapRotationCameraPoint.transform.position, tempVector));
+            //    Debug.Log(Vector3.Angle(minimapRotationCameraPoints[i].transform.position - VARS.curMinimapRotationCameraPoint.transform.position, tempVector));
+            //    Debug.Log(Vector3.Dot(minimapRotationCameraPoints[i].transform.position - VARS.curMinimapRotationCameraPoint.transform.position, tempVector));
             //}
 
             //ifIsNearlyOnTheLine
-            if (Vector3.Angle(miniMapRotationCameraPoints[i].transform.position - VARS.curMiniMapRotationCameraPoint.transform.position, tempVector) < 30)
+            if (Vector3.Angle(minimapRotationCameraPoints[i].transform.position - VARS.curMinimapRotationCameraPoint.transform.position, tempVector) < 30)
             {
                 //Debug.Log("enter2: " + i);
 
-                //Debug.Log("dot: " + Vector3.Dot(miniMapRotationCameraPoints[i].transform.position - VARS.curMiniMapRotationCameraPoint.transform.position, tempVector));
+                //Debug.Log("dot: " + Vector3.Dot(minimapRotationCameraPoints[i].transform.position - VARS.curMinimapRotationCameraPoint.transform.position, tempVector));
 
                 //ifIsTheRightDirection
-                if (Vector3.Dot(miniMapRotationCameraPoints[i].transform.position - VARS.curMiniMapRotationCameraPoint.transform.position, tempVector) > 0)
+                if (Vector3.Dot(minimapRotationCameraPoints[i].transform.position - VARS.curMinimapRotationCameraPoint.transform.position, tempVector) > 0)
                 {
                     //Debug.Log("enter3");
 
                     //Debug.Log("curToIndex: " + i);
 
-                    //Debug.Log(VARS.curToMiniMapRotationCameraPoint.transform.position - VARS.curMiniMapRotationCameraPoint.transform.position);
+                    //Debug.Log(VARS.curToMinimapRotationCameraPoint.transform.position - VARS.curMinimapRotationCameraPoint.transform.position);
 
-                    VARS.curToMiniMapRotationCameraPointIndex = i;
-                    VARS.curToMiniMapRotationCameraPoint = miniMapRotationCameraPoints[i];
+                    VARS.curToMinimapRotationCameraPointIndex = i;
+                    VARS.curToMinimapRotationCameraPoint = minimapRotationCameraPoints[i];
                     break;
                 }
             }
@@ -662,6 +670,23 @@ public class UniversalFunctionsLibrary : MonoBehaviour
             {
                 return true;
             }
+        }
+
+        return false;
+    }
+
+    public bool IsCatInEdgeGateTrigger()
+    {
+        for (int i = 0; i < edgeGateTriggers.Count; i++)
+        {
+            tempVector = catTransform.position - edgeGateTriggers[i].transform.position;
+
+            if (Mathf.Abs(Vector3.Dot(tempVector, VARS.curUp)) < gridBreadth - 0.1f &&
+                Mathf.Abs(Vector3.Dot(tempVector, VARS.curRight)) < gridBreadth - 0.1f)
+            {
+                return true;
+            }
+
         }
 
         return false;

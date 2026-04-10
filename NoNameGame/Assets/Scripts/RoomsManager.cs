@@ -48,14 +48,14 @@ public class RoomsManager : MonoBehaviour
     GameObject[] roomPlanes = new GameObject[54];
 
     GameObject[] twistingCenters = new GameObject[6];
-
+    Vector3[] twistingCenterClockwiseVectors = new Vector3[6];
     float twistSpeed;
 
-    float miniMapRotationMovingSpeed;
+    float minimapRotationMovingSpeed;
 
     Transform camTransform;
 
-    float camMiniMapDistanceToCubeCore;
+    float camMinimapDistanceToCubeCore;
 
     Transform catTransform;
 
@@ -90,10 +90,11 @@ public class RoomsManager : MonoBehaviour
         faceStableRights = CONS.faceStableRights;
         roomPlanes = CONS.roomPlanes;
         twistingCenters = CONS.twistingCenters;
+        twistingCenterClockwiseVectors = CONS.twistingCenterClockwiseVectors;
         twistSpeed = CONS.twistSpeed;
-        miniMapRotationMovingSpeed = CONS.miniMapRotationMovingSpeed;
+        minimapRotationMovingSpeed = CONS.minimapRotationMovingSpeed;
         camTransform = CONS.camTransform;
-        camMiniMapDistanceToCubeCore = CONS.camMiniMapDistanceToCubeCore;
+        camMinimapDistanceToCubeCore = CONS.camMinimapDistanceToCubeCore;
         catTransform = CONS.catTransform;
         catIniPositionPoint = CONS.catIniPositionPoint;
         #endregion
@@ -170,7 +171,7 @@ public class RoomsManager : MonoBehaviour
         {
             //hideOtherPlanes
             if (!VARS.IsZoomedOut &&
-                !VARS.IsInMiniMap)
+                !VARS.IsInMinimap)
                 UFL.HideOtherPlanes();
 
             #region Twist
@@ -262,11 +263,11 @@ public class RoomsManager : MonoBehaviour
                     //setTargetEulerangles
                     if (VARS.IsClockwiseTwisting)
                     {
-                        twistingTargetEulerangles = curTwistingCenter.transform.eulerAngles + new Vector3(0, 0, 90);
+                        twistingTargetEulerangles = curTwistingCenter.transform.eulerAngles + twistingCenterClockwiseVectors[VARS.curFaceIndex - 1];
                     }
                     else
                     {
-                        twistingTargetEulerangles = curTwistingCenter.transform.eulerAngles + new Vector3(0, 0, -90);
+                        twistingTargetEulerangles = curTwistingCenter.transform.eulerAngles + -twistingCenterClockwiseVectors[VARS.curFaceIndex - 1];
                     }
 
                     isTwistingPresetOver = true;
@@ -303,8 +304,8 @@ public class RoomsManager : MonoBehaviour
                     //resetCatEulerangles
                     catTransform.eulerAngles = Vector3.zero;
 
-                    //setMiniMapRoomPlanes
-                    UFL.SetMiniMapRoomPlanesByRoomPlanes();
+                    //setMinimapRoomPlanes
+                    UFL.SetMinimapRoomPlanesByRoomPlanes();
 
                     isTwistingPresetOver = false;
 

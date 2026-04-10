@@ -12,9 +12,12 @@ public static class EDIAutoLinkerForPrefabsToConstantsList
     {
         {"GateBlock", "gates" },
         {"EdgeGateBlock", "edgeGates" },
+        {"EdgeGateTriggerBlock", "edgeGateTriggers" },
         {"SavePointBlock", "savePoints" },
+        {"KeyBlock","keys" },
         {"LockedBlock", "locks" },
-        {"KeyBlock","keys" }
+        {"MinimapKey","minimapKeys" },
+        {"MinimapLock","minimapLocks" }
         // ø…¿©’π
         // { "NewPrefabName", "targetListFieldName" },
     };

@@ -207,7 +207,7 @@ public class CatMove : MonoBehaviour
                     VARS.IsInNewRoomAllResetOver &&
                     !VARS.IsRotating &&
                     !VARS.IsTwisting &&
-                    !VARS.IsInMiniMap &&
+                    !VARS.IsInMinimap &&
                     !VARS.IsOptionPanelActivated &&
                     !VARS.IsExiting &&
                     !(VARS.IsJustEnterNewFace &&

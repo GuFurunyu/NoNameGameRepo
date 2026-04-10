@@ -57,6 +57,9 @@ public class CurRoomManager : MonoBehaviour
 
             if (storedFaceIndex != VARS.curFaceIndex)
             {
+                VARS.horCurSpeed = 0;
+                VARS.verCurSpeed = 0;
+
                 VARS.justEnterNewFaceStartTime = Time.time;
 
                 VARS.IsJustEnterNewFace = true;

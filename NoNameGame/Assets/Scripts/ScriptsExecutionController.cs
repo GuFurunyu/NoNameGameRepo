@@ -41,7 +41,7 @@ public class ScriptsExecutionController : MonoBehaviour
             VARS.IsInNewRoomAllResetOver &&
             !VARS.IsRotating &&
             !VARS.IsTwisting &&
-            !VARS.IsInMiniMap &&
+            !VARS.IsInMinimap &&
             !VARS.IsOptionPanelActivated &&
             !VARS.IsExiting &&
             !(VARS.IsJustEnterNewFace &&
@@ -51,7 +51,7 @@ public class ScriptsExecutionController : MonoBehaviour
         VARS.IsCatRotateMainPartExecutable =
             VARS.IsInNewRoomAllResetOver &&
             !VARS.IsTwisting &&
-            !VARS.IsInMiniMap &&
+            !VARS.IsInMinimap &&
             !VARS.IsExiting;
 
         //catEnergy
@@ -77,6 +77,8 @@ public class ScriptsExecutionController : MonoBehaviour
         VARS.IsBlocksManagerMainPartExecutable =
             VARS.IsInNewRoomAllResetOver &&
             VARS.IsIniRotation &&
+            !VARS.IsRotating &&
+            !VARS.IsTwisting &&
             !VARS.IsExiting;
 
         //optionsManager
@@ -84,6 +86,6 @@ public class ScriptsExecutionController : MonoBehaviour
             !VARS.IsRotating &&
             !VARS.IsTwisting &&
             !VARS.IsZoomedOut &&
-            !VARS.IsInMiniMap;
+            !VARS.IsInMinimap;
     }
 }

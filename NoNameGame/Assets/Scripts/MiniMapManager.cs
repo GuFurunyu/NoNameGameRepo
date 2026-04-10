@@ -1,7 +1,7 @@
 using UnityEngine;
 
-[DefaultExecutionOrder((int)ScriptsExecutionOrder.ExecutionOrder.miniMapManager)]
-public class MiniMapManager : MonoBehaviour
+[DefaultExecutionOrder((int)ScriptsExecutionOrder.ExecutionOrder.minimapManager)]
+public class MinimapManager : MonoBehaviour
 {
     Constants CONS;
     Variables VARS;
@@ -10,20 +10,22 @@ public class MiniMapManager : MonoBehaviour
 
     GameObject gameManager;
 
-    int curMiniMapRotatingDirIndex;
+    int curMinimapRotatingDirIndex;
 
-    Vector3 curMiniMapRotationAxis;
+    Vector3 curMinimapRotationCameraMovingVector;
 
-    Vector3 camMiniMapRotationStartEulerAngles;
-    Quaternion curMiniMapRotationTargetQuaternion;
-    Vector3 camMiniMapRotationTargetEulerAngles;
+    Vector3 curMinimapRotationAxis;
 
-    float accumulatedMiniMapRotationDegree;
+    Vector3 camMinimapRotationStartEulerAngles;
+    Quaternion curMinimapRotationTargetQuaternion;
+    Vector3 camMinimapRotationTargetEulerAngles;
+
+    float accumulatedMinimapRotationDegree;
 
     #region ConstantsUsed
     Transform camTransform;
 
-    float miniMapRotationMovingSpeed;
+    float minimapRotationMovingSpeed;
     #endregion
 
     #region VariablesUsed
@@ -41,7 +43,7 @@ public class MiniMapManager : MonoBehaviour
 
         #region ImportConstants
         camTransform = CONS.camTransform;
-        miniMapRotationMovingSpeed = CONS.miniMapRotationMovingSpeed;
+        minimapRotationMovingSpeed = CONS.minimapRotationMovingSpeed;
         #endregion
 
         #region ImportReferenceVariables
@@ -55,9 +57,9 @@ public class MiniMapManager : MonoBehaviour
 
         if (VARS.IsInNewRoomAllResetOver)
         {
-            #region MiniMap
-            //intoMiniMap
-            if (!VARS.IsInMiniMap)
+            #region Minimap
+            //intoMinimap
+            if (!VARS.IsInMinimap)
             {
                 if (!VARS.IsZoomedOut &&
                     //VARS.IsIniRotation &&
@@ -71,11 +73,11 @@ public class MiniMapManager : MonoBehaviour
                         //    {
                         if (VARS.IsConfirmKeyDown)
                         {
-                            UFL.IntoMiniMap();
+                            UFL.IntoMinimap();
 
-                            VARS.IsMiniMapRotationCameraPointIndexNotInitialized = true;
+                            VARS.IsMinimapRotationCameraPointIndexNotInitialized = true;
 
-                            VARS.IsInMiniMap = true;
+                            VARS.IsInMinimap = true;
                         }
                         //    }
                         //}
@@ -83,70 +85,76 @@ public class MiniMapManager : MonoBehaviour
                 }
             }
 
-            //inMiniMap
+            //inMinimap
             else
             {
-                if (!VARS.IsMiniMapRotating)
+                if (!VARS.IsMinimapRotating)
                 {
-                    //miniMapRotationControl
+                    //minimapRotationControl
                     if (VARS.IsUpKeyDown)
                     {
-                        VARS.IsMiniMapRotating = true;
-                        curMiniMapRotatingDirIndex = 1;
-                        UFL.GetCurToMiniMapRotationCameraPoint(1);
+                        VARS.IsMinimapRotating = true;
+                        curMinimapRotatingDirIndex = 1;
+                        UFL.GetCurToMinimapRotationCameraPoint(1);
                     }
                     else if (VARS.IsDownKeyDown)
                     {
-                        VARS.IsMiniMapRotating = true;
-                        curMiniMapRotatingDirIndex = 2;
-                        UFL.GetCurToMiniMapRotationCameraPoint(2);
+                        VARS.IsMinimapRotating = true;
+                        curMinimapRotatingDirIndex = 2;
+                        UFL.GetCurToMinimapRotationCameraPoint(2);
                     }
                     else if (VARS.IsLeftKeyDown)
                     {
-                        VARS.IsMiniMapRotating = true;
-                        curMiniMapRotatingDirIndex = 3;
-                        UFL.GetCurToMiniMapRotationCameraPoint(3);
+                        VARS.IsMinimapRotating = true;
+                        curMinimapRotatingDirIndex = 3;
+                        UFL.GetCurToMinimapRotationCameraPoint(3);
                     }
                     else if (VARS.IsRightKeyDown)
                     {
-                        VARS.IsMiniMapRotating = true;
-                        curMiniMapRotatingDirIndex = 4;
-                        UFL.GetCurToMiniMapRotationCameraPoint(4);
+                        VARS.IsMinimapRotating = true;
+                        curMinimapRotatingDirIndex = 4;
+                        UFL.GetCurToMinimapRotationCameraPoint(4);
+                    }
+                    if (VARS.IsMinimapRotating)
+                    {
+                        curMinimapRotationCameraMovingVector =
+                            VARS.curToMinimapRotationCameraPoint.transform.position - VARS.curMinimapRotationCameraPoint.transform.position;
                     }
 
-                    //outOfMiniMap
+                    //outOfMinimap
                     if (VARS.IsConfirmKeyDown)
                     {
-                        UFL.OutOfMiniMap();
+                        UFL.OutOfMinimap();
 
-                        VARS.IsInMiniMap = false;
+                        VARS.IsInMinimap = false;
                     }
                 }
-                //miniMapRotationProcess
+                //minimapRotationProcess
                 else
                 {
-                    //Debug.Log("distance: " + Vector3.Distance(camTransform.position, VARS.curToMiniMapRotationCameraPoint.transform.position));
+                    //Debug.Log("distance: " + Vector3.Distance(camTransform.position, VARS.curToMinimapRotationCameraPoint.transform.position));
 
-                    if (/*accumulatedMiniMapRotationDegree < 90*/
-                        Vector3.Distance(camTransform.position, VARS.curToMiniMapRotationCameraPoint.transform.position) > 3)
+                    if (/*accumulatedMinimapRotationDegree < 90*/
+                        Vector3.Distance(camTransform.position, VARS.curToMinimapRotationCameraPoint.transform.position) > 3 &&
+                        Vector3.Dot(VARS.curToMinimapRotationCameraPoint.transform.position - camTransform.position, curMinimapRotationCameraMovingVector) > 0)
                     {
-                        UFL.MiniMapCameraRotate(curMiniMapRotatingDirIndex, miniMapRotationMovingSpeed * Time.deltaTime);
+                        UFL.MinimapCameraRotate(curMinimapRotatingDirIndex, minimapRotationMovingSpeed * Time.deltaTime);
 
-                        //accumulatedMiniMapRotationDegree += miniMapRotationMovingSpeed * Time.deltaTime;
-                        //accumulatedMiniMapRotationDegree = Vector3.Angle(camTransform.eulerAngles, camMiniMapRotationStartEulerAngles);
+                        //accumulatedMinimapRotationDegree += minimapRotationMovingSpeed * Time.deltaTime;
+                        //accumulatedMinimapRotationDegree = Vector3.Angle(camTransform.eulerAngles, camMinimapRotationStartEulerAngles);
                     }
                     else
                     {
-                        UFL.SetCameraPosition(VARS.curToMiniMapRotationCameraPoint.transform.position);
+                        UFL.SetCameraPosition(VARS.curToMinimapRotationCameraPoint.transform.position);
 
                         camTransform.LookAt(Vector3.zero, camTransform.up);
 
-                        VARS.curMiniMapRotationCameraPointIndex = VARS.curToMiniMapRotationCameraPointIndex;
-                        //VARS.curMiniMapRotationCameraPoint = VARS.curToMiniMapRotationCameraPoint;
+                        VARS.curMinimapRotationCameraPointIndex = VARS.curToMinimapRotationCameraPointIndex;
+                        //VARS.curMinimapRotationCameraPoint = VARS.curToMinimapRotationCameraPoint;
 
-                        //UFL.SetCameraEulerangles(camMiniMapRotationTargetEulerAngles);
+                        //UFL.SetCameraEulerangles(camMinimapRotationTargetEulerAngles);
 
-                        VARS.IsMiniMapRotating = false;
+                        VARS.IsMinimapRotating = false;
                     }
                 }
             }

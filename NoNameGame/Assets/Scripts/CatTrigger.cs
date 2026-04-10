@@ -35,9 +35,14 @@ public class CatTrigger : MonoBehaviour
     GameObject storedSavePointBlock;
     //GameObject storedActivatedSavePointBlock;
 
+    //minimapLock
+    float curNearestMinimapLockDistance;
+    int curNearestMinimapLockIndex;
+
     int tempInt;
     float tempFloat;
     Vector3 tempVector;
+    Transform tempTransform;
     GameObject tempGameObject;
 
     #region ConstantsUsed
@@ -67,6 +72,8 @@ public class CatTrigger : MonoBehaviour
     float keySpeed;
     float keyDistance;
 
+    Material connectedGateColor;
+
     float strawberriesDistance;
     float strawberriesSpeed;
     float strawberriesContractionMin;
@@ -74,6 +81,11 @@ public class CatTrigger : MonoBehaviour
 
     float energyCrystalPower;
     float energyCrystalRespawnTime;
+
+    GameObject[] minimapRoomPlanes = new GameObject[54];
+
+    List<GameObject> minimapKeys = new List<GameObject>();
+    List<GameObject> minimapLocks = new List<GameObject>();
     #endregion
 
     #region VariablesUsed
@@ -93,6 +105,9 @@ public class CatTrigger : MonoBehaviour
 
     GameObject curTriggerTile;
     TileData curTriggerTileData;
+
+    List<int> deactivatedMinimapKeyIndexes = new List<int>();
+    List<int> deactivatedMinimapLockIndexes = new List<int>();
     #endregion
 
     #region BoolVariablesUsed
@@ -123,12 +138,16 @@ public class CatTrigger : MonoBehaviour
         locks = CONS.locks;
         keySpeed = CONS.keySpeed;
         keyDistance = CONS.keyDistance;
+        connectedGateColor = CONS.connectedGateColor;
         strawberriesDistance = CONS.strawberriesDistance;
         strawberriesSpeed = CONS.strawberriesSpeed;
         strawberriesContractionMin = CONS.strawberriesContractionMin;
         strawberriesContractionSpeed = CONS.strawberriesContractionSpeed;
         energyCrystalPower = CONS.energyCrystalPower;
         energyCrystalRespawnTime = CONS.energyCrystalRespawnTime;
+        minimapRoomPlanes = CONS.minimapRoomPlanes;
+        minimapKeys = CONS.minimapKeys;
+        minimapLocks = CONS.minimapLocks;
         #endregion
 
         #region ImportReferenceVariables
@@ -136,6 +155,8 @@ public class CatTrigger : MonoBehaviour
         edgeGateLinkedToIndexes = VARS.edgeGateLinkedToIndexes;
         deactivatedKeyIndexes = VARS.deactivatedKeyIndexes;
         deactivatedLockIndexes = VARS.deactivatedLockIndexes;
+        deactivatedMinimapKeyIndexes = VARS.deactivatedMinimapKeyIndexes;
+        deactivatedMinimapLockIndexes = VARS.deactivatedMinimapLockIndexes;
         #endregion
 
         ////loadStoredBlocks
@@ -182,18 +203,26 @@ public class CatTrigger : MonoBehaviour
                     //}
 
                     //curToEdgeGate = edgeGates[curNearestEdgeGateIndex];
-                    for (int i = 0; i < edgeGates.Count; i++)
-                    {
-                        if (curTriggerTile == edgeGates[i])
-                        {
-                            curToEdgeGate = edgeGates[edgeGateLinkedToIndexes[i]];
-                        }
-                    }
+                    //for (int i = 0; i < edgeGates.Count; i++)
+                    //{
+                    //    if (edgeGates[i] == VARS.curEdgeGate)
+                    //    {
+                    //        curToEdgeGate = edgeGates[edgeGateLinkedToIndexes[i]];
+                    //    }
+                    //}
                     //curEdgeGatesBetweenVector = curToEdgeGate.transform.position - curTile.transform.position;
 
                     //toNewRoom
                     if (VARS.IsEdgeGateTriggered)
                     {
+                        for (int i = 0; i < edgeGates.Count; i++)
+                        {
+                            if (edgeGates[i] == VARS.curEdgeGate)
+                            {
+                                curToEdgeGate = edgeGates[edgeGateLinkedToIndexes[i]];
+                            }
+                        }
+
                         catTransform.position = curToEdgeGate.transform.position - roomStableForwards[curToEdgeGate.GetComponent<TileData>().inRoomIndex] * 0.1f;
 
                         curEdgeGatesCommonLineVector = Vector3.Cross(roomStableForwards[curTriggerTileData.inRoomIndex], roomStableForwards[curToEdgeGate.GetComponent<TileData>().inRoomIndex]);
@@ -303,6 +332,32 @@ public class CatTrigger : MonoBehaviour
                 VARS.curCarriedKeyIniParent = VARS.curCarriedKey.transform.parent.gameObject;
                 VARS.curCarriedKeyIniLocalPosition = VARS.curCarriedKey.transform.localPosition;
                 VARS.curCarriedKey.transform.SetParent(null, true);
+                VARS.curCarriedIniRoomIndex = VARS.curRoomIndex;
+
+                //minimapKey
+                for (int i = 0; i < minimapKeys.Count; i++)
+                {
+                    if (minimapKeys[i].activeSelf)
+                    {
+                        tempGameObject = minimapKeys[i].transform.parent.parent.gameObject;
+
+                        for (int j = 0; j < 54; j++)
+                        {
+                            if (tempGameObject == minimapRoomPlanes[j])
+                            {
+                                tempInt = j;
+                                break;
+                            }
+                        }
+
+                        if (tempInt == VARS.curCarriedIniRoomIndex)
+                        {
+                            VARS.curMinimapKey = minimapKeys[i];
+                            break;
+                        }
+                    }
+                }
+                VARS.curMinimapKey.SetActive(false);
 
                 VARS.IsCarryingAKey = true;
 
@@ -353,24 +408,53 @@ public class CatTrigger : MonoBehaviour
                     }
 
                     //deactivate
-                    for (int i = 0; i < locks.Count; i++)
-                    {
-                        if (locks[i] == VARS.curUnlockingBlock)
-                        {
-                            deactivatedLockIndexes.Add(i);
-                        }
-                    }
-                    deactivatedLockIndexes.Add(tempInt);
                     for (int i = 0; i < keys.Count; i++)
                     {
                         if (keys[i] == VARS.curCarriedKey)
                         {
                             deactivatedKeyIndexes.Add(i);
+                            break;
                         }
                     }
+                    for (int i = 0; i < locks.Count; i++)
+                    {
+                        if (locks[i] == VARS.curUnlockingBlock)
+                        {
+                            deactivatedLockIndexes.Add(i);
+                            break;
+                        }
+                    }
+                    deactivatedLockIndexes.Add(tempInt);
+
+                    //setActiveFalse
                     VARS.curUnlockingBlock.SetActive(false);
                     tempGameObject.SetActive(false);
                     VARS.curCarriedKey.SetActive(false);
+
+                    //minimapLock
+                    tempVector = UFL.Vector3WorldToMinimap(tempGameObject.transform.position);
+                    curNearestMinimapLockDistance = 999;
+                    for (int i = 0; i < minimapLocks.Count; i++)
+                    {
+                        tempFloat = Vector3.Distance(minimapLocks[i].transform.position, tempVector);
+                        if (tempFloat < curNearestMinimapLockDistance)
+                        {
+                            curNearestMinimapLockDistance = tempFloat;
+                            curNearestMinimapLockIndex = i;
+                        }
+                    }
+                    minimapLocks[curNearestMinimapLockIndex].GetComponent<MeshRenderer>().material = connectedGateColor;
+
+                    //minimapDeactivate
+                    for (int i = 0; i < minimapKeys.Count; i++)
+                    {
+                        if (minimapKeys[i] == VARS.curMinimapKey)
+                        {
+                            deactivatedMinimapKeyIndexes.Add(i);
+                            break;
+                        }
+                    }
+                    deactivatedMinimapLockIndexes.Add(curNearestMinimapLockIndex);
 
                     VARS.IsUnlocking = false;
 

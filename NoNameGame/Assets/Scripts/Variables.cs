@@ -182,8 +182,8 @@ public class Variables : MonoBehaviour
 
 
     //inRoomsManager?
-    //[SerializeField] private bool _isIntoMiniMap;
-    //public bool IsIntoMiniMap { get { return _isIntoMiniMap; } set { _isIntoMiniMap = value; } }
+    //[SerializeField] private bool _isIntoMinimap;
+    //public bool IsIntoMinimap { get { return _isIntoMinimap; } set { _isIntoMinimap = value; } }
 
     //keysAndLocks
     public List<int> deactivatedKeyIndexes = new List<int>();
@@ -268,7 +268,7 @@ public class Variables : MonoBehaviour
     public bool IsZoomingIn { get { return _isZoomingIn; } set { _isZoomingIn = value; } }
 
 
-    public Vector3 camEuleranglesBeforeIntoMiniMap;
+    public Vector3 camEuleranglesBeforeIntoMinimap;
     #endregion
 
     #region Cat
@@ -533,6 +533,7 @@ public class Variables : MonoBehaviour
     //triggerTile
     public GameObject curTriggerTile;
     public TileData curTriggerTileData;
+    public GameObject curEdgeGate;
     #endregion
 
     #region CatMove
@@ -764,6 +765,8 @@ public class Variables : MonoBehaviour
     public GameObject curCarriedKey;
     public GameObject curCarriedKeyIniParent;
     public Vector3 curCarriedKeyIniLocalPosition;
+    public int curCarriedIniRoomIndex;
+    public GameObject curMinimapKey;
 
     //[SerializeField] private bool _isToUnlock;
     //public bool IsToUnlock { get { return _isToUnlock; } set { _isToUnlock = value; } }
@@ -831,6 +834,8 @@ public class Variables : MonoBehaviour
 
     //fixedDeltaTime
     public float blocksManagerFixedDeltaTime;
+    public float curBlocksManagerFluidContinuousnessFixedDeltaTime;
+    public float curBlocksManagerFluidContinuousnessLastUpdatedTime;
 
     //curBlocks
     public List<GameObject> curBlocks = new List<GameObject>();
@@ -867,28 +872,33 @@ public class Variables : MonoBehaviour
     public Vector3 curCatMovedByRailBlockVector;
     #endregion
 
-    #region MiniMapManager
+    #region MinimapManager
     [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
         "  \nMINIMAPMANAGER\n --- ")]
 
-    [SerializeField] private bool _isInMiniMap;
-    public bool IsInMiniMap { get { return _isInMiniMap; } set { _isInMiniMap = value; } }
+    [SerializeField] private bool _isInMinimap;
+    public bool IsInMinimap { get { return _isInMinimap; } set { _isInMinimap = value; } }
 
-    [SerializeField] private bool _isMiniMapRotating;
-    public bool IsMiniMapRotating { get { return _isMiniMapRotating; } set { _isMiniMapRotating = value; } }
+    [SerializeField] private bool _isMinimapRotating;
+    public bool IsMinimapRotating { get { return _isMinimapRotating; } set { _isMinimapRotating = value; } }
 
+    //minimapRoomPlaneColor
+    public Color curMinimapRoomPlaneColor;
 
-    public Color curMiniMapRoomPlaneColor;
+    //minimapRotationCameraPoint
+    public GameObject curMinimapRotationCameraPoint;
+    public GameObject curToMinimapRotationCameraPoint;
 
-    public GameObject curMiniMapRotationCameraPoint;
-    public GameObject curToMiniMapRotationCameraPoint;
+    [SerializeField] private bool _isMinimapRotationCameraPositionIndexNotInitialized;
+    public bool IsMinimapRotationCameraPointIndexNotInitialized
+    { get { return _isMinimapRotationCameraPositionIndexNotInitialized; } set { _isMinimapRotationCameraPositionIndexNotInitialized = value; } }
 
-    [SerializeField] private bool _isMiniMapRotationCameraPositionIndexNotInitialized;
-    public bool IsMiniMapRotationCameraPointIndexNotInitialized
-    { get { return _isMiniMapRotationCameraPositionIndexNotInitialized; } set { _isMiniMapRotationCameraPositionIndexNotInitialized = value; } }
+    public int curMinimapRotationCameraPointIndex;
+    public int curToMinimapRotationCameraPointIndex;
 
-    public int curMiniMapRotationCameraPointIndex;
-    public int curToMiniMapRotationCameraPointIndex;
+    //keysAndLocks
+    public List<int> deactivatedMinimapKeyIndexes = new List<int>();
+    public List<int> deactivatedMinimapLockIndexes = new List<int>();
     #endregion
 
     #region OptionsManager

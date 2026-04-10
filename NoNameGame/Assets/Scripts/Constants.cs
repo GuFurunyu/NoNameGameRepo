@@ -27,7 +27,7 @@ public class Constants : MonoBehaviour
     //breadth
     public float gridBreadth;
     public int roomCoordBreadth;
-    public int miniMapRoomCoordBreadth;
+    public int minimapRoomCoordBreadth;
 
     //inRoomMaxForwardDistance
     public float inRoomMaxForwardDistance;
@@ -54,6 +54,11 @@ public class Constants : MonoBehaviour
 
     //edgeGates
     public List<GameObject> edgeGates = new List<GameObject>();
+    public List<GameObject> edgeGateTriggers = new List<GameObject>();
+
+    //gateColor
+    public Material connectedGateColor;
+    public Material unconnectedGateColor;
 
     //savePoint
     public List<GameObject> savePoints = new List<GameObject>();
@@ -61,6 +66,7 @@ public class Constants : MonoBehaviour
 
     //twist
     public GameObject[] twistingCenters = new GameObject[6];
+    public Vector3[] twistingCenterClockwiseVectors = new Vector3[6];
     public float twistSpeed;
 
     //lockAndKeys
@@ -103,10 +109,10 @@ public class Constants : MonoBehaviour
     //size
     public float camNormalSize;
     public float camZoomedOutMaxSize;
-    public float camMiniMapSize;
+    public float camMinimapSize;
 
     //distance
-    public float camMiniMapDistanceToCubeCore;
+    public float camMinimapDistanceToCubeCore;
     #endregion
 
     #region Cat
@@ -348,34 +354,38 @@ public class Constants : MonoBehaviour
     public List<string> railBlockMoveStrings = new List<string>();
     #endregion
 
-    #region MiniMapManager
+    #region MinimapManager
     [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
         "  \nMINIMAPMANAGER\n --- ")]
     //faces
-    public GameObject[] miniMapFaces = new GameObject[6];
+    public GameObject[] minimapFaces = new GameObject[6];
 
     //roomPlanes
-    public GameObject[] miniMapRoomPlanes = new GameObject[54];
+    public GameObject[] minimapRoomPlanes = new GameObject[54];
 
     //twistingCenters
-    public GameObject[] miniMapTwistingCenters = new GameObject[6];
+    public GameObject[] minimapTwistingCenters = new GameObject[6];
 
     //rotationMovingSpeed
-    public float miniMapRotationMovingSpeed;
+    public float minimapRotationMovingSpeed;
 
     //rotationCameraPoints
-    public GameObject[] miniMapRotationCameraPoints = new GameObject[26];
+    public GameObject[] minimapRotationCameraPoints = new GameObject[26];
 
     //outVersion
-    //public Vector3[] miniMapRotationCameraPointStableUps = new Vector3[26];
-    //public Vector3[] miniMapRotationCameraPointStableRights = new Vector3[26];
-    //public GameObject[] miniMapRotationCameraUpPoints = new GameObject[26];
-    //public GameObject[] miniMapRotationCameraDownPoints = new GameObject[26];
-    //public GameObject[] miniMapRotationCameraLeftPoints = new GameObject[26];
-    //public GameObject[] miniMapRotationCameraRightPoints = new GameObject[26];
+    //public Vector3[] minimapRotationCameraPointStableUps = new Vector3[26];
+    //public Vector3[] minimapRotationCameraPointStableRights = new Vector3[26];
+    //public GameObject[] minimapRotationCameraUpPoints = new GameObject[26];
+    //public GameObject[] minimapRotationCameraDownPoints = new GameObject[26];
+    //public GameObject[] minimapRotationCameraLeftPoints = new GameObject[26];
+    //public GameObject[] minimapRotationCameraRightPoints = new GameObject[26];
 
     //centerTriangles
     public GameObject[] minimapCenterTriangleEmpties = new GameObject[6];
+
+    //keysAndLocks
+    public List<GameObject> minimapKeys = new List<GameObject>();
+    public List<GameObject> minimapLocks = new List<GameObject>();
     #endregion
 
     #region OptionsManager

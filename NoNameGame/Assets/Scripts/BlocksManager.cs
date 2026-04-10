@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Reflection;
 using UnityEditor;
 using UnityEngine;
@@ -141,6 +142,9 @@ public class BlocksManager : MonoBehaviour
 
     List<GameObject> locks = new List<GameObject>();
 
+    Material connectedGateColor;
+    Material unconnectedGateColor;
+
     Transform catTransform;
 
     GameObject storedSandBlocksEmpty;
@@ -209,6 +213,8 @@ public class BlocksManager : MonoBehaviour
         gates = CONS.gates;
         edgeGates = CONS.edgeGates;
         locks = CONS.locks;
+        connectedGateColor = CONS.connectedGateColor;
+        unconnectedGateColor = CONS.unconnectedGateColor;
         catTransform = CONS.catTransform;
         storedSandBlocksEmpty = CONS.storedSandBlocksEmpty;
         storedWaterBlocksEmpty = CONS.storedWaterBlocksEmpty;
@@ -364,6 +370,27 @@ public class BlocksManager : MonoBehaviour
                 }
             }
 
+            //fluidContinuousnessFixedDeltaTime
+            if (curRoomBlockTypeIndexes.Contains(2103))
+            {
+                VARS.curBlocksManagerFluidContinuousnessFixedDeltaTime = sandFixedUpdateTime;
+            }
+            else if (curRoomBlockTypeIndexes.Contains(3201) ||
+                curRoomBlockTypeIndexes.Contains(5201))
+            {
+                VARS.curBlocksManagerFluidContinuousnessFixedDeltaTime = liquidFixedUpdateTime;
+            }
+            else if (curRoomBlockTypeIndexes.Contains(1301) ||
+                curRoomBlockTypeIndexes.Contains(5301))
+            {
+                VARS.curBlocksManagerFluidContinuousnessFixedDeltaTime = gasFixedUpdateTime;
+            }
+            else if (curRoomBlockTypeIndexes.Contains(6401))
+            {
+                VARS.curBlocksManagerFluidContinuousnessFixedDeltaTime = mistFixedUpdateTime;
+            }
+            VARS.curBlocksManagerFluidContinuousnessLastUpdatedTime = Time.time;
+
             //shaffleCurBlocks
             ShaffleCurBlocks();
 
@@ -402,6 +429,8 @@ public class BlocksManager : MonoBehaviour
                     {
                         tempTransform.GetChild(k).gameObject.SetActive(false);
                     }
+
+                    tempTransform.GetComponent<MeshRenderer>().material = connectedGateColor;
                 }
                 //lockNotConnectedGates
                 else
@@ -414,6 +443,8 @@ public class BlocksManager : MonoBehaviour
                     {
                         tempTransform.GetChild(k).gameObject.SetActive(true);
                     }
+
+                    tempTransform.GetComponent<MeshRenderer>().material = unconnectedGateColor;
                 }
 
                 //findCurNearestLock
@@ -439,6 +470,8 @@ public class BlocksManager : MonoBehaviour
                     {
                         tempTransform.GetChild(k).gameObject.SetActive(true);
                     }
+
+                    tempTransform.GetComponent<MeshRenderer>().material = unconnectedGateColor;
                 }
             }
 
@@ -453,8 +486,8 @@ public class BlocksManager : MonoBehaviour
             //determineEdgeGatePassabilities
             for (int i = 0; i < edgeGates.Count; i++)
             {
-                if (edgeGates[i].transform.parent != VARS.curPlaneEmpty.transform)
-                    continue;
+                //if (edgeGates[i].transform.parent != VARS.curPlaneEmpty.transform)
+                //    continue;
 
                 tempTransform = edgeGates[i].transform;
 
@@ -495,6 +528,8 @@ public class BlocksManager : MonoBehaviour
                     {
                         tempTransform.GetChild(k).gameObject.SetActive(false);
                     }
+
+                    tempTransform.GetComponent<MeshRenderer>().material = connectedGateColor;
                 }
                 //lockNotConnectedEdgeGates
                 else
@@ -508,6 +543,8 @@ public class BlocksManager : MonoBehaviour
                     {
                         tempTransform.GetChild(k).gameObject.SetActive(true);
                     }
+
+                    tempTransform.GetComponent<MeshRenderer>().material = unconnectedGateColor;
                 }
 
                 //findCurNearestLock
@@ -534,6 +571,8 @@ public class BlocksManager : MonoBehaviour
                     {
                         tempTransform.GetChild(k).gameObject.SetActive(true);
                     }
+
+                    tempTransform.GetComponent<MeshRenderer>().material = unconnectedGateColor;
                 }
             }
 
@@ -1143,59 +1182,64 @@ public class BlocksManager : MonoBehaviour
             #region FluidContinuousnessOptimization
             if (VARS.IsFluidContinuousnessOptimizationActivated)
             {
-                //filterOutTheHolesCausedByTheBlocksMoved
-                for (int i = curMovedBlockCoordVectors.Count - 1; i >= 0; i--)
+                if (Time.time - VARS.curBlocksManagerFluidContinuousnessLastUpdatedTime > VARS.curBlocksManagerFluidContinuousnessFixedDeltaTime)
                 {
-                    curCoordVector = curMovedBlockCoordVectors[i];
-
-                    isOccupied = false;
-
-                    for (int j = 0; j < curCoordVectors.Count; j++)
+                    //filterOutTheHolesCausedByTheBlocksMoved
+                    for (int i = curMovedBlockCoordVectors.Count - 1; i >= 0; i--)
                     {
-                        if (Mathf.RoundToInt(curCoordVectors[j].x) == Mathf.RoundToInt(curCoordVector.x) &&
-                            Mathf.RoundToInt(curCoordVectors[j].y) == Mathf.RoundToInt(curCoordVector.y) &&
-                            Mathf.RoundToInt(curCoordVectors[j].z) == Mathf.RoundToInt(curCoordVector.z))
-                        {
-                            isOccupied = true;
+                        curCoordVector = curMovedBlockCoordVectors[i];
 
-                            break;
+                        isOccupied = false;
+
+                        for (int j = 0; j < curCoordVectors.Count; j++)
+                        {
+                            if (Mathf.RoundToInt(curCoordVectors[j].x) == Mathf.RoundToInt(curCoordVector.x) &&
+                                Mathf.RoundToInt(curCoordVectors[j].y) == Mathf.RoundToInt(curCoordVector.y) &&
+                                Mathf.RoundToInt(curCoordVectors[j].z) == Mathf.RoundToInt(curCoordVector.z))
+                            {
+                                isOccupied = true;
+
+                                break;
+                            }
+                        }
+
+                        if (isOccupied)
+                        {
+                            //curMovedBlockIndexes.RemoveAt(i);
+                            curMovedBlockCoordVectors.RemoveAt(i);
+                            curMovedBlockTypeIndexes.RemoveAt(i);
                         }
                     }
-
-                    if (isOccupied)
+                    //clearTheCurSpawnedBlocks
+                    for (int i = 0; i < curSpawnedBlocks.Count; i++)
                     {
-                        //curMovedBlockIndexes.RemoveAt(i);
-                        curMovedBlockCoordVectors.RemoveAt(i);
-                        curMovedBlockTypeIndexes.RemoveAt(i);
+                        //Destroy(curSpawnedBlocks[i]);
+
+                        curSpawnedBlocks[i].transform.position = Vector3.zero;
+
+                        curSpawnedBlocks[i].SetActive(false);
+
+                        curStoredSandBlockIndex = 0;
+                        curStoredWaterBlockIndex = 0;
+                        curStoredAcidBlockIndex = 0;
+                        curStoredVaporBlockIndex = 0;
+                        curStoredGasBlockIndex = 0;
+                        curStoredElectricMistBlockIndex = 0;
+                        curStoredLightElectricMistBlockIndex = 0;
                     }
-                }
-                //clearTheCurSpawnedBlocks
-                for (int i = 0; i < curSpawnedBlocks.Count; i++)
-                {
-                    //Destroy(curSpawnedBlocks[i]);
+                    curSpawnedBlocks.Clear();
+                    //spawnTheSameBlocksInTheMovedOutPositionsToMakeTheEffectMoreContinuous
+                    for (int i = 0; i < curMovedBlockCoordVectors.Count; i++)
+                    {
+                        SpawnBlockByTypeIndex(curMovedBlockTypeIndexes[i], curMovedBlockCoordVectors[i]);
+                    }
+                    //clearTheListsOfTheCurMovedBlocks
+                    //curMovedBlockIndexes.Clear();
+                    curMovedBlockCoordVectors.Clear();
+                    curMovedBlockTypeIndexes.Clear();
 
-                    curSpawnedBlocks[i].transform.position = Vector3.zero;
-
-                    curSpawnedBlocks[i].SetActive(false);
-
-                    curStoredSandBlockIndex = 0;
-                    curStoredWaterBlockIndex = 0;
-                    curStoredAcidBlockIndex = 0;
-                    curStoredVaporBlockIndex = 0;
-                    curStoredGasBlockIndex = 0;
-                    curStoredElectricMistBlockIndex = 0;
-                    curStoredLightElectricMistBlockIndex = 0;
+                    VARS.curBlocksManagerFluidContinuousnessLastUpdatedTime = Time.time;
                 }
-                curSpawnedBlocks.Clear();
-                //spawnTheSameBlocksInTheMovedOutPositionsToMakeTheEffectMoreContinuous
-                for (int i = 0; i < curMovedBlockCoordVectors.Count; i++)
-                {
-                    SpawnBlockByTypeIndex(curMovedBlockTypeIndexes[i], curMovedBlockCoordVectors[i]);
-                }
-                //clearTheListsOfTheCurMovedBlocks
-                //curMovedBlockIndexes.Clear();
-                curMovedBlockCoordVectors.Clear();
-                curMovedBlockTypeIndexes.Clear();
             }
             #endregion
 
@@ -1444,6 +1488,9 @@ public class BlocksManager : MonoBehaviour
             curBlock.transform.position += rightVector;
             curCoordVectors[curBlockIndex] += rightVector;
         }
+
+        ////euleranglesFix
+        //curBlock.transform.eulerAngles = Vector3.zero;
     }
 
     void CurFluidBlockMoveLeftOrRight(int curBlockIndex)

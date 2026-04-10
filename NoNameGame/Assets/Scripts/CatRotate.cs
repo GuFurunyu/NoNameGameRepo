@@ -147,9 +147,6 @@ public class CatRotate : MonoBehaviour
                 VARS.outIniRotationStartTime = 0;
 
             VARS.IsInNewRoomCatRotateResetOver = true;
-
-            VARS.horCurSpeed = 0;
-            VARS.verCurSpeed = 0;
         }
 
         if (VARS.IsCatRotateMainPartExecutable)

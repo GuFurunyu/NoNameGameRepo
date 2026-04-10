@@ -20,9 +20,9 @@ public class DataManager : MonoBehaviour
         public Vector3[] roomPlanePositions = new Vector3[54];
         public Vector3[] roomPlaneEulerangles = new Vector3[54];
 
-        //miniMapRooms
-        public Vector3[] miniMapRoomPlanePositions = new Vector3[54];
-        public Vector3[] miniMapRoomPlaneEulerangles = new Vector3[54];
+        //minimapRooms
+        public Vector3[] minimapRoomPlanePositions = new Vector3[54];
+        public Vector3[] minimapRoomPlaneEulerangles = new Vector3[54];
     }
 
     WorldData curWorldData = new WorldData();
@@ -46,7 +46,9 @@ public class DataManager : MonoBehaviour
         public List<int> deactivatedKeyIndexes = new List<int>();
         public List<int> deactivatedLockIndexes = new List<int>();
         public bool isCarryingAKey;
-        public GameObject curCarriedKey;
+        public int curCarriedKeyIndex;
+        public List<int> deactivatedMinimapKeyIndexes = new List<int>();
+        public List<int> deactivatedMinimapLockIndexes = new List<int>();
     }
 
     CatWorldData curCatWorldData = new CatWorldData();
@@ -76,7 +78,7 @@ public class DataManager : MonoBehaviour
     #region ConstantsUsed
     float gridBreadth;
     int roomCoordBreadth;
-    int miniMapRoomCoordBreadth;
+    int minimapRoomCoordBreadth;
 
     GameObject[] faces = new GameObject[6];
     Vector3[] faceStableForwards = new Vector3[6];
@@ -87,12 +89,17 @@ public class DataManager : MonoBehaviour
 
     GameObject[] twistingCenters = new GameObject[6];
 
-    GameObject[] miniMapFaces = new GameObject[6];
-    GameObject[] miniMapRoomPlanes = new GameObject[54];
-    GameObject[] miniMapTwistingCenters = new GameObject[6];
-
     List<GameObject> keys = new List<GameObject>();
     List<GameObject> locks = new List<GameObject>();
+
+    GameObject[] minimapFaces = new GameObject[6];
+    GameObject[] minimapRoomPlanes = new GameObject[54];
+    GameObject[] minimapTwistingCenters = new GameObject[6];
+
+    List<GameObject> minimapKeys = new List<GameObject>();
+    List<GameObject> minimapLocks = new List<GameObject>();
+
+    Material connectedGateColor;
 
     Transform catTransform;
     #endregion
@@ -114,17 +121,20 @@ public class DataManager : MonoBehaviour
         #region ImportConstants
         gridBreadth = CONS.gridBreadth;
         roomCoordBreadth = CONS.roomCoordBreadth;
-        miniMapRoomCoordBreadth = CONS.miniMapRoomCoordBreadth;
+        minimapRoomCoordBreadth = CONS.minimapRoomCoordBreadth;
         faces = CONS.faces;
         faceStableForwards = CONS.faceStableForwards;
         roomPlanes = CONS.roomPlanes;
         storedActivatedSavePointBlock = CONS.storedActivatedSavePointBlock;
         twistingCenters = CONS.twistingCenters;
-        miniMapFaces = CONS.miniMapFaces;
-        miniMapRoomPlanes = CONS.miniMapRoomPlanes;
-        miniMapTwistingCenters = CONS.miniMapTwistingCenters;
         keys = CONS.keys;
         locks = CONS.locks;
+        minimapFaces = CONS.minimapFaces;
+        minimapRoomPlanes = CONS.minimapRoomPlanes;
+        minimapTwistingCenters = CONS.minimapTwistingCenters;
+        minimapKeys = CONS.minimapKeys;
+        minimapLocks = CONS.minimapLocks;
+        connectedGateColor = CONS.connectedGateColor;
         catTransform = CONS.catTransform;
         #endregion
 
@@ -202,22 +212,22 @@ public class DataManager : MonoBehaviour
                     }
                 }
 
-                //miniMapRooms
-                tempTransform = miniMapRoomPlanes[i].transform;
+                //minimapRooms
+                tempTransform = minimapRoomPlanes[i].transform;
 
-                tempTransform.position = UFL.Vector3RoundToInt(curWorldData.miniMapRoomPlanePositions[i]);
-                tempTransform.eulerAngles = UFL.Vector3RoundToInt(curWorldData.miniMapRoomPlaneEulerangles[i]);
+                tempTransform.position = UFL.Vector3RoundToInt(curWorldData.minimapRoomPlanePositions[i]);
+                tempTransform.eulerAngles = UFL.Vector3RoundToInt(curWorldData.minimapRoomPlaneEulerangles[i]);
 
-                //miniMapRoomPlanesChildToTheFaces
+                //minimapRoomPlanesChildToTheFaces
                 for (int j = 0; j < 6; j++)
                 {
-                    //tempVector = tempTransform.position - miniMapTwistingCenters[j].transform.position;
+                    //tempVector = tempTransform.position - minimapTwistingCenters[j].transform.position;
 
                     //ifIsInTheFaceChildToIt
-                    if (/*Mathf.Abs(Vector3.Dot(tempVector, faceStableForwards[j])) <= (miniMapRoomCoordBreadth / 2 + 2) * gridBreadth*/
-                        UFL.IsMiniMapPlaneInTheFace(i, j + 1))
+                    if (/*Mathf.Abs(Vector3.Dot(tempVector, faceStableForwards[j])) <= (minimapRoomCoordBreadth / 2 + 2) * gridBreadth*/
+                        UFL.IsMinimapPlaneInTheFace(i, j + 1))
                     {
-                        tempTransform.SetParent(miniMapFaces[j].transform, true);
+                        tempTransform.SetParent(minimapFaces[j].transform, true);
 
                         break;
                     }
@@ -238,11 +248,11 @@ public class DataManager : MonoBehaviour
             curWorldData.roomPlanePositions[i] = UFL.Vector3RoundToInt(tempTransform.position);
             curWorldData.roomPlaneEulerangles[i] = UFL.Vector3RoundToInt(tempTransform.eulerAngles);
 
-            //miniMapRooms
-            tempTransform = miniMapRoomPlanes[i].transform;
+            //minimapRooms
+            tempTransform = minimapRoomPlanes[i].transform;
 
-            curWorldData.miniMapRoomPlanePositions[i] = UFL.Vector3RoundToInt(tempTransform.position);
-            curWorldData.miniMapRoomPlaneEulerangles[i] = UFL.Vector3RoundToInt(tempTransform.eulerAngles);
+            curWorldData.minimapRoomPlanePositions[i] = UFL.Vector3RoundToInt(tempTransform.position);
+            curWorldData.minimapRoomPlaneEulerangles[i] = UFL.Vector3RoundToInt(tempTransform.eulerAngles);
         }
 
         tempJsonString = JsonUtility.ToJson(curWorldData);
@@ -278,7 +288,7 @@ public class DataManager : MonoBehaviour
             VARS.deactivatedKeyIndexes = curCatWorldData.deactivatedKeyIndexes;
             VARS.deactivatedLockIndexes = curCatWorldData.deactivatedLockIndexes;
             VARS.IsCarryingAKey = curCatWorldData.isCarryingAKey;
-            VARS.curCarriedKey = curCatWorldData.curCarriedKey;
+            VARS.curCarriedKey = keys[curCatWorldData.curCarriedKeyIndex];
             for (int i = 0; i < keys.Count; i++)
             {
                 if (curCatWorldData.deactivatedKeyIndexes.Contains(i))
@@ -291,6 +301,24 @@ public class DataManager : MonoBehaviour
                 if (curCatWorldData.deactivatedLockIndexes.Contains(i))
                 {
                     locks[i].SetActive(false);
+                }
+            }
+
+            //minimapKeysAndLocks
+            VARS.deactivatedMinimapKeyIndexes = curCatWorldData.deactivatedMinimapKeyIndexes;
+            VARS.deactivatedMinimapLockIndexes = curCatWorldData.deactivatedMinimapLockIndexes;
+            for (int i = 0; i < minimapKeys.Count; i++)
+            {
+                if (curCatWorldData.deactivatedMinimapKeyIndexes.Contains(i))
+                {
+                    minimapKeys[i].SetActive(false);
+                }
+            }
+            for (int i = 0; i < minimapLocks.Count; i++)
+            {
+                if (curCatWorldData.deactivatedMinimapLockIndexes.Contains(i))
+                {
+                    minimapLocks[i].GetComponent<MeshRenderer>().material = connectedGateColor;
                 }
             }
 
@@ -320,7 +348,18 @@ public class DataManager : MonoBehaviour
         curCatWorldData.deactivatedKeyIndexes = VARS.deactivatedKeyIndexes;
         curCatWorldData.deactivatedLockIndexes = VARS.deactivatedLockIndexes;
         curCatWorldData.isCarryingAKey = VARS.IsCarryingAKey;
-        curCatWorldData.curCarriedKey = VARS.curCarriedKey;
+        for (int i = 0; i < keys.Count; i++)
+        {
+            if (keys[i] == VARS.curCarriedKey)
+            {
+                curCatWorldData.curCarriedKeyIndex = i;
+                break;
+            }
+        }
+
+        //minimapKeysAndLocks
+        curCatWorldData.deactivatedMinimapKeyIndexes = VARS.deactivatedMinimapKeyIndexes;
+        curCatWorldData.deactivatedMinimapLockIndexes = VARS.deactivatedMinimapLockIndexes;
 
         tempJsonString = JsonUtility.ToJson(curCatWorldData);
 

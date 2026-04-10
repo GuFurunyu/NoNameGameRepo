@@ -70,7 +70,7 @@ public class Control : MonoBehaviour
 
         if (!VARS.IsRotating &&
             !VARS.IsTwisting &&
-            !VARS.IsMiniMapRotating &&
+            !VARS.IsMinimapRotating &&
             VARS.IsInNewRoomAllResetOver)
         {
             VARS.IsInputtingUpKey = Input.GetKey(VARS.upKeyCode);

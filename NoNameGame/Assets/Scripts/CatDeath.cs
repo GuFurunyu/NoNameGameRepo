@@ -95,6 +95,8 @@ public class CatDeath : MonoBehaviour
             VARS.curCarriedKey.transform.parent = VARS.curCarriedKeyIniParent.transform;
             VARS.curCarriedKey.transform.localPosition = VARS.curCarriedKeyIniLocalPosition;
 
+            VARS.curMinimapKey.SetActive(true);
+
             VARS.curCarriedKey = null;
 
             VARS.IsCarryingAKey = false;

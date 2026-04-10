@@ -449,38 +449,46 @@ public class CatCollision : MonoBehaviour
             {
                 tempVector = catTransform.position - VARS.curDownTile.transform.position;
                 tempFloat = Vector3.Dot(tempVector, curUp);
-                if (tempFloat < gridBreadth - 0.1f)
+                if (tempFloat < gridBreadth - 0.01f)
                 {
                     //Debug.Log("distanceFix1:" + catTransform.position);
                     UFL.AddCatPosition(curUp * (gridBreadth - tempFloat + 0.01f));
                     //Debug.Log("distanceFix2:" + catTransform.position);
+
+                    VARS.verCurSpeed = -VARS.verCurSpeed * VARS.curDownTileData.elasticity;
                 }
             }
             else if (VARS.IsToCeiling)
             {
                 tempVector = catTransform.position - VARS.curUpTile.transform.position;
                 tempFloat = Vector3.Dot(tempVector, -curUp);
-                if (tempFloat < gridBreadth - 0.1f)
+                if (tempFloat < gridBreadth)
                 {
                     UFL.AddCatPosition(-curUp * (gridBreadth - tempFloat));
+
+                    VARS.verCurSpeed = -VARS.verCurSpeed * VARS.curUpTileData.elasticity;
                 }
             }
             else if (VARS.IsLeftBlocked)
             {
                 tempVector = catTransform.position - VARS.curLeftTile.transform.position;
                 tempFloat = Vector3.Dot(tempVector, curRight);
-                if (tempFloat < gridBreadth - 0.1f)
+                if (tempFloat < gridBreadth)
                 {
                     UFL.AddCatPosition(curRight * (gridBreadth - tempFloat));
+
+                    VARS.horCurSpeed = -VARS.horCurSpeed * VARS.curLeftTileData.elasticity;
                 }
             }
             else if (VARS.IsRightBlocked)
             {
                 tempVector = catTransform.position - VARS.curRightTile.transform.position;
                 tempFloat = Vector3.Dot(tempVector, -curRight);
-                if (tempFloat < gridBreadth - 0.1f)
+                if (tempFloat < gridBreadth)
                 {
                     UFL.AddCatPosition(-curRight * (gridBreadth - tempFloat));
+
+                    VARS.horCurSpeed = -VARS.horCurSpeed * VARS.curRightTileData.elasticity;
                 }
             }
 
@@ -494,12 +502,6 @@ public class CatCollision : MonoBehaviour
                 }
             }
             #endregion
-
-            //voidBlocks
-            if (UFL.IsCatInVoidBlock())
-            {
-                VARS.IsToDie = true;
-            }
 
             //#region Squeeze
             //tempInt = UFL.CatInBlockIndex();
@@ -844,6 +846,8 @@ public class CatCollision : MonoBehaviour
                 else if (/*curTileData.triggerTypeIndex == 4*/
                     curTileData.blockTypeIndex == 7002)
                 {
+                    VARS.curEdgeGate = VARS.curTriggerTile;
+
                     VARS.IsEnteringAnEdgeGate = true;
                 }
 
@@ -851,7 +855,10 @@ public class CatCollision : MonoBehaviour
                 else if (/*curTileData.triggerTypeIndex == 5*/
                     curTileData.blockTypeIndex == 7003)
                 {
-                    VARS.IsEdgeGateTriggered = true;
+                    if (UFL.IsCatInEdgeGateTrigger())
+                    {
+                        VARS.IsEdgeGateTriggered = true;
+                    }
                 }
 
                 //activateSavePoint(notActiavted)
@@ -909,6 +916,15 @@ public class CatCollision : MonoBehaviour
                     if (curTile.transform.localScale != Vector3.one * 0.2f)
                     {
                         VARS.IsGettingAnEnergyCrystal = true;
+                    }
+                }
+
+                //void
+                else if (curTileData.blockTypeIndex == 7010)
+                {
+                    if (UFL.IsCatInVoidBlock())
+                    {
+                        VARS.IsToDie = true;
                     }
                 }
             }

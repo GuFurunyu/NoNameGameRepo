@@ -119,6 +119,28 @@ public class CameraManager : MonoBehaviour
             VARS.curRight = new Vector3
                 (Mathf.RoundToInt(camTransform.right.x), Mathf.RoundToInt(camTransform.right.y), Mathf.RoundToInt(camTransform.right.z));
 
+            //initialSightMasks
+            //for (int i = 0; i < 4; i++)
+            //{
+            //    initialSightMasks[i].transform.LookAt(initialSightMasks[i].transform.position + VARS.curRoomStableForward);
+            //}
+            initialSightMasksEmpty.transform.localPosition = -VARS.curRoomStableForward * 4;
+            if (VARS.curFaceIndex == 1 ||
+                VARS.curFaceIndex == 2)
+            {
+                initialSightMasksEmpty.transform.eulerAngles = new Vector3(0, 0, 0);
+            }
+            else if (VARS.curFaceIndex == 3 ||
+                VARS.curFaceIndex == 4)
+            {
+                initialSightMasksEmpty.transform.eulerAngles = new Vector3(0, 90, 0);
+            }
+            else if (VARS.curFaceIndex == 5 ||
+                VARS.curFaceIndex == 6)
+            {
+                initialSightMasksEmpty.transform.eulerAngles = new Vector3(90, 0, 0);
+            }
+
             VARS.IsInNewRoomCameraManagerResetOver = true;
         }
 
@@ -303,10 +325,10 @@ public class CameraManager : MonoBehaviour
             #endregion
             #endregion
 
-            #region MiniMap
-            //if (VARS.IsInMiniMap)
+            #region Minimap
+            //if (VARS.IsInMinimap)
             //{
-            //    UFL.SetCameraEulerangles(new Vector3(camTransform.eulerAngles.x, camTransform.eulerAngles.y, VARS.camEuleranglesBeforeIntoMiniMap.z));
+            //    UFL.SetCameraEulerangles(new Vector3(camTransform.eulerAngles.x, camTransform.eulerAngles.y, VARS.camEuleranglesBeforeIntoMinimap.z));
             //}
             #endregion
         }
