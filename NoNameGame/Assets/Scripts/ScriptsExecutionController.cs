@@ -44,6 +44,7 @@ public class ScriptsExecutionController : MonoBehaviour
             !VARS.IsInMinimap &&
             !VARS.IsOptionPanelActivated &&
             !VARS.IsExiting &&
+            !VARS.IsEdgeGateTriggered &&
             !(VARS.IsJustEnterNewFace &&
             !VARS.IsOnGround);
 
@@ -56,6 +57,7 @@ public class ScriptsExecutionController : MonoBehaviour
 
         //catEnergy
         VARS.IsCatEnergyResetExecutable =
+            VARS.IsInNewRoomAllResetOver &&
             !VARS.IsRotating &&
             !VARS.IsTwisting &&
             !VARS.IsInAcce &&
@@ -69,6 +71,7 @@ public class ScriptsExecutionController : MonoBehaviour
 
         //catTrigger
         VARS.IsCatTriggerMainPartExecutable =
+            VARS.IsInNewRoomAllResetOver &&
             !VARS.IsRotating &&
             !VARS.IsTwisting &&
             !VARS.IsExiting;
@@ -83,6 +86,7 @@ public class ScriptsExecutionController : MonoBehaviour
 
         //optionsManager
         VARS.IsOptionsManagerActivationExecutable =
+            VARS.IsInNewRoomAllResetOver &&
             !VARS.IsRotating &&
             !VARS.IsTwisting &&
             !VARS.IsZoomedOut &&

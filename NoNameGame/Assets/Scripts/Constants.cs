@@ -4,6 +4,11 @@ using UnityEngine;
 [DefaultExecutionOrder((int)ScriptsExecutionOrder.ExecutionOrder.constants)]
 public class Constants : MonoBehaviour
 {
+    [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
+        "\n- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
+        "  \nCONSTANTS\n --- " +
+        "\n- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n")]
+
     #region Default
     [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
         "  \nDEFAULT\n --- ")]
@@ -138,6 +143,9 @@ public class Constants : MonoBehaviour
     #region CatCollision
     [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
         "  \nCATCOLLISION\n --- ")]
+    //fixedDeltaTime
+    public float catCollisionFixedDeltaTime;
+
     //rayDistance
     public float rayDistance;
     public float longRayDistance;
@@ -154,6 +162,9 @@ public class Constants : MonoBehaviour
     #region CatMove
     [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
         "  \nCATMOVE\n --- ")]
+    //fixedDeltaTime
+    public float catMoveFixedDeltaTime;
+
     //horSpeed
     public float horAcce;
     public float horReverseAcce;
@@ -426,6 +437,11 @@ public class Constants : MonoBehaviour
 
     //audioclips
     public List<AudioClip> audioClips = new List<AudioClip>();
+
+    //volume
+    public float normalVolume;
+    public float volumeFadingOutSpeed;
+    public float volumeFadingOutThres;
     #endregion
 
     void Start()

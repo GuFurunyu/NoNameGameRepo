@@ -18,6 +18,10 @@ public class AudioManager : MonoBehaviour
     AudioSource audioSource;
 
     List<AudioClip> audioClips;
+
+    float normalVolume;
+    float volumeFadingOutSpeed;
+    float volumeFadingOutThres;
     #endregion
 
     #region VariablesUsed
@@ -36,6 +40,9 @@ public class AudioManager : MonoBehaviour
         #region ImportConstants
         audioSource = CONS.audioSource;
         audioClips = CONS.audioClips;
+        normalVolume = CONS.normalVolume;
+        volumeFadingOutSpeed = CONS.volumeFadingOutSpeed;
+        volumeFadingOutThres = CONS.volumeFadingOutThres;
         #endregion
 
         #region ImportReferenceVariable
@@ -56,9 +63,23 @@ public class AudioManager : MonoBehaviour
             {
                 storedAudioClipIndex = VARS.curAudioClipIndex;
 
-                audioSource.clip = audioClips[storedAudioClipIndex];
-                audioSource.Play();
-                audioSource.loop = true;
+                VARS.IsFormerBgmFadingOut = true;
+            }
+            //formalBgmFadeOut
+            if (VARS.IsFormerBgmFadingOut)
+            {
+                audioSource.volume -= volumeFadingOutSpeed * Time.deltaTime;
+
+                if (audioSource.volume < volumeFadingOutThres)
+                {
+                    audioSource.volume = normalVolume;
+
+                    audioSource.clip = audioClips[storedAudioClipIndex];
+                    audioSource.Play();
+                    audioSource.loop = true;
+
+                    VARS.IsFormerBgmFadingOut = false;
+                }
             }
         }
     }

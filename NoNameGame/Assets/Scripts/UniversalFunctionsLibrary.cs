@@ -32,6 +32,7 @@ public class UniversalFunctionsLibrary : MonoBehaviour
 
     GameObject[] twistingCenters = new GameObject[6];
 
+    List<GameObject> edgeGates = new List<GameObject>();
     List<GameObject> edgeGateTriggers = new List<GameObject>();
 
     GameObject[] minimapFaces = new GameObject[6];
@@ -85,6 +86,7 @@ public class UniversalFunctionsLibrary : MonoBehaviour
         faceStableRights = CONS.faceStableRights;
         roomPlanes = CONS.roomPlanes;
         twistingCenters = CONS.twistingCenters;
+        edgeGates = CONS.edgeGates;
         edgeGateTriggers = CONS.edgeGateTriggers;
         minimapFaces = CONS.minimapFaces;
         minimapRoomPlanes = CONS.minimapRoomPlanes;
@@ -684,6 +686,25 @@ public class UniversalFunctionsLibrary : MonoBehaviour
             if (Mathf.Abs(Vector3.Dot(tempVector, VARS.curUp)) < gridBreadth - 0.1f &&
                 Mathf.Abs(Vector3.Dot(tempVector, VARS.curRight)) < gridBreadth - 0.1f)
             {
+                return true;
+            }
+
+        }
+
+        return false;
+    }
+
+    public bool IsCatInEdgeGate()
+    {
+        for (int i = 0; i < edgeGates.Count; i++)
+        {
+            tempVector = catTransform.position - edgeGates[i].transform.position;
+
+            if (Mathf.Abs(Vector3.Dot(tempVector, VARS.curUp)) < gridBreadth /*- 0.1f*/ &&
+                Mathf.Abs(Vector3.Dot(tempVector, VARS.curRight)) < gridBreadth /*- 0.1f*/)
+            {
+                VARS.curEdgeGate = edgeGates[i];
+
                 return true;
             }
 

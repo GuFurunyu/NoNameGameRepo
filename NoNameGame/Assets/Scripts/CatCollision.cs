@@ -81,8 +81,13 @@ public class CatCollision : MonoBehaviour
     float breakingPower;
     //bool isBreaking;
 
+    //distanceFix
+    //int isNotJustOnGroundFixedInt = 1;
+
     int tempInt;
     float tempFloat;
+    float tempFloat1;
+    float tempFloat2;
     Vector3 tempVector;
     RaycastHit tempHit;
 
@@ -92,6 +97,8 @@ public class CatCollision : MonoBehaviour
     Transform catTransform;
 
     float catBreadth;
+
+    float catCollisionFixedDeltaTime;
 
     float rayDistance;
     float longRayDistance;
@@ -139,6 +146,7 @@ public class CatCollision : MonoBehaviour
         gridBreadth = CONS.gridBreadth;
         catTransform = CONS.catTransform;
         catBreadth = CONS.catBreadth;
+        catCollisionFixedDeltaTime = CONS.catCollisionFixedDeltaTime;
         rayDistance = CONS.rayDistance;
         longRayDistance = CONS.longRayDistance;
         longPlusRayDistance = CONS.longPlusRayDistance;
@@ -160,7 +168,8 @@ public class CatCollision : MonoBehaviour
         #endregion
     }
 
-    void Update()
+    //void Update()
+    void FixedUpdate()
     {
         #region ImportValueVariables
         curRight = VARS.curRight;
@@ -168,16 +177,24 @@ public class CatCollision : MonoBehaviour
         #endregion
 
         #region Collision
+        //if (Time.time - VARS.catCollisionLastUpdatedTime < catCollisionFixedDeltaTime)
+        //{
+        //    return;
+        //}
+        //else
+        //{
+        //    VARS.catCollisionLastUpdatedTime = Time.time;
+        //}
 
         #region Ray
-        leftTopPoint = catTransform.position - curRight * catBreadth / 4 + curUp * (catBreadth / 2 - 0.02f);
-        leftBottomPoint = catTransform.position - curRight * catBreadth / 4 - curUp * (catBreadth / 2 - 0.02f);
-        rightTopPoint = catTransform.position + curRight * catBreadth / 4 + curUp * (catBreadth / 2 - 0.02f);
-        rightBottomPoint = catTransform.position + curRight * catBreadth / 4 - curUp * (catBreadth / 2 - 0.02f);
-        topLeftPoint = catTransform.position + curUp * catBreadth / 4 - curRight * (catBreadth / 2 - 0.02f);
-        topRightPoint = catTransform.position + curUp * catBreadth / 4 + curRight * (catBreadth / 2 - 0.02f);
-        bottomLeftPoint = catTransform.position - curUp * catBreadth / 4 - curRight * (catBreadth / 2 - 0.02f);
-        bottomRightPoint = catTransform.position - curUp * catBreadth / 4 + curRight * (catBreadth / 2 - 0.02f);
+        leftTopPoint = catTransform.position - curRight * catBreadth / 4 + curUp * (catBreadth / 2 - 0.01f);
+        leftBottomPoint = catTransform.position - curRight * catBreadth / 4 - curUp * (catBreadth / 2 - 0.01f);
+        rightTopPoint = catTransform.position + curRight * catBreadth / 4 + curUp * (catBreadth / 2 - 0.01f);
+        rightBottomPoint = catTransform.position + curRight * catBreadth / 4 - curUp * (catBreadth / 2 - 0.01f);
+        topLeftPoint = catTransform.position + curUp * catBreadth / 4 - curRight * (catBreadth / 2 - 0.01f);
+        topRightPoint = catTransform.position + curUp * catBreadth / 4 + curRight * (catBreadth / 2 - 0.01f);
+        bottomLeftPoint = catTransform.position - curUp * catBreadth / 4 - curRight * (catBreadth / 2 - 0.01f);
+        bottomRightPoint = catTransform.position - curUp * catBreadth / 4 + curRight * (catBreadth / 2 - 0.01f);
         //liquidCenterPoint = catTransform.position + curUp * catBreadth / 40;
         //gasCenterPoint = catTransform.position - curUp * catBreadth / 40;
         topPoint = catTransform.position + curUp * (catBreadth / 2 - 0.02f);
@@ -203,7 +220,7 @@ public class CatCollision : MonoBehaviour
         mistDownRay = new Ray(topPoint, -curUp);
         mistLeftRay = new Ray(rightPoint, -curRight);
         mistRightRay = new Ray(leftPoint, curRight);
-        #endregion        
+        #endregion
 
         if (VARS.IsCatCollisionMainPartExecutable)
         {
@@ -384,7 +401,7 @@ public class CatCollision : MonoBehaviour
 
             #region MistDetect
             if (Physics.Raycast(mistUpRay, out mistUpHit, longLongRayDistance) ||
-                Physics.Raycast(mistDownRay,out mistDownHit,longLongRayDistance) ||
+                Physics.Raycast(mistDownRay, out mistDownHit, longLongRayDistance) ||
                 Physics.Raycast(mistLeftRay, out mistLeftHit, longLongRayDistance) ||
                 Physics.Raycast(mistRightRay, out mistRightHit, longLongRayDistance))
             {
@@ -428,7 +445,7 @@ public class CatCollision : MonoBehaviour
             }
 
             //electricity
-            if(VARS.catCurElectricity != 0)
+            if (VARS.catCurElectricity != 0)
             {
                 //UFL.AddCatCurElectricity(-VARS.catCurElectricity * electricityTransferSpeed * Time.deltaTime);
                 VARS.catCurElectricity += -VARS.catCurElectricity * electricityTransferSpeed * Time.deltaTime;
@@ -444,49 +461,68 @@ public class CatCollision : MonoBehaviour
             #endregion
 
             #region DistanceFix
-            //ifCatInTileGetItOut
-            if (VARS.IsOnGround)
+            ////ifCatInTileGetItOut
+            if (VARS.IsOnGround &&
+                !VARS.IsToCeiling)
             {
                 tempVector = catTransform.position - VARS.curDownTile.transform.position;
                 tempFloat = Vector3.Dot(tempVector, curUp);
-                if (tempFloat < gridBreadth - 0.01f)
+                tempFloat1 = Vector3.Dot(tempVector, curRight);
+                if (tempFloat < gridBreadth /*- 0.01f*/ )
                 {
-                    //Debug.Log("distanceFix1:" + catTransform.position);
-                    UFL.AddCatPosition(curUp * (gridBreadth - tempFloat + 0.01f));
-                    //Debug.Log("distanceFix2:" + catTransform.position);
+                    if (Mathf.Abs(tempFloat1) < gridBreadth * 0.975f)
+                    {
+                        //Debug.Log("distanceFix1:" + catTransform.position);
+                        UFL.AddCatPosition(curUp * (gridBreadth - tempFloat + 0.0075f));
+                        //Debug.Log("distanceFix2:" + catTransform.position);
+                    }
 
                     VARS.verCurSpeed = -VARS.verCurSpeed * VARS.curDownTileData.elasticity;
                 }
             }
-            else if (VARS.IsToCeiling)
+            if (VARS.IsToCeiling)
             {
                 tempVector = catTransform.position - VARS.curUpTile.transform.position;
                 tempFloat = Vector3.Dot(tempVector, -curUp);
+                tempFloat1 = Vector3.Dot(tempVector, curRight);
                 if (tempFloat < gridBreadth)
                 {
-                    UFL.AddCatPosition(-curUp * (gridBreadth - tempFloat));
+                    if (Mathf.Abs(tempFloat1) < gridBreadth * 0.95f)
+                    {
+                        UFL.AddCatPosition(-curUp * (gridBreadth - tempFloat));
+                    }
 
                     VARS.verCurSpeed = -VARS.verCurSpeed * VARS.curUpTileData.elasticity;
                 }
+
+                VARS.IsHighJumping = false;
             }
-            else if (VARS.IsLeftBlocked)
+            if (VARS.IsLeftBlocked)
             {
                 tempVector = catTransform.position - VARS.curLeftTile.transform.position;
                 tempFloat = Vector3.Dot(tempVector, curRight);
+                tempFloat1 = Vector3.Dot(tempVector, curUp);
                 if (tempFloat < gridBreadth)
                 {
-                    UFL.AddCatPosition(curRight * (gridBreadth - tempFloat));
+                    if (Mathf.Abs(tempFloat1) < gridBreadth * 0.95f)
+                    {
+                        UFL.AddCatPosition(curRight * (gridBreadth - tempFloat));
+                    }
 
                     VARS.horCurSpeed = -VARS.horCurSpeed * VARS.curLeftTileData.elasticity;
                 }
             }
-            else if (VARS.IsRightBlocked)
+            if (VARS.IsRightBlocked)
             {
                 tempVector = catTransform.position - VARS.curRightTile.transform.position;
                 tempFloat = Vector3.Dot(tempVector, -curRight);
+                tempFloat1 = Vector3.Dot(tempVector, curUp);
                 if (tempFloat < gridBreadth)
                 {
-                    UFL.AddCatPosition(-curRight * (gridBreadth - tempFloat));
+                    if (Mathf.Abs(tempFloat1) < gridBreadth * 0.95f)
+                    {
+                        UFL.AddCatPosition(-curRight * (gridBreadth - tempFloat));
+                    }
 
                     VARS.horCurSpeed = -VARS.horCurSpeed * VARS.curRightTileData.elasticity;
                 }
@@ -523,6 +559,72 @@ public class CatCollision : MonoBehaviour
         //        //VARS.IsAttachWall = false;
         //    }
         //}
+        #endregion
+
+        //edgeGate
+        //if (UFL.IsCatInEdgeGate())
+        //{
+        //    VARS.IsEnteringAnEdgeGate = true;
+        //}
+        //if (UFL.IsCatInEdgeGateTrigger())
+        //{
+        //    VARS.IsEdgeGateTriggered = true;
+        //}
+
+        #region EdgeGate
+        ////enter
+        //if (UFL.IsCatInEdgeGate())
+        //{
+        //    VARS.IsEnteringAnEdgeGate = true;
+        //}
+
+        //trigger
+        if (VARS.IsEnteringAnEdgeGate)
+        {
+            //determinEdgeGateDirection
+            tempFloat1 = Vector3.Dot(VARS.curEdgeGate.transform.position - VARS.curRoomCenter, VARS.curUp);
+            tempFloat2 = Vector3.Dot(VARS.curEdgeGate.transform.position - VARS.curRoomCenter, VARS.curRight);
+            //upOrDown
+            if (Mathf.Abs(tempFloat1) > Mathf.Abs(tempFloat2))
+            {
+                //up
+                if (tempFloat1 > 0)
+                {
+                    tempVector = VARS.curUp;
+                }
+                //down
+                else
+                {
+                    tempVector = -VARS.curUp;
+                }
+            }
+            //leftOrRight
+            else
+            {
+                //left
+                if (tempFloat2 < 0)
+                {
+                    tempVector = -VARS.curRight;
+                }
+                //right
+                else
+                {
+                    tempVector = VARS.curRight;
+                }
+            }
+
+            //Debug.Log("tempVector: " + tempVector);
+
+            //triggerEdgeGate
+            if (Vector3.Dot(catTransform.position - VARS.curEdgeGate.transform.position, tempVector) > 0.9f)
+            {
+                //Debug.Log("enter");
+                //Debug.Log("cat: " + catTransform.position);
+                //Debug.Log("edgeGate: " + VARS.curEdgeGate.transform.position);
+
+                VARS.IsEdgeGateTriggered = true;
+            }
+        }
         #endregion
     }
 
@@ -662,20 +764,20 @@ public class CatCollision : MonoBehaviour
                     {
                         VARS.curTilePosition = curTile.transform.position;
 
-                        if (dirIndex == 1)
-                        {
-                            positionFixOffset += 0.001f * tempFloat;
-                        }
+                        //if (dirIndex == 1)
+                        //{
+                        //    positionFixOffset += 0.001f * tempFloat;
+                        //}
 
-                        UFL.SetCatPosition(new Vector3
-                            (catTransform.position.x * Mathf.Abs(Mathf.Abs(tempVector.x) - 1) + VARS.curTilePosition.x * Mathf.Abs(tempVector.x) + tempInt * (positionFixOffset - 0.001f * tempFloat) * tempVector.x,
-                            catTransform.position.y * Mathf.Abs(Mathf.Abs(tempVector.y) - 1) + VARS.curTilePosition.y * Mathf.Abs(tempVector.y) + tempInt * (positionFixOffset - 0.001f * tempFloat) * tempVector.y,
-                            catTransform.position.z * Mathf.Abs(Mathf.Abs(tempVector.z) - 1) + VARS.curTilePosition.z * Mathf.Abs(tempVector.z) + tempInt * (positionFixOffset - 0.001f * tempFloat) * tempVector.z));
+                        //UFL.SetCatPosition(new Vector3
+                        //    (catTransform.position.x * Mathf.Abs(Mathf.Abs(tempVector.x) - 1) + VARS.curTilePosition.x * Mathf.Abs(tempVector.x) + tempInt * (positionFixOffset - 0.001f * tempFloat) * tempVector.x,
+                        //    catTransform.position.y * Mathf.Abs(Mathf.Abs(tempVector.y) - 1) + VARS.curTilePosition.y * Mathf.Abs(tempVector.y) + tempInt * (positionFixOffset - 0.001f * tempFloat) * tempVector.y,
+                        //    catTransform.position.z * Mathf.Abs(Mathf.Abs(tempVector.z) - 1) + VARS.curTilePosition.z * Mathf.Abs(tempVector.z) + tempInt * (positionFixOffset - 0.001f * tempFloat) * tempVector.z));
 
-                        if (dirIndex == 1)
-                        {
-                            positionFixOffset -= 0.001f * tempFloat;
-                        }
+                        //if (dirIndex == 1)
+                        //{
+                        //    positionFixOffset -= 0.001f * tempFloat;
+                        //}
 
                         ////notSharp
                         //if (curTileData.sharpDirVector == Vector3.zero)
@@ -851,15 +953,13 @@ public class CatCollision : MonoBehaviour
                     VARS.IsEnteringAnEdgeGate = true;
                 }
 
-                //edgeGateTrigger(triggerEdgeGate)
-                else if (/*curTileData.triggerTypeIndex == 5*/
-                    curTileData.blockTypeIndex == 7003)
-                {
-                    if (UFL.IsCatInEdgeGateTrigger())
-                    {
-                        VARS.IsEdgeGateTriggered = true;
-                    }
-                }
+                ////edgeGateTrigger(triggerEdgeGate)
+                //else if (/*curTileData.triggerTypeIndex == 5*/
+                //    curTileData.blockTypeIndex == 7003 &&
+                //    UFL.IsCatInEdgeGateTrigger())
+                //{
+                //    VARS.IsEdgeGateTriggered = true;
+                //}
 
                 //activateSavePoint(notActiavted)
                 //savePoint

@@ -240,9 +240,12 @@ public class CatTrigger : MonoBehaviour
                             curRight = Vector3.Cross(curEdgeGatesCommonLineVector, curRight);
                         }
 
-                        VARS.IsEdgeGateTriggered = false;
+                        VARS.curEdgeGate = null;
 
                         throughEdgeGateTime = Time.time;
+
+                        VARS.IsEnteringAnEdgeGate = false;
+                        VARS.IsEdgeGateTriggered = false;
                     }
                 }
             }
@@ -287,8 +290,6 @@ public class CatTrigger : MonoBehaviour
                 //Debug.Log(VARS.curActivatedSavePointPosition);
 
                 VARS.IsToDetermineCurActivatedSavePointPosition = false;
-
-                VARS.IsToWriteCatWorldData = true;
             }
 
             if (VARS.IsToActivateCurSavePoint)
@@ -321,6 +322,8 @@ public class CatTrigger : MonoBehaviour
                 //Debug.Log("catPosition:" + catTransform.position);
 
                 VARS.IsToActivateCurSavePoint = false;
+
+                VARS.IsToWriteCatWorldData = true;
             }
             #endregion
 

@@ -19,6 +19,10 @@ public class DataManager : MonoBehaviour
         //rooms
         public Vector3[] roomPlanePositions = new Vector3[54];
         public Vector3[] roomPlaneEulerangles = new Vector3[54];
+        public Vector3[] roomCenters = new Vector3[54];
+        public Vector3[] roomStableForwards = new Vector3[54];
+        public Vector3[] roomStableUps = new Vector3[54];
+        public Vector3[] roomStableRights = new Vector3[54];
 
         //minimapRooms
         public Vector3[] minimapRoomPlanePositions = new Vector3[54];
@@ -33,11 +37,12 @@ public class DataManager : MonoBehaviour
         public int curRoomIndex;
 
         //curPosition
-        public Vector3 curCatPosition;
+        public Vector3 curCatIniPosition;
 
         //savePoints
         public int curActivatedSavePointIndex;
         public Vector3 curActivatedSavePointPosition;
+        public int curActivatedSavePointRoomIndex;
 
         //exploredRooms
         public bool[] isRoomExplored = new bool[54];
@@ -102,10 +107,15 @@ public class DataManager : MonoBehaviour
     Material connectedGateColor;
 
     Transform catTransform;
+
+    GameObject catIniPositionPoint;
     #endregion
 
     #region VariablesUsed
-
+    Vector3[] roomCenters = new Vector3[54];
+    Vector3[] roomStableForwards = new Vector3[54];
+    Vector3[] roomStableUps = new Vector3[54];
+    Vector3[] roomStableRights = new Vector3[54];
     #endregion
 
 
@@ -136,9 +146,14 @@ public class DataManager : MonoBehaviour
         minimapLocks = CONS.minimapLocks;
         connectedGateColor = CONS.connectedGateColor;
         catTransform = CONS.catTransform;
+        catIniPositionPoint = CONS.catIniPositionPoint;
         #endregion
 
         #region ImportReferenceVariables
+        roomCenters = VARS.roomCenters;
+        roomStableForwards = VARS.roomStableForwards;
+        roomStableUps = VARS.roomStableUps;
+        roomStableRights = VARS.roomStableRights;
         #endregion
 
         ReadWorldData();
@@ -196,6 +211,10 @@ public class DataManager : MonoBehaviour
 
                 tempTransform.position = UFL.Vector3RoundToInt(curWorldData.roomPlanePositions[i]);
                 tempTransform.eulerAngles = UFL.Vector3RoundToInt(curWorldData.roomPlaneEulerangles[i]);
+                roomCenters[i] = curWorldData.roomCenters[i];
+                roomStableForwards[i] = curWorldData.roomStableForwards[i];
+                roomStableUps[i] = curWorldData.roomStableUps[i];
+                roomStableRights[i] = curWorldData.roomStableRights[i];
 
                 //roomPlanesChildToTheFaces
                 for (int j = 0; j < 6; j++)
@@ -247,6 +266,10 @@ public class DataManager : MonoBehaviour
 
             curWorldData.roomPlanePositions[i] = UFL.Vector3RoundToInt(tempTransform.position);
             curWorldData.roomPlaneEulerangles[i] = UFL.Vector3RoundToInt(tempTransform.eulerAngles);
+            curWorldData.roomCenters[i] = roomCenters[i];
+            curWorldData.roomStableForwards[i] = roomStableForwards[i];
+            curWorldData.roomStableUps[i] = roomStableUps[i];
+            curWorldData.roomStableRights[i] = roomStableRights[i];
 
             //minimapRooms
             tempTransform = minimapRoomPlanes[i].transform;
@@ -275,11 +298,13 @@ public class DataManager : MonoBehaviour
             VARS.curRoomIndex = curCatWorldData.curRoomIndex;
 
             //curPosition
-            catTransform.position = curCatWorldData.curCatPosition;
+            catIniPositionPoint.transform.position = curCatWorldData.curCatIniPosition;
+            catTransform.position = curCatWorldData.curCatIniPosition;
 
             //savePoint
             VARS.curActivatedSavePointIndex = curCatWorldData.curActivatedSavePointIndex;
             VARS.curActivatedSavePointPosition = curCatWorldData.curActivatedSavePointPosition;
+            VARS.curActivatedSavePointRoomIndex = curCatWorldData.curActivatedSavePointRoomIndex;
 
             //isRoomExplored
             VARS.IsRoomExplored = curCatWorldData.isRoomExplored;
@@ -334,12 +359,13 @@ public class DataManager : MonoBehaviour
         curCatWorldData.curRoomIndex = VARS.curRoomIndex;
 
         //curPosition
-        curCatWorldData.curCatPosition = catTransform.position;
+        curCatWorldData.curCatIniPosition = catIniPositionPoint.transform.position;
 
         //savePoint
         curCatWorldData.curActivatedSavePointIndex = VARS.curActivatedSavePointIndex;
         curCatWorldData.curActivatedSavePointPosition = VARS.curActivatedSavePointPosition;
         storedActivatedSavePointBlock.transform.position = curCatWorldData.curActivatedSavePointPosition;
+        curCatWorldData.curActivatedSavePointRoomIndex = VARS.curActivatedSavePointRoomIndex;
 
         //isRoomExplored
         curCatWorldData.isRoomExplored = VARS.IsRoomExplored;

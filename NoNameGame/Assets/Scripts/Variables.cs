@@ -7,6 +7,11 @@ using UnityEngine;
 [DefaultExecutionOrder((int)ScriptsExecutionOrder.ExecutionOrder.variables)]
 public class Variables : MonoBehaviour
 {
+    [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
+        "\n- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
+        "  \nVARIABLES\n --- " +
+        "\n- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n")]
+
     #region ScriptsExecutionController
     //[Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
     //    "  \nSCRIPTSEXECUTIONCONTROLLER\n --- ")]
@@ -404,6 +409,9 @@ public class Variables : MonoBehaviour
     #region CatCollision
     [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
         "  \nCATCOLLISION\n --- ")]
+    //fixedDeltaTime
+    public float catCollisionLastUpdatedTime;
+
     //executability
     [SerializeField] private bool _isCatCollisionMainPartExecutable;
     public bool IsCatCollisionMainPartExecutable { get { return _isCatCollisionMainPartExecutable; } set { _isCatCollisionMainPartExecutable = value; } }
@@ -539,6 +547,9 @@ public class Variables : MonoBehaviour
     #region CatMove
     [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
         "  \nCATMOVE\n --- ")]
+    //fixedDeltaTime
+    public float catMoveLastUpdatedTime;
+
     //executability
     [SerializeField] private bool _isCatMoveMainPartExecutable;
     public bool IsCatMoveMainPartExecutable { get { return _isCatMoveMainPartExecutable; } set { _isCatMoveMainPartExecutable = value; } }
@@ -927,6 +938,14 @@ public class Variables : MonoBehaviour
         "  \nAUDIOMANAGER\n --- ")]
     //curAudioClipIndex
     public int curAudioClipIndex;
+
+    //isFormerBgmFadingOut
+    [SerializeField] private bool _isFormerBgmFadingOut;
+    public bool IsFormerBgmFadingOut { get { return _isFormerBgmFadingOut; } set { _isFormerBgmFadingOut = value; } }
+
+    //[SerializeField] private bool _isFormalBgmFadedOut;
+    //public bool IsFormalBgmFadedOut { get { return _isFormalBgmFadedOut; } set { _isFormalBgmFadedOut = value; } }
+
     #endregion
 
     void Start()

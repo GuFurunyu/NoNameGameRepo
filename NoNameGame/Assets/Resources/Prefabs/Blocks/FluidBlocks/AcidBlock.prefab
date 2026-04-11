@@ -129,6 +129,10 @@ MonoBehaviour:
   isAffectedByGravity: 1
   isPlatform: 0
   isNotClimbable: 0
+  isFragile: 0
+  railBlockIndex: 0
+  railBlockMoveStringStartIndex: 0
+  isLoop: 0
   sharpDirVector: {x: 0, y: 0, z: 0}
   toughness: 999
   elasticity: 0
@@ -166,7 +170,7 @@ Transform:
   m_GameObject: {fileID: 6817422462093686340}
   serializedVersion: 2
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -0.1, z: 0}
   m_LocalScale: {x: 0.45, y: 0.45, z: 0.45}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -240,7 +244,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &906398587086711550
 Transform:
   m_ObjectHideFlags: 0
@@ -324,7 +328,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3973255254054580942
 Transform:
   m_ObjectHideFlags: 0

@@ -47,6 +47,8 @@ public class CatMove : MonoBehaviour
 
     Transform catTransform;
 
+    float catMoveFixedDeltaTime;
+
     //horSpeed
     float horAcce;
     float horReverseAcce;
@@ -134,6 +136,7 @@ public class CatMove : MonoBehaviour
         #region ImportConstants
         justEnterNewFaceTime = CONS.justEnterNewFaceTime;
         catTransform = CONS.catTransform;
+        catMoveFixedDeltaTime = CONS.catMoveFixedDeltaTime;
         horAcce = CONS.horAcce;
         horReverseAcce = CONS.horReverseAcce;
         horMaxSpeed = CONS.horMaxSpeed;
@@ -168,6 +171,7 @@ public class CatMove : MonoBehaviour
         VARS.verCurSpeed = 0;
     }
 
+    //private void FixedUpdate()
     void Update()
     {
         #region ImportValueVariables
@@ -193,6 +197,15 @@ public class CatMove : MonoBehaviour
         isInGas = VARS.IsInGas;
         isInMist = VARS.IsInMist;
         #endregion
+
+        //if (Time.time - VARS.catMoveLastUpdatedTime < catMoveFixedDeltaTime)
+        //{
+        //    return;
+        //}
+        //else
+        //{
+        //    VARS.catMoveLastUpdatedTime = Time.time;
+        //}
 
         //justEnterNewFaceFix
         if (VARS.IsJustEnterNewFace)

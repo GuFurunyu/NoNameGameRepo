@@ -51,6 +51,10 @@ public class RoomsManager : MonoBehaviour
     Vector3[] twistingCenterClockwiseVectors = new Vector3[6];
     float twistSpeed;
 
+    List<GameObject> edgeGateTriggers = new List<GameObject>();
+
+    List<GameObject> savePoints = new List<GameObject>();
+
     float minimapRotationMovingSpeed;
 
     Transform camTransform;
@@ -92,6 +96,8 @@ public class RoomsManager : MonoBehaviour
         twistingCenters = CONS.twistingCenters;
         twistingCenterClockwiseVectors = CONS.twistingCenterClockwiseVectors;
         twistSpeed = CONS.twistSpeed;
+        edgeGateTriggers = CONS.edgeGateTriggers;
+        savePoints = CONS.savePoints;
         minimapRotationMovingSpeed = CONS.minimapRotationMovingSpeed;
         camTransform = CONS.camTransform;
         camMinimapDistanceToCubeCore = CONS.camMinimapDistanceToCubeCore;
@@ -113,6 +119,12 @@ public class RoomsManager : MonoBehaviour
         #region ImportValueVariables
         curPlaneEmpty = VARS.curPlaneEmpty;
         #endregion
+
+        ////edgeGateTriggerRefresh
+        //for (int i = 0; i < edgeGateTriggers.Count; i++)
+        //{
+        //    edgeGateTriggers[i].transform.position = edgeGateTriggers[i].transform.parent.position;
+        //}
 
         #region IfIsInNewRoom
         if (UFL.IsInRoom(VARS.curRoomIndex, catTransform.position))
@@ -258,7 +270,7 @@ public class RoomsManager : MonoBehaviour
                     //catAndCamTempChildToCurTwistingCenter
                     //camTransform.SetParent(curTwistingCenter.transform, true);
                     catTransform.SetParent(curTwistingCenter.transform, true);
-                    catIniPositionPoint.transform.SetParent(curTwistingCenter.transform, true);
+                    //catIniPositionPoint.transform.SetParent(curTwistingCenter.transform, true);
 
                     //setTargetEulerangles
                     if (VARS.IsClockwiseTwisting)
@@ -299,7 +311,11 @@ public class RoomsManager : MonoBehaviour
                     //freeCatAndCam
                     //camTransform.SetParent(null);
                     catTransform.SetParent(null);
-                    catIniPositionPoint.transform.SetParent(null);
+                    //catIniPositionPoint.transform.SetParent(null);
+
+                    //catIniPositionPoint
+                    catIniPositionPoint.transform.position = 
+                        savePoints[VARS.curActivatedSavePointIndex].transform.position - VARS.roomStableForwards[VARS.curActivatedSavePointRoomIndex] * 0.1f;
 
                     //resetCatEulerangles
                     catTransform.eulerAngles = Vector3.zero;
