@@ -279,7 +279,7 @@ public class CatAppearance : MonoBehaviour
         #endregion
 
         #region Eyes
-        if (VARS.horCurSpeed == 0)
+        if (VARS.curFacingDirectionIndex == 0)
         {
             //still
             if (!VARS.IsInputtingUpKey &&
@@ -313,7 +313,7 @@ public class CatAppearance : MonoBehaviour
             }
         }
         //left
-        else if (VARS.horCurSpeed < 0)
+        else if (VARS.curFacingDirectionIndex == 1)
         {
             catLeftEyeTransform.localPosition = -curRoomStableForward * 0.1f - curUp * 0.25f - curRight * 0.25f;
             catRightEyeTransform.localPosition = -curRoomStableForward * 0.1f - curUp * 0.25f + curRight * 0.025f;
@@ -322,7 +322,7 @@ public class CatAppearance : MonoBehaviour
             catRightEyeTransform.localScale = UFL.Vector3Abs(curRoomStableForward) + UFL.Vector3Abs(curUp) * 0.2f + UFL.Vector3Abs(curRight) * 0.15f;
         }
         //right
-        else if (VARS.horCurSpeed > 0)
+        else if (VARS.curFacingDirectionIndex == 2)
         {
             catLeftEyeTransform.localPosition = -curRoomStableForward * 0.1f - curUp * 0.25f - curRight * 0.025f;
             catRightEyeTransform.localPosition = -curRoomStableForward * 0.1f - curUp * 0.25f + curRight * 0.25f;

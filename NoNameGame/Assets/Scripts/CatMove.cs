@@ -198,6 +198,10 @@ public class CatMove : MonoBehaviour
         isInMist = VARS.IsInMist;
         #endregion
 
+        ////debug
+        //VARS.horCurSpeed = 0;
+        //VARS.verCurSpeed = 0;
+
         //if (Time.time - VARS.catMoveLastUpdatedTime < catMoveFixedDeltaTime)
         //{
         //    return;
@@ -210,21 +214,24 @@ public class CatMove : MonoBehaviour
         //justEnterNewFaceFix
         if (VARS.IsJustEnterNewFace)
         {
-            if (VARS.IsOnGround ||
-                VARS.IsJumpKeyDown ||
+            if ((VARS.IsInUpEdgeGate && (VARS.IsLeftKeyDown || VARS.IsRightKeyDown || VARS.IsDownKeyDown)) ||
+                (VARS.IsInDownEdgeGate && VARS.IsJumpKeyDown) ||
                 Time.time - VARS.justEnterNewFaceStartTime > justEnterNewFaceTime)
             {
                 VARS.IsJustEnterNewFace = false;
 
                 VARS.IsCatMoveMainPartExecutable =
+                    //Time.deltaTime < 0.0167f &&//~?
                     VARS.IsInNewRoomAllResetOver &&
                     !VARS.IsRotating &&
                     !VARS.IsTwisting &&
                     !VARS.IsInMinimap &&
                     !VARS.IsOptionPanelActivated &&
                     !VARS.IsExiting &&
+                    !VARS.IsEdgeGateTriggered &&
                     !(VARS.IsJustEnterNewFace &&
-                    !VARS.IsOnGround);
+                    (VARS.IsInUpEdgeGate ||
+                    VARS.IsInDownEdgeGate));
             }
             //else
             //{
@@ -279,38 +286,49 @@ public class CatMove : MonoBehaviour
                 horCurMaxSpeed = horToCeilingMaxSpeed;
             }
 
-            //moveLeft
-            if (VARS.IsInputtingLeftKey)
+            //horInput
+            if (VARS.IsInputtingLeftKey ||
+                VARS.IsInputtingRightKey)
             {
-                //forDash
-                //lastHorDirectionInput = leftKeyCode;
-                VARS.curFacingDirectionIndex = 1;
-
-                if (VARS.horCurSpeed >= -horCurMaxSpeed)
+                //moveLeft            
+                if (VARS.IsInputtingLeftKey)
                 {
-                    //drag
-                    //horCurSpeed -= horCurAcce * Time.deltaTime;
-                    //UFL.AddHorCurSpeed(-horCurAcce * Time.deltaTime);
-                    VARS.horCurSpeed += -horCurAcce * Time.deltaTime;
-                }
+                    //forDash
+                    //lastHorDirectionInput = leftKeyCode;
+                    VARS.curFacingDirectionIndex = 1;
 
-                VARS.IsHorInputting = true;
+                    if (VARS.horCurSpeed >= -horCurMaxSpeed &&
+                        !VARS.IsLeftBlocked)
+                    {
+                        //drag
+                        //horCurSpeed -= horCurAcce * Time.deltaTime;
+                        //UFL.AddHorCurSpeed(-horCurAcce * Time.deltaTime);
+                        VARS.horCurSpeed += -horCurAcce * Time.deltaTime;
+                    }
+
+                    VARS.IsHorInputting = true;
+                }
+                //moveRight
+                else if (VARS.IsInputtingRightKey)
+                {
+                    //lastHorDirectionInput = rightKeyCode;
+                    VARS.curFacingDirectionIndex = 2;
+
+                    if (VARS.horCurSpeed <= horCurMaxSpeed &&
+                        !VARS.IsRightBlocked)
+                    {
+                        //drag
+                        //horCurSpeed += horCurAcce * Time.deltaTime;
+                        //UFL.AddHorCurSpeed(horCurAcce * Time.deltaTime);
+                        VARS.horCurSpeed += horCurAcce * Time.deltaTime;
+                    }
+
+                    VARS.IsHorInputting = true;
+                }
             }
-            //moveRight
-            else if (VARS.IsInputtingRightKey)
+            else
             {
-                //lastHorDirectionInput = rightKeyCode;
-                VARS.curFacingDirectionIndex = 2;
-
-                if (VARS.horCurSpeed <= horCurMaxSpeed)
-                {
-                    //drag
-                    //horCurSpeed += horCurAcce * Time.deltaTime;
-                    //UFL.AddHorCurSpeed(horCurAcce * Time.deltaTime);
-                    VARS.horCurSpeed += horCurAcce * Time.deltaTime;
-                }
-
-                VARS.IsHorInputting = true;
+                VARS.curFacingDirectionIndex = 0;
             }
 
             //isLeftBlocked
@@ -328,7 +346,7 @@ public class CatMove : MonoBehaviour
                         VARS.IsInputtingGrabKey)
                     {
                         //lastHorDirectionInput = rightKeyCode;
-                        VARS.curFacingDirectionIndex = 2;
+                        VARS.curFacingDirectionIndex = 1;
 
                         if (VARS.curEnergy > 0)
                         {
@@ -451,6 +469,9 @@ public class CatMove : MonoBehaviour
                 }
             }
 
+            ////debug
+            //VARS.horCurSpeed = 0;
+
             //horSpeedSum
             if (VARS.horCurSpeed != 0)
             {
@@ -482,19 +503,32 @@ public class CatMove : MonoBehaviour
                 if (isInLiquid)
                 {
                     verCurIniSpeed = verIniSpeed / curLiquidTileData.fluidDrag;
-                    curGravityAcce = gravityAcce - gravityAcce * curLiquidTileData.mass * (1 - buoyancyDistanceFixFloat) * 3;
+                    if (VARS.IsInputtingUpKey)
+                    {
+                        curGravityAcce = gravityAcce - gravityAcce * curLiquidTileData.mass * (1 - buoyancyDistanceFixFloat) /** 3*/ /** 2*/ /** 1.5f*/ * 2;
+                    }
+                    else if (VARS.IsInputtingDownKey)
+                    {
+                        curGravityAcce = gravityAcce - gravityAcce * curLiquidTileData.mass * (1 - buoyancyDistanceFixFloat) /** 3*/ /** 2*/ /** 1.5f*/ * 0.9f;
+                    }
+                    else
+                    {
+                        curGravityAcce = gravityAcce - gravityAcce * curLiquidTileData.mass * (1 - buoyancyDistanceFixFloat) /** 3*/ /** 2*/ * 1.5f;
+                    }
                     verCurMaxSpeed = verMaxSpeed / curLiquidTileData.fluidDrag;
+
+                    VARS.IsJustInLiquid = true;
                 }
                 else if (isInGas)
                 {
                     verCurIniSpeed = verIniSpeed / curGasTileData.fluidDrag;
-                    curGravityAcce = gravityAcce - gravityAcce * curGasTileData.mass / 2;
+                    curGravityAcce = gravityAcce - gravityAcce * curGasTileData.mass /*/ 2*/;
                     verCurMaxSpeed = verMaxSpeed / curGasTileData.fluidDrag;
                 }
                 else if (isInMist)
                 {
                     verCurIniSpeed = verIniSpeed / curMistTileData.fluidDrag;
-                    curGravityAcce = gravityAcce - gravityAcce * curMistTileData.mass / 2;
+                    curGravityAcce = gravityAcce - gravityAcce * curMistTileData.mass /*/ 2*/;
                     verCurMaxSpeed = verMaxSpeed / curMistTileData.fluidDrag;
                 }
             }
@@ -512,6 +546,16 @@ public class CatMove : MonoBehaviour
                 {
                     curClimbSpeed = climbSpeed * curRightTileData.friction;
                 }
+            }
+
+            //outOfLiquidDeacce
+            if (!isInLiquid &&
+                VARS.IsJustInLiquid &&
+                VARS.verCurSpeed > 0)
+            {
+                VARS.verCurSpeed /= 2;
+
+                VARS.IsJustInLiquid = false;
             }
 
             //just"||isInLiquid"?
@@ -727,6 +771,9 @@ public class CatMove : MonoBehaviour
                 {
                     VARS.verCurSpeed = -verFallMaxSpeed;
                 }
+
+                ////debug
+                //VARS.verCurSpeed = 0;
 
                 //verSpeedSum
                 //catTransform.position += curUp * VARS.verCurSpeed * Time.deltaTime;

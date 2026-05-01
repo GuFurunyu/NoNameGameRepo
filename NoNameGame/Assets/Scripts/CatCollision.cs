@@ -168,8 +168,8 @@ public class CatCollision : MonoBehaviour
         #endregion
     }
 
-    //void Update()
-    void FixedUpdate()
+    void Update()
+    //void FixedUpdate()
     {
         #region ImportValueVariables
         curRight = VARS.curRight;
@@ -224,240 +224,257 @@ public class CatCollision : MonoBehaviour
 
         if (VARS.IsCatCollisionMainPartExecutable)
         {
-            #region OnGroundDetect
-            if (Physics.Raycast(downRay1, out downHit1, longPlusRayDistance - VARS.verCurSpeed / 1000) ||
-                Physics.Raycast(downRay2, out downHit2, longPlusRayDistance - VARS.verCurSpeed / 1000))
-            {
-                if (Physics.Raycast(downRay1, out downHit1, longPlusRayDistance - VARS.verCurSpeed / 1000))
-                {
-                    Detect(2, 1);
-                }
-                if (Physics.Raycast(downRay2, out downHit2, longPlusRayDistance - VARS.verCurSpeed / 1000))
-                {
-                    Detect(2, 2);
-                }
-            }
+            //if(VARS.IsOnGround)
+            //{
+            //    UFL.DebugLog("isOnGround");
+            //}   
+            //if (VARS.IsToCeiling)
+            //{
+            //    UFL.DebugLog("isToCeiling");
+            //}
 
-            if (VARS.IsGroundDetected)
-            {
-                VARS.IsGroundDetected = false;
-                VARS.IsOnGround = true;
-            }
-            else
-            {
-                VARS.IsOnGround = false;
-            }
+            #region RayDetect
+            //#region OnGroundDetect
+            //if (Physics.Raycast(downRay1, out downHit1, longPlusRayDistance - VARS.verCurSpeed / 1000) ||
+            //    Physics.Raycast(downRay2, out downHit2, longPlusRayDistance - VARS.verCurSpeed / 1000))
+            //{
+            //    if (Physics.Raycast(downRay1, out downHit1, longPlusRayDistance - VARS.verCurSpeed / 1000))
+            //    {
+            //        Detect(2, 1);
+            //    }
+            //    if (Physics.Raycast(downRay2, out downHit2, longPlusRayDistance - VARS.verCurSpeed / 1000))
+            //    {
+            //        Detect(2, 2);
+            //    }
+            //}
+
+            //if (VARS.IsGroundDetected)
+            //{
+            //    VARS.IsGroundDetected = false;
+            //    VARS.IsOnGround = true;
+            //}
+            //else
+            //{
+            //    VARS.IsOnGround = false;
+            //}
+            //#endregion
+
+            //#region ToCeilingDetect
+            //if (Physics.Raycast(upRay1, out upHit1, longPlusRayDistance + VARS.verCurSpeed / 1000) ||
+            //    Physics.Raycast(upRay2, out upHit2, longPlusRayDistance + VARS.verCurSpeed / 1000))
+            //{
+            //    if (Physics.Raycast(upRay1, out upHit1, longPlusRayDistance + VARS.verCurSpeed / 1000))
+            //    {
+            //        Detect(1, 1);
+            //    }
+            //    if (Physics.Raycast(upRay2, out upHit2, longPlusRayDistance + VARS.verCurSpeed / 1000))
+            //    {
+            //        Detect(1, 2);
+            //    }
+            //}
+
+            //if (VARS.IsCeilingDetected)
+            //{
+            //    VARS.IsCeilingDetected = false;
+            //    VARS.IsToCeiling = true;
+            //}
+            //else
+            //{
+            //    VARS.IsToCeiling = false;
+            //}
+            //#endregion
+
+            //#region BlockDetect
+            //if (Physics.Raycast(leftRay1, out leftHit1, longPlusRayDistance - VARS.horCurSpeed / 1000) ||
+            //        Physics.Raycast(leftRay2, out leftHit2, longPlusRayDistance - VARS.horCurSpeed / 1000))
+            //{
+            //    if (Physics.Raycast(leftRay1, out leftHit1, longPlusRayDistance - VARS.horCurSpeed / 1000))
+            //    {
+            //        Detect(3, 1);
+            //    }
+            //    if (Physics.Raycast(leftRay2, out leftHit2, longPlusRayDistance - VARS.horCurSpeed / 1000))
+            //    {
+            //        Detect(3, 2);
+            //    }
+            //}
+
+            //if (VARS.IsLeftBlockDetected)
+            //{
+            //    VARS.IsLeftBlockDetected = false;
+            //    VARS.IsLeftBlocked = true;
+            //}
+            //else
+            //{
+            //    VARS.IsLeftBlocked = false;
+            //}
+
+            //if (Physics.Raycast(rightRay1, out rightHit1, longPlusRayDistance + VARS.horCurSpeed / 1000) ||
+            //    Physics.Raycast(rightRay2, out rightHit2, longPlusRayDistance + VARS.horCurSpeed / 1000))
+            //{
+            //    if (Physics.Raycast(rightRay1, out rightHit1, longPlusRayDistance + VARS.horCurSpeed / 1000))
+            //    {
+            //        Detect(4, 1);
+            //    }
+            //    if (Physics.Raycast(rightRay2, out rightHit2, longPlusRayDistance + VARS.horCurSpeed / 1000))
+            //    {
+            //        Detect(4, 2);
+            //    }
+            //}
+
+            //if (VARS.IsRightBlockDetected)
+            //{
+            //    VARS.IsRightBlockDetected = false;
+            //    VARS.IsRightBlocked = true;
+            //}
+            //else
+            //{
+            //    VARS.IsRightBlocked = false;
+            //}
+            //#endregion
+
+            //#region LiquidDetect
+            //if (Physics.Raycast(liquidDownRay, out liquidDownHit, longRayDistance) ||
+            //        Physics.Raycast(liquidUpRay, out liquidUpHit, longLongLongRayDistance))
+            //{
+            //    if (Physics.Raycast(liquidDownRay, out liquidDownHit, longRayDistance))
+            //    {
+            //        Detect(5, 1);
+            //    }
+            //    if (Physics.Raycast(liquidUpRay, out liquidUpHit, longLongLongRayDistance))
+            //    {
+            //        Detect(5, 2);
+            //    }
+            //}
+
+            //if (VARS.IsLiquidDetected)
+            //{
+            //    //intoLiquidSlowDown
+            //    if (!VARS.IsInLiquid)
+            //    {
+            //        if (Mathf.Abs(VARS.verCurSpeed) > verMaxSpeed / 2)
+            //        {
+            //            if (curTileData != null)
+            //                //verCurSpeed = verCurSpeed / curTileData.fluidDrag;
+            //                //UFL.SetVerCurSpeed(VARS.verCurSpeed / curTileData.fluidDrag);
+            //                VARS.verCurSpeed = VARS.verCurSpeed / curTileData.fluidDrag;
+            //        }
+            //    }
+
+            //    VARS.IsLiquidDetected = false;
+            //    VARS.IsInLiquid = true;
+            //}
+            //else
+            //{
+            //    //outLiquidSlowDown
+            //    if (VARS.IsInLiquid)
+            //    {
+            //        if (Mathf.Abs(VARS.verCurSpeed) > verMaxSpeed / 2)
+            //        {
+            //            //verCurSpeed = verCurSpeed / 2;
+            //            //UFL.SetVerCurSpeed(VARS.verCurSpeed / 2);
+            //            VARS.verCurSpeed = VARS.verCurSpeed / 2;
+            //        }
+            //    }
+
+            //    VARS.IsInLiquid = false;
+            //}
+            //#endregion
+
+            //#region GasDetect
+            //if (Physics.Raycast(gasUpRay, out gasUpHit, longRayDistance) ||
+            //        Physics.Raycast(gasDownRay, out gasDownHit, longLongLongRayDistance))
+            //{
+            //    if (Physics.Raycast(gasUpRay, out gasUpHit, longRayDistance))
+            //    {
+            //        Detect(6, 1);
+            //    }
+            //    if (Physics.Raycast(gasDownRay, out gasDownHit, longLongLongRayDistance))
+            //    {
+            //        Detect(6, 2);
+            //    }
+            //}
+
+            //if (VARS.IsGasDetected)
+            //{
+            //    VARS.IsGasDetected = false;
+            //    VARS.IsInGas = true;
+            //}
+            //else
+            //{
+            //    VARS.IsInGas = false;
+            //}
+
+            ////mightAdoptedTigherVersion
+            ////VARS.IsInGas = VARS.IsGasDetected;
+            ////VARS.IsGasDetected = false;
+            //#endregion
+
+            //#region MistDetect
+            //if (Physics.Raycast(mistUpRay, out mistUpHit, longLongRayDistance) ||
+            //    Physics.Raycast(mistDownRay, out mistDownHit, longLongRayDistance) ||
+            //    Physics.Raycast(mistLeftRay, out mistLeftHit, longLongRayDistance) ||
+            //    Physics.Raycast(mistRightRay, out mistRightHit, longLongRayDistance))
+            //{
+            //    if (Physics.Raycast(mistUpRay, out mistUpHit, longLongRayDistance))
+            //    {
+            //        Detect(7, 1);
+            //    }
+            //    if (Physics.Raycast(mistDownRay, out mistDownHit, longLongRayDistance))
+            //    {
+            //        Detect(7, 2);
+            //    }
+            //    if (Physics.Raycast(mistLeftRay, out mistLeftHit, longLongRayDistance))
+            //    {
+            //        Detect(7, 3);
+            //    }
+            //    if (Physics.Raycast(mistRightRay, out mistRightHit, longLongRayDistance))
+            //    {
+            //        Detect(7, 4);
+            //    }
+            //}
+
+            //if (VARS.IsMistDetected)
+            //{
+            //    VARS.IsMistDetected = false;
+            //    VARS.IsInMist = true;
+            //}
+            //else
+            //{
+            //    VARS.IsInMist = false;
+            //}
+            //#endregion
             #endregion
 
-            #region ToCeilingDetect
-            if (Physics.Raycast(upRay1, out upHit1, longPlusRayDistance + VARS.verCurSpeed / 1000) ||
-                Physics.Raycast(upRay2, out upHit2, longPlusRayDistance + VARS.verCurSpeed / 1000))
-            {
-                if (Physics.Raycast(upRay1, out upHit1, longPlusRayDistance + VARS.verCurSpeed / 1000))
-                {
-                    Detect(1, 1);
-                }
-                if (Physics.Raycast(upRay2, out upHit2, longPlusRayDistance + VARS.verCurSpeed / 1000))
-                {
-                    Detect(1, 2);
-                }
-            }
-
-            if (VARS.IsCeilingDetected)
-            {
-                VARS.IsCeilingDetected = false;
-                VARS.IsToCeiling = true;
-            }
-            else
-            {
-                VARS.IsToCeiling = false;
-            }
-            #endregion
-
-            #region BlockDetect
-            if (Physics.Raycast(leftRay1, out leftHit1, longPlusRayDistance - VARS.horCurSpeed / 1000) ||
-                    Physics.Raycast(leftRay2, out leftHit2, longPlusRayDistance - VARS.horCurSpeed / 1000))
-            {
-                if (Physics.Raycast(leftRay1, out leftHit1, longPlusRayDistance - VARS.horCurSpeed / 1000))
-                {
-                    Detect(3, 1);
-                }
-                if (Physics.Raycast(leftRay2, out leftHit2, longPlusRayDistance - VARS.horCurSpeed / 1000))
-                {
-                    Detect(3, 2);
-                }
-            }
-
-            if (VARS.IsLeftBlockDetected)
-            {
-                VARS.IsLeftBlockDetected = false;
-                VARS.IsLeftBlocked = true;
-            }
-            else
-            {
-                VARS.IsLeftBlocked = false;
-            }
-
-            if (Physics.Raycast(rightRay1, out rightHit1, longPlusRayDistance + VARS.horCurSpeed / 1000) ||
-                Physics.Raycast(rightRay2, out rightHit2, longPlusRayDistance + VARS.horCurSpeed / 1000))
-            {
-                if (Physics.Raycast(rightRay1, out rightHit1, longPlusRayDistance + VARS.horCurSpeed / 1000))
-                {
-                    Detect(4, 1);
-                }
-                if (Physics.Raycast(rightRay2, out rightHit2, longPlusRayDistance + VARS.horCurSpeed / 1000))
-                {
-                    Detect(4, 2);
-                }
-            }
-
-            if (VARS.IsRightBlockDetected)
-            {
-                VARS.IsRightBlockDetected = false;
-                VARS.IsRightBlocked = true;
-            }
-            else
-            {
-                VARS.IsRightBlocked = false;
-            }
-            #endregion
-
-            #region LiquidDetect
-            if (Physics.Raycast(liquidDownRay, out liquidDownHit, longRayDistance) ||
-                    Physics.Raycast(liquidUpRay, out liquidUpHit, longLongLongRayDistance))
-            {
-                if (Physics.Raycast(liquidDownRay, out liquidDownHit, longRayDistance))
-                {
-                    Detect(5, 1);
-                }
-                if (Physics.Raycast(liquidUpRay, out liquidUpHit, longLongLongRayDistance))
-                {
-                    Detect(5, 2);
-                }
-            }
-
-            if (VARS.IsLiquidDetected)
-            {
-                //intoLiquidSlowDown
-                if (!VARS.IsInLiquid)
-                {
-                    if (Mathf.Abs(VARS.verCurSpeed) > verMaxSpeed / 2)
-                    {
-                        if (curTileData != null)
-                            //verCurSpeed = verCurSpeed / curTileData.fluidDrag;
-                            //UFL.SetVerCurSpeed(VARS.verCurSpeed / curTileData.fluidDrag);
-                            VARS.verCurSpeed = VARS.verCurSpeed / curTileData.fluidDrag;
-                    }
-                }
-
-                VARS.IsLiquidDetected = false;
-                VARS.IsInLiquid = true;
-            }
-            else
-            {
-                //outLiquidSlowDown
-                if (VARS.IsInLiquid)
-                {
-                    if (Mathf.Abs(VARS.verCurSpeed) > verMaxSpeed / 2)
-                    {
-                        //verCurSpeed = verCurSpeed / 2;
-                        //UFL.SetVerCurSpeed(VARS.verCurSpeed / 2);
-                        VARS.verCurSpeed = VARS.verCurSpeed / 2;
-                    }
-                }
-
-                VARS.IsInLiquid = false;
-            }
-            #endregion
-
-            #region GasDetect
-            if (Physics.Raycast(gasUpRay, out gasUpHit, longRayDistance) ||
-                    Physics.Raycast(gasDownRay, out gasDownHit, longLongLongRayDistance))
-            {
-                if (Physics.Raycast(gasUpRay, out gasUpHit, longRayDistance))
-                {
-                    Detect(6, 1);
-                }
-                if (Physics.Raycast(gasDownRay, out gasDownHit, longLongLongRayDistance))
-                {
-                    Detect(6, 2);
-                }
-            }
-
-            if (VARS.IsGasDetected)
-            {
-                VARS.IsGasDetected = false;
-                VARS.IsInGas = true;
-            }
-            else
-            {
-                VARS.IsInGas = false;
-            }
-
-            //mightAdoptedTigherVersion
-            //VARS.IsInGas = VARS.IsGasDetected;
-            //VARS.IsGasDetected = false;
-            #endregion
-
-            #region MistDetect
-            if (Physics.Raycast(mistUpRay, out mistUpHit, longLongRayDistance) ||
-                Physics.Raycast(mistDownRay, out mistDownHit, longLongRayDistance) ||
-                Physics.Raycast(mistLeftRay, out mistLeftHit, longLongRayDistance) ||
-                Physics.Raycast(mistRightRay, out mistRightHit, longLongRayDistance))
-            {
-                if (Physics.Raycast(mistUpRay, out mistUpHit, longLongRayDistance))
-                {
-                    Detect(7, 1);
-                }
-                if (Physics.Raycast(mistDownRay, out mistDownHit, longLongRayDistance))
-                {
-                    Detect(7, 2);
-                }
-                if (Physics.Raycast(mistLeftRay, out mistLeftHit, longLongRayDistance))
-                {
-                    Detect(7, 3);
-                }
-                if (Physics.Raycast(mistRightRay, out mistRightHit, longLongRayDistance))
-                {
-                    Detect(7, 4);
-                }
-            }
-
-            if (VARS.IsMistDetected)
-            {
-                VARS.IsMistDetected = false;
-                VARS.IsInMist = true;
-            }
-            else
-            {
-                VARS.IsInMist = false;
-            }
+            #region CurBlocksDetect
+            UFL.GetCatCollisionInfo();
+            UFL.TransferAffliction();
+            UFL.CollidTriggers();
             #endregion
 
             #region IfNothingDetected
-            #region AfflictionTransfer
-            //temperature
-            if (VARS.catCurTemperature != 0)
-            {
-                //UFL.AddCatCurTemperature(-VARS.catCurTemperature * temperatureTransferSpeed * Time.deltaTime);
-                VARS.catCurTemperature += -VARS.catCurTemperature * temperatureTransferSpeed * Time.deltaTime;
+            //#region AfflictionTransfer
+            ////temperature
+            //if (VARS.catCurTemperature != 0)
+            //{
+            //    //UFL.AddCatCurTemperature(-VARS.catCurTemperature * temperatureTransferSpeed * Time.deltaTime);
+            //    VARS.catCurTemperature += -VARS.catCurTemperature * temperatureTransferSpeed * Time.deltaTime;
 
-            }
+            //}
 
-            //electricity
-            if (VARS.catCurElectricity != 0)
-            {
-                //UFL.AddCatCurElectricity(-VARS.catCurElectricity * electricityTransferSpeed * Time.deltaTime);
-                VARS.catCurElectricity += -VARS.catCurElectricity * electricityTransferSpeed * Time.deltaTime;
-            }
+            ////electricity
+            //if (VARS.catCurElectricity != 0)
+            //{
+            //    //UFL.AddCatCurElectricity(-VARS.catCurElectricity * electricityTransferSpeed * Time.deltaTime);
+            //    VARS.catCurElectricity += -VARS.catCurElectricity * electricityTransferSpeed * Time.deltaTime;
+            //}
 
-            //toxicity
-            if (VARS.catCurToxicity != 0)
-            {
-                //UFL.AddCatCurToxicity(-VARS.catCurToxicity * toxicityTransferSpeed * Time.deltaTime);
-                VARS.catCurToxicity += -VARS.catCurToxicity * toxicityTransferSpeed * Time.deltaTime;
-            }
-            #endregion
+            ////toxicity
+            //if (VARS.catCurToxicity != 0)
+            //{
+            //    //UFL.AddCatCurToxicity(-VARS.catCurToxicity * toxicityTransferSpeed * Time.deltaTime);
+            //    VARS.catCurToxicity += -VARS.catCurToxicity * toxicityTransferSpeed * Time.deltaTime;
+            //}
+            //#endregion
             #endregion
 
             #region DistanceFix
@@ -465,6 +482,8 @@ public class CatCollision : MonoBehaviour
             if (VARS.IsOnGround &&
                 !VARS.IsToCeiling)
             {
+                //UFL.DebugLog("onGroundDistanceFix");
+
                 tempVector = catTransform.position - VARS.curDownTile.transform.position;
                 tempFloat = Vector3.Dot(tempVector, curUp);
                 tempFloat1 = Vector3.Dot(tempVector, curRight);
@@ -473,32 +492,41 @@ public class CatCollision : MonoBehaviour
                     if (Mathf.Abs(tempFloat1) < gridBreadth * 0.975f)
                     {
                         //Debug.Log("distanceFix1:" + catTransform.position);
-                        UFL.AddCatPosition(curUp * (gridBreadth - tempFloat + 0.0075f));
+                        UFL.AddCatPosition(curUp * (gridBreadth - tempFloat /*+ 0.0075f*/));
                         //Debug.Log("distanceFix2:" + catTransform.position);
                     }
 
-                    VARS.verCurSpeed = -VARS.verCurSpeed * VARS.curDownTileData.elasticity;
+                    VARS.verCurSpeed = -VARS.verCurSpeed * VARS.curDownTileData.elasticity;                    
                 }
             }
             if (VARS.IsToCeiling)
+            //if(UFL.CatBlockDistance(1) < gridBreadth + 0.01f)
             {
+                //UFL.DebugLog("toCeilingDistanceFix");
+
                 tempVector = catTransform.position - VARS.curUpTile.transform.position;
                 tempFloat = Vector3.Dot(tempVector, -curUp);
                 tempFloat1 = Vector3.Dot(tempVector, curRight);
                 if (tempFloat < gridBreadth)
                 {
-                    if (Mathf.Abs(tempFloat1) < gridBreadth * 0.95f)
+                    //if (Mathf.Abs(tempFloat1) < gridBreadth * 0.95f)
+                    if (Mathf.Abs(tempFloat1) < gridBreadth * 0.975f)
                     {
                         UFL.AddCatPosition(-curUp * (gridBreadth - tempFloat));
+                        //UFL.AddCatPosition(-curUp * (gridBreadth - tempFloat + 0.0075f));
                     }
 
                     VARS.verCurSpeed = -VARS.verCurSpeed * VARS.curUpTileData.elasticity;
+
+                    //UFL.DebugLog(VARS.verCurSpeed.ToString());
                 }
 
                 VARS.IsHighJumping = false;
             }
             if (VARS.IsLeftBlocked)
             {
+                //UFL.DebugLog("leftBlockedDistanceFix");
+
                 tempVector = catTransform.position - VARS.curLeftTile.transform.position;
                 tempFloat = Vector3.Dot(tempVector, curRight);
                 tempFloat1 = Vector3.Dot(tempVector, curUp);
@@ -514,6 +542,8 @@ public class CatCollision : MonoBehaviour
             }
             if (VARS.IsRightBlocked)
             {
+                //UFL.DebugLog("rightBlockedDistanceFix");
+
                 tempVector = catTransform.position - VARS.curRightTile.transform.position;
                 tempFloat = Vector3.Dot(tempVector, -curRight);
                 tempFloat1 = Vector3.Dot(tempVector, curUp);
@@ -572,59 +602,59 @@ public class CatCollision : MonoBehaviour
         //}
 
         #region EdgeGate
-        ////enter
-        //if (UFL.IsCatInEdgeGate())
+        //////enter
+        ////if (UFL.IsCatInEdgeGate())
+        ////{
+        ////    VARS.IsEnteringAnEdgeGate = true;
+        ////}
+
+        ////trigger
+        //if (VARS.IsEnteringAnEdgeGate)
         //{
-        //    VARS.IsEnteringAnEdgeGate = true;
+        //    //determinEdgeGateDirection
+        //    tempFloat1 = Vector3.Dot(VARS.curEdgeGate.transform.position - VARS.curRoomCenter, VARS.curUp);
+        //    tempFloat2 = Vector3.Dot(VARS.curEdgeGate.transform.position - VARS.curRoomCenter, VARS.curRight);
+        //    //upOrDown
+        //    if (Mathf.Abs(tempFloat1) > Mathf.Abs(tempFloat2))
+        //    {
+        //        //up
+        //        if (tempFloat1 > 0)
+        //        {
+        //            tempVector = VARS.curUp;
+        //        }
+        //        //down
+        //        else
+        //        {
+        //            tempVector = -VARS.curUp;
+        //        }
+        //    }
+        //    //leftOrRight
+        //    else
+        //    {
+        //        //left
+        //        if (tempFloat2 < 0)
+        //        {
+        //            tempVector = -VARS.curRight;
+        //        }
+        //        //right
+        //        else
+        //        {
+        //            tempVector = VARS.curRight;
+        //        }
+        //    }
+
+        //    //Debug.Log("tempVector: " + tempVector);
+
+        //    //triggerEdgeGate
+        //    if (Vector3.Dot(catTransform.position - VARS.curEdgeGate.transform.position, tempVector) > 0.9f)
+        //    {
+        //        //Debug.Log("enter");
+        //        //Debug.Log("cat: " + catTransform.position);
+        //        //Debug.Log("edgeGate: " + VARS.curEdgeGate.transform.position);
+
+        //        VARS.IsEdgeGateTriggered = true;
+        //    }
         //}
-
-        //trigger
-        if (VARS.IsEnteringAnEdgeGate)
-        {
-            //determinEdgeGateDirection
-            tempFloat1 = Vector3.Dot(VARS.curEdgeGate.transform.position - VARS.curRoomCenter, VARS.curUp);
-            tempFloat2 = Vector3.Dot(VARS.curEdgeGate.transform.position - VARS.curRoomCenter, VARS.curRight);
-            //upOrDown
-            if (Mathf.Abs(tempFloat1) > Mathf.Abs(tempFloat2))
-            {
-                //up
-                if (tempFloat1 > 0)
-                {
-                    tempVector = VARS.curUp;
-                }
-                //down
-                else
-                {
-                    tempVector = -VARS.curUp;
-                }
-            }
-            //leftOrRight
-            else
-            {
-                //left
-                if (tempFloat2 < 0)
-                {
-                    tempVector = -VARS.curRight;
-                }
-                //right
-                else
-                {
-                    tempVector = VARS.curRight;
-                }
-            }
-
-            //Debug.Log("tempVector: " + tempVector);
-
-            //triggerEdgeGate
-            if (Vector3.Dot(catTransform.position - VARS.curEdgeGate.transform.position, tempVector) > 0.9f)
-            {
-                //Debug.Log("enter");
-                //Debug.Log("cat: " + catTransform.position);
-                //Debug.Log("edgeGate: " + VARS.curEdgeGate.transform.position);
-
-                VARS.IsEdgeGateTriggered = true;
-            }
-        }
         #endregion
     }
 
@@ -742,7 +772,7 @@ public class CatCollision : MonoBehaviour
                         case 2:
                             VARS.curDownTile = curTile;
                             VARS.curDownTileData = curTileData;
-                            VARS.IsGroundDetected = true; ;
+                            VARS.IsGroundDetected = true;
                             break;
                         case 3:
                             VARS.curLeftTile = curTile;
@@ -754,7 +784,7 @@ public class CatCollision : MonoBehaviour
                             VARS.curRightTile = curTile;
                             VARS.curRightTileData = curTileData;
                             if (!curTileData.isPlatform)
-                                VARS.IsRightBlockDetected = true; ;
+                                VARS.IsRightBlockDetected = true;
                             break;
                     }
 
@@ -993,6 +1023,8 @@ public class CatCollision : MonoBehaviour
                     if (!VARS.IsCarryingAKey &&
                         !VARS.IsUnlocking)
                     {
+                        VARS.curKey = VARS.curTriggerTile;
+
                         VARS.IsToCarryAKey = true;
                     }
                 }

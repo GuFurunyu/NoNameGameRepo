@@ -32,12 +32,15 @@ public class ScriptsExecutionController : MonoBehaviour
 
         //catCollision
         VARS.IsCatCollisionMainPartExecutable =
+            //Time.deltaTime < 0.0167f &&//~?
+            VARS.IsInNewRoomAllResetOver &&
             !VARS.IsRotating &&
             !VARS.IsTwisting &&
             !VARS.IsExiting;
 
         //catMove
         VARS.IsCatMoveMainPartExecutable =
+            //Time.deltaTime < 0.0167f &&//~?
             VARS.IsInNewRoomAllResetOver &&
             !VARS.IsRotating &&
             !VARS.IsTwisting &&
@@ -46,7 +49,8 @@ public class ScriptsExecutionController : MonoBehaviour
             !VARS.IsExiting &&
             !VARS.IsEdgeGateTriggered &&
             !(VARS.IsJustEnterNewFace &&
-            !VARS.IsOnGround);
+            (VARS.IsInUpEdgeGate ||
+            VARS.IsInDownEdgeGate));
 
         //catRotate
         VARS.IsCatRotateMainPartExecutable =

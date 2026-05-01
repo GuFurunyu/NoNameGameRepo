@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using JetBrains.Annotations;
 using Unity.VisualScripting;
 using UnityEngine;
 //using ECB = Variables.ExecutionControlBool;
@@ -11,6 +12,12 @@ public class Variables : MonoBehaviour
         "\n- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
         "  \nVARIABLES\n --- " +
         "\n- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n")]
+
+    #region UniversalFunctionsLibrary
+    [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
+        "  \nUNIVERSALFUNCTIONSLIBRARY\n --- ")]
+    public int debugCount;
+    #endregion
 
     #region ScriptsExecutionController
     //[Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
@@ -197,6 +204,12 @@ public class Variables : MonoBehaviour
     //justEnterNewFace
     [SerializeField] bool _isJustEnterNewFace;
     public bool IsJustEnterNewFace { get { return _isJustEnterNewFace; } set { _isJustEnterNewFace = value; } }
+
+    [SerializeField] bool _isInUpEdgeGate;
+    public bool IsInUpEdgeGate { get { return _isInUpEdgeGate; } set { _isInUpEdgeGate = value; } }
+
+    [SerializeField] bool _isInDownEdgeGate;
+    public bool IsInDownEdgeGate { get { return _isInDownEdgeGate; } set { _isInDownEdgeGate = value; } }
 
     public float justEnterNewFaceStartTime;
     #endregion
@@ -416,6 +429,11 @@ public class Variables : MonoBehaviour
     [SerializeField] private bool _isCatCollisionMainPartExecutable;
     public bool IsCatCollisionMainPartExecutable { get { return _isCatCollisionMainPartExecutable; } set { _isCatCollisionMainPartExecutable = value; } }
 
+    public float curUpBlockDistance;
+    public float curDownBlockDistance;
+    public float curLeftBlockDistance;
+    public float curRightBlockDistance;
+
     //notTouchingAnything
     [SerializeField] private bool _isNotTouchingAnything;
     public bool IsNotTouchingAnything
@@ -542,16 +560,17 @@ public class Variables : MonoBehaviour
     public GameObject curTriggerTile;
     public TileData curTriggerTileData;
     public GameObject curEdgeGate;
+    public GameObject curKey;
     #endregion
 
     #region CatMove
     [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
         "  \nCATMOVE\n --- ")]
-    //fixedDeltaTime
-    public float catMoveLastUpdatedTime;
-
     //executability
     [SerializeField] private bool _isCatMoveMainPartExecutable;
+
+    //fixedDeltaTime
+    public float catMoveLastUpdatedTime;
     public bool IsCatMoveMainPartExecutable { get { return _isCatMoveMainPartExecutable; } set { _isCatMoveMainPartExecutable = value; } }
 
     //curSpeed
@@ -584,6 +603,10 @@ public class Variables : MonoBehaviour
 
     [SerializeField] private bool _isAcceEnabled;
     public bool IsAcceEnabled { get { return _isAcceEnabled; } set { _isAcceEnabled = value; } }
+
+    //justInLiquid
+    [SerializeField] private bool _isJustInLiquid;
+    public bool IsJustInLiquid { get { return _isJustInLiquid; } set { _isJustInLiquid = value; } }
 
     #endregion
 
@@ -766,6 +789,8 @@ public class Variables : MonoBehaviour
     public int curActivatedSavePointRoomIndex;
     public Vector3 curActivatedSavePointPosition;
 
+    public float lastActivatedSavePointTime;
+
     //key
     [SerializeField] private bool _isToCarryAKey;
     public bool IsToCarryAKey { get { return _isToCarryAKey; } set { _isToCarryAKey = value; } }
@@ -776,7 +801,7 @@ public class Variables : MonoBehaviour
     public GameObject curCarriedKey;
     public GameObject curCarriedKeyIniParent;
     public Vector3 curCarriedKeyIniLocalPosition;
-    public int curCarriedIniRoomIndex;
+    public int curCarriedKeyIniRoomIndex;
     public GameObject curMinimapKey;
 
     //[SerializeField] private bool _isToUnlock;
@@ -787,6 +812,8 @@ public class Variables : MonoBehaviour
 
     public GameObject curUnlockingBlock;
 
+    //strawberry
+    public List<GameObject> carriedStrawberries = new List<GameObject>();
     #endregion
 
     #region CatAppearance
@@ -850,6 +877,8 @@ public class Variables : MonoBehaviour
 
     //curBlocks
     public List<GameObject> curBlocks = new List<GameObject>();
+    public List<TileData> curBlockTileDatas = new List<TileData>();
+    public List<Vector3> curCoordVectors = new List<Vector3>();
 
     //curBlockUpdateTimes
     public List<float> curBlockLastUpdateTimes = new List<float>();
@@ -857,6 +886,10 @@ public class Variables : MonoBehaviour
     //curRoomBlockStateOfMatterIndexesAndTypeIndexes
     public List<int> curRoomBlockStateOfMatterIndexes;
     public List<int> curRoomBlockTypeIndexes;
+
+    public bool[] isRoomMovableBlockIniLocalPositionsDetermined = new bool[54];
+    [SerializeField] private bool _isNotToResetMovableBlockPositions;
+    public bool IsNotToResetMovableBlockPositions { get { return _isNotToResetMovableBlockPositions; } set { _isNotToResetMovableBlockPositions = value; } }
 
     //gravity
     //~?
@@ -869,6 +902,22 @@ public class Variables : MonoBehaviour
     [SerializeField] private bool _isFluidContinuousnessOptimizationActivated = true;
     public bool IsFluidContinuousnessOptimizationActivated
     { get { return _isFluidContinuousnessOptimizationActivated; } set { _isFluidContinuousnessOptimizationActivated = value; } }
+
+    //storedBlocks
+    public GameObject[] storedSandBlocks = new GameObject[512];
+    public GameObject[] storedWaterBlocks = new GameObject[512];
+    public GameObject[] storedAcidBlocks = new GameObject[512];
+    public GameObject[] storedVaporBlocks = new GameObject[512];
+    public GameObject[] storedGasBlocks = new GameObject[512];
+    public GameObject[] storedElectricMistBlocks = new GameObject[512];
+    public GameObject[] storedLightElectricMistBlocks = new GameObject[512];
+    public int curStoredSandBlockIndex;
+    public int curStoredWaterBlockIndex;
+    public int curStoredAcidBlockIndex;
+    public int curStoredVaporBlockIndex;
+    public int curStoredGasBlockIndex;
+    public int curStoredElectricMistBlockIndex;
+    public int curStoredLightElectricMistBlockIndex;
 
     //fragileBlocks
     public List<GameObject> curToBeBrokenFragileRustBlocks = new List<GameObject>();

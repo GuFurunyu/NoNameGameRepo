@@ -1,5 +1,8 @@
 using System.Collections.Generic;
+using System.Diagnostics;
 using JetBrains.Annotations;
+using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 
 [DefaultExecutionOrder((int)ScriptsExecutionOrder.ExecutionOrder.universalFunctionsLibrary)]
@@ -10,10 +13,32 @@ public class UniversalFunctionsLibrary : MonoBehaviour
 
     GameObject gameManager;
 
+    bool hasGotCurTriggerBlock;
+    bool hasGotCurNearestUpBlock;
+    bool hasGotCurNearestDownBlock;
+    bool hasGotCurNearestLeftBlock;
+    bool hasGotCurNearestRightBlock;
+    bool hasGotCurNearestLiquidBlock;
+    bool hasGotCurGasBlock;
+    bool hasGotCurMistBlock;
+
+    float curUpBlockDistance;
+    float curDownBlockDistance;
+    float curLeftBlockDistance;
+    float curRightBlockDistance;
+
+    bool isUpLiquid;
+
+    float curNearestLiquidBlockDistance;
+
     int tempInt;
     float tempFloat;
+    float tempFloat1;
+    float tempFloat2;
     float[] tempFloats = new float[3];
     Vector3 tempVector;
+    Vector3 tempVector1;
+    Vector3 tempVector2;
     Quaternion tempQuaternion;
     GameObject tempGameObject;
 
@@ -35,6 +60,23 @@ public class UniversalFunctionsLibrary : MonoBehaviour
     List<GameObject> edgeGates = new List<GameObject>();
     List<GameObject> edgeGateTriggers = new List<GameObject>();
 
+    Camera cam;
+    Transform camTransform;
+
+    float camNormalSize;
+    float camMinimapSize;
+
+    float camMinimapDistanceToCubeCore;
+
+    GameObject cat;
+    Transform catTransform;
+
+    float temperatureTransferSpeed;
+    float electricityTransferSpeed;
+    float toxicityTransferSpeed;
+
+    float activateSavePointGapTime;
+
     GameObject[] minimapFaces = new GameObject[6];
     GameObject[] minimapRoomPlanes = new GameObject[54];
     GameObject[] minimapTwistingCenters = new GameObject[6];
@@ -47,17 +89,6 @@ public class UniversalFunctionsLibrary : MonoBehaviour
     //GameObject[] minimapRotationCameraRightPoints = new GameObject[26];
 
     GameObject[] minimapCenterTriangleEmpties = new GameObject[6];
-
-    Camera cam;
-    Transform camTransform;
-
-    float camNormalSize;
-    float camMinimapSize;
-
-    float camMinimapDistanceToCubeCore;
-
-    GameObject cat;
-    Transform catTransform;
     #endregion
 
     #region VariablesUsed
@@ -67,6 +98,10 @@ public class UniversalFunctionsLibrary : MonoBehaviour
     Vector3[] roomStableRights = new Vector3[54];
 
     List<GameObject> curBlocks = new List<GameObject>();
+    List<TileData> curBlockTileDatas = new List<TileData>();
+
+    List<GameObject> curToBeBrokenFragileRustBlocks = new List<GameObject>();
+    List<float> curFragileRustBlockToBeBrokenStartTimes = new List<float>();
     #endregion
 
     private void Start()
@@ -88,11 +123,6 @@ public class UniversalFunctionsLibrary : MonoBehaviour
         twistingCenters = CONS.twistingCenters;
         edgeGates = CONS.edgeGates;
         edgeGateTriggers = CONS.edgeGateTriggers;
-        minimapFaces = CONS.minimapFaces;
-        minimapRoomPlanes = CONS.minimapRoomPlanes;
-        minimapTwistingCenters = CONS.minimapTwistingCenters;
-        minimapRotationCameraPoints = CONS.minimapRotationCameraPoints;
-        minimapCenterTriangleEmpties = CONS.minimapCenterTriangleEmpties;
         cam = CONS.cam;
         camTransform = CONS.camTransform;
         camNormalSize = CONS.camNormalSize;
@@ -100,6 +130,15 @@ public class UniversalFunctionsLibrary : MonoBehaviour
         camMinimapDistanceToCubeCore = CONS.camMinimapDistanceToCubeCore;
         cat = CONS.cat;
         catTransform = CONS.catTransform;
+        temperatureTransferSpeed = CONS.temperatureTransferSpeed;
+        electricityTransferSpeed = CONS.electricityTransferSpeed;
+        toxicityTransferSpeed = CONS.toxicityTransferSpeed;
+        activateSavePointGapTime = CONS.activateSavePointGapTime;
+        minimapFaces = CONS.minimapFaces;
+        minimapRoomPlanes = CONS.minimapRoomPlanes;
+        minimapTwistingCenters = CONS.minimapTwistingCenters;
+        minimapRotationCameraPoints = CONS.minimapRotationCameraPoints;
+        minimapCenterTriangleEmpties = CONS.minimapCenterTriangleEmpties;
         #endregion
 
         #region ImportReferenceVariables
@@ -108,6 +147,9 @@ public class UniversalFunctionsLibrary : MonoBehaviour
         roomStableUps = VARS.roomStableUps;
         roomStableRights = VARS.roomStableRights;
         curBlocks = VARS.curBlocks;
+        curBlockTileDatas = VARS.curBlockTileDatas;
+        curToBeBrokenFragileRustBlocks = VARS.curToBeBrokenFragileRustBlocks;
+        curFragileRustBlockToBeBrokenStartTimes = VARS.curFragileRustBlockToBeBrokenStartTimes;
         #endregion
     }
 
@@ -117,7 +159,26 @@ public class UniversalFunctionsLibrary : MonoBehaviour
         #endregion
     }
 
+    #region Debug
+    [Conditional("UNITY_EDITOR")]
+    public void DebugLog()
+    {
+        UnityEngine.Debug.Log("debug " + VARS.debugCount++);
+    }
+
+    [Conditional("UNITY_EDITOR")]
+    public void DebugLog(string s)
+    {
+        UnityEngine.Debug.Log("debug " + s);
+    }
+    #endregion
+
     #region Universal
+    public bool EqualToZero(float f)
+    {
+        return Mathf.Abs(f) < 1e-8f;
+    }
+
     public Vector3 Vector3Abs(Vector3 vector)
     {
         return new Vector3(Mathf.Abs(vector.x), Mathf.Abs(vector.y), Mathf.Abs(vector.z));
@@ -516,6 +577,645 @@ public class UniversalFunctionsLibrary : MonoBehaviour
     #endregion
 
     #region CatCollision
+    public void GetCatCollisionInfo()
+    {
+        hasGotCurTriggerBlock = false;
+        hasGotCurNearestUpBlock = false;
+        hasGotCurNearestDownBlock = false;
+        hasGotCurNearestLeftBlock = false;
+        hasGotCurNearestRightBlock = false;
+        hasGotCurNearestLiquidBlock = false;
+        hasGotCurGasBlock = false;
+        hasGotCurMistBlock = false;
+
+        VARS.curTriggerTile = null;
+        VARS.curTriggerTileData = null;
+        VARS.curUpTile = null;
+        VARS.curUpTileData = null;
+        VARS.curDownTile = null;
+        VARS.curDownTileData = null;
+        VARS.curLeftTile = null;
+        VARS.curLeftTileData = null;
+        VARS.curRightTile = null;
+        VARS.curRightTileData = null;
+        VARS.curLiquidTileData = null;
+        VARS.curGasTileData = null;
+        VARS.curMistTileData = null;
+
+        curUpBlockDistance = 999;
+        curDownBlockDistance = 999;
+        curLeftBlockDistance = 999;
+        curRightBlockDistance = 999;
+
+        curNearestLiquidBlockDistance = 999;
+
+        isUpLiquid = false;
+
+        for (int i = 0; i < curBlocks.Count; i++)
+        {
+            if (curBlocks[i].activeSelf == false)
+                continue;
+
+            tempVector = catTransform.position - curBlocks[i].transform.position;
+
+            //trigger
+            if (curBlockTileDatas[i].stateOfMatterIndex == 0)
+            {
+                if (!hasGotCurTriggerBlock)
+                {
+                    if (Mathf.Abs(Vector3.Dot(tempVector, VARS.curUp)) < gridBreadth - 0.025f &&
+                        Mathf.Abs(Vector3.Dot(tempVector, VARS.curRight)) < gridBreadth - 0.025f)
+                    {
+                        if (!(VARS.IsCarryingAKey && curBlockTileDatas[i].blockTypeIndex == 7007) &&
+                            !(VARS.IsCarryingStrawberries && VARS.carriedStrawberries.Contains(curBlocks[i])))
+                        {
+                            VARS.curTriggerTile = curBlocks[i];
+                            VARS.curTriggerTileData = curBlockTileDatas[i];
+
+                            hasGotCurTriggerBlock = true;
+                        }
+                    }
+                }
+            }
+            
+            //solid
+            if (curBlockTileDatas[i].stateOfMatterIndex == 1)
+            {
+                //up
+                if (!hasGotCurNearestUpBlock &&
+                    !curBlockTileDatas[i].isPlatform)
+                {
+                    tempFloat1 = Mathf.Abs(Vector3.Dot(tempVector, VARS.curRight));
+
+                    if (tempFloat1 < gridBreadth - 0.025f)
+                    {
+                        tempFloat = Vector3.Dot(tempVector, -VARS.curUp);
+
+                        if (tempFloat > 0.5f &&
+                            tempFloat < curUpBlockDistance &&
+                            tempFloat > tempFloat1)
+                        {
+                            curUpBlockDistance = tempFloat;
+
+                            if (curUpBlockDistance < gridBreadth + 0.025f)
+                            {
+                                //DebugLog("enter");
+
+                                VARS.curUpTile = curBlocks[i];
+                                VARS.curUpTileData = curBlockTileDatas[i];
+                                VARS.IsCeilingDetected = true;
+
+                                hasGotCurNearestUpBlock = true;
+                            }
+                        }
+                    }
+                }
+                //down
+                if (!hasGotCurNearestDownBlock)
+                {
+                    tempFloat1 = Mathf.Abs(Vector3.Dot(tempVector, VARS.curRight));
+
+                    if (tempFloat1 < gridBreadth - 0.025f)
+                    {
+                        tempFloat = Vector3.Dot(tempVector, VARS.curUp);
+
+                        if (tempFloat > 0.5f &&
+                            tempFloat < curDownBlockDistance &&
+                            tempFloat > tempFloat1)
+                        {
+                            curDownBlockDistance = tempFloat;
+
+                            if (curDownBlockDistance < gridBreadth + 0.025f)
+                            {
+                                VARS.curDownTile = curBlocks[i];
+                                VARS.curDownTileData = curBlockTileDatas[i];
+                                VARS.IsGroundDetected = true;
+
+                                hasGotCurNearestDownBlock = true;
+                            }
+                        }
+                    }
+                }
+                //left
+                if (!hasGotCurNearestLeftBlock &&
+                    !curBlockTileDatas[i].isPlatform)
+                {
+                    tempFloat1 = Mathf.Abs(Vector3.Dot(tempVector, VARS.curUp));
+
+                    if (tempFloat1 < gridBreadth - 0.025f)
+                    {
+                        tempFloat = Vector3.Dot(tempVector, VARS.curRight);
+
+                        if (tempFloat > 0.5f &&
+                            tempFloat < curLeftBlockDistance &&
+                            tempFloat > tempFloat1)
+                        {
+                            curLeftBlockDistance = tempFloat;
+
+                            if (curLeftBlockDistance < gridBreadth + 0.025f)
+                            {
+                                VARS.curLeftTile = curBlocks[i];
+                                VARS.curLeftTileData = curBlockTileDatas[i];
+                                VARS.IsLeftBlockDetected = true;
+
+                                hasGotCurNearestLeftBlock = true;
+                            }
+                        }
+                    }
+                }
+                //right
+                if (!hasGotCurNearestRightBlock
+                    && !curBlockTileDatas[i].isPlatform)
+                {
+                    tempFloat1 = Mathf.Abs(Vector3.Dot(tempVector, VARS.curUp));
+
+                    if (tempFloat1 < gridBreadth - 0.025f)
+                    {
+                        tempFloat = Vector3.Dot(tempVector, -VARS.curRight);
+
+                        if (tempFloat > 0.5f &&
+                            tempFloat < curRightBlockDistance &&
+                            tempFloat > tempFloat1)
+                        {
+                            curRightBlockDistance = tempFloat;
+
+                            if (curRightBlockDistance < gridBreadth + 0.025f)
+                            {
+                                VARS.curRightTile = curBlocks[i];
+                                VARS.curRightTileData = curBlockTileDatas[i];
+                                VARS.IsRightBlockDetected = true;
+
+                                hasGotCurNearestRightBlock = true;
+                            }
+                        }
+                    }
+                }
+            }
+
+            //liquid
+            if (curBlockTileDatas[i].stateOfMatterIndex == 2)
+            {
+                if (!isUpLiquid)
+                {
+                    tempFloat1 = Mathf.Abs(Vector3.Dot(tempVector, VARS.curRight));
+                    if (tempFloat1 < gridBreadth - 0.025f)
+                    {
+                        tempFloat = Vector3.Dot(tempVector, -VARS.curUp);
+
+                        if (tempFloat > 0 &&
+                            tempFloat < gridBreadth + 0.025f &&
+                            tempFloat > tempFloat1)
+                        {
+                            VARS.buoyancyDistanceFixFloat = 0;
+
+                            isUpLiquid = true;
+                        }
+                    }
+
+                }
+
+                if (!hasGotCurNearestLiquidBlock)
+                {
+                    tempFloat = Vector3.Magnitude(tempVector);
+                    if (tempFloat < curNearestLiquidBlockDistance &&
+                        Mathf.Abs(Vector3.Dot(tempVector, VARS.curUp)) < gridBreadth - 0.025f &&
+                        Mathf.Abs(Vector3.Dot(tempVector, VARS.curRight)) < gridBreadth - 0.025f)
+                    {
+                        curNearestLiquidBlockDistance = tempFloat;
+
+                        VARS.curLiquidTileData = curBlockTileDatas[i];
+                        VARS.IsLiquidDetected = true;
+
+                        if (!isUpLiquid)
+                        {
+                            tempFloat = Vector3.Dot(tempVector, VARS.curUp);
+                            if (tempFloat < 0)
+                            {
+                                VARS.buoyancyDistanceFixFloat = 0;
+                            }
+                            else
+                            {
+                                VARS.buoyancyDistanceFixFloat = 1 - tempFloat;
+                            }
+                        }
+
+                        //hasGotCurLiquidBlock = true;
+                    }
+                }
+            }
+
+            //gas
+            if (curBlockTileDatas[i].stateOfMatterIndex == 3)
+            {
+                if (!hasGotCurGasBlock)
+                {
+                    if (Mathf.Abs(Vector3.Dot(tempVector, VARS.curUp)) < gridBreadth - 0.025f &&
+                        Mathf.Abs(Vector3.Dot(tempVector, VARS.curRight)) < gridBreadth - 0.025f)
+                    {
+                        VARS.curGasTileData = curBlockTileDatas[i];
+                        VARS.IsGasDetected = true;
+
+                        hasGotCurGasBlock = true;
+                    }
+                }
+            }
+
+            //mist
+            if (curBlockTileDatas[i].stateOfMatterIndex == 4)
+            {
+                if (!hasGotCurMistBlock)
+                {
+                    if (Mathf.Abs(Vector3.Dot(tempVector, VARS.curUp)) < gridBreadth - 0.025f &&
+                        Mathf.Abs(Vector3.Dot(tempVector, VARS.curRight)) < gridBreadth - 0.025f)
+                    {
+                        VARS.curMistTileData = curBlockTileDatas[i];
+                        VARS.IsMistDetected = true;
+
+                        hasGotCurMistBlock = true;
+                    }
+                }
+            }
+        }
+
+        if (VARS.IsCeilingDetected)
+        {
+            VARS.IsCeilingDetected = false;
+            VARS.IsToCeiling = true;
+        }
+        else
+        {
+            VARS.IsToCeiling = false;
+        }
+        if (VARS.IsGroundDetected)
+        {
+            VARS.IsGroundDetected = false;
+            VARS.IsOnGround = true;
+        }
+        else
+        {
+            VARS.IsOnGround = false;
+        }
+        if (VARS.IsLeftBlockDetected)
+        {
+            VARS.IsLeftBlockDetected = false;
+            VARS.IsLeftBlocked = true;
+        }
+        else
+        {
+            VARS.IsLeftBlocked = false;
+        }
+        if (VARS.IsRightBlockDetected)
+        {
+            VARS.IsRightBlockDetected = false;
+            VARS.IsRightBlocked = true;
+        }
+        else
+        {
+            VARS.IsRightBlocked = false;
+        }
+        if (VARS.IsLiquidDetected)
+        {
+            VARS.IsLiquidDetected = false;
+            VARS.IsInLiquid = true;
+        }
+        else
+        {
+            VARS.IsInLiquid = false;
+        }
+        if (VARS.IsGasDetected)
+        {
+            VARS.IsGasDetected = false;
+            VARS.IsInGas = true;
+        }
+        else
+        {
+            VARS.IsInGas = false;
+        }
+        if (VARS.IsMistDetected)
+        {
+            VARS.IsMistDetected = false;
+            VARS.IsInMist = true;
+        }
+        else
+        {
+            VARS.IsInMist = false;
+        }
+
+        //onOrToCurTile
+        if (VARS.curUpTile != null &&
+            VARS.curUpTile == VARS.curAttachedCeilingTile)
+        {
+            //fragile
+            if (VARS.curUpTileData.isFragile)
+            {
+                BreakCurTile(VARS.curUpTile,curToBeBrokenFragileRustBlocks, curFragileRustBlockToBeBrokenStartTimes);
+            }
+
+            //railBlock
+            if (VARS.curUpTileData.railBlockIndex > 0)
+            {
+                VARS.curOnOrToRailBlock = VARS.curUpTile;
+                VARS.IsOnOrToARailBlock = true;
+            }
+        }
+        if (VARS.curDownTile != null)
+        {
+            //fragile
+            if (VARS.curDownTileData.isFragile)
+            {
+                BreakCurTile(VARS.curDownTile, curToBeBrokenFragileRustBlocks, curFragileRustBlockToBeBrokenStartTimes);
+            }
+
+            //railBlock
+            if (VARS.curDownTileData.railBlockIndex > 0)
+            {
+                VARS.curOnOrToRailBlock = VARS.curDownTile;
+                VARS.IsOnOrToARailBlock = true;
+            }
+        }
+        if (VARS.curLeftTile!=null &&
+            VARS.curLeftTile==VARS.curAttachedWallTile)
+        {
+            //fragile
+            if (VARS.curLeftTileData.isFragile)
+            {
+                BreakCurTile(VARS.curLeftTile, curToBeBrokenFragileRustBlocks, curFragileRustBlockToBeBrokenStartTimes);
+            }
+
+            //railBlock
+            if (VARS.curLeftTileData.railBlockIndex > 0)
+            {
+                VARS.curOnOrToRailBlock = VARS.curLeftTile;
+                VARS.IsOnOrToARailBlock = true;
+            }
+        }
+        if (VARS.curRightTile != null &&
+            VARS.curRightTile == VARS.curAttachedWallTile)
+        {
+            //fragile
+            if (VARS.curRightTileData.isFragile)
+            {
+                BreakCurTile(VARS.curRightTile, curToBeBrokenFragileRustBlocks, curFragileRustBlockToBeBrokenStartTimes);
+            }
+
+            //railBlock
+            if (VARS.curRightTileData.railBlockIndex > 0)
+            {
+                VARS.curOnOrToRailBlock = VARS.curRightTile;
+                VARS.IsOnOrToARailBlock = true;
+            }
+        }
+
+        VARS.curUpBlockDistance = curUpBlockDistance;
+        VARS.curDownBlockDistance = curDownBlockDistance;
+        VARS.curLeftBlockDistance = curLeftBlockDistance;
+        VARS.curRightBlockDistance = curRightBlockDistance;
+    }
+
+    public void TransferAffliction()
+    {
+        TileData curTileData;
+
+        if (!VARS.IsInLiquid &&
+            !VARS.IsInGas &&
+            !VARS.IsInMist)
+        {
+            if (VARS.IsToCeiling ||
+                VARS.IsOnGround ||
+                VARS.IsLeftBlocked ||
+                VARS.IsRightBlocked)
+            {
+                for (int i = 0; i < 4; i++)
+                {
+                    switch (i)
+                    {
+                        case 0: curTileData = VARS.curUpTileData; break;
+                        case 1: curTileData = VARS.curDownTileData; break;
+                        case 2: curTileData = VARS.curLeftTileData; break;
+                        case 3: curTileData = VARS.curRightTileData; break;
+                        default: curTileData = null; break;
+                    }
+
+                    if (curTileData != null)
+                    {
+                        //temperature
+                        if (!(EqualToZero(curTileData.temperature) &&
+                            EqualToZero(VARS.catCurTemperature)))
+                        {
+                            //UFL.AddCatCurTemperature((curTileData.temperature - VARS.catCurTemperature) * temperatureTransferSpeed * Time.deltaTime);
+                            VARS.catCurTemperature += (curTileData.temperature - VARS.catCurTemperature) * temperatureTransferSpeed * Time.deltaTime;
+                        }
+                        //electricity
+                        if (!(EqualToZero(curTileData.electricity) &&
+                            EqualToZero(VARS.catCurElectricity)))
+                        {
+                            //UFL.AddCatCurElectricity((curTileData.electricity - VARS.catCurElectricity) * electricityTransferSpeed * Time.deltaTime);
+                            VARS.catCurElectricity += (curTileData.electricity - VARS.catCurElectricity) * electricityTransferSpeed * Time.deltaTime;
+                        }
+                        //toxicity
+                        if (!(EqualToZero(curTileData.toxicity) &&
+                            EqualToZero(VARS.catCurToxicity)))
+                        {
+                            //UFL.AddCatCurToxicity((curTileData.toxicity - VARS.catCurToxicity) * toxicityTransferSpeed * Time.deltaTime);
+                            VARS.catCurToxicity += (curTileData.toxicity - VARS.catCurToxicity) * toxicityTransferSpeed * Time.deltaTime;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                //temperature
+                if (VARS.catCurTemperature != 0)
+                {
+                    //UFL.AddCatCurTemperature(-VARS.catCurTemperature * temperatureTransferSpeed * Time.deltaTime);
+                    VARS.catCurTemperature += -VARS.catCurTemperature * temperatureTransferSpeed * Time.deltaTime;
+
+                }
+
+                //electricity
+                if (VARS.catCurElectricity != 0)
+                {
+                    //UFL.AddCatCurElectricity(-VARS.catCurElectricity * electricityTransferSpeed * Time.deltaTime);
+                    VARS.catCurElectricity += -VARS.catCurElectricity * electricityTransferSpeed * Time.deltaTime;
+                }
+
+                //toxicity
+                if (VARS.catCurToxicity != 0)
+                {
+                    //UFL.AddCatCurToxicity(-VARS.catCurToxicity * toxicityTransferSpeed * Time.deltaTime);
+                    VARS.catCurToxicity += -VARS.catCurToxicity * toxicityTransferSpeed * Time.deltaTime;
+                }
+            }
+        }
+        else
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                switch (i)
+                {
+                    case 0: curTileData = VARS.curLiquidTileData; break;
+                    case 1: curTileData = VARS.curGasTileData; break;
+                    case 2: curTileData = VARS.curMistTileData; break;
+                    default: curTileData = null; break;
+                }
+
+                if (curTileData != null)
+                {
+                    //temperature
+                    if (!(EqualToZero(curTileData.temperature) &&
+                        EqualToZero(VARS.catCurTemperature)))
+                    {
+                        //UFL.AddCatCurTemperature((curTileData.temperature - VARS.catCurTemperature) * temperatureTransferSpeed * Time.deltaTime);
+                        VARS.catCurTemperature += (curTileData.temperature - VARS.catCurTemperature) * temperatureTransferSpeed * Time.deltaTime;
+                    }
+                    //electricity
+                    if (!(EqualToZero(curTileData.electricity) &&
+                        EqualToZero(VARS.catCurElectricity)))
+                    {
+                        //UFL.AddCatCurElectricity((curTileData.electricity - VARS.catCurElectricity) * electricityTransferSpeed * Time.deltaTime);
+                        VARS.catCurElectricity += (curTileData.electricity - VARS.catCurElectricity) * electricityTransferSpeed * Time.deltaTime;
+                    }
+                    //toxicity
+                    if (!(EqualToZero(curTileData.toxicity) &&
+                        EqualToZero(VARS.catCurToxicity)))
+                    {
+                        //UFL.AddCatCurToxicity((curTileData.toxicity - VARS.catCurToxicity) * toxicityTransferSpeed * Time.deltaTime);
+                        VARS.catCurToxicity += (curTileData.toxicity - VARS.catCurToxicity) * toxicityTransferSpeed * Time.deltaTime;
+                    }
+                }
+            }
+        }
+    }
+
+    public void CollidTriggers()
+    {
+        //DebugLog("collidTriggers");
+
+        if (VARS.curTriggerTile != null)
+        {
+            //gate
+            if (/*curTileData.triggerTypeIndex == 3*/
+                VARS.curTriggerTileData.blockTypeIndex == 7001)
+            {
+
+            }
+
+            //edgeGate(enter)
+            else if (/*VARS.curTriggerTileData.triggerTypeIndex == 4*/
+                VARS.curTriggerTileData.blockTypeIndex == 7002)
+            {
+                VARS.curEdgeGate = VARS.curTriggerTile;
+
+                VARS.IsEnteringAnEdgeGate = true;
+            }
+
+            ////edgeGateTrigger(triggerEdgeGate)
+            //else if (/*VARS.curTriggerTileData.triggerTypeIndex == 5*/
+            //    VARS.curTriggerTileData.blockTypeIndex == 7003 &&
+            //    UFL.IsCatInEdgeGateTrigger())
+            //{
+            //    VARS.IsEdgeGateTriggered = true;
+            //}
+
+            //activateSavePoint(notActiavted)
+            //savePoint
+            else if (/*VARS.curTriggerTileData.triggerTypeIndex == 6*/
+                VARS.curTriggerTileData.blockTypeIndex == 7004)
+            {
+                //DebugLog("savePoint");
+
+                //if (IsCatInSavePointBlock())
+                //{
+                //    VARS.IsToActivateASavePoint = true;
+                //}
+
+                if (Time.time - VARS.lastActivatedSavePointTime > activateSavePointGapTime)
+                {
+                    VARS.lastActivatedSavePointTime = Time.time;
+
+                    VARS.IsToActivateASavePoint = true;
+                }
+            }
+
+            //activatedSavePoint(~~?)
+            //activatedSavePoint
+            else if (/*VARS.curTriggerTileData.triggerTypeIndex == 7*/
+                VARS.curTriggerTileData.blockTypeIndex == 7005)
+            {
+
+            }
+
+            //center(in)
+            else if (/*VARS.curTriggerTileData.triggerTypeIndex == 8*/
+                VARS.curTriggerTileData.blockTypeIndex == 7006)
+            {
+                VARS.IsInCenter = true;
+            }
+
+            //key
+            else if (VARS.curTriggerTileData.blockTypeIndex == 7007)
+            {
+                //DebugLog("key");
+
+                if (!VARS.IsCarryingAKey &&
+                    !VARS.IsUnlocking)
+                {
+                    VARS.curKey = VARS.curTriggerTile;
+
+                    VARS.IsToCarryAKey = true;
+                }
+            }
+
+            //strawberry(get)
+            else if (/*VARS.curTriggerTileData.triggerTypeIndex == 1*/
+                VARS.curTriggerTileData.blockTypeIndex == 7008)
+            {
+                //isCarryingStrawberries = true;
+
+                //carriedStrawberries.Add(curTile);
+                //carriedStrawberriesIniPositions.Add(curTile.transform.position);
+
+                VARS.IsGettingAStrawberry = true;
+            }
+
+            //energyCrystal(get)
+            else if (/*VARS.curTriggerTileData.triggerTypeIndex == 2*/
+                VARS.curTriggerTileData.blockTypeIndex == 7009)
+            {
+                if (VARS.curTriggerTile.transform.localScale != Vector3.one * 0.2f)
+                {
+                    VARS.IsGettingAnEnergyCrystal = true;
+                }
+            }
+
+            //void
+            else if (VARS.curTriggerTileData.blockTypeIndex == 7010)
+            {
+                //if (IsCatInVoidBlock())
+                //{
+                //    VARS.IsToDie = true;
+                //}
+
+                //DebugLog("enterVoid");
+
+                VARS.IsToDie = true;
+            }
+
+            //center(out)
+            if (/*VARS.curTriggerTileData.triggerTypeIndex != 8*/
+                VARS.curTriggerTileData.blockTypeIndex != 7006)
+            {
+                VARS.IsInCenter = false;
+            }
+        }
+    }
+
+    void BreakCurTile(GameObject curTile, List<GameObject> intoGameObjectList, List<float> intoTimeList)
+    {
+        intoGameObjectList.Add(curTile);
+        intoTimeList.Add(Time.time);
+    }
+
     public void ClearCurCollisionTileDatas()
     {
         VARS.curUpTileData = null;

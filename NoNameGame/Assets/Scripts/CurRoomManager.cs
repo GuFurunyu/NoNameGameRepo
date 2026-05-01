@@ -1,3 +1,4 @@
+using System.Reflection;
 using UnityEngine;
 
 [DefaultExecutionOrder((int)ScriptsExecutionOrder.ExecutionOrder.curRoomManager)]
@@ -10,6 +11,8 @@ public class CurRoomManager : MonoBehaviour
 
     GameObject gameManager;
 
+    float tempFloat;
+    Vector3 tempVector;
     Transform tempTransform;
     GameObject tempGameObject;
 
@@ -17,7 +20,12 @@ public class CurRoomManager : MonoBehaviour
     int storedFaceIndex = -1;
 
     #region ConstantsUsed
+    float gridBreadth;
+    int roomCoordBreadth;
+
     GameObject[] faces = new GameObject[6];
+
+    Transform catTransform;
     #endregion
 
     #region VariablesUsed
@@ -34,7 +42,10 @@ public class CurRoomManager : MonoBehaviour
         SEC = gameManager.GetComponent<ScriptsExecutionController>();
 
         #region ImportConstants
+        gridBreadth = CONS.gridBreadth;
+        roomCoordBreadth = CONS.roomCoordBreadth;
         faces = CONS.faces;
+        catTransform = CONS.catTransform;
         #endregion
 
         #region ImportReferenceVariables
@@ -61,6 +72,19 @@ public class CurRoomManager : MonoBehaviour
                 VARS.verCurSpeed = 0;
 
                 VARS.justEnterNewFaceStartTime = Time.time;
+
+                //isInUpOrDownEdgeGate
+                tempVector = catTransform.position - VARS.curRoomCenter;
+                //tempFloat = Vector3.Dot(tempVector, VARS.curUp);
+                tempFloat = Vector3.Dot(tempVector, VARS.curRoomStableUp);
+                if (tempFloat > (roomCoordBreadth / 3) * gridBreadth)
+                {
+                    VARS.IsInUpEdgeGate = true;
+                }
+                else if (tempFloat < -(roomCoordBreadth / 3) * gridBreadth)
+                {
+                    VARS.IsInDownEdgeGate = true;
+                }
 
                 VARS.IsJustEnterNewFace = true;
             }

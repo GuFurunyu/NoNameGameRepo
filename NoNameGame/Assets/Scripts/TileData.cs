@@ -16,6 +16,8 @@ public class TileData : MonoBehaviour
 
     int curRoomIndex;
 
+    public bool isNotToBeInCurBlocks;
+
     //coordinates(~?)
     Vector3 curPosition;
     Vector3 curCoordinates;
@@ -37,6 +39,10 @@ public class TileData : MonoBehaviour
     public int stateOfMatterIndex { get { return _stateOfMatterIndex; } set { _stateOfMatterIndex = value; } }
 
     public bool isMovable;
+
+    public Vector3 iniLocalPosition;
+
+    public int continuousHorMovingTimes;
 
     public bool isPositionDetermined;
 
@@ -138,6 +144,12 @@ public class TileData : MonoBehaviour
     #region VariablesUsed
 
     #endregion
+
+    //private void Awake()
+    //{
+    //    if (isMovable)
+    //        iniLocalPosition = this.transform.localPosition;
+    //}
 
     private void Start()
     {

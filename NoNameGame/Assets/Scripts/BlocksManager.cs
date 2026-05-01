@@ -17,22 +17,6 @@ public class BlocksManager : MonoBehaviour
     //lastUpdateTime
     float lastUpdateTime;
 
-    //storedBlock
-    GameObject[] storedSandBlocks = new GameObject[512];
-    GameObject[] storedWaterBlocks = new GameObject[512];
-    GameObject[] storedAcidBlocks = new GameObject[512];
-    GameObject[] storedVaporBlocks = new GameObject[512];
-    GameObject[] storedGasBlocks = new GameObject[512];
-    GameObject[] storedElectricMistBlocks = new GameObject[512];
-    GameObject[] storedLightElectricMistBlocks = new GameObject[512];
-    int curStoredSandBlockIndex;
-    int curStoredWaterBlockIndex;
-    int curStoredAcidBlockIndex;
-    int curStoredVaporBlockIndex;
-    int curStoredGasBlockIndex;
-    int curStoredElectricMistBlockIndex;
-    int curStoredLightElectricMistBlockIndex;
-
     ////matrix
     ////[x][y][z](~coord)
     //public int[,] curBlocksMatrix;
@@ -49,7 +33,6 @@ public class BlocksManager : MonoBehaviour
 
     //curBlock
     //HR: toBeMadeDynamic
-    List<TileData> curBlockTileDatas = new List<TileData>();
     //public List<int> curBlockStateOfMatterIndexes = new List<int>();
     GameObject curBlock;
     TileData curBlockTileData;
@@ -57,8 +40,7 @@ public class BlocksManager : MonoBehaviour
     //public int curBlockIndex;
     float curBlockLastUpdateTime;
 
-    ////coordVectorAndPosition
-    List<Vector3> curCoordVectors = new List<Vector3>();
+    //coordVectorAndPosition
     Vector3 curCoordVector;
     Vector3 nearCoordVector;
 
@@ -161,6 +143,8 @@ public class BlocksManager : MonoBehaviour
     float sandFixedUpdateTime;
     float railBlockFixedUpdateTime;
 
+    int continuousHorMovingMaxTime;
+
     float unlockDistance;
 
     float fragileRustBlockToBeBrokenTime;
@@ -178,11 +162,24 @@ public class BlocksManager : MonoBehaviour
     Vector3 curRight;
 
     List<GameObject> curBlocks = new List<GameObject>();
+    List<TileData> curBlockTileDatas = new List<TileData>();
+    List<Vector3> curCoordVectors = new List<Vector3>();
 
     List<float> curBlockLastUpdateTimes = new List<float>();
 
     List<int> curRoomBlockStateOfMatterIndexes = new List<int>();
     List<int> curRoomBlockTypeIndexes = new List<int>();
+
+    bool[] isRoomMovableBlockIniLocalPositionsDetermined = new bool[54];
+
+    //storedBlocks
+    GameObject[] storedSandBlocks = new GameObject[512];
+    GameObject[] storedWaterBlocks = new GameObject[512];
+    GameObject[] storedAcidBlocks = new GameObject[512];
+    GameObject[] storedVaporBlocks = new GameObject[512];
+    GameObject[] storedGasBlocks = new GameObject[512];
+    GameObject[] storedElectricMistBlocks = new GameObject[512];
+    GameObject[] storedLightElectricMistBlocks = new GameObject[512];
 
     List<GameObject> curToBeBrokenFragileRustBlocks = new List<GameObject>();
     List<float> curFragileRustBlockToBeBrokenStartTimes = new List<float>();
@@ -228,6 +225,7 @@ public class BlocksManager : MonoBehaviour
         mistFixedUpdateTime = CONS.mistFixedUpdateTime;
         sandFixedUpdateTime = CONS.sandFixedUpdateTime;
         railBlockFixedUpdateTime = CONS.railBlockFixedUpdateTime;
+        continuousHorMovingMaxTime = CONS.continuousHorMovingMaxTime;
         unlockDistance = CONS.unlockDistance;
         fragileRustBlockToBeBrokenTime = CONS.fragileRustBlockToBeBrokenTime;
         fragileRustBlockRespawnTime = CONS.fragileRustBlockRespawnTime;
@@ -237,9 +235,19 @@ public class BlocksManager : MonoBehaviour
         #region ImportReferenceVariables
         edgeGateLinkedToIndexes = VARS.edgeGateLinkedToIndexes;
         curBlocks = VARS.curBlocks;
+        curBlockTileDatas = VARS.curBlockTileDatas;
+        curCoordVectors = VARS.curCoordVectors;
         curBlockLastUpdateTimes = VARS.curBlockLastUpdateTimes;
         curRoomBlockStateOfMatterIndexes = VARS.curRoomBlockStateOfMatterIndexes;
         curRoomBlockTypeIndexes = VARS.curRoomBlockTypeIndexes;
+        isRoomMovableBlockIniLocalPositionsDetermined = VARS.isRoomMovableBlockIniLocalPositionsDetermined;
+        storedSandBlocks = VARS.storedSandBlocks;
+        storedWaterBlocks = VARS.storedWaterBlocks;
+        storedAcidBlocks = VARS.storedAcidBlocks;
+        storedVaporBlocks = VARS.storedVaporBlocks;
+        storedGasBlocks = VARS.storedGasBlocks;
+        storedElectricMistBlocks = VARS.storedElectricMistBlocks;
+        storedLightElectricMistBlocks = VARS.storedLightElectricMistBlocks;
         curToBeBrokenFragileRustBlocks = VARS.curToBeBrokenFragileRustBlocks;
         curFragileRustBlockToBeBrokenStartTimes = VARS.curFragileRustBlockToBeBrokenStartTimes;
         curBrokenFragileRustBlocks = VARS.curBrokenFragileRustBlocks;
@@ -305,6 +313,57 @@ public class BlocksManager : MonoBehaviour
             if (VARS.curPlaneEmpty == null)
                 VARS.curPlaneEmpty = CONS.roomPlanes[VARS.curRoomIndex].transform.GetChild(0).gameObject;
 
+            //determineRoomMovalbeBlockIniLocalPositions
+            if (!isRoomMovableBlockIniLocalPositionsDetermined[VARS.curRoomIndex])
+            {
+                for (int i = 0; i < VARS.curPlaneEmpty.transform.childCount; i++)
+                {
+                    tempTransform = VARS.curPlaneEmpty.transform.GetChild(i);
+                    tempTileData = tempTransform.GetComponent<TileData>();
+
+                    if (tempTileData.isMovable)
+                    {
+                        tempTileData.iniLocalPosition = tempTransform.localPosition;
+                    }
+                }
+
+                isRoomMovableBlockIniLocalPositionsDetermined[VARS.curRoomIndex] = true;
+            }
+            //resetMovableBlockLocalPositions
+            else
+            {
+                if (!VARS.IsNotToResetMovableBlockPositions)
+                {
+                    for (int i = 0; i < VARS.curPlaneEmpty.transform.childCount; i++)
+                    {
+                        tempTransform = VARS.curPlaneEmpty.transform.GetChild(i);
+                        tempTileData = tempTransform.GetComponent<TileData>();
+
+                        if (tempTileData.isMovable)
+                        {
+                            tempTransform.localPosition = tempTileData.iniLocalPosition;
+                        }
+                    }
+                }
+                else
+                {
+                    VARS.IsNotToResetMovableBlockPositions = false;
+                }
+            }
+
+            //activateAllFluidBlocks
+            for (int i = 0; i < VARS.curPlaneEmpty.transform.childCount; i++)
+            {
+                tempTransform = VARS.curPlaneEmpty.transform.GetChild(i);
+                tempTileData = tempTransform.GetComponent<TileData>();
+
+                if (tempTileData.stateOfMatterIndex > 1)
+                {
+                    tempTransform.gameObject.SetActive(true);
+                    tempTileData.continuousHorMovingTimes = 0;
+                }
+            }
+
             curBlocks.Clear();
             curBlockTileDatas.Clear();
             curCoordVectors.Clear();
@@ -334,11 +393,13 @@ public class BlocksManager : MonoBehaviour
                 if (tempTransform.GetComponent<TileData>() != null &&
                     tempTransform.gameObject.activeSelf)
                 {
-                    //notCountEdgeGateTriggers
-                    if (tempTransform.GetComponent<TileData>().blockTypeIndex != 7003)
-                    {
-                        tempTileData = tempTransform.GetComponent<TileData>();
+                    tempTileData = tempTransform.GetComponent<TileData>();
 
+                    //notCountEdgeGateTriggers
+                    //notCountNotToBeInCurBlocksTiles
+                    if (tempTileData.blockTypeIndex != 7003 &&
+                        !tempTileData.isNotToBeInCurBlocks)
+                    {
                         curBlocks.Add(tempTransform.gameObject);
                         curBlockTileDatas.Add(tempTileData);
                         //curBlockStateOfMatterIndexes.Add(tempTransform.GetComponent<TileData>().stateOfMatterIndex);
@@ -593,6 +654,9 @@ public class BlocksManager : MonoBehaviour
 
             for (int i = 0; i < curBlocks.Count; i++)
             {
+                if (curBlocks[i].activeSelf == false)
+                    continue;
+
                 curBlock = curBlocks[i];
                 curBlockTileData = curBlockTileDatas[i];
 
@@ -669,7 +733,10 @@ public class BlocksManager : MonoBehaviour
             }
 
             for (int i = 0; i < curBlocks.Count; i++)
-            {                
+            {
+                if (curBlocks[i].activeSelf == false)
+                    continue;
+
                 curBlock = curBlocks[i];
                 curBlockTileData = curBlockTileDatas[i];
                 //curBlockStateOfMatterIndex = curBlockStateOfMatterIndexes[i];
@@ -1219,13 +1286,13 @@ public class BlocksManager : MonoBehaviour
 
                         curSpawnedBlocks[i].SetActive(false);
 
-                        curStoredSandBlockIndex = 0;
-                        curStoredWaterBlockIndex = 0;
-                        curStoredAcidBlockIndex = 0;
-                        curStoredVaporBlockIndex = 0;
-                        curStoredGasBlockIndex = 0;
-                        curStoredElectricMistBlockIndex = 0;
-                        curStoredLightElectricMistBlockIndex = 0;
+                        VARS.curStoredSandBlockIndex = 0;
+                        VARS.curStoredWaterBlockIndex = 0;
+                        VARS.curStoredAcidBlockIndex = 0;
+                        VARS.curStoredVaporBlockIndex = 0;
+                        VARS.curStoredGasBlockIndex = 0;
+                        VARS.curStoredElectricMistBlockIndex = 0;
+                        VARS.curStoredLightElectricMistBlockIndex = 0;
                     }
                     curSpawnedBlocks.Clear();
                     //spawnTheSameBlocksInTheMovedOutPositionsToMakeTheEffectMoreContinuous
@@ -1432,7 +1499,10 @@ public class BlocksManager : MonoBehaviour
                 //if (dirIndex == 2)
                 //    Debug.Log(curBlockTileDatas[i].blockTypeIndex);
 
-                return curBlockTileDatas[i].blockTypeIndex;
+                if (curBlocks[i].activeSelf == true)
+                    return curBlockTileDatas[i].blockTypeIndex;
+                else
+                    return 0;
             }
         }
 
@@ -1472,21 +1542,34 @@ public class BlocksManager : MonoBehaviour
         {
             curBlock.transform.position += upVector;
             curCoordVectors[curBlockIndex] += upVector;
+
+            curBlockTileData.continuousHorMovingTimes = 0;
         }
         else if (dirIndex == 2)
         {
             curBlock.transform.position -= upVector;
             curCoordVectors[curBlockIndex] -= upVector;
+
+            curBlockTileData.continuousHorMovingTimes = 0;
         }
         else if (dirIndex == 3)
         {
             curBlock.transform.position -= rightVector;
             curCoordVectors[curBlockIndex] -= rightVector;
+
+            curBlockTileData.continuousHorMovingTimes ++;
         }
         else if (dirIndex == 4)
         {
             curBlock.transform.position += rightVector;
             curCoordVectors[curBlockIndex] += rightVector;
+
+            curBlockTileData.continuousHorMovingTimes ++;
+        }
+
+        if (curBlockTileData.continuousHorMovingTimes > continuousHorMovingMaxTime)
+        {
+            curBlock.SetActive(false);
         }
 
         ////euleranglesFix
@@ -1536,25 +1619,25 @@ public class BlocksManager : MonoBehaviour
         switch (blockTypeIndex)
         {
             case 2103:
-                tempGameObject = storedSandBlocks[curStoredSandBlockIndex++];
+                tempGameObject = storedSandBlocks[VARS.curStoredSandBlockIndex++];
                 break;
             case 3201:
-                tempGameObject = storedWaterBlocks[curStoredWaterBlockIndex++];
+                tempGameObject = storedWaterBlocks[VARS.curStoredWaterBlockIndex++];
                 break;
             case 5201:
-                tempGameObject = storedAcidBlocks[curStoredAcidBlockIndex++];
+                tempGameObject = storedAcidBlocks[VARS.curStoredAcidBlockIndex++];
                 break;
             case 1301:
-                tempGameObject = storedVaporBlocks[curStoredVaporBlockIndex++];
+                tempGameObject = storedVaporBlocks[VARS.curStoredVaporBlockIndex++];
                 break;
             case 5301:
-                tempGameObject = storedGasBlocks[curStoredGasBlockIndex++];
+                tempGameObject = storedGasBlocks[VARS.curStoredGasBlockIndex++];
                 break;
             case 6401:
-                tempGameObject=storedElectricMistBlocks[curStoredElectricMistBlockIndex++];
+                tempGameObject=storedElectricMistBlocks[VARS.curStoredElectricMistBlockIndex++];
                 break;
             case 6402:
-                tempGameObject = storedLightElectricMistBlocks[curStoredLightElectricMistBlockIndex++];
+                tempGameObject = storedLightElectricMistBlocks[VARS.curStoredLightElectricMistBlockIndex++];
                 break;
         }
 

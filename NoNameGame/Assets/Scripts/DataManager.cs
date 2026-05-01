@@ -52,6 +52,8 @@ public class DataManager : MonoBehaviour
         public List<int> deactivatedLockIndexes = new List<int>();
         public bool isCarryingAKey;
         public int curCarriedKeyIndex;
+        public int curCarriedKeyIniRoomIndex;
+        public Vector3 curCarriedKeyIniLocalPosition;
         public List<int> deactivatedMinimapKeyIndexes = new List<int>();
         public List<int> deactivatedMinimapLockIndexes = new List<int>();
     }
@@ -197,7 +199,7 @@ public class DataManager : MonoBehaviour
     #region WorldData
     void ReadWorldData()
     {
-        tempPath = Path.Combine(Application.persistentDataPath, "Datas", "WorldData.txt");
+        tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "WorldData.txt");
 
         if (File.Exists(tempPath))
         {
@@ -257,7 +259,7 @@ public class DataManager : MonoBehaviour
 
     void WriteWorldData()
     {
-        tempPath = Path.Combine(Application.persistentDataPath, "Datas", "WorldData.txt");
+        tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "WorldData.txt");
 
         for (int i = 0; i < 54; i++)
         {
@@ -287,7 +289,7 @@ public class DataManager : MonoBehaviour
     #region CatWorldData
     void ReadCatWorldData()
     {
-        tempPath = Path.Combine(Application.persistentDataPath, "Datas", "CatWorldData.txt");
+        tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "CatWorldData.txt");
 
         if (File.Exists(tempPath))
         {
@@ -314,6 +316,9 @@ public class DataManager : MonoBehaviour
             VARS.deactivatedLockIndexes = curCatWorldData.deactivatedLockIndexes;
             VARS.IsCarryingAKey = curCatWorldData.isCarryingAKey;
             VARS.curCarriedKey = keys[curCatWorldData.curCarriedKeyIndex];
+            VARS.curCarriedKeyIniRoomIndex = curCatWorldData.curCarriedKeyIniRoomIndex;
+            VARS.curCarriedKeyIniParent = roomPlanes[curCatWorldData.curCarriedKeyIniRoomIndex].transform.GetChild(0).gameObject;
+            VARS.curCarriedKeyIniLocalPosition = curCatWorldData.curCarriedKeyIniLocalPosition;
             for (int i = 0; i < keys.Count; i++)
             {
                 if (curCatWorldData.deactivatedKeyIndexes.Contains(i))
@@ -353,7 +358,7 @@ public class DataManager : MonoBehaviour
 
     void WriteCatWorldData()
     {
-        tempPath = Path.Combine(Application.persistentDataPath, "Datas", "CatWorldData.txt");
+        tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "CatWorldData.txt");
 
         //curRoom
         curCatWorldData.curRoomIndex = VARS.curRoomIndex;
@@ -374,6 +379,8 @@ public class DataManager : MonoBehaviour
         curCatWorldData.deactivatedKeyIndexes = VARS.deactivatedKeyIndexes;
         curCatWorldData.deactivatedLockIndexes = VARS.deactivatedLockIndexes;
         curCatWorldData.isCarryingAKey = VARS.IsCarryingAKey;
+        curCatWorldData.curCarriedKeyIniRoomIndex = VARS.curCarriedKeyIniRoomIndex;
+        curCatWorldData.curCarriedKeyIniLocalPosition = VARS.curCarriedKeyIniLocalPosition;
         for (int i = 0; i < keys.Count; i++)
         {
             if (keys[i] == VARS.curCarriedKey)
@@ -396,7 +403,7 @@ public class DataManager : MonoBehaviour
     #region KeyCodesData
     void ReadKeyCodesData()
     {
-        tempPath = Path.Combine(Application.persistentDataPath, "Datas", "KeyCodesData.txt");
+        tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "KeyCodesData.txt");
 
         if (File.Exists(tempPath))
         {
@@ -435,7 +442,7 @@ public class DataManager : MonoBehaviour
 
     void WriteKeyCodesData()
     {
-        tempPath = Path.Combine(Application.persistentDataPath, "Datas", "KeyCodesData.txt");
+        tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "KeyCodesData.txt");
 
         curKeyCodesData.upKeyCode = VARS.upKeyCode;
         curKeyCodesData.downKeyCode = VARS.downKeyCode;

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [DefaultExecutionOrder((int)ScriptsExecutionOrder.ExecutionOrder.roomsManager)]
@@ -64,6 +65,14 @@ public class RoomsManager : MonoBehaviour
     Transform catTransform;
 
     GameObject catIniPositionPoint;
+
+    GameObject storedSandBlocksEmpty;
+    GameObject storedWaterBlocksEmpty;
+    GameObject storedAcidBlocksEmpty;
+    GameObject storedVaporBlocksEmpty;
+    GameObject storedGasBlocksEmpty;
+    GameObject storedElectricMistBlocksEmpty;
+    GameObject storedLightElectricMistBlocksEmpty;
     #endregion
 
     #region VariablesUsed
@@ -73,6 +82,14 @@ public class RoomsManager : MonoBehaviour
     Vector3[] roomStableForwards = new Vector3[54];
     Vector3[] roomStableUps = new Vector3[54];
     Vector3[] roomStableRights = new Vector3[54];
+
+    GameObject[] storedSandBlocks = new GameObject[512];
+    GameObject[] storedWaterBlocks = new GameObject[512];
+    GameObject[] storedAcidBlocks = new GameObject[512];
+    GameObject[] storedVaporBlocks = new GameObject[512];
+    GameObject[] storedGasBlocks = new GameObject[512];
+    GameObject[] storedElectricMistBlocks = new GameObject[512];
+    GameObject[] storedLightElectricMistBlocks = new GameObject[512];
     #endregion
 
     void Start()
@@ -103,6 +120,13 @@ public class RoomsManager : MonoBehaviour
         camMinimapDistanceToCubeCore = CONS.camMinimapDistanceToCubeCore;
         catTransform = CONS.catTransform;
         catIniPositionPoint = CONS.catIniPositionPoint;
+        storedSandBlocksEmpty = CONS.storedSandBlocksEmpty;
+        storedWaterBlocksEmpty = CONS.storedWaterBlocksEmpty;
+        storedAcidBlocksEmpty = CONS.storedAcidBlocksEmpty;
+        storedVaporBlocksEmpty = CONS.storedVaporBlocksEmpty;
+        storedGasBlocksEmpty = CONS.storedGasBlocksEmpty;
+        storedElectricMistBlocksEmpty = CONS.storedElectricMistBlocksEmpty;
+        storedLightElectricMistBlocksEmpty = CONS.storedLightElectricMistBlocksEmpty;
         #endregion
         catTransform = CONS.catTransform;
 
@@ -111,6 +135,13 @@ public class RoomsManager : MonoBehaviour
         roomStableForwards = VARS.roomStableForwards;
         roomStableUps = VARS.roomStableUps;
         roomStableRights = VARS.roomStableRights;
+        storedSandBlocks = VARS.storedSandBlocks;
+        storedWaterBlocks = VARS.storedWaterBlocks;
+        storedAcidBlocks = VARS.storedAcidBlocks;
+        storedVaporBlocks = VARS.storedVaporBlocks;
+        storedGasBlocks = VARS.storedGasBlocks;
+        storedElectricMistBlocks = VARS.storedElectricMistBlocks;
+        storedLightElectricMistBlocks = VARS.storedLightElectricMistBlocks;
         #endregion        
     }
 
@@ -267,6 +298,57 @@ public class RoomsManager : MonoBehaviour
                         curRelatedRoomPlanes[i].transform.SetParent(curTwistingCenter.transform, true);
                     }
 
+                    //storedBlocksTempChildToCurTwistingCenter
+                    if (VARS.curStoredSandBlockIndex > 0)
+                    {
+                        for (int i = 0; i < VARS.curStoredSandBlockIndex + 1; i++)
+                        {
+                            storedSandBlocks[i].transform.SetParent(curTwistingCenter.transform, true);
+                        }
+                    }
+                    if (VARS.curStoredWaterBlockIndex > 0)
+                    {
+                        for (int i = 0; i < VARS.curStoredWaterBlockIndex + 1; i++)
+                        {
+                            storedWaterBlocks[i].transform.SetParent(curTwistingCenter.transform, true);
+                        }
+                    }
+                    if (VARS.curStoredAcidBlockIndex > 0)
+                    {
+                        for (int i = 0; i < VARS.curStoredAcidBlockIndex + 1; i++)
+                        {
+                            storedAcidBlocks[i].transform.SetParent(curTwistingCenter.transform, true);
+                        }
+                    }
+                    if (VARS.curStoredVaporBlockIndex > 0)
+                    {
+                        for (int i = 0; i < VARS.curStoredVaporBlockIndex + 1; i++)
+                        {
+                            storedVaporBlocks[i].transform.SetParent(curTwistingCenter.transform, true);
+                        }
+                    }
+                    if (VARS.curStoredGasBlockIndex > 0)
+                    {
+                        for (int i = 0; i < VARS.curStoredGasBlockIndex + 1; i++)
+                        {
+                            storedGasBlocks[i].transform.SetParent(curTwistingCenter.transform, true);
+                        }
+                    }
+                    if (VARS.curStoredElectricMistBlockIndex > 0)
+                    {
+                        for (int i = 0; i < VARS.curStoredElectricMistBlockIndex + 1; i++)
+                        {
+                            storedElectricMistBlocks[i].transform.SetParent(curTwistingCenter.transform, true);
+                        }
+                    }
+                    if (VARS.curStoredLightElectricMistBlockIndex > 0)
+                    {
+                        for (int i = 0; i < VARS.curStoredLightElectricMistBlockIndex + 1; i++)
+                        {
+                            storedLightElectricMistBlocks[i].transform.SetParent(curTwistingCenter.transform, true);
+                        }
+                    }
+
                     //catAndCamTempChildToCurTwistingCenter
                     //camTransform.SetParent(curTwistingCenter.transform, true);
                     catTransform.SetParent(curTwistingCenter.transform, true);
@@ -308,6 +390,57 @@ public class RoomsManager : MonoBehaviour
                     curRelatedRoomPlanes.Clear();
                     curRelatedRoomPlaneIndexes.Clear();
 
+                    //freeStoredBlocks
+                    if (VARS.curStoredSandBlockIndex > 0)
+                    {
+                        for (int i = 0; i < VARS.curStoredSandBlockIndex + 1; i++)
+                        {
+                            storedSandBlocks[i].transform.SetParent(storedSandBlocksEmpty.transform, true);
+                        }
+                    }
+                    if (VARS.curStoredWaterBlockIndex > 0)
+                    {
+                        for (int i = 0; i < VARS.curStoredWaterBlockIndex + 1; i++)
+                        {
+                            storedWaterBlocks[i].transform.SetParent(storedWaterBlocksEmpty.transform, true);
+                        }
+                    }
+                    if (VARS.curStoredAcidBlockIndex > 0)
+                    {
+                        for (int i = 0; i < VARS.curStoredAcidBlockIndex + 1; i++)
+                        {
+                            storedAcidBlocks[i].transform.SetParent(storedAcidBlocksEmpty.transform, true);
+                        }
+                    }
+                    if (VARS.curStoredVaporBlockIndex > 0)
+                    {
+                        for (int i = 0; i < VARS.curStoredVaporBlockIndex + 1; i++)
+                        {
+                            storedVaporBlocks[i].transform.SetParent(storedVaporBlocksEmpty.transform, true);
+                        }
+                    }
+                    if (VARS.curStoredGasBlockIndex > 0)
+                    {
+                        for (int i = 0; i < VARS.curStoredGasBlockIndex + 1; i++)
+                        {
+                            storedGasBlocks[i].transform.SetParent(storedGasBlocksEmpty.transform, true);
+                        }
+                    }
+                    if (VARS.curStoredElectricMistBlockIndex > 0)
+                    {
+                        for (int i = 0; i < VARS.curStoredElectricMistBlockIndex + 1; i++)
+                        {
+                            storedElectricMistBlocks[i].transform.SetParent(storedElectricMistBlocksEmpty.transform, true);
+                        }
+                    }
+                    if (VARS.curStoredLightElectricMistBlockIndex > 0)
+                    {
+                        for (int i = 0; i < VARS.curStoredLightElectricMistBlockIndex + 1; i++)
+                        {
+                            storedLightElectricMistBlocks[i].transform.SetParent(storedLightElectricMistBlocksEmpty.transform, true);
+                        }
+                    }
+
                     //freeCatAndCam
                     //camTransform.SetParent(null);
                     catTransform.SetParent(null);
@@ -328,6 +461,8 @@ public class RoomsManager : MonoBehaviour
                     twistingAccumulatedDegree = 0;
 
                     VARS.IsIntoNewRoom = true;
+
+                    VARS.IsNotToResetMovableBlockPositions = true;
 
                     VARS.IsToDetermineCurActivatedSavePointPosition = true;
 
@@ -393,7 +528,7 @@ public class RoomsManager : MonoBehaviour
             else
             {
                 //topFace
-                if (tempFloat2 < 0)
+                if (tempFloat2 > 0)
                 {
                     ResetCurRelatedPlane(curRelatedRoomPlaneIndexes[i], 5);
                 }

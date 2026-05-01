@@ -278,6 +278,9 @@ public class Constants : MonoBehaviour
     //edgeGate
     public float throughEdgeGateGapTime;
 
+    //savePoint
+    public float activateSavePointGapTime;
+
     //key
     public float keySpeed;
     public float keyDistance;
@@ -353,6 +356,9 @@ public class Constants : MonoBehaviour
     public float mistFixedUpdateTime;
     public float sandFixedUpdateTime;
     public float railBlockFixedUpdateTime;
+
+    //continuousHorMovingMaxTime
+    public int continuousHorMovingMaxTime;
 
     //lockedBlocks
     public float unlockDistance;

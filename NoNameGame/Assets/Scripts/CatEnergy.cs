@@ -121,6 +121,8 @@ public class CatEnergy : MonoBehaviour
         //ifOutOfEnergyDie
         if (VARS.curEnergy <= 0)
         {
+            UFL.DebugLog("outOfEnergy");
+
             VARS.IsToDie = true;
         }
 

@@ -554,6 +554,8 @@ MonoBehaviour:
   isNotClimbable: 0
   isFragile: 1
   railBlockIndex: 0
+  railBlockMoveStringStartIndex: 0
+  isLoop: 0
   sharpDirVector: {x: 0, y: 0, z: 0}
   toughness: 999
   elasticity: 0

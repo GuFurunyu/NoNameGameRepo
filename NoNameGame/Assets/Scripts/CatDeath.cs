@@ -31,6 +31,18 @@ public class CatDeath : MonoBehaviour
     #endregion
 
     #region VariablesUsed
+    List<GameObject> curBlocks = new List<GameObject>();
+    List<TileData> curBlockTileDatas = new List<TileData>();
+    List<Vector3> curCoordVectors = new List<Vector3>();
+
+    //storedBlocks
+    GameObject[] storedSandBlocks = new GameObject[512];
+    GameObject[] storedWaterBlocks = new GameObject[512];
+    GameObject[] storedAcidBlocks = new GameObject[512];
+    GameObject[] storedVaporBlocks = new GameObject[512];
+    GameObject[] storedGasBlocks = new GameObject[512];
+    GameObject[] storedElectricMistBlocks = new GameObject[512];
+    GameObject[] storedLightElectricMistBlocks = new GameObject[512];
     #endregion
 
     void Start()
@@ -51,6 +63,16 @@ public class CatDeath : MonoBehaviour
         #endregion
 
         #region ImportReferenceVariables
+        curBlocks = VARS.curBlocks;
+        curBlockTileDatas = VARS.curBlockTileDatas;
+        curCoordVectors = VARS.curCoordVectors;
+        storedSandBlocks = VARS.storedSandBlocks;
+        storedWaterBlocks = VARS.storedWaterBlocks;
+        storedAcidBlocks = VARS.storedAcidBlocks;
+        storedVaporBlocks = VARS.storedVaporBlocks;
+        storedGasBlocks = VARS.storedGasBlocks;
+        storedElectricMistBlocks = VARS.storedElectricMistBlocks;
+        storedLightElectricMistBlocks = VARS.storedLightElectricMistBlocks;
         #endregion
 
         VARS.catIniPosition = catTransform.position;
@@ -77,6 +99,8 @@ public class CatDeath : MonoBehaviour
     }
     void Die()
     {
+        UFL.DebugLog("die");
+
         ////turnIntoVoid
         //storedVoidBlocks[curStoredVoidBlockIndex].transform.position = new Vector3
         //    (Mathf.RoundToInt(catTransform.position.x), Mathf.RoundToInt(catTransform.position.y), Mathf.RoundToInt(catTransform.position.z));
@@ -88,6 +112,75 @@ public class CatDeath : MonoBehaviour
         //storedVoidBlocks[curStoredVoidBlockIndex].SetActive(true);
 
         //curStoredVoidBlockIndex++;
+
+        //resetMovableBlockLocalPositions
+        for (int i = 0; i < curBlocks.Count; i++)
+        {
+            if (curBlockTileDatas[i].isMovable)
+            {
+                curBlocks[i].transform.localPosition = curBlockTileDatas[i].iniLocalPosition;
+                curCoordVectors[i] = curBlockTileDatas[i].iniLocalPosition;
+            }
+        }
+        //resetStoredBlockPositions
+        if (VARS.curStoredSandBlockIndex > 0)
+        {
+            for (int i = 0; i < VARS.curStoredSandBlockIndex + 1; i++)
+            {
+                storedSandBlocks[i].transform.position = Vector3.zero;
+            }
+            VARS.curStoredSandBlockIndex = 0;
+        }
+        if (VARS.curStoredWaterBlockIndex > 0)
+        {
+            for (int i = 0; i < VARS.curStoredWaterBlockIndex + 1; i++)
+            {
+                storedWaterBlocks[i].transform.position = Vector3.zero;
+            }
+            VARS.curStoredWaterBlockIndex = 0;
+        }
+        if (VARS.curStoredAcidBlockIndex > 0)
+        {
+            for (int i = 0; i < VARS.curStoredAcidBlockIndex + 1; i++)
+            {
+                storedAcidBlocks[i].transform.position = Vector3.zero;
+            }
+            VARS.curStoredAcidBlockIndex = 0;
+        }
+        if (VARS.curStoredVaporBlockIndex > 0)
+        {
+            for (int i = 0; i < VARS.curStoredVaporBlockIndex + 1; i++)
+            {
+                storedVaporBlocks[i].transform.position = Vector3.zero;
+            }
+            VARS.curStoredVaporBlockIndex = 0;
+        }
+        if (VARS.curStoredGasBlockIndex > 0)
+        {
+            for (int i = 0; i < VARS.curStoredGasBlockIndex + 1; i++)
+            {
+                storedGasBlocks[i].transform.position = Vector3.zero;
+            }
+            VARS.curStoredGasBlockIndex = 0;
+        }
+        if (VARS.curStoredElectricMistBlockIndex > 0)
+        {
+            for (int i = 0; i < VARS.curStoredElectricMistBlockIndex + 1; i++)
+            {
+                storedElectricMistBlocks[i].transform.position = Vector3.zero;
+            }
+            VARS.curStoredElectricMistBlockIndex = 0;
+        }
+        if (VARS.curStoredLightElectricMistBlockIndex > 0)
+        {
+            for (int i = 0; i < VARS.curStoredLightElectricMistBlockIndex + 1; i++)
+            {
+                storedLightElectricMistBlocks[i].transform.position = Vector3.zero;
+            }
+            VARS.curStoredLightElectricMistBlockIndex = 0;
+        }
+
+        VARS.IsInNewRoomBlocksManagerResetOver = false;
 
         //clearKey
         if (VARS.IsCarryingAKey)
@@ -110,7 +203,8 @@ public class CatDeath : MonoBehaviour
         //VARS.curEnergy = maxEnergy;
         //VARS.curEnergy = 0.1f;
         //UFL.SetCurEnergy(0.1f);
-        VARS.curEnergy = 0.1f;
+        //VARS.curEnergy = 0.1f;
+        VARS.curEnergy = maxEnergy;
         //UFL.SetCurTargetEnergy(0.1f);
         VARS.curTargetEnergy = 0.1f;
         //VARS.horCurSpeed = 0;
@@ -119,6 +213,9 @@ public class CatDeath : MonoBehaviour
         //VARS.verCurSpeed = 0;
         //UFL.SetVerCurSpeed(0);
         VARS.verCurSpeed = 0;
+        VARS.catCurTemperature = 0;
+        VARS.catCurElectricity = 0;
+        VARS.catCurToxicity = 0;
 
         VARS.IsToInitializeSight = true;
 

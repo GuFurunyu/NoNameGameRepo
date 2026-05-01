@@ -77,6 +77,7 @@ public class CameraManager : MonoBehaviour
         #region ImportReferenceVariables
         #endregion
 
+        initialSightMasksEmpty.SetActive(true);
         //getInitialSightMasks
         for (int i = 0; i < 4; i++)
         {

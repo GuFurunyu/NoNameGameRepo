@@ -12,7 +12,6 @@ public class CatTrigger : MonoBehaviour
     GameObject gameManager;
 
     //strawberry
-    public List<GameObject> carriedStrawberries = new List<GameObject>();
     public List<Vector3> carriedStrawberriesIniPositions = new List<Vector3>();
     //float strawberriesRotationStartTime;
 
@@ -41,6 +40,8 @@ public class CatTrigger : MonoBehaviour
 
     int tempInt;
     float tempFloat;
+    float tempFloat1;
+    float tempFloat2;
     Vector3 tempVector;
     Transform tempTransform;
     GameObject tempGameObject;
@@ -106,6 +107,8 @@ public class CatTrigger : MonoBehaviour
     GameObject curTriggerTile;
     TileData curTriggerTileData;
 
+    List<GameObject> carriedStrawberries = new List<GameObject>();
+
     List<int> deactivatedMinimapKeyIndexes = new List<int>();
     List<int> deactivatedMinimapLockIndexes = new List<int>();
     #endregion
@@ -155,6 +158,7 @@ public class CatTrigger : MonoBehaviour
         edgeGateLinkedToIndexes = VARS.edgeGateLinkedToIndexes;
         deactivatedKeyIndexes = VARS.deactivatedKeyIndexes;
         deactivatedLockIndexes = VARS.deactivatedLockIndexes;
+        carriedStrawberries = VARS.carriedStrawberries;
         deactivatedMinimapKeyIndexes = VARS.deactivatedMinimapKeyIndexes;
         deactivatedMinimapLockIndexes = VARS.deactivatedMinimapLockIndexes;
         #endregion
@@ -184,34 +188,57 @@ public class CatTrigger : MonoBehaviour
             #region EdgeGate
             if (VARS.IsEnteringAnEdgeGate)
             {
+                //trigger
+                if (!VARS.IsEdgeGateTriggered)
+                {
+                    //determinEdgeGateDirection
+                    tempFloat1 = Vector3.Dot(VARS.curEdgeGate.transform.position - VARS.curRoomCenter, VARS.curUp);
+                    tempFloat2 = Vector3.Dot(VARS.curEdgeGate.transform.position - VARS.curRoomCenter, VARS.curRight);
+                    //upOrDown
+                    if (Mathf.Abs(tempFloat1) > Mathf.Abs(tempFloat2))
+                    {
+                        //up
+                        if (tempFloat1 > 0)
+                        {
+                            tempVector = VARS.curUp;
+                        }
+                        //down
+                        else
+                        {
+                            tempVector = -VARS.curUp;
+                        }
+                    }
+                    //leftOrRight
+                    else
+                    {
+                        //left
+                        if (tempFloat2 < 0)
+                        {
+                            tempVector = -VARS.curRight;
+                        }
+                        //right
+                        else
+                        {
+                            tempVector = VARS.curRight;
+                        }
+                    }
+
+                    //Debug.Log("tempVector: " + tempVector);
+
+                    //triggerEdgeGate
+                    if (Vector3.Dot(catTransform.position - VARS.curEdgeGate.transform.position, tempVector) > 0.9f)
+                    {
+                        //Debug.Log("enter");
+                        //Debug.Log("cat: " + catTransform.position);
+                        //Debug.Log("edgeGate: " + VARS.curEdgeGate.transform.position);
+
+                        VARS.IsEdgeGateTriggered = true;
+                    }
+                }
+
                 //ifIsGapTimeOver
                 if (Time.time - throughEdgeGateTime > throughEdgeGateGapTime)
                 {
-                    ////findCurNearestEdgeGate
-                    //curNearestEdgeGateDistance = 999;
-
-                    //for (int i = 0; i < edgeGates.Count; i++)
-                    //{
-                    //    if (edgeGates[i].transform.parent != curTriggerTile.transform.parent)
-                    //    {
-                    //        if (Vector3.Distance(edgeGates[i].transform.position, curTriggerTile.transform.position) < curNearestEdgeGateDistance)
-                    //        {
-                    //            curNearestEdgeGateDistance = Vector3.Distance(edgeGates[i].transform.position, curTriggerTile.transform.position);
-                    //            curNearestEdgeGateIndex = i;
-                    //        }
-                    //    }
-                    //}
-
-                    //curToEdgeGate = edgeGates[curNearestEdgeGateIndex];
-                    //for (int i = 0; i < edgeGates.Count; i++)
-                    //{
-                    //    if (edgeGates[i] == VARS.curEdgeGate)
-                    //    {
-                    //        curToEdgeGate = edgeGates[edgeGateLinkedToIndexes[i]];
-                    //    }
-                    //}
-                    //curEdgeGatesBetweenVector = curToEdgeGate.transform.position - curTile.transform.position;
-
                     //toNewRoom
                     if (VARS.IsEdgeGateTriggered)
                     {
@@ -331,11 +358,12 @@ public class CatTrigger : MonoBehaviour
             //carry
             if (VARS.IsToCarryAKey)
             {
-                VARS.curCarriedKey = VARS.curTriggerTile;
+                //VARS.curCarriedKey = VARS.curTriggerTile;
+                VARS.curCarriedKey = VARS.curKey;
                 VARS.curCarriedKeyIniParent = VARS.curCarriedKey.transform.parent.gameObject;
                 VARS.curCarriedKeyIniLocalPosition = VARS.curCarriedKey.transform.localPosition;
                 VARS.curCarriedKey.transform.SetParent(null, true);
-                VARS.curCarriedIniRoomIndex = VARS.curRoomIndex;
+                VARS.curCarriedKeyIniRoomIndex = VARS.curRoomIndex;
 
                 //minimapKey
                 for (int i = 0; i < minimapKeys.Count; i++)
@@ -353,7 +381,7 @@ public class CatTrigger : MonoBehaviour
                             }
                         }
 
-                        if (tempInt == VARS.curCarriedIniRoomIndex)
+                        if (tempInt == VARS.curCarriedKeyIniRoomIndex)
                         {
                             VARS.curMinimapKey = minimapKeys[i];
                             break;
