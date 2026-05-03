@@ -97,6 +97,13 @@ public class UniversalFunctionsLibrary : MonoBehaviour
     Vector3[] roomStableUps = new Vector3[54];
     Vector3[] roomStableRights = new Vector3[54];
 
+    bool[] isRedFragmentsEmbeded = new bool[9];
+    bool[] isYellowFragmentsEmbeded = new bool[9];
+    bool[] isBlueFragmentsEmbeded = new bool[9];
+    bool[] isOrangeFragmentsEmbeded = new bool[9];
+    bool[] isGreenFragmentsEmbeded = new bool[9];
+    bool[] isPurpleFragmentsEmbeded = new bool[9];
+
     List<GameObject> curBlocks = new List<GameObject>();
     List<TileData> curBlockTileDatas = new List<TileData>();
 
@@ -146,6 +153,12 @@ public class UniversalFunctionsLibrary : MonoBehaviour
         roomStableForwards = VARS.roomStableForwards;
         roomStableUps = VARS.roomStableUps;
         roomStableRights = VARS.roomStableRights;
+        isRedFragmentsEmbeded = VARS.isRedFragmentsEmbeded;
+        isYellowFragmentsEmbeded = VARS.isYellowFragmentsEmbeded;
+        isBlueFragmentsEmbeded = VARS.isBlueFragmentsEmbeded;
+        isOrangeFragmentsEmbeded = VARS.isOrangeFragmentsEmbeded;
+        isGreenFragmentsEmbeded = VARS.isGreenFragmentsEmbeded;
+        isPurpleFragmentsEmbeded = VARS.isPurpleFragmentsEmbeded;
         curBlocks = VARS.curBlocks;
         curBlockTileDatas = VARS.curBlockTileDatas;
         curToBeBrokenFragileRustBlocks = VARS.curToBeBrokenFragileRustBlocks;
@@ -191,7 +204,117 @@ public class UniversalFunctionsLibrary : MonoBehaviour
 
     public Vector3 Vector3WorldToMinimap(Vector3 vector)
     {
-        return (vector / roomCoordBreadth) * minimapRoomCoordBreadth;
+        tempVector = vector;
+        //frontal
+        if (Mathf.Abs(tempVector.z) > Mathf.Abs(tempVector.x) && Mathf.Abs(tempVector.z) > Mathf.Abs(tempVector.y))
+        {
+            if (tempVector.x > roomCoordBreadth / 2)
+            {
+                tempVector.x -= roomCoordBreadth + 1;
+                tempVector.x = (tempVector.x / roomCoordBreadth) * minimapRoomCoordBreadth;
+                tempVector.x += minimapRoomCoordBreadth + 1;
+            }
+            else if (tempVector.x < -roomCoordBreadth / 2)
+            {
+                tempVector.x += roomCoordBreadth + 1;
+                tempVector.x = (tempVector.x / roomCoordBreadth) * minimapRoomCoordBreadth;
+                tempVector.x -= minimapRoomCoordBreadth + 1;
+            }
+            else
+            {
+                tempVector.x = (tempVector.x / roomCoordBreadth) * minimapRoomCoordBreadth;
+            }
+            if (tempVector.y > roomCoordBreadth / 2)
+            {
+                tempVector.y -= roomCoordBreadth + 1;
+                tempVector.y = (tempVector.y / roomCoordBreadth) * minimapRoomCoordBreadth;
+                tempVector.y += minimapRoomCoordBreadth + 1;
+            }
+            else if (tempVector.y < -roomCoordBreadth / 2)
+            {
+                tempVector.y += roomCoordBreadth + 1;
+                tempVector.y = (tempVector.y / roomCoordBreadth) * minimapRoomCoordBreadth;
+                tempVector.y -= minimapRoomCoordBreadth + 1;
+            }
+            else
+            {
+                tempVector.y = (tempVector.y / roomCoordBreadth) * minimapRoomCoordBreadth;
+            }
+        }
+        //profile
+        else if (Mathf.Abs(tempVector.x) > Mathf.Abs(tempVector.y) && Mathf.Abs(tempVector.x) > Mathf.Abs(tempVector.z))
+        {
+            if (tempVector.y > roomCoordBreadth / 2)
+            {
+                tempVector.y -= roomCoordBreadth + 1;
+                tempVector.y = (tempVector.y / roomCoordBreadth) * minimapRoomCoordBreadth;
+                tempVector.y += minimapRoomCoordBreadth + 1;
+            }
+            else if (tempVector.y < -roomCoordBreadth / 2)
+            {
+                tempVector.y += roomCoordBreadth + 1;
+                tempVector.y = (tempVector.y / roomCoordBreadth) * minimapRoomCoordBreadth;
+                tempVector.y -= minimapRoomCoordBreadth + 1;
+            }
+            else
+            {
+                tempVector.y = (tempVector.y / roomCoordBreadth) * minimapRoomCoordBreadth;
+            }
+            if (tempVector.z > roomCoordBreadth / 2)
+            {
+                tempVector.z -= roomCoordBreadth + 1;
+                tempVector.z = (tempVector.z / roomCoordBreadth) * minimapRoomCoordBreadth;
+                tempVector.z += minimapRoomCoordBreadth + 1;
+            }
+            else if (tempVector.z < -roomCoordBreadth / 2)
+            {
+                tempVector.z += roomCoordBreadth + 1;
+                tempVector.z = (tempVector.z / roomCoordBreadth) * minimapRoomCoordBreadth;
+                tempVector.z -= minimapRoomCoordBreadth + 1;
+            }
+            else
+            {
+                tempVector.z = (tempVector.z / roomCoordBreadth) * minimapRoomCoordBreadth;
+            }
+        }
+        //horizontal
+        else
+        {
+            if (tempVector.x > roomCoordBreadth / 2)
+            {
+                tempVector.x -= roomCoordBreadth + 1;
+                tempVector.x = (tempVector.x / roomCoordBreadth) * minimapRoomCoordBreadth;
+                tempVector.x += minimapRoomCoordBreadth + 1;
+            }
+            else if (tempVector.x < -roomCoordBreadth / 2)
+            {
+                tempVector.x += roomCoordBreadth + 1;
+                tempVector.x = (tempVector.x / roomCoordBreadth) * minimapRoomCoordBreadth;
+                tempVector.x -= minimapRoomCoordBreadth + 1;
+            }
+            else
+            {
+                tempVector.x = (tempVector.x / roomCoordBreadth) * minimapRoomCoordBreadth;
+            }
+            if (tempVector.z > roomCoordBreadth / 2)
+            {
+                tempVector.z -= roomCoordBreadth + 1;
+                tempVector.z = (tempVector.z / roomCoordBreadth) * minimapRoomCoordBreadth;
+                tempVector.z += minimapRoomCoordBreadth + 1;
+            }
+            else if (tempVector.z < -roomCoordBreadth / 2)
+            {
+                tempVector.z += roomCoordBreadth + 1;
+                tempVector.z = (tempVector.z / roomCoordBreadth) * minimapRoomCoordBreadth;
+                tempVector.z -= minimapRoomCoordBreadth + 1;
+            }
+            else
+            {
+                tempVector.z = (tempVector.z / roomCoordBreadth) * minimapRoomCoordBreadth;
+            }
+        }
+
+        return tempVector;
     }
     #endregion
 
@@ -642,8 +765,9 @@ public class UniversalFunctionsLibrary : MonoBehaviour
             if (curBlockTileDatas[i].stateOfMatterIndex == 1)
             {
                 //up
-                if (!hasGotCurNearestUpBlock &&
-                    !curBlockTileDatas[i].isPlatform)
+                if ((!hasGotCurNearestUpBlock &&
+                    !curBlockTileDatas[i].isPlatform) ||
+                    curBlockTileDatas[i].isFragile)
                 {
                     tempFloat1 = Mathf.Abs(Vector3.Dot(tempVector, VARS.curRight));
 
@@ -652,26 +776,35 @@ public class UniversalFunctionsLibrary : MonoBehaviour
                         tempFloat = Vector3.Dot(tempVector, -VARS.curUp);
 
                         if (tempFloat > 0.5f &&
-                            tempFloat < curUpBlockDistance &&
+                            tempFloat < gridBreadth + 0.1f &&
                             tempFloat > tempFloat1)
                         {
-                            curUpBlockDistance = tempFloat;
-
-                            if (curUpBlockDistance < gridBreadth + 0.025f)
+                            if (tempFloat < curUpBlockDistance)
                             {
-                                //DebugLog("enter");
+                                curUpBlockDistance = tempFloat;
 
-                                VARS.curUpTile = curBlocks[i];
-                                VARS.curUpTileData = curBlockTileDatas[i];
-                                VARS.IsCeilingDetected = true;
+                                if (curUpBlockDistance < gridBreadth + 0.025f)
+                                {
+                                    //DebugLog("enter");
 
-                                hasGotCurNearestUpBlock = true;
+                                    VARS.curUpTile = curBlocks[i];
+                                    VARS.curUpTileData = curBlockTileDatas[i];
+                                    VARS.IsCeilingDetected = true;
+
+                                    hasGotCurNearestUpBlock = true;
+                                }
+                            }
+                            if (curBlockTileDatas[i].isFragile &&
+                                VARS.IsAttachCeiling)
+                            {
+                                BreakCurTile(curBlocks[i], curToBeBrokenFragileRustBlocks, curFragileRustBlockToBeBrokenStartTimes);
                             }
                         }
                     }
                 }
                 //down
-                if (!hasGotCurNearestDownBlock)
+                if (!hasGotCurNearestDownBlock ||
+                    curBlockTileDatas[i].isFragile)
                 {
                     tempFloat1 = Mathf.Abs(Vector3.Dot(tempVector, VARS.curRight));
 
@@ -680,25 +813,33 @@ public class UniversalFunctionsLibrary : MonoBehaviour
                         tempFloat = Vector3.Dot(tempVector, VARS.curUp);
 
                         if (tempFloat > 0.5f &&
-                            tempFloat < curDownBlockDistance &&
+                            tempFloat < gridBreadth + 0.1f &&
                             tempFloat > tempFloat1)
                         {
-                            curDownBlockDistance = tempFloat;
-
-                            if (curDownBlockDistance < gridBreadth + 0.025f)
+                            if (tempFloat < curDownBlockDistance)
                             {
-                                VARS.curDownTile = curBlocks[i];
-                                VARS.curDownTileData = curBlockTileDatas[i];
-                                VARS.IsGroundDetected = true;
+                                curDownBlockDistance = tempFloat;
 
-                                hasGotCurNearestDownBlock = true;
+                                if (curDownBlockDistance < gridBreadth + 0.025f)
+                                {
+                                    VARS.curDownTile = curBlocks[i];
+                                    VARS.curDownTileData = curBlockTileDatas[i];
+                                    VARS.IsGroundDetected = true;
+
+                                    hasGotCurNearestDownBlock = true;
+                                }
+                            }
+                            if (curBlockTileDatas[i].isFragile)
+                            {
+                                BreakCurTile(curBlocks[i], curToBeBrokenFragileRustBlocks, curFragileRustBlockToBeBrokenStartTimes);
                             }
                         }
                     }
                 }
                 //left
-                if (!hasGotCurNearestLeftBlock &&
-                    !curBlockTileDatas[i].isPlatform)
+                if ((!hasGotCurNearestLeftBlock &&
+                    !curBlockTileDatas[i].isPlatform) ||
+                    curBlockTileDatas[i].isFragile)
                 {
                     tempFloat1 = Mathf.Abs(Vector3.Dot(tempVector, VARS.curUp));
 
@@ -707,25 +848,35 @@ public class UniversalFunctionsLibrary : MonoBehaviour
                         tempFloat = Vector3.Dot(tempVector, VARS.curRight);
 
                         if (tempFloat > 0.5f &&
-                            tempFloat < curLeftBlockDistance &&
+                            tempFloat < gridBreadth + 0.1f &&
                             tempFloat > tempFloat1)
                         {
-                            curLeftBlockDistance = tempFloat;
-
-                            if (curLeftBlockDistance < gridBreadth + 0.025f)
+                            if (tempFloat < curLeftBlockDistance)
                             {
-                                VARS.curLeftTile = curBlocks[i];
-                                VARS.curLeftTileData = curBlockTileDatas[i];
-                                VARS.IsLeftBlockDetected = true;
+                                curLeftBlockDistance = tempFloat;
 
-                                hasGotCurNearestLeftBlock = true;
+                                if (curLeftBlockDistance < gridBreadth + 0.025f)
+                                {
+                                    VARS.curLeftTile = curBlocks[i];
+                                    VARS.curLeftTileData = curBlockTileDatas[i];
+                                    VARS.IsLeftBlockDetected = true;
+
+                                    hasGotCurNearestLeftBlock = true;
+                                }
+                            }
+                            if (curBlockTileDatas[i].isFragile &&
+                                VARS.IsAttachWall &&
+                                VARS.curFacingDirectionIndex == 1)
+                            {
+                                BreakCurTile(curBlocks[i], curToBeBrokenFragileRustBlocks, curFragileRustBlockToBeBrokenStartTimes);
                             }
                         }
                     }
                 }
                 //right
-                if (!hasGotCurNearestRightBlock
-                    && !curBlockTileDatas[i].isPlatform)
+                if ((!hasGotCurNearestRightBlock
+                    && !curBlockTileDatas[i].isPlatform) ||
+                    curBlockTileDatas[i].isFragile)
                 {
                     tempFloat1 = Mathf.Abs(Vector3.Dot(tempVector, VARS.curUp));
 
@@ -734,18 +885,27 @@ public class UniversalFunctionsLibrary : MonoBehaviour
                         tempFloat = Vector3.Dot(tempVector, -VARS.curRight);
 
                         if (tempFloat > 0.5f &&
-                            tempFloat < curRightBlockDistance &&
+                            tempFloat < gridBreadth + 0.1f &&
                             tempFloat > tempFloat1)
                         {
-                            curRightBlockDistance = tempFloat;
-
-                            if (curRightBlockDistance < gridBreadth + 0.025f)
+                            if (tempFloat < curRightBlockDistance)
                             {
-                                VARS.curRightTile = curBlocks[i];
-                                VARS.curRightTileData = curBlockTileDatas[i];
-                                VARS.IsRightBlockDetected = true;
+                                curRightBlockDistance = tempFloat;
 
-                                hasGotCurNearestRightBlock = true;
+                                if (curRightBlockDistance < gridBreadth + 0.025f)
+                                {
+                                    VARS.curRightTile = curBlocks[i];
+                                    VARS.curRightTileData = curBlockTileDatas[i];
+                                    VARS.IsRightBlockDetected = true;
+
+                                    hasGotCurNearestRightBlock = true;
+                                }
+                            }
+                            if (curBlockTileDatas[i].isFragile &&
+                                VARS.IsAttachWall &&
+                                VARS.curFacingDirectionIndex == 2)
+                            {
+                                BreakCurTile(curBlocks[i], curToBeBrokenFragileRustBlocks, curFragileRustBlockToBeBrokenStartTimes);
                             }
                         }
                     }
@@ -901,70 +1061,70 @@ public class UniversalFunctionsLibrary : MonoBehaviour
             VARS.IsInMist = false;
         }
 
-        //onOrToCurTile
-        if (VARS.curUpTile != null &&
-            VARS.curUpTile == VARS.curAttachedCeilingTile)
-        {
-            //fragile
-            if (VARS.curUpTileData.isFragile)
-            {
-                BreakCurTile(VARS.curUpTile,curToBeBrokenFragileRustBlocks, curFragileRustBlockToBeBrokenStartTimes);
-            }
+        ////onOrToCurTile
+        //if (VARS.curUpTile != null &&
+        //    VARS.curUpTile == VARS.curAttachedCeilingTile)
+        //{
+        //    //fragile
+        //    if (VARS.curUpTileData.isFragile)
+        //    {
+        //        BreakCurTile(VARS.curUpTile,curToBeBrokenFragileRustBlocks, curFragileRustBlockToBeBrokenStartTimes);
+        //    }
 
-            //railBlock
-            if (VARS.curUpTileData.railBlockIndex > 0)
-            {
-                VARS.curOnOrToRailBlock = VARS.curUpTile;
-                VARS.IsOnOrToARailBlock = true;
-            }
-        }
-        if (VARS.curDownTile != null)
-        {
-            //fragile
-            if (VARS.curDownTileData.isFragile)
-            {
-                BreakCurTile(VARS.curDownTile, curToBeBrokenFragileRustBlocks, curFragileRustBlockToBeBrokenStartTimes);
-            }
+        //    //railBlock
+        //    if (VARS.curUpTileData.railBlockIndex > 0)
+        //    {
+        //        VARS.curOnOrToRailBlock = VARS.curUpTile;
+        //        VARS.IsOnOrToARailBlock = true;
+        //    }
+        //}
+        //if (VARS.curDownTile != null)
+        //{
+        //    //fragile
+        //    if (VARS.curDownTileData.isFragile)
+        //    {
+        //        BreakCurTile(VARS.curDownTile, curToBeBrokenFragileRustBlocks, curFragileRustBlockToBeBrokenStartTimes);
+        //    }
 
-            //railBlock
-            if (VARS.curDownTileData.railBlockIndex > 0)
-            {
-                VARS.curOnOrToRailBlock = VARS.curDownTile;
-                VARS.IsOnOrToARailBlock = true;
-            }
-        }
-        if (VARS.curLeftTile!=null &&
-            VARS.curLeftTile==VARS.curAttachedWallTile)
-        {
-            //fragile
-            if (VARS.curLeftTileData.isFragile)
-            {
-                BreakCurTile(VARS.curLeftTile, curToBeBrokenFragileRustBlocks, curFragileRustBlockToBeBrokenStartTimes);
-            }
+        //    //railBlock
+        //    if (VARS.curDownTileData.railBlockIndex > 0)
+        //    {
+        //        VARS.curOnOrToRailBlock = VARS.curDownTile;
+        //        VARS.IsOnOrToARailBlock = true;
+        //    }
+        //}
+        //if (VARS.curLeftTile!=null &&
+        //    VARS.curLeftTile==VARS.curAttachedWallTile)
+        //{
+        //    //fragile
+        //    if (VARS.curLeftTileData.isFragile)
+        //    {
+        //        BreakCurTile(VARS.curLeftTile, curToBeBrokenFragileRustBlocks, curFragileRustBlockToBeBrokenStartTimes);
+        //    }
 
-            //railBlock
-            if (VARS.curLeftTileData.railBlockIndex > 0)
-            {
-                VARS.curOnOrToRailBlock = VARS.curLeftTile;
-                VARS.IsOnOrToARailBlock = true;
-            }
-        }
-        if (VARS.curRightTile != null &&
-            VARS.curRightTile == VARS.curAttachedWallTile)
-        {
-            //fragile
-            if (VARS.curRightTileData.isFragile)
-            {
-                BreakCurTile(VARS.curRightTile, curToBeBrokenFragileRustBlocks, curFragileRustBlockToBeBrokenStartTimes);
-            }
+        //    //railBlock
+        //    if (VARS.curLeftTileData.railBlockIndex > 0)
+        //    {
+        //        VARS.curOnOrToRailBlock = VARS.curLeftTile;
+        //        VARS.IsOnOrToARailBlock = true;
+        //    }
+        //}
+        //if (VARS.curRightTile != null &&
+        //    VARS.curRightTile == VARS.curAttachedWallTile)
+        //{
+        //    //fragile
+        //    if (VARS.curRightTileData.isFragile)
+        //    {
+        //        BreakCurTile(VARS.curRightTile, curToBeBrokenFragileRustBlocks, curFragileRustBlockToBeBrokenStartTimes);
+        //    }
 
-            //railBlock
-            if (VARS.curRightTileData.railBlockIndex > 0)
-            {
-                VARS.curOnOrToRailBlock = VARS.curRightTile;
-                VARS.IsOnOrToARailBlock = true;
-            }
-        }
+        //    //railBlock
+        //    if (VARS.curRightTileData.railBlockIndex > 0)
+        //    {
+        //        VARS.curOnOrToRailBlock = VARS.curRightTile;
+        //        VARS.IsOnOrToARailBlock = true;
+        //    }
+        //}
 
         VARS.curUpBlockDistance = curUpBlockDistance;
         VARS.curDownBlockDistance = curDownBlockDistance;
@@ -1199,6 +1359,96 @@ public class UniversalFunctionsLibrary : MonoBehaviour
                 //DebugLog("enterVoid");
 
                 VARS.IsToDie = true;
+            }
+
+            //redFragment
+            else if (VARS.curTriggerTileData.blockTypeIndex == 1001)
+            {
+                if (!VARS.IsToCarryAFragment &&
+                    !VARS.IsEmbeddingFragments &&
+                    !isRedFragmentsEmbeded[VARS.curTriggerTileData.fragmentIndex - 1] &&
+                    !VARS.curCarriedFragments.Contains(VARS.curTriggerTile))
+                {
+                    VARS.curToBeCarriedFragment = VARS.curTriggerTile;
+                    VARS.curToBeCarriedFragmentFaceIndex = 6;
+                    VARS.curToBeCarriedFragmentIndex = VARS.curTriggerTileData.fragmentIndex;
+                    VARS.IsToCarryAFragment = true;
+                }
+            }
+
+            //yellowFragment
+            else if (VARS.curTriggerTileData.blockTypeIndex == 2001)
+            {
+                if (!VARS.IsToCarryAFragment &&
+                    !VARS.IsEmbeddingFragments &&
+                    !isYellowFragmentsEmbeded[VARS.curTriggerTileData.fragmentIndex - 1] &&
+                    !VARS.curCarriedFragments.Contains(VARS.curTriggerTile))
+                {
+                    VARS.curToBeCarriedFragment = VARS.curTriggerTile;
+                    VARS.curToBeCarriedFragmentFaceIndex = 1;
+                    VARS.curToBeCarriedFragmentIndex = VARS.curTriggerTileData.fragmentIndex;
+                    VARS.IsToCarryAFragment = true;
+                }
+            }
+
+            //blueFragment
+            else if (VARS.curTriggerTileData.blockTypeIndex == 3001)
+            {
+                if (!VARS.IsToCarryAFragment &&
+                    !VARS.IsEmbeddingFragments &&
+                    !isBlueFragmentsEmbeded[VARS.curTriggerTileData.fragmentIndex - 1] &&
+                    !VARS.curCarriedFragments.Contains(VARS.curTriggerTile))
+                {
+                    VARS.curToBeCarriedFragment = VARS.curTriggerTile;
+                    VARS.curToBeCarriedFragmentFaceIndex = 4;
+                    VARS.curToBeCarriedFragmentIndex = VARS.curTriggerTileData.fragmentIndex;
+                    VARS.IsToCarryAFragment = true;
+                }
+            }
+
+            //orangeFragment
+            else if (VARS.curTriggerTileData.blockTypeIndex == 4001)
+            {
+                if (!VARS.IsToCarryAFragment &&
+                    !VARS.IsEmbeddingFragments &&
+                    !isOrangeFragmentsEmbeded[VARS.curTriggerTileData.fragmentIndex - 1] &&
+                    !VARS.curCarriedFragments.Contains(VARS.curTriggerTile))
+                {
+                    VARS.curToBeCarriedFragment = VARS.curTriggerTile;
+                    VARS.curToBeCarriedFragmentFaceIndex = 3;
+                    VARS.curToBeCarriedFragmentIndex = VARS.curTriggerTileData.fragmentIndex;
+                    VARS.IsToCarryAFragment = true;
+                }
+            }
+
+            //greenFragment
+            else if (VARS.curTriggerTileData.blockTypeIndex == 5001)
+            {
+                if (!VARS.IsToCarryAFragment &&
+                    !VARS.IsEmbeddingFragments &&
+                    !isGreenFragmentsEmbeded[VARS.curTriggerTileData.fragmentIndex - 1] &&
+                    !VARS.curCarriedFragments.Contains(VARS.curTriggerTile))
+                {
+                    VARS.curToBeCarriedFragment = VARS.curTriggerTile;
+                    VARS.curToBeCarriedFragmentFaceIndex = 5;
+                    VARS.curToBeCarriedFragmentIndex = VARS.curTriggerTileData.fragmentIndex;
+                    VARS.IsToCarryAFragment = true;
+                }
+            }
+
+            //purpleFragment
+            else if (VARS.curTriggerTileData.blockTypeIndex == 6001)
+            {
+                if (!VARS.IsToCarryAFragment &&
+                    !VARS.IsEmbeddingFragments &&
+                    !isPurpleFragmentsEmbeded[VARS.curTriggerTileData.fragmentIndex - 1] &&
+                    !VARS.curCarriedFragments.Contains(VARS.curTriggerTile))
+                {
+                    VARS.curToBeCarriedFragment = VARS.curTriggerTile;
+                    VARS.curToBeCarriedFragmentFaceIndex = 2;
+                    VARS.curToBeCarriedFragmentIndex = VARS.curTriggerTileData.fragmentIndex;
+                    VARS.IsToCarryAFragment = true;
+                }
             }
 
             //center(out)

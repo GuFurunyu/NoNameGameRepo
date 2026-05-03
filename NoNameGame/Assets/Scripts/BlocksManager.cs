@@ -17,6 +17,9 @@ public class BlocksManager : MonoBehaviour
     //lastUpdateTime
     float lastUpdateTime;
 
+    float curNearestMinimapGateDistance;
+    int curNearestMinimapGateIndex;
+
     ////matrix
     ////[x][y][z](~coord)
     //public int[,] curBlocksMatrix;
@@ -151,10 +154,15 @@ public class BlocksManager : MonoBehaviour
     float fragileRustBlockRespawnTime;
 
     List<string> railBlockMoveStrings = new List<string>();
+
+    List<GameObject> minimapGates = new List<GameObject>();
+    List<GameObject> minimapLocks = new List<GameObject>();
     #endregion
 
     #region VariablesUsed
     List<int> edgeGateLinkedToIndexes = new List<int>();
+
+    List<int> deactivatedLockIndexes = new List<int>();
 
     Vector3 curRoomStableUp;
     Vector3 curRoomStableRight;
@@ -188,6 +196,8 @@ public class BlocksManager : MonoBehaviour
 
     List<GameObject> curRailBlocks = new List<GameObject>();
     List<Vector3> curRailBlockInitialPositions = new List<Vector3>();
+
+    List<int> deactivatedMinimapLockIndexes = new List<int>();
     #endregion
 
     //toDoLater:
@@ -230,10 +240,13 @@ public class BlocksManager : MonoBehaviour
         fragileRustBlockToBeBrokenTime = CONS.fragileRustBlockToBeBrokenTime;
         fragileRustBlockRespawnTime = CONS.fragileRustBlockRespawnTime;
         railBlockMoveStrings = CONS.railBlockMoveStrings;
+        minimapGates = CONS.minimapGates;
+        minimapLocks = CONS.minimapLocks;
         #endregion
 
         #region ImportReferenceVariables
         edgeGateLinkedToIndexes = VARS.edgeGateLinkedToIndexes;
+        deactivatedLockIndexes = VARS.deactivatedLockIndexes;
         curBlocks = VARS.curBlocks;
         curBlockTileDatas = VARS.curBlockTileDatas;
         curCoordVectors = VARS.curCoordVectors;
@@ -254,6 +267,7 @@ public class BlocksManager : MonoBehaviour
         curFragileRustBlockBrokenTimes = VARS.curFragileRustBlockBrokenTimes;
         curRailBlocks = VARS.curRailBlocks;
         curRailBlockInitialPositions = VARS.curRailBlockInitialPositions;
+        deactivatedMinimapLockIndexes = VARS.deactivatedMinimapLockIndexes;
         #endregion
 
         #region loadStoredBlocks
@@ -321,7 +335,11 @@ public class BlocksManager : MonoBehaviour
                     tempTransform = VARS.curPlaneEmpty.transform.GetChild(i);
                     tempTileData = tempTransform.GetComponent<TileData>();
 
-                    if (tempTileData.isMovable)
+                    //Debug.Log("tempTransformIsNull " + tempTransform == null);
+                    //Debug.Log("tempTileDataIsNull " + tempTileData == null);
+
+                    if (tempTileData != null &&
+                        tempTileData.isMovable)
                     {
                         tempTileData.iniLocalPosition = tempTransform.localPosition;
                     }
@@ -339,7 +357,8 @@ public class BlocksManager : MonoBehaviour
                         tempTransform = VARS.curPlaneEmpty.transform.GetChild(i);
                         tempTileData = tempTransform.GetComponent<TileData>();
 
-                        if (tempTileData.isMovable)
+                        if (tempTileData != null &&
+                            tempTileData.isMovable)
                         {
                             tempTransform.localPosition = tempTileData.iniLocalPosition;
                         }
@@ -357,7 +376,8 @@ public class BlocksManager : MonoBehaviour
                 tempTransform = VARS.curPlaneEmpty.transform.GetChild(i);
                 tempTileData = tempTransform.GetComponent<TileData>();
 
-                if (tempTileData.stateOfMatterIndex > 1)
+                if (tempTileData != null &&
+                    tempTileData.stateOfMatterIndex > 1)
                 {
                     tempTransform.gameObject.SetActive(true);
                     tempTileData.continuousHorMovingTimes = 0;
@@ -492,6 +512,20 @@ public class BlocksManager : MonoBehaviour
                     }
 
                     tempTransform.GetComponent<MeshRenderer>().material = connectedGateColor;
+
+                    //minimapGate
+                    tempVector = UFL.Vector3WorldToMinimap(tempTransform.position);
+                    curNearestMinimapGateDistance = 999;
+                    for (int j = 0; j < minimapGates.Count; j++)
+                    {
+                        tempFloat = Vector3.Distance(minimapGates[j].transform.position, tempVector);
+                        if (tempFloat < curNearestMinimapGateDistance)
+                        {
+                            curNearestMinimapGateDistance = tempFloat;
+                            curNearestMinimapGateIndex = j;
+                        }
+                    }
+                    minimapGates[curNearestMinimapGateIndex].GetComponent<MeshRenderer>().material = connectedGateColor;
                 }
                 //lockNotConnectedGates
                 else
@@ -506,6 +540,20 @@ public class BlocksManager : MonoBehaviour
                     }
 
                     tempTransform.GetComponent<MeshRenderer>().material = unconnectedGateColor;
+
+                    //minimapGate
+                    tempVector = UFL.Vector3WorldToMinimap(tempTransform.position);
+                    curNearestMinimapGateDistance = 999;
+                    for (int j = 0; j < minimapGates.Count; j++)
+                    {
+                        tempFloat = Vector3.Distance(minimapGates[j].transform.position, tempVector);
+                        if (tempFloat < curNearestMinimapGateDistance)
+                        {
+                            curNearestMinimapGateDistance = tempFloat;
+                            curNearestMinimapGateIndex = j;
+                        }
+                    }
+                    minimapGates[curNearestMinimapGateIndex].GetComponent<MeshRenderer>().material = unconnectedGateColor;
                 }
 
                 //findCurNearestLock
@@ -513,7 +561,7 @@ public class BlocksManager : MonoBehaviour
                 for (int j = 0; j < locks.Count; j++)
                 {
                     if (locks[j].transform.parent != tempTransform.parent &&
-                        locks[j].activeSelf)
+                        !deactivatedLockIndexes.Contains(j))
                     {
                         if (Vector3.Distance(locks[j].transform.position, tempTransform.position) < curGateNearestLockDistance)
                         {
@@ -525,6 +573,8 @@ public class BlocksManager : MonoBehaviour
                 //lockNotConnectedGates
                 if (curGateNearestLockDistance < 6 * gridBreadth)
                 {
+                    //Debug.Log("enter");
+
                     //toSolid
                     tempTransform.GetComponent<TileData>().stateOfMatterIndex = 1;
                     for (int k = 0; k < tempTransform.childCount; k++)
@@ -533,6 +583,20 @@ public class BlocksManager : MonoBehaviour
                     }
 
                     tempTransform.GetComponent<MeshRenderer>().material = unconnectedGateColor;
+
+                    //minimapGate
+                    tempVector = UFL.Vector3WorldToMinimap(tempTransform.position);
+                    curNearestMinimapGateDistance = 999;
+                    for (int j = 0; j < minimapGates.Count; j++)
+                    {
+                        tempFloat = Vector3.Distance(minimapGates[j].transform.position, tempVector);
+                        if (tempFloat < curNearestMinimapGateDistance)
+                        {
+                            curNearestMinimapGateDistance = tempFloat;
+                            curNearestMinimapGateIndex = j;
+                        }
+                    }
+                    minimapGates[curNearestMinimapGateIndex].GetComponent<MeshRenderer>().material = unconnectedGateColor;
                 }
             }
 
@@ -591,6 +655,20 @@ public class BlocksManager : MonoBehaviour
                     }
 
                     tempTransform.GetComponent<MeshRenderer>().material = connectedGateColor;
+
+                    //minimapGate
+                    tempVector = UFL.Vector3WorldToMinimap(tempTransform.position);
+                    curNearestMinimapGateDistance = 999;
+                    for (int j = 0; j < minimapGates.Count; j++)
+                    {
+                        tempFloat = Vector3.Distance(minimapGates[j].transform.position, tempVector);
+                        if (tempFloat < curNearestMinimapGateDistance)
+                        {
+                            curNearestMinimapGateDistance = tempFloat;
+                            curNearestMinimapGateIndex = j;
+                        }
+                    }
+                    minimapGates[curNearestMinimapGateIndex].GetComponent<MeshRenderer>().material = connectedGateColor;
                 }
                 //lockNotConnectedEdgeGates
                 else
@@ -606,6 +684,20 @@ public class BlocksManager : MonoBehaviour
                     }
 
                     tempTransform.GetComponent<MeshRenderer>().material = unconnectedGateColor;
+
+                    //minimapGate
+                    tempVector = UFL.Vector3WorldToMinimap(tempTransform.position);
+                    curNearestMinimapGateDistance = 999;
+                    for (int j = 0; j < minimapGates.Count; j++)
+                    {
+                        tempFloat = Vector3.Distance(minimapGates[j].transform.position, tempVector);
+                        if (tempFloat < curNearestMinimapGateDistance)
+                        {
+                            curNearestMinimapGateDistance = tempFloat;
+                            curNearestMinimapGateIndex = j;
+                        }
+                    }
+                    minimapGates[curNearestMinimapGateIndex].GetComponent<MeshRenderer>().material = unconnectedGateColor;
                 }
 
                 //findCurNearestLock
@@ -613,7 +705,7 @@ public class BlocksManager : MonoBehaviour
                 for (int j = 0; j < locks.Count; j++)
                 {
                     if (locks[j].transform.parent != tempTransform.parent &&
-                        locks[j].activeSelf)
+                        !deactivatedLockIndexes.Contains(j))
                     {
                         if (Vector3.Distance(locks[j].transform.position, tempTransform.position) < curEdgeGateNearestLockDistance)
                         {
@@ -634,6 +726,20 @@ public class BlocksManager : MonoBehaviour
                     }
 
                     tempTransform.GetComponent<MeshRenderer>().material = unconnectedGateColor;
+
+                    //minimapGate
+                    tempVector = UFL.Vector3WorldToMinimap(tempTransform.position);
+                    curNearestMinimapGateDistance = 999;
+                    for (int j = 0; j < minimapGates.Count; j++)
+                    {
+                        tempFloat = Vector3.Distance(minimapGates[j].transform.position, tempVector);
+                        if (tempFloat < curNearestMinimapGateDistance)
+                        {
+                            curNearestMinimapGateDistance = tempFloat;
+                            curNearestMinimapGateIndex = j;
+                        }
+                    }
+                    minimapGates[curNearestMinimapGateIndex].GetComponent<MeshRenderer>().material = unconnectedGateColor;
                 }
             }
 

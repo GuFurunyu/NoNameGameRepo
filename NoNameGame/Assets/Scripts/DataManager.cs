@@ -50,12 +50,29 @@ public class DataManager : MonoBehaviour
         //keysAndLocks
         public List<int> deactivatedKeyIndexes = new List<int>();
         public List<int> deactivatedLockIndexes = new List<int>();
-        public bool isCarryingAKey;
-        public int curCarriedKeyIndex;
-        public int curCarriedKeyIniRoomIndex;
-        public Vector3 curCarriedKeyIniLocalPosition;
+        //public bool isCarryingAKey;
+        //public int curCarriedKeyIndex;
+        //public int curCarriedKeyIniRoomIndex;
+        //public Vector3 curCarriedKeyIniLocalPosition;
         public List<int> deactivatedMinimapKeyIndexes = new List<int>();
         public List<int> deactivatedMinimapLockIndexes = new List<int>();
+
+        //fragments
+        public bool[] isRedFragmentsEmbeded = new bool[8];
+        public bool[] isYellowFragmentsEmbeded = new bool[8];
+        public bool[] isBlueFragmentsEmbeded = new bool[8];
+        public bool[] isOrangeFragmentsEmbeded = new bool[8];
+        public bool[] isGreenFragmentsEmbeded = new bool[8];
+        public bool[] isPurpleFragmentsEmbeded = new bool[8];
+        public Vector3[] redEmbededFragmentPositions = new Vector3[8];
+        public Vector3[] yellowEmbededFragmentPositions = new Vector3[8];
+        public Vector3[] blueEmbededFragmentPositions = new Vector3[8];
+        public Vector3[] orangeEmbededFragmentPositions = new Vector3[8];
+        public Vector3[] greenEmbededFragmentPositions = new Vector3[8];
+        public Vector3[] purpleEmbededFragmentPositions = new Vector3[8];
+
+        //isCenterFulfilled
+        public bool[] isCenterFulfilled = new bool[6];
     }
 
     CatWorldData curCatWorldData = new CatWorldData();
@@ -79,6 +96,7 @@ public class DataManager : MonoBehaviour
     string tempPath;
     string tempJsonString;
 
+    int tempInt;
     Vector3 tempVector;
     Transform tempTransform;
 
@@ -91,6 +109,15 @@ public class DataManager : MonoBehaviour
     Vector3[] faceStableForwards = new Vector3[6];
 
     GameObject[] roomPlanes = new GameObject[54];
+
+    List<GameObject> redFragments = new List<GameObject>();
+    List<GameObject> yellowFragments = new List<GameObject>();
+    List<GameObject> blueFragments = new List<GameObject>();
+    List<GameObject> orangeFragments = new List<GameObject>();
+    List<GameObject> greenFragments = new List<GameObject>();
+    List<GameObject> purpleFragments = new List<GameObject>();
+
+    GameObject[] holeBlocks = new GameObject[6];
 
     GameObject storedActivatedSavePointBlock;
 
@@ -118,6 +145,15 @@ public class DataManager : MonoBehaviour
     Vector3[] roomStableForwards = new Vector3[54];
     Vector3[] roomStableUps = new Vector3[54];
     Vector3[] roomStableRights = new Vector3[54];
+
+    bool[] isRedFragmentsEmbeded = new bool[8];
+    bool[] isYellowFragmentsEmbeded = new bool[8];
+    bool[] isBlueFragmentsEmbeded = new bool[8];
+    bool[] isOrangeFragmentsEmbeded = new bool[8];
+    bool[] isGreenFragmentsEmbeded = new bool[8];
+    bool[] isPurpleFragmentsEmbeded = new bool[8];
+
+    bool[] isCenterFulfilled = new bool[6];
     #endregion
 
 
@@ -137,6 +173,13 @@ public class DataManager : MonoBehaviour
         faces = CONS.faces;
         faceStableForwards = CONS.faceStableForwards;
         roomPlanes = CONS.roomPlanes;
+        redFragments = CONS.redFragments;
+        yellowFragments = CONS.yellowFragments;
+        blueFragments = CONS.blueFragments;
+        orangeFragments = CONS.orangeFragments;
+        greenFragments = CONS.greenFragments;
+        purpleFragments = CONS.purpleFragments;
+        holeBlocks = CONS.holeBlocks;
         storedActivatedSavePointBlock = CONS.storedActivatedSavePointBlock;
         twistingCenters = CONS.twistingCenters;
         keys = CONS.keys;
@@ -156,6 +199,13 @@ public class DataManager : MonoBehaviour
         roomStableForwards = VARS.roomStableForwards;
         roomStableUps = VARS.roomStableUps;
         roomStableRights = VARS.roomStableRights;
+        isRedFragmentsEmbeded = VARS.isRedFragmentsEmbeded;
+        isYellowFragmentsEmbeded = VARS.isYellowFragmentsEmbeded;
+        isBlueFragmentsEmbeded = VARS.isBlueFragmentsEmbeded;
+        isOrangeFragmentsEmbeded = VARS.isOrangeFragmentsEmbeded;
+        isGreenFragmentsEmbeded = VARS.isGreenFragmentsEmbeded;
+        isPurpleFragmentsEmbeded = VARS.isPurpleFragmentsEmbeded;
+        isCenterFulfilled = VARS.isCenterFulfilled;
         #endregion
 
         ReadWorldData();
@@ -314,11 +364,11 @@ public class DataManager : MonoBehaviour
             //keysAndLocks
             VARS.deactivatedKeyIndexes = curCatWorldData.deactivatedKeyIndexes;
             VARS.deactivatedLockIndexes = curCatWorldData.deactivatedLockIndexes;
-            VARS.IsCarryingAKey = curCatWorldData.isCarryingAKey;
-            VARS.curCarriedKey = keys[curCatWorldData.curCarriedKeyIndex];
-            VARS.curCarriedKeyIniRoomIndex = curCatWorldData.curCarriedKeyIniRoomIndex;
-            VARS.curCarriedKeyIniParent = roomPlanes[curCatWorldData.curCarriedKeyIniRoomIndex].transform.GetChild(0).gameObject;
-            VARS.curCarriedKeyIniLocalPosition = curCatWorldData.curCarriedKeyIniLocalPosition;
+            //VARS.IsCarryingAKey = curCatWorldData.isCarryingAKey;
+            //VARS.curCarriedKey = keys[curCatWorldData.curCarriedKeyIndex];
+            //VARS.curCarriedKeyIniRoomIndex = curCatWorldData.curCarriedKeyIniRoomIndex;
+            //VARS.curCarriedKeyIniParent = roomPlanes[curCatWorldData.curCarriedKeyIniRoomIndex].transform.GetChild(0).gameObject;
+            //VARS.curCarriedKeyIniLocalPosition = curCatWorldData.curCarriedKeyIniLocalPosition;
             for (int i = 0; i < keys.Count; i++)
             {
                 if (curCatWorldData.deactivatedKeyIndexes.Contains(i))
@@ -353,6 +403,97 @@ public class DataManager : MonoBehaviour
             }
 
             VARS.IsToActivateCurSavePoint = true;
+
+            //fragments
+            isRedFragmentsEmbeded = curCatWorldData.isRedFragmentsEmbeded;
+            isYellowFragmentsEmbeded = curCatWorldData.isYellowFragmentsEmbeded;
+            isBlueFragmentsEmbeded = curCatWorldData.isBlueFragmentsEmbeded;
+            isOrangeFragmentsEmbeded = curCatWorldData.isOrangeFragmentsEmbeded;
+            isGreenFragmentsEmbeded = curCatWorldData.isGreenFragmentsEmbeded;
+            isPurpleFragmentsEmbeded = curCatWorldData.isPurpleFragmentsEmbeded;
+            for (int i = 0; i < redFragments.Count; i++)
+            {
+                if (isRedFragmentsEmbeded[redFragments[i].GetComponent<TileData>().fragmentIndex - 1])
+                {
+                    redFragments[i].transform.position = curCatWorldData.redEmbededFragmentPositions[i];
+                    for (int j = 0; j < 9; j++)
+                    {
+                        redFragments[i].transform.GetChild(j).gameObject.SetActive(j > 2);
+                    }
+                    redFragments[i].transform.SetParent(roomPlanes[49].transform.GetChild(0), true);
+                }
+            }
+            for (int i = 0; i < yellowFragments.Count; i++)
+            {
+                if (isYellowFragmentsEmbeded[yellowFragments[i].GetComponent<TileData>().fragmentIndex - 1])
+                {
+                    yellowFragments[i].transform.position = curCatWorldData.yellowEmbededFragmentPositions[i];
+                    for (int j = 0; j < 9; j++)
+                    {
+                        yellowFragments[i].transform.GetChild(j).gameObject.SetActive(j > 2);
+                    }
+                    yellowFragments[i].transform.SetParent(roomPlanes[4].transform.GetChild(0), true);
+                }
+            }
+            for (int i = 0; i < blueFragments.Count; i++)
+            {
+                if (isBlueFragmentsEmbeded[blueFragments[i].GetComponent<TileData>().fragmentIndex - 1])
+                {
+                    blueFragments[i].transform.position = curCatWorldData.blueEmbededFragmentPositions[i];
+                    for (int j = 0; j < 9; j++)
+                    {
+                        blueFragments[i].transform.GetChild(j).gameObject.SetActive(j > 2);
+                    }
+                    blueFragments[i].transform.SetParent(roomPlanes[31].transform.GetChild(0), true);
+                }
+            }
+            for (int i = 0; i < orangeFragments.Count; i++)
+            {
+                if (isOrangeFragmentsEmbeded[orangeFragments[i].GetComponent<TileData>().fragmentIndex - 1])
+                {
+                    orangeFragments[i].transform.position = curCatWorldData.orangeEmbededFragmentPositions[i];
+                    for (int j = 0; j < 9; j++)
+                    {
+                        orangeFragments[i].transform.GetChild(j).gameObject.SetActive(j > 2);
+                    }
+                    orangeFragments[i].transform.SetParent(roomPlanes[22].transform.GetChild(0), true);
+                }
+            }
+            for (int i = 0; i < greenFragments.Count; i++)
+            {
+                if (isGreenFragmentsEmbeded[greenFragments[i].GetComponent<TileData>().fragmentIndex - 1])
+                {
+                    greenFragments[i].transform.position = curCatWorldData.greenEmbededFragmentPositions[i];
+                    for (int j = 0; j < 9; j++)
+                    {
+                        greenFragments[i].transform.GetChild(j).gameObject.SetActive(j > 2);
+                    }
+                    greenFragments[i].transform.SetParent(roomPlanes[40].transform.GetChild(0), true);
+                }
+            }
+            for (int i = 0; i < purpleFragments.Count; i++)
+            {
+                if (isPurpleFragmentsEmbeded[purpleFragments[i].GetComponent<TileData>().fragmentIndex - 1])
+                {
+                    purpleFragments[i].transform.position = curCatWorldData.purpleEmbededFragmentPositions[i];
+                    for (int j = 0; j < 9; j++)
+                    {
+                        purpleFragments[i].transform.GetChild(j).gameObject.SetActive(j > 2);
+                    }
+                    purpleFragments[i].transform.SetParent(roomPlanes[13].transform.GetChild(0), true);
+                }
+            }
+
+            //isCenterFulfilled
+            isCenterFulfilled = curCatWorldData.isCenterFulfilled;
+            for (int i = 0; i < 6; i++)
+            {
+                if (isCenterFulfilled[i])
+                {
+                    tempInt = i * 9 + 4;
+                    holeBlocks[i].transform.position = roomCenters[tempInt] - roomStableForwards[tempInt] * 0.9f;
+                }
+            }
         }
     }
 
@@ -378,17 +519,76 @@ public class DataManager : MonoBehaviour
         //keysAndLocks
         curCatWorldData.deactivatedKeyIndexes = VARS.deactivatedKeyIndexes;
         curCatWorldData.deactivatedLockIndexes = VARS.deactivatedLockIndexes;
-        curCatWorldData.isCarryingAKey = VARS.IsCarryingAKey;
-        curCatWorldData.curCarriedKeyIniRoomIndex = VARS.curCarriedKeyIniRoomIndex;
-        curCatWorldData.curCarriedKeyIniLocalPosition = VARS.curCarriedKeyIniLocalPosition;
-        for (int i = 0; i < keys.Count; i++)
+        //curCatWorldData.isCarryingAKey = VARS.IsCarryingAKey;
+        //curCatWorldData.curCarriedKeyIniRoomIndex = VARS.curCarriedKeyIniRoomIndex;
+        //curCatWorldData.curCarriedKeyIniLocalPosition = VARS.curCarriedKeyIniLocalPosition;
+        //for (int i = 0; i < keys.Count; i++)
+        //{
+        //    if (keys[i] == VARS.curCarriedKey)
+        //    {
+        //        curCatWorldData.curCarriedKeyIndex = i;
+        //        break;
+        //    }
+        //}
+
+        //fragments
+        curCatWorldData.isRedFragmentsEmbeded = isRedFragmentsEmbeded;
+        curCatWorldData.isYellowFragmentsEmbeded= isYellowFragmentsEmbeded;
+        curCatWorldData.isBlueFragmentsEmbeded = isBlueFragmentsEmbeded;
+        curCatWorldData.isOrangeFragmentsEmbeded = isOrangeFragmentsEmbeded;
+        curCatWorldData.isGreenFragmentsEmbeded = isGreenFragmentsEmbeded;
+        curCatWorldData.isPurpleFragmentsEmbeded = isPurpleFragmentsEmbeded;
+        for (int i = 0; i < redFragments.Count; i++)
         {
-            if (keys[i] == VARS.curCarriedKey)
+            tempInt = redFragments[i].GetComponent<TileData>().fragmentIndex - 1;
+            if (isRedFragmentsEmbeded[tempInt])
             {
-                curCatWorldData.curCarriedKeyIndex = i;
-                break;
+                curCatWorldData.redEmbededFragmentPositions[tempInt] = redFragments[i].transform.position;
             }
         }
+        for (int i = 0; i < yellowFragments.Count; i++)
+        {
+            tempInt = yellowFragments[i].GetComponent<TileData>().fragmentIndex - 1;
+            if (isYellowFragmentsEmbeded[tempInt])
+            {
+                curCatWorldData.yellowEmbededFragmentPositions[tempInt] = yellowFragments[i].transform.position;
+            }
+        }
+        for (int i = 0; i < blueFragments.Count; i++)
+        {
+            tempInt = blueFragments[i].GetComponent<TileData>().fragmentIndex - 1;
+            if (isBlueFragmentsEmbeded[tempInt])
+            {
+                curCatWorldData.blueEmbededFragmentPositions[tempInt] = blueFragments[i].transform.position;
+            }
+        }
+        for (int i = 0; i < orangeFragments.Count; i++)
+        {
+            tempInt = orangeFragments[i].GetComponent<TileData>().fragmentIndex - 1;
+            if (isOrangeFragmentsEmbeded[tempInt])
+            {
+                curCatWorldData.orangeEmbededFragmentPositions[tempInt] = orangeFragments[i].transform.position;
+            }
+        }
+        for (int i = 0; i < greenFragments.Count; i++)
+        {
+            tempInt = greenFragments[i].GetComponent<TileData>().fragmentIndex - 1;
+            if (isGreenFragmentsEmbeded[tempInt])
+            {
+                curCatWorldData.greenEmbededFragmentPositions[tempInt] = greenFragments[i].transform.position;
+            }
+        }
+        for (int i = 0; i < purpleFragments.Count; i++)
+        {
+            tempInt = purpleFragments[i].GetComponent<TileData>().fragmentIndex - 1;
+            if (isPurpleFragmentsEmbeded[tempInt])
+            {
+                curCatWorldData.purpleEmbededFragmentPositions[tempInt] = purpleFragments[i].transform.position;
+            }
+        }
+
+        //isCenterFulfilled
+        curCatWorldData.isCenterFulfilled = isCenterFulfilled;
 
         //minimapKeysAndLocks
         curCatWorldData.deactivatedMinimapKeyIndexes = VARS.deactivatedMinimapKeyIndexes;

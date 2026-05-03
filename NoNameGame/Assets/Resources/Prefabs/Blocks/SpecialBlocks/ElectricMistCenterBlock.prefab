@@ -377,9 +377,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inRoomIndex: 0
+  isNotToBeInCurBlocks: 0
   offsetThres: 0.2
   _stateOfMatterIndex: 0
   isMovable: 0
+  iniLocalPosition: {x: 0, y: 0, z: 0}
+  continuousHorMovingTimes: 0
   isPositionDetermined: 0
   isAffectedByGravity: 0
   isPlatform: 0
@@ -396,7 +399,7 @@ MonoBehaviour:
   fluidDrag: 1
   mass: 1
   temperature: 0
-  electricity: 0
+  electricity: 150
   toxicity: 0
   _blockTypeIndex: 6103
 --- !u!1 &5893994179672614435

@@ -242,21 +242,21 @@ public class CatAppearance : MonoBehaviour
             VARS.curEnergy = 0;
         }
 
-        if (VARS.curEnergy >= maxEnergy)
+        if (VARS.curEnergy >= maxEnergy + VARS.maxEnergyBonus)
         {
             catEnergyMask.SetActive(false);
         }
         else
         {
             //position
-            catEnergyMask.transform.localPosition = -curRoomStableForward * 0.01f + curUp * (1 - (maxEnergy - VARS.curEnergy) / maxEnergy) / 2;
+            catEnergyMask.transform.localPosition = -curRoomStableForward * 0.01f + curUp * (1 - (maxEnergy + VARS.maxEnergyBonus - VARS.curEnergy) / (maxEnergy + VARS.maxEnergyBonus)) / 2;
 
             //localScale
-            //catEnergyMask.transform.localScale = Vector3.one + curUp * ((maxEnergy - curEnergy) / maxEnergy - 1);
+            //catEnergyMask.transform.localScale = Vector3.one + curUp * ((maxEnergy + VARS.maxEnergyBonus - curEnergy) / maxEnergy + VARS.maxEnergyBonus - 1);
             catEnergyMask.transform.localScale = new Vector3
-                (1 + Mathf.Abs(curUp.x) * ((maxEnergy - VARS.curEnergy) / maxEnergy - 1),
-                1 + Mathf.Abs(curUp.y) * ((maxEnergy - VARS.curEnergy) / maxEnergy - 1),
-                1 + Mathf.Abs(curUp.z) * ((maxEnergy - VARS.curEnergy) / maxEnergy - 1));
+                (1 + Mathf.Abs(curUp.x) * ((maxEnergy + VARS.maxEnergyBonus - VARS.curEnergy) / (maxEnergy + VARS.maxEnergyBonus) - 1),
+                1 + Mathf.Abs(curUp.y) * ((maxEnergy + VARS.maxEnergyBonus - VARS.curEnergy) / (maxEnergy + VARS.maxEnergyBonus) - 1),
+                1 + Mathf.Abs(curUp.z) * ((maxEnergy + VARS.maxEnergyBonus - VARS.curEnergy) / (maxEnergy + VARS.maxEnergyBonus) - 1));
 
             catEnergyMask.SetActive(true);
         }

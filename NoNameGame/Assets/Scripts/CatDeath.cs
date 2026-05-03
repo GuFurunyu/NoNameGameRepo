@@ -31,6 +31,15 @@ public class CatDeath : MonoBehaviour
     #endregion
 
     #region VariablesUsed
+    List<GameObject> curCarriedFragments = new List<GameObject>();
+    List<int> curCarriedFragmentFaceIndexes = new List<int>();
+    List<int> curCarriedFragmentIndexes = new List<int>();
+    List<GameObject> curCarriedFragmentIniParents = new List<GameObject>();
+    List<Vector3> curCarriedFragmentIniLocalPositions = new List<Vector3>();
+
+    List<int> curToBeEmbededFragmentIndexes = new List<int>();
+    List<Vector3> curToBeEmbededFragmentPositions = new List<Vector3>();
+
     List<GameObject> curBlocks = new List<GameObject>();
     List<TileData> curBlockTileDatas = new List<TileData>();
     List<Vector3> curCoordVectors = new List<Vector3>();
@@ -63,6 +72,13 @@ public class CatDeath : MonoBehaviour
         #endregion
 
         #region ImportReferenceVariables
+        curCarriedFragments = VARS.curCarriedFragments;
+        curCarriedFragmentFaceIndexes = VARS.curCarriedFragmentFaceIndexes;
+        curCarriedFragmentIndexes = VARS.curCarriedFragmentIndexes;
+        curCarriedFragmentIniParents = VARS.curCarriedFragmentIniParents;
+        curCarriedFragmentIniLocalPositions = VARS.curCarriedFragmentIniLocalPositions;
+        curToBeEmbededFragmentIndexes = VARS.curToBeEmbededFragmentIndexes;
+        curToBeEmbededFragmentPositions = VARS.curToBeEmbededFragmentPositions;
         curBlocks = VARS.curBlocks;
         curBlockTileDatas = VARS.curBlockTileDatas;
         curCoordVectors = VARS.curCoordVectors;
@@ -194,6 +210,26 @@ public class CatDeath : MonoBehaviour
 
             VARS.IsCarryingAKey = false;
         }
+        //clearCarriedFragments
+        if (VARS.IsCarryingFragments)
+        {
+            for (int i = 0; i < curCarriedFragments.Count; i++)
+            {
+                curCarriedFragments[i].transform.parent = curCarriedFragmentIniParents[i].transform;
+                curCarriedFragments[i].transform.localPosition = VARS.curCarriedFragmentIniLocalPositions[i];
+            }
+
+            curCarriedFragments.Clear();
+            curCarriedFragmentFaceIndexes.Clear();
+            curCarriedFragmentIndexes.Clear();
+            curCarriedFragmentIniParents.Clear();
+            curCarriedFragmentIniLocalPositions.Clear();
+
+            curToBeEmbededFragmentIndexes.Clear();
+            curToBeEmbededFragmentPositions.Clear();
+
+            VARS.IsCarryingAKey = false;
+        }
 
         //catTransform.position = VARS.catIniPosition;
         catTransform.position = catIniPositionPoint.transform.position;
@@ -204,7 +240,7 @@ public class CatDeath : MonoBehaviour
         //VARS.curEnergy = 0.1f;
         //UFL.SetCurEnergy(0.1f);
         //VARS.curEnergy = 0.1f;
-        VARS.curEnergy = maxEnergy;
+        VARS.curEnergy = maxEnergy + VARS.maxEnergyBonus;
         //UFL.SetCurTargetEnergy(0.1f);
         VARS.curTargetEnergy = 0.1f;
         //VARS.horCurSpeed = 0;

@@ -51,6 +51,18 @@ public class Constants : MonoBehaviour
     //roomPlanes
     public GameObject[] roomPlanes = new GameObject[54];
 
+    //fragments
+    public List<GameObject> redFragments = new List<GameObject>();
+    public List<GameObject> yellowFragments = new List<GameObject>();
+    public List<GameObject> blueFragments = new List<GameObject>();
+    public List<GameObject> orangeFragments = new List<GameObject>();
+    public List<GameObject> greenFragments = new List<GameObject>();
+    public List<GameObject> purpleFragments = new List<GameObject>();
+
+    //energyFragmentsAndHoles
+    public GameObject[] energyFragments = new GameObject[6];
+    public GameObject[] holeBlocks = new GameObject[6];
+
     //~?
     //Vector3 outerGravityVector = new Vector3(1, -1, 1);
 
@@ -243,6 +255,9 @@ public class Constants : MonoBehaviour
     //maxEnergy
     public float maxEnergy;
 
+    //energyFragment
+    public float energyFragmentMaxEnergyBonus;
+
     //energyCost
     public float jumpEnergyCost;
     public float dashEnergyCost;
@@ -275,6 +290,13 @@ public class Constants : MonoBehaviour
     #region CatTrigger
     [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
         "  \nCATTRIGGER\n --- ")]
+    //fragment
+    public float fragmentDistance;
+    public float fragmentSpeed;
+    public float energyFragmentSpeed;
+    public float energyFragmentBackDistance;
+    public float absorbingEnergyFragmentWaitingTime;
+
     //edgeGate
     public float throughEdgeGateGapTime;
 
@@ -399,6 +421,9 @@ public class Constants : MonoBehaviour
 
     //centerTriangles
     public GameObject[] minimapCenterTriangleEmpties = new GameObject[6];
+
+    //gates
+    public List<GameObject> minimapGates = new List<GameObject>();
 
     //keysAndLocks
     public List<GameObject> minimapKeys = new List<GameObject>();

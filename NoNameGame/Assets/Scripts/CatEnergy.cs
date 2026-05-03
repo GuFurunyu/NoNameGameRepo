@@ -85,16 +85,16 @@ public class CatEnergy : MonoBehaviour
         #endregion
 
         #region OutOfBoundReset     
-        if (VARS.curEnergy > maxEnergy)
+        if (VARS.curEnergy > maxEnergy + VARS.maxEnergyBonus)
         {
-            //UFL.SetCurEnergy(CONS.maxEnergy);
-            VARS.curEnergy = maxEnergy;
+            //UFL.SetCurEnergy(CONS.maxEnergy + VARS.maxEnergyBonus);
+            VARS.curEnergy = maxEnergy + VARS.maxEnergyBonus;
         }
 
-        if (VARS.curTargetEnergy > maxEnergy)
+        if (VARS.curTargetEnergy > maxEnergy + VARS.maxEnergyBonus)
         {
-            //UFL.SetCurTargetEnergy(maxEnergy);
-            VARS.curTargetEnergy = maxEnergy;
+            //UFL.SetCurTargetEnergy(maxEnergy + VARS.maxEnergyBonus);
+            VARS.curTargetEnergy = maxEnergy + VARS.maxEnergyBonus;
         }
         else if (VARS.curTargetEnergy < 0)
         {
@@ -107,7 +107,7 @@ public class CatEnergy : MonoBehaviour
         if (VARS.IsCatEnergyResetExecutable)
         {
             //energyRestore
-            if (VARS.curTargetEnergy < maxEnergy)
+            if (VARS.curTargetEnergy < maxEnergy + VARS.maxEnergyBonus)
             {
                 //Debug.Log("energyRestore");
 

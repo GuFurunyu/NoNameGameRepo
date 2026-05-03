@@ -165,13 +165,23 @@ public class Variables : MonoBehaviour
         }
     }
 
-
     //roomsInfo
     public Vector3[] roomCenters = new Vector3[54];
     public Vector3[] roomStableForwards = new Vector3[54];
     public Vector3[] roomStableUps = new Vector3[54];
     public Vector3[] roomStableRights = new Vector3[54];
     //public List<Vector3> roomOPoints = new List<Vector3>();
+
+    //fragments
+    public bool[] isRedFragmentsEmbeded = new bool[8];
+    public bool[] isYellowFragmentsEmbeded = new bool[8];
+    public bool[] isBlueFragmentsEmbeded = new bool[8];
+    public bool[] isOrangeFragmentsEmbeded = new bool[8];
+    public bool[] isGreenFragmentsEmbeded = new bool[8];
+    public bool[] isPurpleFragmentsEmbeded = new bool[8];
+
+    //isCenterFulfilled
+    public bool[] isCenterFulfilled = new bool[6];
 
     //edgeGatesLinkedToIndexes
     public List<int> edgeGateLinkedToIndexes = new List<int>();
@@ -727,6 +737,9 @@ public class Variables : MonoBehaviour
     [SerializeField] private bool _isCatEnergyResetExecutable;
     public bool IsCatEnergyResetExecutable { get { return _isCatEnergyResetExecutable; } set { _isCatEnergyResetExecutable = value; } }
 
+    //maxEnergyBonus
+    public float maxEnergyBonus;
+
     //curEnergy
     //public float curEnergy;
     [SerializeField] private float _curEnergy;
@@ -746,24 +759,59 @@ public class Variables : MonoBehaviour
     [SerializeField] private bool _isCatTriggerMainPartExecutable;
     public bool IsCatTriggerMainPartExecutable { get { return _isCatTriggerMainPartExecutable; } set { _isCatTriggerMainPartExecutable = value; } }
 
-    //strawberry
-    [SerializeField] private bool _isCarryingStrawberries;
-    public bool IsCarryingStrawberries { get { return _isCarryingStrawberries; } set { _isCarryingStrawberries = value; } }
+    //fragments
+    [SerializeField] private bool _isToCarryAFragment;
+    public bool IsToCarryAFragment { get { return _isToCarryAFragment; } set { _isToCarryAFragment = value; } }
 
-    [SerializeField] private bool _isCollectingStrawberries;
-    public bool IsCollectingStrawberries { get { return _isCollectingStrawberries; } set { _isCollectingStrawberries = value; } }
+    [SerializeField] private bool _isCarryingFragments;
+    public bool IsCarryingFragments { get { return _isCarryingFragments; } set { _isCarryingFragments = value; } }
 
-    [SerializeField] private bool _isGettingAStrawberry;
-    public bool IsGettingAStrawberry { get { return _isGettingAStrawberry; } set { _isGettingAStrawberry = value; } }
+    [SerializeField] private bool _isEmbeddingFragments;
+    public bool IsEmbeddingFragments { get { return _isEmbeddingFragments; } set { _isEmbeddingFragments = value; } }
 
-    [SerializeField] private bool _isToLoseCarriedStrawberries;
-    public bool IsToLoseCarriedStrawberries { get { return _isToLoseCarriedStrawberries; } set { _isToLoseCarriedStrawberries = value; } }
+    [SerializeField] private bool _isDeterminingToBeEmbededFragmentPositions;
+    public bool IsDeterminingToBeEmbededFragmentPositions { get { return _isDeterminingToBeEmbededFragmentPositions; } set { _isDeterminingToBeEmbededFragmentPositions = value; } }
 
+    [SerializeField] private bool _isCenterFulfilled;
+    public bool IsCenterFulfilled { get { return _isCenterFulfilled; } set { _isCenterFulfilled = value; } }
 
-    //energyCrystal
-    [SerializeField] private bool _isGettingAnEnergyCrystal;
-    public bool IsGettingAnEnergyCrystal { get { return _isGettingAnEnergyCrystal; } set { _isGettingAnEnergyCrystal = value; } }
+    [SerializeField] private bool _isAbsorbingAnEnergyFragment;
+    public bool IsAbsorbingAnEnergyFragment { get { return _isAbsorbingAnEnergyFragment; } set { _isAbsorbingAnEnergyFragment = value; } }
 
+    //[SerializeField] private bool _isToCarryARedFragment;
+    //public bool IsToCarryARedFragment { get { return _isToCarryARedFragment; } set { _isToCarryARedFragment = value; } }
+
+    //[SerializeField] private bool _isToCarryAYellowFragment;
+    //public bool IsToCarryAYellowFragment { get { return _isToCarryAYellowFragment; } set { _isToCarryAYellowFragment = value; } }
+
+    //[SerializeField] private bool _isToCarryABlueFragment;
+    //public bool IsToCarryABlueFragment { get { return _isToCarryABlueFragment; } set { _isToCarryABlueFragment = value; } }
+
+    //[SerializeField] private bool _isToCarryAnOrangeFragment;
+    //public bool IsToCarryAnOrangeFragment { get { return _isToCarryAnOrangeFragment; } set { _isToCarryAnOrangeFragment = value; } }
+
+    //[SerializeField] private bool _isToCarryAGreenFragment;
+    //public bool IsToCarryAGreenFragment { get { return _isToCarryAGreenFragment; } set { _isToCarryAGreenFragment = value; } }
+
+    //[SerializeField] private bool _isToCarryAPurpleFragment;
+    //public bool IsToCarryAPurpleFragment { get { return _isToCarryAPurpleFragment; } set { _isToCarryAPurpleFragment = value; } }
+
+    public GameObject curToBeCarriedFragment;
+    public int curToBeCarriedFragmentFaceIndex;
+    public int curToBeCarriedFragmentIndex;
+
+    public List<GameObject> curCarriedFragments = new List<GameObject>();
+    public List<int> curCarriedFragmentFaceIndexes = new List<int>();
+    public List<int> curCarriedFragmentIndexes = new List<int>();
+    public List<GameObject> curCarriedFragmentIniParents = new List<GameObject>();
+    public List<Vector3> curCarriedFragmentIniLocalPositions = new List<Vector3>();
+
+    public List<int> curToBeEmbededFragmentIndexes = new List<int>();
+    public List<Vector3> curToBeEmbededFragmentPositions = new List<Vector3>();
+
+    public float absorbingEnergyFragmentWaitingStartTime;
+    [SerializeField] private bool _isEnergyFragmentBacked;
+    public bool IsEnergyFragmentBacked { get { return _isEnergyFragmentBacked; } set { _isEnergyFragmentBacked = value; } }
 
     //edgeGate
     [SerializeField] private bool _isEnteringAnEdgeGate;
@@ -813,7 +861,25 @@ public class Variables : MonoBehaviour
     public GameObject curUnlockingBlock;
 
     //strawberry
+    [SerializeField] private bool _isCarryingStrawberries;
+    public bool IsCarryingStrawberries { get { return _isCarryingStrawberries; } set { _isCarryingStrawberries = value; } }
+
+    [SerializeField] private bool _isCollectingStrawberries;
+    public bool IsCollectingStrawberries { get { return _isCollectingStrawberries; } set { _isCollectingStrawberries = value; } }
+
+    [SerializeField] private bool _isGettingAStrawberry;
+    public bool IsGettingAStrawberry { get { return _isGettingAStrawberry; } set { _isGettingAStrawberry = value; } }
+
+    [SerializeField] private bool _isToLoseCarriedStrawberries;
+    public bool IsToLoseCarriedStrawberries { get { return _isToLoseCarriedStrawberries; } set { _isToLoseCarriedStrawberries = value; } }
+
+    //strawberry
     public List<GameObject> carriedStrawberries = new List<GameObject>();
+
+
+    //energyCrystal
+    [SerializeField] private bool _isGettingAnEnergyCrystal;
+    public bool IsGettingAnEnergyCrystal { get { return _isGettingAnEnergyCrystal; } set { _isGettingAnEnergyCrystal = value; } }
     #endregion
 
     #region CatAppearance

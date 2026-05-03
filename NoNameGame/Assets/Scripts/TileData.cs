@@ -18,6 +18,8 @@ public class TileData : MonoBehaviour
 
     public bool isNotToBeInCurBlocks;
 
+    public int fragmentIndex;
+
     //coordinates(~?)
     Vector3 curPosition;
     Vector3 curCoordinates;
@@ -112,26 +114,32 @@ public class TileData : MonoBehaviour
     //      680-CenterBlock
     //way2(x-x-xx(region-stateOfMatterIndex-mainType)):
     //  1-RedRegionBlocks
+    //      1001-RedFragmentBlock
     //      1101-RedBlock, 1102-DarkRedBlock, 1103-CoalBlock
     //      1301-VaporBlock
     //  2-YellowRegionBlocks
-    //      2101-YellowBlock, 2102-DarkYellow , 2103-SandBlock
+    //      2001-YellowFragmentBlock
+    //      2101-YellowBlock, 2102-DarkYellow, 2103-SandBlock
     //  3-BlueRegionBlocks
-    //      3101-BlueBlock, 3102-DarkBlueBlock , 3103-IceBlock, 3104-BreakableIceBlock
+    //      3001-BlueFragmentBlock
+    //      3101-BlueBlock, 3102-DarkBlueBlock, 3103-IceBlock, 3104-BreakableIceBlock
     //      3201-WaterBlock
     //  4-OrangeRegionBlocks
+    //      4001-OrangeFragmentBlock
     //      4101-OrangeBlock, 4102-DarkOrangeBlock, 4103-FragileRustBlock, 4104-RailRustBlock
     //  5-GreenRegionBlocks
+    //      5001-GreenFragmentBlock
     //      5101-GreenBlock, 5102-DarkGreenBlock, 5103-ElasticBlock
     //      5201-AcidBlock
     //      5301-GasBlock
     //  6-PurpleRegionBlocks
+    //      6001-PurpleFragmentBlock
     //      6101-PurpleBlock, 6102-DarkPurpleBlock, 6103-ElectricMistCenterBlock
     //      6401-ElectricMistBlock, 6402-LightElectricMistBlock
     //  7-UniversalBlocks
     //      7001-GateBlock, 7002-EdgeGateBlock, 7003-EdgeGateTriggerBlock, 7004-SavePointBlock, 7005-ActivatedSavePointBlock, 7006-CenterBlock, 7007-KeyBlock
     //      7008-StrawberryBlock, 7009-EnergyCrystalBlock,
-    //      7010-VoidBlock
+    //      7010-VoidBlock, 7011-EnergyFragmentBlock
     //      7101-(White)Block, 7102-Dark(White)Block, 7103-PlatformBlock, 7104-LockedBlock
     //public int blockTypeIndex;
     [SerializeField] int _blockTypeIndex;

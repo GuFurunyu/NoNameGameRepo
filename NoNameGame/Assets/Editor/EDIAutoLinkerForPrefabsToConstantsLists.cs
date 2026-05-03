@@ -10,12 +10,19 @@ public static class EDIAutoLinkerForPrefabsToConstantsList
     // 配置：预制体名 => Constants中List字段名
     private static readonly Dictionary<string, string> prefabToListField = new Dictionary<string, string>
     {
+        {"RedFragmentBlock","redFragments" },
+        {"YellowFragmentBlock","yellowFragments" },
+        {"BlueFragmentBlock","blueFragments" },
+        {"OrangeFragmentBlock","orangeFragments" },
+        {"GreenFragmentBlock","greenFragments" },
+        {"PurpleFragmentBlock","purpleFragments" },
         {"GateBlock", "gates" },
         {"EdgeGateBlock", "edgeGates" },
         {"EdgeGateTriggerBlock", "edgeGateTriggers" },
         {"SavePointBlock", "savePoints" },
         {"KeyBlock","keys" },
         {"LockedBlock", "locks" },
+        {"MinimapGate", "minimapGates" },
         {"MinimapKey","minimapKeys" },
         {"MinimapLock","minimapLocks" }
         // 可扩展
