@@ -522,13 +522,13 @@ public class CatMove : MonoBehaviour
                 else if (isInGas)
                 {
                     verCurIniSpeed = verIniSpeed / curGasTileData.fluidDrag;
-                    curGravityAcce = gravityAcce - gravityAcce * curGasTileData.mass /*/ 2*/;
+                    curGravityAcce = gravityAcce - gravityAcce * curGasTileData.mass * 0.5f /*/ 2*/;
                     verCurMaxSpeed = verMaxSpeed / curGasTileData.fluidDrag;
                 }
                 else if (isInMist)
                 {
                     verCurIniSpeed = verIniSpeed / curMistTileData.fluidDrag;
-                    curGravityAcce = gravityAcce - gravityAcce * curMistTileData.mass /*/ 2*/;
+                    curGravityAcce = gravityAcce - gravityAcce * curMistTileData.mass *0.5f /*/ 2*/;
                     verCurMaxSpeed = verMaxSpeed / curMistTileData.fluidDrag;
                 }
             }

@@ -55,18 +55,18 @@ public class MinimapManager : MonoBehaviour
         #region ImportValueVariables
         #endregion
 
-        if (VARS.IsInNewRoomAllResetOver)
+        if (VARS.IsMinimapMainPartExecutable)
         {
             #region Minimap
             //intoMinimap
             if (!VARS.IsInMinimap)
             {
-                if (!VARS.IsZoomedOut &&
-                    //VARS.IsIniRotation &&
-                    !VARS.IsOptionPanelActivated)
-                {
-                    if (!VARS.IsInCenter)
-                    {
+                //if (!VARS.IsZoomedOut &&
+                //    //VARS.IsIniRotation &&
+                //    !VARS.IsOptionPanelActivated)
+                //{
+                //    if (!VARS.IsInCenter)
+                //    {
                         //if (VARS.IsInputtingUpKey)
                         //{
                         //    if (VARS.IsJumpKeyDown)
@@ -81,8 +81,8 @@ public class MinimapManager : MonoBehaviour
                         }
                         //    }
                         //}
-                    }
-                }
+                //    }
+                //}
             }
 
             //inMinimap

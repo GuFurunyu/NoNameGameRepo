@@ -75,6 +75,10 @@ public class UniversalFunctionsLibrary : MonoBehaviour
     float electricityTransferSpeed;
     float toxicityTransferSpeed;
 
+    float intoVoidEnergyLost;
+
+    float intoVoidGapTime;
+
     float activateSavePointGapTime;
 
     GameObject[] minimapFaces = new GameObject[6];
@@ -140,6 +144,8 @@ public class UniversalFunctionsLibrary : MonoBehaviour
         temperatureTransferSpeed = CONS.temperatureTransferSpeed;
         electricityTransferSpeed = CONS.electricityTransferSpeed;
         toxicityTransferSpeed = CONS.toxicityTransferSpeed;
+        intoVoidEnergyLost = CONS.intoVoidEnergyLost;
+        intoVoidGapTime = CONS.intoVoidGapTime;
         activateSavePointGapTime = CONS.activateSavePointGapTime;
         minimapFaces = CONS.minimapFaces;
         minimapRoomPlanes = CONS.minimapRoomPlanes;
@@ -470,15 +476,15 @@ public class UniversalFunctionsLibrary : MonoBehaviour
 
                 if ((i - 4) % 9 == 0)
                 {
-                    tempGameObject = minimapCenterTriangleEmpties[(i - 4) / 9];
-                    tempGameObject.transform.GetChild(0).gameObject.SetActive(false);
-                    tempGameObject.transform.GetChild(1).gameObject.SetActive(true);
+                    //tempGameObject = minimapCenterTriangleEmpties[(i - 4) / 9];
+                    //tempGameObject.transform.GetChild(0).gameObject.SetActive(false);
+                    //tempGameObject.transform.GetChild(1).gameObject.SetActive(true);
                 }
             }
             else if ((i - 4) % 9 == 0)
             {
-                tempGameObject = minimapCenterTriangleEmpties[(i - 4) / 9];
-                tempGameObject.SetActive(IsRoomExplored(i));
+                //tempGameObject = minimapCenterTriangleEmpties[(i - 4) / 9];
+                //tempGameObject.SetActive(IsRoomExplored(i));
             }
 
             //roomPlanes[i].SetActive(false);
@@ -510,9 +516,9 @@ public class UniversalFunctionsLibrary : MonoBehaviour
 
                 if ((i - 4) % 9 == 0)
                 {
-                    tempGameObject = minimapCenterTriangleEmpties[(i - 4) / 9];
-                    tempGameObject.transform.GetChild(0).gameObject.SetActive(true);
-                    tempGameObject.transform.GetChild(1).gameObject.SetActive(false);
+                    //tempGameObject = minimapCenterTriangleEmpties[(i - 4) / 9];
+                    //tempGameObject.transform.GetChild(0).gameObject.SetActive(true);
+                    //tempGameObject.transform.GetChild(1).gameObject.SetActive(false);
                 }
             }
 
@@ -736,7 +742,8 @@ public class UniversalFunctionsLibrary : MonoBehaviour
 
         for (int i = 0; i < curBlocks.Count; i++)
         {
-            if (curBlocks[i].activeSelf == false)
+            if (curBlocks[i].activeSelf == false ||
+                curBlockTileDatas[i].isNotToBeDetected == true)
                 continue;
 
             tempVector = catTransform.position - curBlocks[i].transform.position;
@@ -1317,7 +1324,8 @@ public class UniversalFunctionsLibrary : MonoBehaviour
             {
                 //DebugLog("key");
 
-                if (!VARS.IsCarryingAKey &&
+                if (!VARS.IsToCarryAKey &&
+                    !VARS.IsCarryingAKey &&
                     !VARS.IsUnlocking)
                 {
                     VARS.curKey = VARS.curTriggerTile;
@@ -1342,7 +1350,12 @@ public class UniversalFunctionsLibrary : MonoBehaviour
             else if (/*VARS.curTriggerTileData.triggerTypeIndex == 2*/
                 VARS.curTriggerTileData.blockTypeIndex == 7009)
             {
-                if (VARS.curTriggerTile.transform.localScale != Vector3.one * 0.2f)
+                //if (VARS.curTriggerTile.transform.localScale != Vector3.one * 0.2f)
+                //if (Vector3.Distance(VARS.curTriggerTile.transform.localScale, Vector3.one * 0.2f) < 0.1f)
+                //{
+                //    VARS.IsGettingAnEnergyCrystal = true;
+                //}
+                if (VARS.curTriggerTile.activeSelf == true)//~?
                 {
                     VARS.IsGettingAnEnergyCrystal = true;
                 }
@@ -1356,9 +1369,25 @@ public class UniversalFunctionsLibrary : MonoBehaviour
                 //    VARS.IsToDie = true;
                 //}
 
-                //DebugLog("enterVoid");
+                //DebugLog("intoVoid");
 
-                VARS.IsToDie = true;
+                //VARS.IsToDie = true;
+                                
+                if (Time.time - VARS.lastIntoVoidTime > intoVoidGapTime)
+                {
+                    tempVector = VARS.curTriggerTile.transform.position - catTransform.position;
+                    tempFloat1 = Mathf.Abs(Vector3.Dot(tempVector, VARS.curUp));
+                    tempFloat2 = Mathf.Abs(Vector3.Dot(tempVector, VARS.curRight));
+
+                    if (tempFloat1 < 0.95f && tempFloat2 < 0.95f)
+                    {
+                        VARS.curTargetEnergy -= intoVoidEnergyLost;
+
+                        VARS.IsJustIntoVoid = true;
+
+                        VARS.lastIntoVoidTime = Time.time;
+                    }
+                }
             }
 
             //redFragment
@@ -1457,6 +1486,10 @@ public class UniversalFunctionsLibrary : MonoBehaviour
             {
                 VARS.IsInCenter = false;
             }
+        }
+        else
+        {
+            VARS.IsInCenter = false;
         }
     }
 

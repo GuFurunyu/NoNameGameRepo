@@ -18,6 +18,8 @@ public class TileData : MonoBehaviour
 
     public bool isNotToBeInCurBlocks;
 
+    public bool isNotToBeDetected;
+
     public int fragmentIndex;
 
     //coordinates(~?)

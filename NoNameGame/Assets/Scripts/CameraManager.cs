@@ -40,6 +40,8 @@ public class CameraManager : MonoBehaviour
     float camNormalSize;
     float camZoomedOutMaxSize;
 
+    GameObject twistGuide;
+
     Transform catTransform;
     #endregion
 
@@ -71,6 +73,7 @@ public class CameraManager : MonoBehaviour
         zoomInAutoTriggerTime = CONS.zoomInAutoTriggerTime;
         camNormalSize = CONS.camNormalSize;
         camZoomedOutMaxSize = CONS.camZoomedOutMaxSize;
+        twistGuide = CONS.twistGuide;
         catTransform = CONS.catTransform;
         #endregion
 
@@ -196,10 +199,11 @@ public class CameraManager : MonoBehaviour
             #endregion
 
             #region Zoom
-            #region ZoomOut
-            if (!VARS.IsRotating &&
+            if (VARS.IsZoomEnabled &&
+                !VARS.IsRotating &&
                 !VARS.IsTwisting)
             {
+                #region ZoomOut
                 if (!VARS.IsZoomedOut)
                 {
                     //control
@@ -278,7 +282,7 @@ public class CameraManager : MonoBehaviour
                         //autoTrigger
                         else
                         {
-                            if(zoomInAutoTriggerStartTime==0)
+                            if (zoomInAutoTriggerStartTime == 0)
                                 zoomInAutoTriggerStartTime = Time.time;
 
                             if (Time.time - zoomInAutoTriggerStartTime > zoomInAutoTriggerTime)
@@ -331,6 +335,22 @@ public class CameraManager : MonoBehaviour
             //{
             //    UFL.SetCameraEulerangles(new Vector3(camTransform.eulerAngles.x, camTransform.eulerAngles.y, VARS.camEuleranglesBeforeIntoMinimap.z));
             //}
+            #endregion
+
+            #region Guide
+            if (!VARS.HasTwisted &&
+                VARS.IsInCenter)
+            {
+                twistGuide.SetActive(true);
+            }
+            if (VARS.IsTwisting)
+            {
+                twistGuide.SetActive(false);
+
+                VARS.HasTwisted = true;
+
+                VARS.IsToWriteProgressData = true;
+            }
             #endregion
         }
     }

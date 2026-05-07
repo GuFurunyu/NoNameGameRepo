@@ -100,6 +100,37 @@ public class BlocksManager : MonoBehaviour
     int curNearestEdgeGateIndex;
     float curEdgeGateNearestLockDistance;
 
+    //randomValues
+    float[] randomValues = new float[256]{
+    0.72f, 0.15f, 0.93f, 0.48f, 0.06f, 0.81f, 0.37f, 0.59f, 0.24f, 0.67f,
+    0.42f, 0.91f, 0.13f, 0.76f, 0.54f, 0.08f, 0.83f, 0.31f, 0.65f, 0.39f,
+    0.95f, 0.20f, 0.68f, 0.45f, 0.02f, 0.78f, 0.52f, 0.16f, 0.88f, 0.34f,
+    0.71f, 0.49f, 0.11f, 0.63f, 0.86f, 0.27f, 0.56f, 0.74f, 0.19f, 0.41f,
+    0.98f, 0.33f, 0.69f, 0.23f, 0.62f, 0.85f, 0.44f, 0.07f, 0.77f, 0.51f,
+    0.28f, 0.94f, 0.36f, 0.58f, 0.18f, 0.73f, 0.46f, 0.09f, 0.82f, 0.64f,
+    0.25f, 0.89f, 0.13f, 0.67f, 0.38f, 0.57f, 0.79f, 0.21f, 0.43f, 0.97f,
+    0.32f, 0.61f, 0.84f, 0.47f, 0.04f, 0.69f, 0.53f, 0.15f, 0.92f, 0.29f,
+    0.75f, 0.41f, 0.66f, 0.12f, 0.88f, 0.35f, 0.58f, 0.77f, 0.23f, 0.49f,
+    0.01f, 0.83f, 0.55f, 0.17f, 0.72f, 0.39f, 0.96f, 0.27f, 0.63f, 0.44f,
+    0.69f, 0.22f, 0.87f, 0.33f, 0.51f, 0.78f, 0.14f, 0.05f, 0.81f, 0.46f,
+    0.65f, 0.32f, 0.59f, 0.74f, 0.18f, 0.91f, 0.37f, 0.54f, 0.08f, 0.85f,
+    0.26f, 0.61f, 0.43f, 0.79f, 0.11f, 0.68f, 0.95f, 0.28f, 0.56f, 0.73f,
+    0.42f, 0.03f, 0.84f, 0.49f, 0.16f, 0.64f, 0.39f, 0.75f, 0.52f, 0.09f,
+    0.88f, 0.34f, 0.57f, 0.22f, 0.77f, 0.13f, 0.62f, 0.86f, 0.29f, 0.48f,
+    0.71f, 0.25f, 0.94f, 0.36f, 0.58f, 0.17f, 0.83f, 0.44f, 0.66f, 0.31f,
+    0.53f, 0.76f, 0.19f, 0.07f, 0.82f, 0.45f, 0.67f, 0.24f, 0.89f, 0.38f,
+    0.55f, 0.72f, 0.10f, 0.86f, 0.33f, 0.59f, 0.21f, 0.78f, 0.47f, 0.12f,
+    0.64f, 0.85f, 0.27f, 0.54f, 0.73f, 0.41f, 0.06f, 0.79f, 0.52f, 0.15f,
+    0.68f, 0.92f, 0.35f, 0.61f, 0.18f, 0.77f, 0.43f, 0.08f, 0.84f, 0.51f,
+    0.26f, 0.63f, 0.89f, 0.34f, 0.57f, 0.72f, 0.19f, 0.45f, 0.81f, 0.38f,
+    0.64f, 0.11f, 0.87f, 0.53f, 0.28f, 0.69f, 0.94f, 0.23f, 0.48f, 0.76f,
+    0.32f, 0.55f, 0.82f, 0.14f, 0.67f, 0.41f, 0.09f, 0.86f, 0.52f, 0.25f,
+    0.68f, 0.37f, 0.73f, 0.17f, 0.58f, 0.84f, 0.29f, 0.46f, 0.71f, 0.13f,
+    0.92f, 0.42f, 0.66f, 0.33f, 0.74f, 0.19f, 0.56f, 0.81f, 0.27f, 0.44f,
+    0.62f, 0.32f, 0.59f, 0.74f, 0.18f, 0.91f
+    };
+    byte curRandomValueByteIndex;
+
     //railBlocks
     int curRailBlockMoveStringIndex;
     int curCarryCatRailBlockIndex = -1;
@@ -107,6 +138,7 @@ public class BlocksManager : MonoBehaviour
     bool tempBool;
     int tempInt;
     float tempFloat;
+    float tempFloat1;
     char tempChar;
     string tempString;
     Vector3 tempVector;
@@ -146,6 +178,10 @@ public class BlocksManager : MonoBehaviour
     float sandFixedUpdateTime;
     float railBlockFixedUpdateTime;
 
+    //float[] randomValues = new float[256];
+
+    float mistMaxDistance;
+
     int continuousHorMovingMaxTime;
 
     float unlockDistance;
@@ -166,8 +202,8 @@ public class BlocksManager : MonoBehaviour
 
     Vector3 curRoomStableUp;
     Vector3 curRoomStableRight;
-    Vector3 curUp;
-    Vector3 curRight;
+    //Vector3 VARS.curUp;
+    //Vector3 VARS.curRight;
 
     List<GameObject> curBlocks = new List<GameObject>();
     List<TileData> curBlockTileDatas = new List<TileData>();
@@ -235,6 +271,7 @@ public class BlocksManager : MonoBehaviour
         mistFixedUpdateTime = CONS.mistFixedUpdateTime;
         sandFixedUpdateTime = CONS.sandFixedUpdateTime;
         railBlockFixedUpdateTime = CONS.railBlockFixedUpdateTime;
+        mistMaxDistance = CONS.mistMaxDistance;
         continuousHorMovingMaxTime = CONS.continuousHorMovingMaxTime;
         unlockDistance = CONS.unlockDistance;
         fragileRustBlockToBeBrokenTime = CONS.fragileRustBlockToBeBrokenTime;
@@ -307,8 +344,6 @@ public class BlocksManager : MonoBehaviour
         #region ImportValueVariables
         curRoomStableUp = VARS.curRoomStableUp;
         curRoomStableRight = VARS.curRoomStableRight;
-        curUp = VARS.curUp;
-        curRight = VARS.curRight;
         #endregion
 
         ////customFixedUpdateInUpdate
@@ -429,6 +464,7 @@ public class BlocksManager : MonoBehaviour
 
                         //curCoordVector = tempTransform.localPosition;
                         curCoordVector = tempTransform.position - VARS.curPlaneEmpty.transform.position;
+                        //curCoordVector=tempTransform.localPosition;
                         curCoordVectors.Add(curCoordVector);
 
                         //getCurRoomBlockStateOfMatterIndexesAndTypeIndexes
@@ -753,10 +789,10 @@ public class BlocksManager : MonoBehaviour
             //SortCurBlocks();
 
             #region getCurFluidMaxAndMinHeight
-            curLiquidMaxHeight = 999;
+            curLiquidMaxHeight = -999;
             curGasMinHeight = 999;
             curLiquidMinHeight = 999;
-            curGasMaxHeight = 999;
+            curGasMaxHeight = -999;
 
             for (int i = 0; i < curBlocks.Count; i++)
             {
@@ -765,56 +801,67 @@ public class BlocksManager : MonoBehaviour
 
                 curBlock = curBlocks[i];
                 curBlockTileData = curBlockTileDatas[i];
+                curCoordVector = curCoordVectors[i];
 
                 //liquidHeight
                 if (curBlockTileData.stateOfMatterIndex == 2)
                 {
-                    tempFloat = Vector3.Dot(curBlock.transform.localPosition, curUp);
+                    //tempFloat = Vector3.Dot(curBlock.transform.localPosition, VARS.curUp);
+                    tempFloat = Vector3.Dot(curCoordVector, VARS.curUp);
 
-                    //curLiquidMaxHeight
-                    if (curLiquidMaxHeight == 999)
+                    if (GetNearBlockTypeIndex(1) == 0)
                     {
-                        curLiquidMaxHeight = tempFloat;
-                    }
-                    else if (tempFloat > curLiquidMaxHeight)
-                    {
-                        curLiquidMaxHeight = tempFloat;
-                    }
+                        Debug.Log(curCoordVector);
 
-                    //curLiquidMinHeight
-                    if (curLiquidMinHeight == 999)
-                    {
-                        curLiquidMinHeight = tempFloat;
-                    }
-                    else if (tempFloat < curLiquidMinHeight)
-                    {
-                        curLiquidMinHeight = tempFloat;
+                        //curLiquidMaxHeight
+                        //if (curLiquidMaxHeight == 999)
+                        //{
+                        //    curLiquidMaxHeight = tempFloat;
+                        //}
+                        if (tempFloat > curLiquidMaxHeight)
+                        {
+                            curLiquidMaxHeight = tempFloat;
+                        }
+
+                        //curLiquidMinHeight
+                        //if (curLiquidMinHeight == 999)
+                        //{
+                        //    curLiquidMinHeight = tempFloat;
+                        //}
+                        if (tempFloat < curLiquidMinHeight)
+                        {
+                            curLiquidMinHeight = tempFloat;
+                        }
                     }
                 }
 
                 //gasHeight
                 if (curBlockTileData.stateOfMatterIndex == 3)
                 {
-                    tempFloat = Vector3.Dot(curBlock.transform.localPosition, curUp);
+                    //tempFloat = Vector3.Dot(curBlock.transform.localPosition, VARS.curUp);
+                    tempFloat = Vector3.Dot(curCoordVector, VARS.curUp);
 
-                    //curGasMinHeight
-                    if (curGasMinHeight == 999)
+                    if (GetNearBlockTypeIndex(2) == 0)
                     {
-                        curGasMinHeight = tempFloat;
-                    }
-                    else if (tempFloat < curGasMinHeight)
-                    {
-                        curGasMinHeight = tempFloat;
-                    }
+                        //curGasMinHeight
+                        //if (curGasMinHeight == 999)
+                        //{
+                        //    curGasMinHeight = tempFloat;
+                        //}
+                        if (tempFloat < curGasMinHeight)
+                        {
+                            curGasMinHeight = tempFloat;
+                        }
 
-                    //curGasMaxHeight
-                    if (curGasMaxHeight == 999)
-                    {
-                        curGasMaxHeight = tempFloat;
-                    }
-                    else if (tempFloat > curGasMaxHeight)
-                    {
-                        curGasMaxHeight = tempFloat;
+                        //curGasMaxHeight
+                        //if (curGasMaxHeight == 999)
+                        //{
+                        //    curGasMaxHeight = tempFloat;
+                        //}
+                        if (tempFloat > curGasMaxHeight)
+                        {
+                            curGasMaxHeight = tempFloat;
+                        }
                     }
                 }
 
@@ -917,11 +964,11 @@ public class BlocksManager : MonoBehaviour
 
                                 //    VARS.IsCatMovedByRailBlock = true;
 
-                                //    if (Vector3.Dot(tempVector, curRight) == 0)
+                                //    if (Vector3.Dot(tempVector, VARS.curRight) == 0)
                                 //    {
                                 //        VARS.verCurSpeed = 0;
                                 //    }
-                                //    else if (Vector3.Dot(tempVector, curUp) == 0)
+                                //    else if (Vector3.Dot(tempVector, VARS.curUp) == 0)
                                 //    {
                                 //        VARS.horCurSpeed = 0;
                                 //    }
@@ -960,11 +1007,11 @@ public class BlocksManager : MonoBehaviour
 
                                     curCarryCatRailBlockIndex = i;
 
-                                    //if (Vector3.Dot(tempVector, curRight) == 0)
+                                    //if (Vector3.Dot(tempVector, VARS.curRight) == 0)
                                     //{
                                     //    VARS.verCurSpeed = 0;
                                     //}
-                                    //else if (Vector3.Dot(tempVector, curUp) == 0)
+                                    //else if (Vector3.Dot(tempVector, VARS.curUp) == 0)
                                     //{
                                     //    VARS.horCurSpeed = 0;
                                     //}
@@ -1067,8 +1114,8 @@ public class BlocksManager : MonoBehaviour
 
                             //hideRailBlocksOutOfRoomBoundary
                             tempVector = curBlock.transform.position - VARS.roomCenters[VARS.curRoomIndex];
-                            if (Mathf.Abs(Vector3.Dot(tempVector, curUp)) > (roomCoordBreadth / 2) * gridBreadth ||
-                                Mathf.Abs(Vector3.Dot(tempVector, curRight)) > (roomCoordBreadth / 2) * gridBreadth)
+                            if (Mathf.Abs(Vector3.Dot(tempVector, VARS.curUp)) > (roomCoordBreadth / 2) * gridBreadth ||
+                                Mathf.Abs(Vector3.Dot(tempVector, VARS.curRight)) > (roomCoordBreadth / 2) * gridBreadth)
                             {
                                 curBlock.GetComponent<MeshRenderer>().enabled = false;
                                 curBlock.transform.localScale = Vector3.one * 0.01f;
@@ -1095,22 +1142,23 @@ public class BlocksManager : MonoBehaviour
 
                         if (curDownBlockTypeIndex != 0)
                         {
-                            if (curUpBlockTypeIndex != 0 || Vector3.Dot(curBlock.transform.localPosition, curUp) >= curLiquidMaxHeight - 1 ||
-                                /*(Vector3.Dot(curBlock.transform.localPosition, curUp) - curLiquidMaxHeight) * (curUp.x + curUp.y + curUp.z) <= 0 ||*/
+                            if (curUpBlockTypeIndex != 0 || Vector3.Dot(/*curBlock.transform.localPosition*/curCoordVector, VARS.curUp) >= curLiquidMaxHeight - 1 ||
+                                /*(Vector3.Dot(curBlock.transform.localPosition, VARS.curUp) - curLiquidMaxHeight) * (VARS.curUp.x + VARS.curUp.y + VARS.curUp.z) <= 0 ||*/
                                 curLeftBlockTypeIndex == 0 || curRightBlockTypeIndex == 0 /*&&
-                            Vector3.Dot(curBlock.transform.localPosition, curUp) != curLiquidMaxHeight - 2 &&
-                            Vector3.Dot(curBlock.transform.localPosition, curUp) != curLiquidMaxHeight - 1*/)
+                            Vector3.Dot(curBlock.transform.localPosition, VARS.curUp) != curLiquidMaxHeight - 2 &&
+                            Vector3.Dot(curBlock.transform.localPosition, VARS.curUp) != curLiquidMaxHeight - 1*/)
                             {
                                 CurFluidBlockMoveLeftOrRight(i);
                             }
                             else
                             {
-                                tempFloat = Random.value;
+                                //tempFloat = Random.value;
+                                tempFloat1 = randomValues[curRandomValueByteIndex++];
 
                                 //moveUp
-                                if (tempFloat < (curLiquidMaxHeight - Vector3.Dot(curBlock.transform.localPosition, curUp)) / (curLiquidMaxHeight - curLiquidMinHeight))
+                                if (tempFloat1 < ((curLiquidMaxHeight - Vector3.Dot(/*curBlock.transform.localPosition*/curCoordVector, VARS.curUp)) / (curLiquidMaxHeight - curLiquidMinHeight)) /** 0.75*/)
                                 {
-                                    //Debug.Log(tempFloat + " " + (curLiquidMaxHeight - Vector3.Dot(curBlock.transform.localPosition, curUp)) / (curLiquidMaxHeight - curLiquidMinHeight));
+                                    //Debug.Log(tempFloat1 + " " + (curLiquidMaxHeight - Vector3.Dot(curBlock.transform.localPosition, VARS.curUp)) / (curLiquidMaxHeight - curLiquidMinHeight));
 
                                     CurBlockMove(i, 1);
                                 }
@@ -1145,20 +1193,21 @@ public class BlocksManager : MonoBehaviour
 
                         if (curUpBlockTypeIndex != 0)
                         {
-                            if (curDownBlockTypeIndex != 0 || Vector3.Dot(curBlock.transform.localPosition, curUp) <= curGasMinHeight + 1 ||
-                                /*(Vector3.Dot(curBlock.transform.localPosition, curUp) - curGasMinHeight) * (curUp.x + curUp.y + curUp.z) <= 0 ||*/
+                            if (curDownBlockTypeIndex != 0 || Vector3.Dot(/*curBlock.transform.localPosition*/curCoordVector, VARS.curUp) <= curGasMinHeight + 1 ||
+                                /*(Vector3.Dot(curBlock.transform.localPosition, VARS.curUp) - curGasMinHeight) * (VARS.curUp.x + VARS.curUp.y + VARS.curUp.z) <= 0 ||*/
                                 curLeftBlockTypeIndex == 0 || curRightBlockTypeIndex == 0 /*&&
-                            Vector3.Dot(curBlock.transform.localPosition, curUp) != curGasMinHeight + 2 &&
-                            Vector3.Dot(curBlock.transform.localPosition, curUp) != curGasMinHeight + 1*/)
+                            Vector3.Dot(curBlock.transform.localPosition, VARS.curUp) != curGasMinHeight + 2 &&
+                            Vector3.Dot(curBlock.transform.localPosition, VARS.curUp) != curGasMinHeight + 1*/)
                             {
                                 CurFluidBlockMoveLeftOrRight(i);
                             }
                             else
                             {
-                                tempFloat = Random.value;
+                                //tempFloat = Random.value;
+                                tempFloat1 = randomValues[curRandomValueByteIndex++];
 
                                 //moveDown
-                                if (tempFloat < (Vector3.Dot(curBlock.transform.localPosition, curUp) - curGasMinHeight) / (curGasMaxHeight - curGasMinHeight))
+                                if (tempFloat1 < ((Vector3.Dot(/*curBlock.transform.localPosition*/curCoordVector, VARS.curUp) - curGasMinHeight) / (curGasMaxHeight - curGasMinHeight)) /** 0.75*/)
                                 {
                                     CurBlockMove(i, 2);
                                 }
@@ -1191,80 +1240,31 @@ public class BlocksManager : MonoBehaviour
                         curLeftBlockTypeIndex = GetNearBlockTypeIndex(3);
                         curRightBlockTypeIndex = GetNearBlockTypeIndex(4);
 
-                        //verticalOrHorizontal
-                        //upOrDown, leftOrRight
-
-                        //if(curUpBlockTypeIndex==0 ||
-                        //    curDownBlockTypeIndex==0 ||
-                        //    curLeftBlockTypeIndex==0 ||
-                        //    curRightBlockTypeIndex==0)
-                        //{
-                        //    isCurMistBlockMoved = false;
-
-                        //    while (!isCurMistBlockMoved)
-                        //    {
-                        //        tempFloat = Random.value;
-
-                        //        if (tempFloat < 0.25f)
-                        //        {
-                        //            if (curUpBlockTypeIndex == 0)
-                        //            {
-                        //                if (Vector3.Dot(curCoordVector - curElectricMistCenterBlockCoordVector, curUp) < 7)
-                        //                    CurBlockMove(i, 1);
-
-                        //                isCurMistBlockMoved = true;
-                        //            }
-                        //        }
-                        //        else if (tempFloat >= 0.25f &&
-                        //            tempFloat < 0.5f)
-                        //        {
-                        //            if (curDownBlockTypeIndex == 0)
-                        //            {
-                        //                if (Vector3.Dot(curCoordVector - curElectricMistCenterBlockCoordVector, curUp) > -7)
-                        //                    CurBlockMove(i, 2);
-
-                        //                isCurMistBlockMoved = true;
-                        //            }
-                        //        }
-                        //        else if (tempFloat >= 0.5f &&
-                        //            tempFloat < 0.75f)
-                        //        {
-                        //            if (curLeftBlockTypeIndex == 0)
-                        //            {
-                        //                if (Vector3.Dot(curCoordVector - curElectricMistCenterBlockCoordVector, curRight) > -7)
-                        //                    CurBlockMove(i, 3);
-
-                        //                isCurMistBlockMoved = true;
-                        //            }
-                        //        }
-                        //        else if (tempFloat >= 0.75f)
-                        //        {
-                        //            if (curRightBlockTypeIndex == 0)
-                        //            {
-                        //                if (Vector3.Dot(curCoordVector - curElectricMistCenterBlockCoordVector, curRight) < 7)
-                        //                    CurBlockMove(i, 4);
-
-                        //                isCurMistBlockMoved = true;
-                        //            }
-                        //        }
-                        //    }
-                        //}
-
                         if (curUpBlockTypeIndex == 0 ||
                             curDownBlockTypeIndex == 0 ||
                             curLeftBlockTypeIndex == 0 ||
                             curRightBlockTypeIndex == 0)
                         {
-                            curElectricMistBlockDistances[0] = Vector3.Dot(curCoordVector - curElectricMistCenterBlockCoordVector, -curUp);
-                            curElectricMistBlockDistances[1] = Vector3.Dot(curCoordVector - curElectricMistCenterBlockCoordVector, curUp);
-                            curElectricMistBlockDistances[2] = Vector3.Dot(curCoordVector - curElectricMistCenterBlockCoordVector, curRight);
-                            curElectricMistBlockDistances[3] = Vector3.Dot(curCoordVector - curElectricMistCenterBlockCoordVector, -curRight);
+                            curElectricMistBlockDistances[0] = Vector3.Dot(curCoordVector - curElectricMistCenterBlockCoordVector, -VARS.curUp) - 1;
+                            curElectricMistBlockDistances[1] = Vector3.Dot(curCoordVector - curElectricMistCenterBlockCoordVector, VARS.curUp) + 1;
+                            curElectricMistBlockDistances[2] = Vector3.Dot(curCoordVector - curElectricMistCenterBlockCoordVector, VARS.curRight);
+                            curElectricMistBlockDistances[3] = Vector3.Dot(curCoordVector - curElectricMistCenterBlockCoordVector, -VARS.curRight);
 
                             isCurMistBlockMoved = false;
 
                             while (!isCurMistBlockMoved)
                             {
                                 tempFloat = Mathf.Max(curElectricMistBlockDistances[0], curElectricMistBlockDistances[1], curElectricMistBlockDistances[2], curElectricMistBlockDistances[3]);
+
+                                if (tempFloat > mistMaxDistance)
+                                {
+                                    //tempFloat1 = Random.value;
+                                    tempFloat1 = randomValues[curRandomValueByteIndex++];
+                                    if (tempFloat1 > 0.9f)
+                                    {
+                                        isCurMistBlockMoved = true;
+                                    }
+                                }
 
                                 //getCurElectricMistBlockGoingIndex
                                 if (tempFloat == curElectricMistBlockDistances[0])
@@ -1451,8 +1451,8 @@ public class BlocksManager : MonoBehaviour
                     {
                         //ifCatInPutOff
                         tempVector = catTransform.position - curBrokenFragileRustBlocks[i].transform.position;
-                        if (Mathf.Abs(Vector3.Dot(tempVector, curUp)) < gridBreadth &&
-                            Mathf.Abs(Vector3.Dot(tempVector, curRight)) < gridBreadth)
+                        if (Mathf.Abs(Vector3.Dot(tempVector, VARS.curUp)) < gridBreadth &&
+                            Mathf.Abs(Vector3.Dot(tempVector, VARS.curRight)) < gridBreadth)
                         {
                             curFragileRustBlockBrokenTimes[i] = Time.time;
                         }
@@ -1483,7 +1483,7 @@ public class BlocksManager : MonoBehaviour
 
             for (int j = curBlocks.Count - 1; j > i; j--)
             {
-                if (Vector3.Dot(curBlocks[j].transform.localPosition, curUp) < Vector3.Dot(curBlocks[j - 1].transform.localPosition, curUp))
+                if (Vector3.Dot(curBlocks[j].transform.localPosition, VARS.curUp) < Vector3.Dot(curBlocks[j - 1].transform.localPosition, VARS.curUp))
                 {
                     //curBlocks
                     tempGameObject = curBlocks[j];
@@ -1524,7 +1524,8 @@ public class BlocksManager : MonoBehaviour
         int n = curBlocks.Count;
         for (int i = n - 1; i > 0; i--)
         {
-            int j = Random.Range(0, i + 1);
+            //int j = Random.Range(0, i + 1);
+            int j = (int)(randomValues[curRandomValueByteIndex++] * (n - 1));
 
             //curBlocks
             tempGameObject = curBlocks[i];
@@ -1583,16 +1584,16 @@ public class BlocksManager : MonoBehaviour
         switch (dirIndex)
         {
             case 1:
-                nearCoordVector = curCoordVector + curUp;
+                nearCoordVector = curCoordVector + VARS.curUp;
                 break;
             case 2:
-                nearCoordVector = curCoordVector - curUp;
+                nearCoordVector = curCoordVector - VARS.curUp;
                 break;
             case 3:
-                nearCoordVector = curCoordVector - curRight;
+                nearCoordVector = curCoordVector - VARS.curRight;
                 break;
             case 4:
-                nearCoordVector = curCoordVector + curRight;
+                nearCoordVector = curCoordVector + VARS.curRight;
                 break;
         }
 
@@ -1640,8 +1641,8 @@ public class BlocksManager : MonoBehaviour
         }
         else
         {
-            upVector = curUp;
-            rightVector = curRight;
+            upVector = VARS.curUp;
+            rightVector = VARS.curRight;
         }
 
         if (dirIndex == 1)
@@ -1686,10 +1687,11 @@ public class BlocksManager : MonoBehaviour
     {
         if (curLeftBlockTypeIndex == 0 && curRightBlockTypeIndex == 0)
         {
-            tempFloat = Random.value;
+            //tempFloat = Random.value;
+            tempFloat1 = randomValues[curRandomValueByteIndex++];
 
             //moveLeft
-            if (tempFloat < 0.5f)
+            if (tempFloat1 < 0.5f)
             {
                 if (curLeftBlockTypeIndex == 0)
                 {

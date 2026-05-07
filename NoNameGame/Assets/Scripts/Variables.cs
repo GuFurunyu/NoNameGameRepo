@@ -33,6 +33,13 @@ public class Variables : MonoBehaviour
     #region DataManager
     [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
         "  \nDATAMANAGER\n --- ")]
+    //progressData
+    [SerializeField] private bool _isToWriteProgressData;
+    public bool IsToWriteProgressData { get { return _isToWriteProgressData; } set { _isToWriteProgressData = value; } }
+
+    [SerializeField] private bool _hasTwisted;
+    public bool HasTwisted { get { return _hasTwisted; } set { _hasTwisted = value; } }
+
     //keyCodesData
     [SerializeField] private bool _isToWriteKeyCodesData;
     public bool IsToWriteKeyCodesData { get { return _isToWriteKeyCodesData; } set { _isToWriteKeyCodesData = value; } }
@@ -60,6 +67,7 @@ public class Variables : MonoBehaviour
         {
             if (value == true)
             {
+                IsToWriteProgressData = true;
                 IsToWriteWorldData = true;
                 IsToWriteCatWorldData = true;
                 IsToWriteKeyCodesData = true;
@@ -280,6 +288,9 @@ public class Variables : MonoBehaviour
     public bool IsInitializingSight { get { return _isInitializingSight; } set { _isInitializingSight = value; } }
 
     //zoom
+    [SerializeField] private bool _isZoomEnabled;
+    public bool IsZoomEnabled { get { return _isZoomEnabled; } set { _isZoomEnabled = value; } }
+
     [SerializeField] private bool _isToZoomOut;
     public bool IsToZoomOut { get { return _isToZoomOut; } set { _isToZoomOut = value; } }
 
@@ -759,6 +770,11 @@ public class Variables : MonoBehaviour
     [SerializeField] private bool _isCatTriggerMainPartExecutable;
     public bool IsCatTriggerMainPartExecutable { get { return _isCatTriggerMainPartExecutable; } set { _isCatTriggerMainPartExecutable = value; } }
 
+    //void
+    public float lastIntoVoidTime;
+    [SerializeField] private bool _isJustIntoVoid;
+    public bool IsJustIntoVoid { get { return _isJustIntoVoid; } set { _isJustIntoVoid = value; } }
+
     //fragments
     [SerializeField] private bool _isToCarryAFragment;
     public bool IsToCarryAFragment { get { return _isToCarryAFragment; } set { _isToCarryAFragment = value; } }
@@ -927,6 +943,9 @@ public class Variables : MonoBehaviour
 
     //catIniPosition
     public Vector3 catIniPosition;
+
+    [SerializeField] private bool _isJustReborn;
+    public bool IsJustReborn { get { return _isJustReborn; } set { _isJustReborn = value; } }
     #endregion
 
     #region BlocksManager
@@ -940,6 +959,9 @@ public class Variables : MonoBehaviour
     public float blocksManagerFixedDeltaTime;
     public float curBlocksManagerFluidContinuousnessFixedDeltaTime;
     public float curBlocksManagerFluidContinuousnessLastUpdatedTime;
+
+    ////randomValue
+    //public byte curRandomValueByteIndex;
 
     //curBlocks
     public List<GameObject> curBlocks = new List<GameObject>();
@@ -1001,6 +1023,9 @@ public class Variables : MonoBehaviour
     #region MinimapManager
     [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
         "  \nMINIMAPMANAGER\n --- ")]
+    //executability
+    [SerializeField] private bool _isMinimapMainPartExecutable;
+    public bool IsMinimapMainPartExecutable { get { return _isMinimapMainPartExecutable; } set { _isMinimapMainPartExecutable = value; } }
 
     [SerializeField] private bool _isInMinimap;
     public bool IsInMinimap { get { return _isInMinimap; } set { _isInMinimap = value; } }

@@ -22,9 +22,15 @@ public static class EDIAutoLinkerForPrefabsToConstantsList
         {"SavePointBlock", "savePoints" },
         {"KeyBlock","keys" },
         {"LockedBlock", "locks" },
-        {"MinimapGate", "minimapGates" },
-        {"MinimapKey","minimapKeys" },
-        {"MinimapLock","minimapLocks" }
+        //{"MinimapRedFragment","minimapRedFragments" },
+        //{"MinimapYellowFragment","minimapYellowFragments" },
+        //{"MinimapBlueFragment","minimapBlueFragments" },
+        //{"MinimapOrangeFragment","minimapOrangeFragments" },
+        //{"MinimapGreenFragment","minimapGreenFragments" },
+        //{"MinimapPurpleFragment","minimapPurpleFragments" },
+        {"MinimapBigGate", "minimapGates" },
+        {"MinimapBigKey","minimapKeys" },
+        {"MinimapBigLock","minimapLocks" }
         // ø…¿©’π
         // { "NewPrefabName", "targetListFieldName" },
     };

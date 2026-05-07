@@ -13,14 +13,9 @@ public class CatTrigger : MonoBehaviour
 
     GameObject gameManager;
 
-    //strawberry
-    public List<Vector3> carriedStrawberriesIniPositions = new List<Vector3>();
-    //float strawberriesRotationStartTime;
-
-    //energyCrystal
-    public List<GameObject> gotEnergyCrystals = new List<GameObject>();
-    public List<float> energyCrystalGotTimes = new List<float>();
-    public bool isAllGotEnergyCrystalsRespawned;
+    //fragment
+    public float curNearestMinimapFragmentDistance;
+    public int curNearestMinimapFragmentIndex;
 
     //edgeGate
     public float curNearestEdgeGateDistance;
@@ -36,9 +31,20 @@ public class CatTrigger : MonoBehaviour
     GameObject storedSavePointBlock;
     //GameObject storedActivatedSavePointBlock;
 
-    //minimapLock
+    //minimapKeyAndLock
+    float curNearestMinimapKeyDistance;
+    int curNearesetMinimapKeyIndex;
     float curNearestMinimapLockDistance;
     int curNearestMinimapLockIndex;
+
+    //strawberry
+    public List<Vector3> carriedStrawberriesIniPositions = new List<Vector3>();
+    //float strawberriesRotationStartTime;
+
+    //energyCrystal
+    public List<GameObject> gotEnergyCrystals = new List<GameObject>();
+    public List<float> energyCrystalGotTimes = new List<float>();
+    public bool isAllGotEnergyCrystalsRespawned;
 
     int tempInt;
     float tempFloat;
@@ -98,8 +104,17 @@ public class CatTrigger : MonoBehaviour
 
     GameObject[] minimapRoomPlanes = new GameObject[54];
 
+    List<GameObject> minimapRedFragments = new List<GameObject>();
+    List<GameObject> minimapYellowFragments = new List<GameObject>();
+    List<GameObject> minimapBlueFragments = new List<GameObject>();
+    List<GameObject> minimapOrangeFragments = new List<GameObject>();
+    List<GameObject> minimapGreenFragments = new List<GameObject>();
+    List<GameObject> minimapPurpleFragments = new List<GameObject>();
+
     List<GameObject> minimapKeys = new List<GameObject>();
     List<GameObject> minimapLocks = new List<GameObject>();
+
+    Material minimapCollectibleCollectedColor;
     #endregion
 
     #region VariablesUsed
@@ -188,8 +203,15 @@ public class CatTrigger : MonoBehaviour
         energyCrystalPower = CONS.energyCrystalPower;
         energyCrystalRespawnTime = CONS.energyCrystalRespawnTime;
         minimapRoomPlanes = CONS.minimapRoomPlanes;
+        minimapRedFragments = CONS.minimapRedFragments;
+        minimapYellowFragments = CONS.minimapYellowFragments;
+        minimapBlueFragments = CONS.minimapBlueFragments;
+        minimapOrangeFragments = CONS.minimapOrangeFragments;
+        minimapGreenFragments = CONS.minimapGreenFragments;
+        minimapPurpleFragments = CONS.minimapPurpleFragments;
         minimapKeys = CONS.minimapKeys;
         minimapLocks = CONS.minimapLocks;
+        minimapCollectibleCollectedColor = CONS.minimapCollectibleCollectedColor;
         #endregion
 
         #region ImportReferenceVariables
@@ -413,35 +435,53 @@ public class CatTrigger : MonoBehaviour
             {
                 //VARS.curCarriedKey = VARS.curTriggerTile;
                 VARS.curCarriedKey = VARS.curKey;
+                //Debug.Log("curCarriedKeyIsNull: " + VARS.curCarriedKey == null);
+                //Debug.Log("curCarriedKeyIniParentIsNull: " + VARS.curCarriedKeyIniParent == null);
                 VARS.curCarriedKeyIniParent = VARS.curCarriedKey.transform.parent.gameObject;
                 VARS.curCarriedKeyIniLocalPosition = VARS.curCarriedKey.transform.localPosition;
                 VARS.curCarriedKey.transform.SetParent(null, true);
                 VARS.curCarriedKeyIniRoomIndex = VARS.curRoomIndex;
 
+                VARS.curCarriedKey.GetComponent<TileData>().isNotToBeDetected = true;
+
                 //minimapKey
+                //for (int i = 0; i < minimapKeys.Count; i++)
+                //{
+                //    if (minimapKeys[i].activeSelf)
+                //    {
+                //        tempGameObject = minimapKeys[i].transform.parent.parent.gameObject;
+
+                //        for (int j = 0; j < 54; j++)
+                //        {
+                //            if (tempGameObject == minimapRoomPlanes[j])
+                //            {
+                //                tempInt = j;
+                //                break;
+                //            }
+                //        }
+
+                //        if (tempInt == VARS.curCarriedKeyIniRoomIndex)
+                //        {
+                //            VARS.curMinimapKey = minimapKeys[i];
+                //            break;
+                //        }
+                //    }
+                //}
+                //VARS.curMinimapKey.SetActive(false);
+                curNearestMinimapKeyDistance = 999;
+                tempVector = UFL.Vector3WorldToMinimap(VARS.curCarriedKey.transform.position);
                 for (int i = 0; i < minimapKeys.Count; i++)
                 {
-                    if (minimapKeys[i].activeSelf)
+                    tempFloat = Vector3.Distance(minimapKeys[i].transform.position, tempVector);
+                    if (tempFloat < curNearestMinimapKeyDistance)
                     {
-                        tempGameObject = minimapKeys[i].transform.parent.parent.gameObject;
-
-                        for (int j = 0; j < 54; j++)
-                        {
-                            if (tempGameObject == minimapRoomPlanes[j])
-                            {
-                                tempInt = j;
-                                break;
-                            }
-                        }
-
-                        if (tempInt == VARS.curCarriedKeyIniRoomIndex)
-                        {
-                            VARS.curMinimapKey = minimapKeys[i];
-                            break;
-                        }
+                        curNearestMinimapKeyDistance = tempFloat;
+                        curNearesetMinimapKeyIndex = i;
                     }
                 }
-                VARS.curMinimapKey.SetActive(false);
+                VARS.curMinimapKey = minimapKeys[curNearesetMinimapKeyIndex];
+                VARS.curMinimapKey.GetComponent<MeshRenderer>().material = minimapCollectibleCollectedColor;
+
 
                 VARS.IsCarryingAKey = true;
 
@@ -451,9 +491,9 @@ public class CatTrigger : MonoBehaviour
             }
             if (VARS.IsCarryingAKey)
             {
+                //follow
                 tempVector = VARS.curCarriedKey.transform.position - catTransform.position - VARS.roomStableForwards[VARS.curRoomIndex] * 0.1f;
                 tempFloat = Vector3.Magnitude(tempVector);
-
                 if (tempFloat > keyDistance * 1.5f)
                 {
                     VARS.curCarriedKey.transform.position += -tempVector.normalized * keySpeed * tempFloat * Time.deltaTime;
@@ -527,7 +567,8 @@ public class CatTrigger : MonoBehaviour
                             curNearestMinimapLockIndex = i;
                         }
                     }
-                    minimapLocks[curNearestMinimapLockIndex].GetComponent<MeshRenderer>().material = connectedGateColor;
+                    //minimapLocks[curNearestMinimapLockIndex].GetComponent<MeshRenderer>().material = connectedGateColor;
+                    minimapLocks[curNearestMinimapLockIndex].SetActive(false);
 
                     //minimapDeactivate
                     for (int i = 0; i < minimapKeys.Count; i++)
@@ -560,6 +601,34 @@ public class CatTrigger : MonoBehaviour
                 curCarriedFragmentIniLocalPositions.Add(VARS.curToBeCarriedFragment.transform.localPosition);
                 VARS.curToBeCarriedFragment.transform.SetParent(null, true);
 
+                VARS.curToBeCarriedFragment.GetComponent<TileData>().isNotToBeDetected = true;
+
+                //minimap
+                if (VARS.curToBeCarriedFragmentFaceIndex == 1)
+                {
+                    minimapYellowFragments[VARS.curToBeCarriedFragmentIndex - 1].GetComponent<MeshRenderer>().material = minimapCollectibleCollectedColor;
+                }
+                else if (VARS.curToBeCarriedFragmentFaceIndex == 2)
+                {
+                    minimapPurpleFragments[VARS.curToBeCarriedFragmentIndex - 1].GetComponent<MeshRenderer>().material = minimapCollectibleCollectedColor;
+                }
+                else if (VARS.curToBeCarriedFragmentFaceIndex == 3)
+                {
+                    minimapOrangeFragments[VARS.curToBeCarriedFragmentIndex - 1].GetComponent<MeshRenderer>().material = minimapCollectibleCollectedColor;
+                }
+                else if (VARS.curToBeCarriedFragmentFaceIndex == 4)
+                {
+                    minimapBlueFragments[VARS.curToBeCarriedFragmentIndex - 1].GetComponent<MeshRenderer>().material = minimapCollectibleCollectedColor;
+                }
+                else if (VARS.curToBeCarriedFragmentFaceIndex == 5)
+                {
+                    minimapGreenFragments[VARS.curToBeCarriedFragmentIndex - 1].GetComponent<MeshRenderer>().material = minimapCollectibleCollectedColor;
+                }
+                else if (VARS.curToBeCarriedFragmentFaceIndex == 6)
+                {
+                    minimapRedFragments[VARS.curToBeCarriedFragmentIndex - 1].GetComponent<MeshRenderer>().material = minimapCollectibleCollectedColor;
+                }
+
                 VARS.IsToCarryAFragment = false;
                 VARS.IsCarryingFragments = true;
             }
@@ -569,8 +638,10 @@ public class CatTrigger : MonoBehaviour
                 //follow
                 for (int i = 0; i < curCarriedFragments.Count; i++)
                 {
-                    if (!VARS.IsEmbeddingFragments &&
-                        curCarriedFragmentFaceIndexes[i] == VARS.curFaceIndex)
+                    //if (!VARS.IsEmbeddingFragments &&
+                    //    curCarriedFragmentFaceIndexes[i] == VARS.curFaceIndex)
+                    if (!VARS.IsEmbeddingFragments ||
+                        curCarriedFragmentFaceIndexes[i] != VARS.curFaceIndex)
                     {
                         tempVector = curCarriedFragments[i].transform.position - catTransform.position - VARS.roomStableForwards[VARS.curRoomIndex] * 0.1f;
                         tempFloat = Vector3.Magnitude(tempVector);
@@ -843,13 +914,15 @@ public class CatTrigger : MonoBehaviour
                 gotEnergyCrystals.Add(curTriggerTile);
                 energyCrystalGotTimes.Add(Time.time);
 
-                curTriggerTile.transform.localScale = Vector3.one * 0.2f;
+                //curTriggerTile.transform.localScale = Vector3.one * 0.2f;
+                curTriggerTile.SetActive(false);
 
-                VARS.curEnergy += energyCrystalPower;
-                if (VARS.curEnergy > maxEnergy + VARS.maxEnergyBonus)
-                {
-                    VARS.curEnergy = maxEnergy + VARS.maxEnergyBonus;
-                }
+                //VARS.curEnergy += energyCrystalPower;
+                //if (VARS.curEnergy > maxEnergy + VARS.maxEnergyBonus)
+                //{
+                //    VARS.curEnergy = maxEnergy + VARS.maxEnergyBonus;
+                //}
+                VARS.curTargetEnergy += energyCrystalPower;
 
                 VARS.IsGettingAnEnergyCrystal = false;
             }
@@ -860,13 +933,22 @@ public class CatTrigger : MonoBehaviour
 
                 for (int i = 0; i < gotEnergyCrystals.Count; i++)
                 {
-                    if (gotEnergyCrystals[i].transform.localScale == Vector3.one * 0.2f)
+                    //if (gotEnergyCrystals[i].transform.localScale == Vector3.one * 0.2f)
+                    //{
+                    //    isAllGotEnergyCrystalsRespawned = false;
+
+                    //    if (Time.time - energyCrystalGotTimes[i] > energyCrystalRespawnTime)
+                    //    {
+                    //        gotEnergyCrystals[i].transform.localScale = Vector3.one;
+                    //    }
+                    //}
+                    if (gotEnergyCrystals[i].activeSelf == false)
                     {
                         isAllGotEnergyCrystalsRespawned = false;
-
+                        
                         if (Time.time - energyCrystalGotTimes[i] > energyCrystalRespawnTime)
                         {
-                            gotEnergyCrystals[i].transform.localScale = Vector3.one;
+                            gotEnergyCrystals[i].SetActive(true);
                         }
                     }
                 }

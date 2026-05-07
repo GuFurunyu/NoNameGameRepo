@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks.Sources;
 using UnityEngine;
+using UnityEngine.Video;
 
 [DefaultExecutionOrder((int)ScriptsExecutionOrder.ExecutionOrder.catDeath)]
 public class CatDeath : MonoBehaviour
@@ -28,6 +29,21 @@ public class CatDeath : MonoBehaviour
     float maxEnergy;
 
     GameObject storedVoidBlocksEmpty;
+
+    List<GameObject> minimapRedFragments = new List<GameObject>();
+    List<GameObject> minimapYellowFragments = new List<GameObject>();
+    List<GameObject> minimapBlueFragments = new List<GameObject>();
+    List<GameObject> minimapOrangeFragments = new List<GameObject>();
+    List<GameObject> minimapGreenFragments = new List<GameObject>();
+    List<GameObject> minimapPurpleFragments = new List<GameObject>();
+
+    Material minimapKeyColor;
+    Material minimapRedFragmentColor;
+    Material minimapYellowFragmentColor;
+    Material minimapBlueFragmentColor;
+    Material minimapOrangeFragmentColor;
+    Material minimapGreenFragmentColor;
+    Material minimapPurpleFragmentColor;
     #endregion
 
     #region VariablesUsed
@@ -69,6 +85,19 @@ public class CatDeath : MonoBehaviour
         catIniPositionPoint = CONS.catIniPositionPoint;
         maxEnergy = CONS.maxEnergy;
         storedVoidBlocksEmpty = CONS.storedVoidBlocksEmpty;
+        minimapRedFragments = CONS.minimapRedFragments;
+        minimapYellowFragments = CONS.minimapYellowFragments;
+        minimapBlueFragments = CONS.minimapBlueFragments;
+        minimapOrangeFragments = CONS.minimapOrangeFragments;
+        minimapGreenFragments = CONS.minimapGreenFragments;
+        minimapPurpleFragments = CONS.minimapPurpleFragments;
+        minimapKeyColor = CONS.minimapKeyColor;
+        minimapRedFragmentColor = CONS.minimapRedFragmentColor;
+        minimapYellowFragmentColor = CONS.minimapYellowFragmentColor;
+        minimapBlueFragmentColor = CONS.minimapBlueFragmentColor;
+        minimapOrangeFragmentColor = CONS.minimapOrangeFragmentColor;
+        minimapGreenFragmentColor = CONS.minimapGreenFragmentColor;
+        minimapPurpleFragmentColor = CONS.minimapPurpleFragmentColor;
         #endregion
 
         #region ImportReferenceVariables
@@ -115,7 +144,7 @@ public class CatDeath : MonoBehaviour
     }
     void Die()
     {
-        UFL.DebugLog("die");
+        //UFL.DebugLog("die");
 
         ////turnIntoVoid
         //storedVoidBlocks[curStoredVoidBlockIndex].transform.position = new Vector3
@@ -204,7 +233,10 @@ public class CatDeath : MonoBehaviour
             VARS.curCarriedKey.transform.parent = VARS.curCarriedKeyIniParent.transform;
             VARS.curCarriedKey.transform.localPosition = VARS.curCarriedKeyIniLocalPosition;
 
-            VARS.curMinimapKey.SetActive(true);
+            VARS.curCarriedKey.GetComponent<TileData>().isNotToBeDetected = false;
+
+            //VARS.curMinimapKey.SetActive(true);
+            VARS.curMinimapKey.GetComponent<MeshRenderer>().material = minimapKeyColor;
 
             VARS.curCarriedKey = null;
 
@@ -217,6 +249,34 @@ public class CatDeath : MonoBehaviour
             {
                 curCarriedFragments[i].transform.parent = curCarriedFragmentIniParents[i].transform;
                 curCarriedFragments[i].transform.localPosition = VARS.curCarriedFragmentIniLocalPositions[i];
+
+                curCarriedFragments[i].GetComponent<TileData>().isNotToBeDetected = false;
+
+                //minimap
+                if (curCarriedFragmentFaceIndexes[i] == 1)
+                {
+                    minimapYellowFragments[curCarriedFragmentIndexes[i] - 1].GetComponent<MeshRenderer>().material = minimapYellowFragmentColor;
+                }
+                else if (curCarriedFragmentFaceIndexes[i] == 2)
+                {
+                    minimapPurpleFragments[curCarriedFragmentIndexes[i] - 1].GetComponent<MeshRenderer>().material = minimapPurpleFragmentColor;
+                }
+                else if (curCarriedFragmentFaceIndexes[i] == 3)
+                {
+                    minimapOrangeFragments[curCarriedFragmentIndexes[i] - 1].GetComponent<MeshRenderer>().material = minimapOrangeFragmentColor;
+                }
+                else if (curCarriedFragmentFaceIndexes[i] == 4)
+                {
+                    minimapBlueFragments[curCarriedFragmentIndexes[i] - 1].GetComponent<MeshRenderer>().material = minimapBlueFragmentColor;
+                }
+                else if (curCarriedFragmentFaceIndexes[i] == 5)
+                {
+                    minimapGreenFragments[curCarriedFragmentIndexes[i] - 1].GetComponent<MeshRenderer>().material = minimapGreenFragmentColor;
+                }
+                else if (curCarriedFragmentFaceIndexes[i] == 6)
+                {
+                    minimapRedFragments[curCarriedFragmentIndexes[i] - 1].GetComponent<MeshRenderer>().material = minimapGreenFragmentColor;
+                }
             }
 
             curCarriedFragments.Clear();
@@ -253,6 +313,8 @@ public class CatDeath : MonoBehaviour
         VARS.catCurElectricity = 0;
         VARS.catCurToxicity = 0;
 
+        VARS.curFacingDirectionIndex = 0;
+
         VARS.IsToInitializeSight = true;
 
         VARS.outIniRotationStartTime = 0.1f;
@@ -271,6 +333,10 @@ public class CatDeath : MonoBehaviour
         VARS.IsToLoseCarriedStrawberries = true;
 
         //VARS.IsIntoNewRoom = true;
+
+        VARS.IsInAcce = false;
+
+        VARS.IsJustReborn = true;
 
         VARS.IsInNewRoomCameraManagerResetOver = false;
         VARS.IsInNewRoomCatRotateResetOver = false;

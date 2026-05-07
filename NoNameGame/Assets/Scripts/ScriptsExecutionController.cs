@@ -46,11 +46,12 @@ public class ScriptsExecutionController : MonoBehaviour
             !VARS.IsTwisting &&
             !VARS.IsInMinimap &&
             !VARS.IsOptionPanelActivated &&
-            !VARS.IsExiting &&
             !VARS.IsEdgeGateTriggered &&
             !(VARS.IsJustEnterNewFace &&
             (VARS.IsInUpEdgeGate ||
-            VARS.IsInDownEdgeGate));
+            VARS.IsInDownEdgeGate)) &&
+            !VARS.IsJustReborn &&
+            !VARS.IsExiting;
 
         //catRotate
         VARS.IsCatRotateMainPartExecutable =
@@ -64,13 +65,15 @@ public class ScriptsExecutionController : MonoBehaviour
             VARS.IsInNewRoomAllResetOver &&
             !VARS.IsRotating &&
             !VARS.IsTwisting &&
+            !VARS.IsJustIntoVoid &&
             !VARS.IsInAcce &&
             !VARS.IsInHotState &&
             !VARS.IsInColdState &&
             !VARS.IsInElectricState &&
             !VARS.IsInToxicState &&
             (VARS.IsOnGround ||
-            VARS.IsInLiquid) &&
+            VARS.IsInLiquid ||
+            VARS.IsJustReborn) &&
             !VARS.IsExiting;
 
         //catTrigger
@@ -87,6 +90,13 @@ public class ScriptsExecutionController : MonoBehaviour
             !VARS.IsRotating &&
             !VARS.IsTwisting &&
             !VARS.IsExiting;
+
+        //minimapManager
+        VARS.IsMinimapMainPartExecutable =
+            VARS.IsInNewRoomAllResetOver &&
+            !VARS.IsZoomedOut &&
+            !VARS.IsOptionPanelActivated /*&&
+            !VARS.IsInCenter*/;
 
         //optionsManager
         VARS.IsOptionsManagerActivationExecutable =

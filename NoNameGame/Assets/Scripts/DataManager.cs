@@ -14,6 +14,13 @@ public class DataManager : MonoBehaviour
 
     GameObject gameManager;
 
+    public class ProgressData
+    {
+        public bool hasTwisted;
+    }
+
+    ProgressData curProgressData = new ProgressData();
+
     public class WorldData
     {
         //rooms
@@ -130,8 +137,17 @@ public class DataManager : MonoBehaviour
     GameObject[] minimapRoomPlanes = new GameObject[54];
     GameObject[] minimapTwistingCenters = new GameObject[6];
 
+    List<GameObject> minimapRedFragments = new List<GameObject>();
+    List<GameObject> minimapYellowFragments = new List<GameObject>();
+    List<GameObject> minimapBlueFragments = new List<GameObject>();
+    List<GameObject> minimapOrangeFragments = new List<GameObject>();
+    List<GameObject> minimapGreenFragments = new List<GameObject>();
+    List<GameObject> minimapPurpleFragments = new List<GameObject>();
+
     List<GameObject> minimapKeys = new List<GameObject>();
     List<GameObject> minimapLocks = new List<GameObject>();
+
+    Material minimapCollectibleCollectedColor;
 
     Material connectedGateColor;
 
@@ -187,8 +203,15 @@ public class DataManager : MonoBehaviour
         minimapFaces = CONS.minimapFaces;
         minimapRoomPlanes = CONS.minimapRoomPlanes;
         minimapTwistingCenters = CONS.minimapTwistingCenters;
+        minimapRedFragments = CONS.minimapRedFragments;
+        minimapYellowFragments = CONS.minimapYellowFragments;
+        minimapBlueFragments = CONS.minimapBlueFragments;
+        minimapOrangeFragments = CONS.minimapOrangeFragments;
+        minimapGreenFragments = CONS.minimapGreenFragments;
+        minimapPurpleFragments = CONS.minimapPurpleFragments;
         minimapKeys = CONS.minimapKeys;
         minimapLocks = CONS.minimapLocks;
+        minimapCollectibleCollectedColor = CONS.minimapCollectibleCollectedColor;
         connectedGateColor = CONS.connectedGateColor;
         catTransform = CONS.catTransform;
         catIniPositionPoint = CONS.catIniPositionPoint;
@@ -208,6 +231,8 @@ public class DataManager : MonoBehaviour
         isCenterFulfilled = VARS.isCenterFulfilled;
         #endregion
 
+        ReadProgressData();
+
         ReadWorldData();
 
         //WriteCatWorldData();
@@ -221,6 +246,13 @@ public class DataManager : MonoBehaviour
     {
         #region ImportValueVariables
         #endregion
+
+        if (VARS.IsToWriteProgressData)
+        {
+            WriteProgressData();
+
+            VARS.IsToWriteProgressData = false;
+        }
 
         if (VARS.IsToWriteWorldData)
         {
@@ -245,6 +277,33 @@ public class DataManager : MonoBehaviour
 
         VARS.IsWritingAllData = false;
     }
+
+    #region ProgressData
+    void ReadProgressData()
+    {
+        tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "ProgressData.txt");
+
+        if (File.Exists(tempPath))
+        {
+            tempJsonString = File.ReadAllText(tempPath);
+            curProgressData = JsonUtility.FromJson<ProgressData>(tempJsonString);
+
+            VARS.HasTwisted = curProgressData.hasTwisted;
+        }
+
+    }
+
+    void WriteProgressData()
+    {
+        tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "ProgressData.txt");
+
+        curProgressData.hasTwisted = VARS.HasTwisted;
+
+        tempJsonString = JsonUtility.ToJson(curProgressData);
+
+        File.WriteAllText(tempPath, tempJsonString);
+    }
+    #endregion
 
     #region WorldData
     void ReadWorldData()
@@ -391,14 +450,16 @@ public class DataManager : MonoBehaviour
             {
                 if (curCatWorldData.deactivatedMinimapKeyIndexes.Contains(i))
                 {
-                    minimapKeys[i].SetActive(false);
+                    //minimapKeys[i].SetActive(false);
+                    minimapKeys[i].GetComponent<MeshRenderer>().material = minimapCollectibleCollectedColor;
                 }
             }
             for (int i = 0; i < minimapLocks.Count; i++)
             {
                 if (curCatWorldData.deactivatedMinimapLockIndexes.Contains(i))
                 {
-                    minimapLocks[i].GetComponent<MeshRenderer>().material = connectedGateColor;
+                    //minimapLocks[i].GetComponent<MeshRenderer>().material = connectedGateColor;
+                    minimapLocks[i].SetActive(false);
                 }
             }
 
@@ -415,7 +476,7 @@ public class DataManager : MonoBehaviour
             {
                 if (isRedFragmentsEmbeded[redFragments[i].GetComponent<TileData>().fragmentIndex - 1])
                 {
-                    redFragments[i].transform.position = curCatWorldData.redEmbededFragmentPositions[i];
+                    redFragments[i].transform.position = curCatWorldData.redEmbededFragmentPositions[redFragments[i].GetComponent<TileData>().fragmentIndex - 1];
                     for (int j = 0; j < 9; j++)
                     {
                         redFragments[i].transform.GetChild(j).gameObject.SetActive(j > 2);
@@ -427,7 +488,7 @@ public class DataManager : MonoBehaviour
             {
                 if (isYellowFragmentsEmbeded[yellowFragments[i].GetComponent<TileData>().fragmentIndex - 1])
                 {
-                    yellowFragments[i].transform.position = curCatWorldData.yellowEmbededFragmentPositions[i];
+                    yellowFragments[i].transform.position = curCatWorldData.yellowEmbededFragmentPositions[yellowFragments[i].GetComponent<TileData>().fragmentIndex - 1];
                     for (int j = 0; j < 9; j++)
                     {
                         yellowFragments[i].transform.GetChild(j).gameObject.SetActive(j > 2);
@@ -439,7 +500,7 @@ public class DataManager : MonoBehaviour
             {
                 if (isBlueFragmentsEmbeded[blueFragments[i].GetComponent<TileData>().fragmentIndex - 1])
                 {
-                    blueFragments[i].transform.position = curCatWorldData.blueEmbededFragmentPositions[i];
+                    blueFragments[i].transform.position = curCatWorldData.blueEmbededFragmentPositions[blueFragments[i].GetComponent<TileData>().fragmentIndex - 1];
                     for (int j = 0; j < 9; j++)
                     {
                         blueFragments[i].transform.GetChild(j).gameObject.SetActive(j > 2);
@@ -451,7 +512,7 @@ public class DataManager : MonoBehaviour
             {
                 if (isOrangeFragmentsEmbeded[orangeFragments[i].GetComponent<TileData>().fragmentIndex - 1])
                 {
-                    orangeFragments[i].transform.position = curCatWorldData.orangeEmbededFragmentPositions[i];
+                    orangeFragments[i].transform.position = curCatWorldData.orangeEmbededFragmentPositions[orangeFragments[i].GetComponent<TileData>().fragmentIndex - 1];
                     for (int j = 0; j < 9; j++)
                     {
                         orangeFragments[i].transform.GetChild(j).gameObject.SetActive(j > 2);
@@ -463,7 +524,7 @@ public class DataManager : MonoBehaviour
             {
                 if (isGreenFragmentsEmbeded[greenFragments[i].GetComponent<TileData>().fragmentIndex - 1])
                 {
-                    greenFragments[i].transform.position = curCatWorldData.greenEmbededFragmentPositions[i];
+                    greenFragments[i].transform.position = curCatWorldData.greenEmbededFragmentPositions[greenFragments[i].GetComponent<TileData>().fragmentIndex - 1];
                     for (int j = 0; j < 9; j++)
                     {
                         greenFragments[i].transform.GetChild(j).gameObject.SetActive(j > 2);
@@ -475,12 +536,54 @@ public class DataManager : MonoBehaviour
             {
                 if (isPurpleFragmentsEmbeded[purpleFragments[i].GetComponent<TileData>().fragmentIndex - 1])
                 {
-                    purpleFragments[i].transform.position = curCatWorldData.purpleEmbededFragmentPositions[i];
+                    purpleFragments[i].transform.position = curCatWorldData.purpleEmbededFragmentPositions[purpleFragments[i].GetComponent<TileData>().fragmentIndex - 1];
                     for (int j = 0; j < 9; j++)
                     {
                         purpleFragments[i].transform.GetChild(j).gameObject.SetActive(j > 2);
                     }
                     purpleFragments[i].transform.SetParent(roomPlanes[13].transform.GetChild(0), true);
+                }
+            }
+            for (int i = 0; i < minimapRedFragments.Count; i++)
+            {
+                if (isRedFragmentsEmbeded[i])
+                {
+                    minimapRedFragments[i].GetComponent<MeshRenderer>().material = minimapCollectibleCollectedColor;
+                }
+            }
+            for (int i = 0; i < minimapYellowFragments.Count; i++)
+            {
+                if (isYellowFragmentsEmbeded[i])
+                {
+                    minimapYellowFragments[i].GetComponent<MeshRenderer>().material = minimapCollectibleCollectedColor;
+                }
+            }
+            for (int i = 0; i < minimapBlueFragments.Count; i++)
+            {
+                if (isBlueFragmentsEmbeded[i])
+                {
+                    minimapBlueFragments[i].GetComponent<MeshRenderer>().material = minimapCollectibleCollectedColor;
+                }
+            }
+            for (int i = 0; i < minimapOrangeFragments.Count; i++)
+            {
+                if (isOrangeFragmentsEmbeded[i])
+                {
+                    minimapOrangeFragments[i].GetComponent<MeshRenderer>().material = minimapCollectibleCollectedColor;
+                }
+            }
+            for (int i = 0; i < minimapGreenFragments.Count; i++)
+            {
+                if (isGreenFragmentsEmbeded[i])
+                {
+                    minimapGreenFragments[i].GetComponent<MeshRenderer>().material = minimapCollectibleCollectedColor;
+                }
+            }
+            for (int i = 0; i < minimapPurpleFragments.Count; i++)
+            {
+                if (isPurpleFragmentsEmbeded[i])
+                {
+                    minimapPurpleFragments[i].GetComponent<MeshRenderer>().material = minimapCollectibleCollectedColor;
                 }
             }
 

@@ -17,6 +17,8 @@ public class CatEnergy : MonoBehaviour
     float onGroundEnergyRestoreSpeed;
 
     float curEnergyChangeToTargetEnergySpeed;
+
+    float intoVoidGapTime;
     #endregion
 
     #region VariablesUsed
@@ -41,6 +43,7 @@ public class CatEnergy : MonoBehaviour
         maxEnergy = CONS.maxEnergy;
         onGroundEnergyRestoreSpeed = CONS.onGroundEnergyRestoreSpeed;
         curEnergyChangeToTargetEnergySpeed = CONS.curEnergyChangeToTargetEnergySpeed;
+        intoVoidGapTime = CONS.intoVoidGapTime;
         #endregion
 
         #region ImportReferenceVariables
@@ -96,12 +99,21 @@ public class CatEnergy : MonoBehaviour
             //UFL.SetCurTargetEnergy(maxEnergy + VARS.maxEnergyBonus);
             VARS.curTargetEnergy = maxEnergy + VARS.maxEnergyBonus;
         }
-        else if (VARS.curTargetEnergy < 0)
-        {
-            //UFL.SetCurTargetEnergy(0);
-            VARS.curTargetEnergy = 0;
-        }
+        //else if (VARS.curTargetEnergy < 0)
+        //{
+        //    //UFL.SetCurTargetEnergy(0);
+        //    VARS.curTargetEnergy = 0;
+        //}
         #endregion
+
+        //justIntoVoid
+        if (VARS.IsJustIntoVoid)
+        {
+            if (Time.time - VARS.lastIntoVoidTime > intoVoidGapTime)
+            {
+                VARS.IsJustIntoVoid = false;
+            }
+        }
 
         #region OnGroundOrInLiquidReset
         if (VARS.IsCatEnergyResetExecutable)
@@ -121,9 +133,16 @@ public class CatEnergy : MonoBehaviour
         //ifOutOfEnergyDie
         if (VARS.curEnergy <= 0)
         {
-            UFL.DebugLog("outOfEnergy");
+            //UFL.DebugLog("outOfEnergy");
 
             VARS.IsToDie = true;
+        }
+
+        //rebornOver
+        if (VARS.IsJustReborn &&
+            VARS.curTargetEnergy == maxEnergy + VARS.maxEnergyBonus)
+        {
+            VARS.IsJustReborn = false;
         }
 
         //VARS.curEnergy = curEnergy;
