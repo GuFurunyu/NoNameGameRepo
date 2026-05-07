@@ -51,11 +51,16 @@ public class CatTrigger : MonoBehaviour
     float tempFloat1;
     float tempFloat2;
     Vector3 tempVector;
+    Vector3 tempVector1;
+    Vector3 tempVector2;
     Transform tempTransform;
     GameObject tempGameObject;
 
     #region ConstantsUsed
     GameObject[] faces = new GameObject[6];
+
+    Vector3[] faceStableUps = new Vector3[6];
+    Vector3[] faceStableRights = new Vector3[6];
 
     Transform camTransform;
 
@@ -72,7 +77,7 @@ public class CatTrigger : MonoBehaviour
     float absorbingEnergyFragmentWaitingTime;
 
     GameObject[] energyFragments = new GameObject[6];
-    GameObject[] holeBlocks = new GameObject[6];
+    //GameObject[] holeBlocks = new GameObject[6];
 
     float throughEdgeGateGapTime;
 
@@ -136,7 +141,7 @@ public class CatTrigger : MonoBehaviour
     List<Vector3> curCarriedFragmentIniLocalPositions = new List<Vector3>();
 
     List<int> curToBeEmbededFragmentIndexes = new List<int>();
-    List<Vector3> curToBeEmbededFragmentPositions = new List<Vector3>();
+    List<Vector3> curToBeEmbededFragmentLocalPositions = new List<Vector3>();
 
     GameObject curPlaneEmpty;
 
@@ -175,6 +180,8 @@ public class CatTrigger : MonoBehaviour
 
         #region ImportConstants
         faces = CONS.faces;
+        faceStableUps = CONS.faceStableUps;
+        faceStableRights = CONS.faceStableRights;
         camTransform = CONS.camTransform;
         catTransform = CONS.catTransform;
         catIniPositionPoint = CONS.catIniPositionPoint;
@@ -185,7 +192,6 @@ public class CatTrigger : MonoBehaviour
         energyFragmentBackDistance = CONS.energyFragmentBackDistance;
         absorbingEnergyFragmentWaitingTime = CONS.absorbingEnergyFragmentWaitingTime;
         energyFragments = CONS.energyFragments;
-        holeBlocks = CONS.holeBlocks;
         throughEdgeGateGapTime = CONS.throughEdgeGateGapTime;
         edgeGates = CONS.edgeGates;
         savePoints = CONS.savePoints;
@@ -229,7 +235,7 @@ public class CatTrigger : MonoBehaviour
         curCarriedFragmentIniParents = VARS.curCarriedFragmentIniParents;
         curCarriedFragmentIniLocalPositions = VARS.curCarriedFragmentIniLocalPositions;
         curToBeEmbededFragmentIndexes = VARS.curToBeEmbededFragmentIndexes;
-        curToBeEmbededFragmentPositions = VARS.curToBeEmbededFragmentPositions;
+        curToBeEmbededFragmentLocalPositions = VARS.curToBeEmbededFragmentLocalPositions;
         edgeGateLinkedToIndexes = VARS.edgeGateLinkedToIndexes;
         deactivatedKeyIndexes = VARS.deactivatedKeyIndexes;
         deactivatedLockIndexes = VARS.deactivatedLockIndexes;
@@ -410,6 +416,11 @@ public class CatTrigger : MonoBehaviour
                 //VARS.catIniPosition = VARS.curActivatedSavePoint.transform.position - curRoomStableForward * 0.1f;
                 //VARS.catIniPosition = VARS.curActivatedSavePointPosition - curRoomStableForward * 0.1f;
                 catIniPositionPoint.transform.position = VARS.curActivatedSavePointPosition - curRoomStableForward * 0.1f;
+
+                if ((VARS.curRoomIndex - 4) % 9 == 0)
+                {
+                    VARS.curLatestCenterSavePointPosition = catIniPositionPoint.transform.position;
+                }
 
                 //Debug.Log("catIniPosition:" + VARS.catIniPosition);
 
@@ -680,22 +691,28 @@ public class CatTrigger : MonoBehaviour
                     {
                         if (curCarriedFragmentFaceIndexes[i] == VARS.curFaceIndex)
                         {
+                            tempVector1 = faceStableUps[VARS.curFaceIndex - 1];
+                            tempVector2 = faceStableRights[VARS.curFaceIndex - 1];
+
                             switch (curCarriedFragmentIndexes[i])
                             {
-                                case 1: tempVector = -VARS.curRoomStableUp - VARS.curRoomStableRight; break;
-                                case 2: tempVector = -VARS.curRoomStableUp; break;
-                                case 3: tempVector = -VARS.curRoomStableUp + VARS.curRoomStableRight; break;
-                                case 4: tempVector = -VARS.curRoomStableRight; break;
-                                case 5: tempVector = VARS.curRoomStableRight; break;
-                                case 6: tempVector = VARS.curRoomStableUp - VARS.curRoomStableRight; break;
-                                case 7: tempVector = VARS.curRoomStableUp; break;
-                                case 8: tempVector = VARS.curRoomStableUp + VARS.curRoomStableRight; break;
+                                case 1: tempVector = -tempVector1 - tempVector2; break;
+                                case 2: tempVector = -tempVector1; break;
+                                case 3: tempVector = -tempVector1 + tempVector2; break;
+                                case 4: tempVector = -tempVector2; break;
+                                case 5: tempVector = tempVector2; break;
+                                case 6: tempVector = tempVector1 - tempVector2; break;
+                                case 7: tempVector = tempVector1; break;
+                                case 8: tempVector = tempVector1 + tempVector2; break;
                             }
 
                             //Debug.Log("curToBeEmbededFragmentPosition: " + (VARS.curRoomCenter + tempVector - VARS.curRoomStableForward * 0.9f));
 
+                            curCarriedFragments[curToBeEmbededFragmentIndexes[i]].transform.SetParent(VARS.curPlaneEmpty.transform, true);
+
                             curToBeEmbededFragmentIndexes.Add(i);
-                            curToBeEmbededFragmentPositions.Add(VARS.curRoomCenter + tempVector - VARS.curRoomStableForward * 0.9f);
+                            //curToBeEmbededFragmentLocalPositions.Add(VARS.curRoomCenter + tempVector - VARS.curRoomStableForward * 0.9f);
+                            curToBeEmbededFragmentLocalPositions.Add(tempVector - VARS.curRoomStableForward * 0.9f);
                         }
                     }
 
@@ -707,7 +724,8 @@ public class CatTrigger : MonoBehaviour
                     //Debug.Log("i: " + i);
                     //Debug.Log("curToBeEmbededFragmentIndexes[i]: " + curToBeEmbededFragmentIndexes[i]);
 
-                    tempVector = curCarriedFragments[curToBeEmbededFragmentIndexes[i]].transform.position - curToBeEmbededFragmentPositions[i];
+                    //tempVector = curCarriedFragments[curToBeEmbededFragmentIndexes[i]].transform.position - curToBeEmbededFragmentLocalPositions[i];
+                    tempVector = curCarriedFragments[curToBeEmbededFragmentIndexes[i]].transform.localPosition - curToBeEmbededFragmentLocalPositions[i];
                     tempFloat = Vector3.Magnitude(tempVector);
                     
                     if (tempFloat > 0.2f)
@@ -716,7 +734,8 @@ public class CatTrigger : MonoBehaviour
                     }
                     else
                     {
-                        curCarriedFragments[curToBeEmbededFragmentIndexes[i]].transform.position = curToBeEmbededFragmentPositions[i];
+                        //curCarriedFragments[curToBeEmbededFragmentIndexes[i]].transform.position = curToBeEmbededFragmentLocalPositions[i];
+                        curCarriedFragments[curToBeEmbededFragmentIndexes[i]].transform.localPosition = curToBeEmbededFragmentLocalPositions[i];
 
                         switch (VARS.curFaceIndex)
                         {
@@ -742,7 +761,7 @@ public class CatTrigger : MonoBehaviour
                         //curCarriedFragmentIniLocalPositions.RemoveAt(curToBeEmbededFragmentIndexes[i]);
 
                         curToBeEmbededFragmentIndexes.RemoveAt(i);
-                        curToBeEmbededFragmentPositions.RemoveAt(i);
+                        curToBeEmbededFragmentLocalPositions.RemoveAt(i);
                     }
                 }
 
@@ -784,7 +803,7 @@ public class CatTrigger : MonoBehaviour
             {
                 Debug.Log("centerFulfilled");
 
-                holeBlocks[VARS.curFaceIndex - 1].transform.position = VARS.curRoomCenter - VARS.curRoomStableForward * 0.9f;
+                //holeBlocks[VARS.curFaceIndex - 1].transform.position = VARS.curRoomCenter - VARS.curRoomStableForward * 0.9f;
                 energyFragments[VARS.curFaceIndex - 1].transform.position = VARS.curRoomCenter - VARS.curRoomStableForward /** 0.9f*/;
 
                 VARS.absorbingEnergyFragmentWaitingStartTime = Time.time;

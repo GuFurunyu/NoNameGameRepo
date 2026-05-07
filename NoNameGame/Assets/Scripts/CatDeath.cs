@@ -54,7 +54,7 @@ public class CatDeath : MonoBehaviour
     List<Vector3> curCarriedFragmentIniLocalPositions = new List<Vector3>();
 
     List<int> curToBeEmbededFragmentIndexes = new List<int>();
-    List<Vector3> curToBeEmbededFragmentPositions = new List<Vector3>();
+    List<Vector3> curToBeEmbededFragmentLocalPositions = new List<Vector3>();
 
     List<GameObject> curBlocks = new List<GameObject>();
     List<TileData> curBlockTileDatas = new List<TileData>();
@@ -107,7 +107,7 @@ public class CatDeath : MonoBehaviour
         curCarriedFragmentIniParents = VARS.curCarriedFragmentIniParents;
         curCarriedFragmentIniLocalPositions = VARS.curCarriedFragmentIniLocalPositions;
         curToBeEmbededFragmentIndexes = VARS.curToBeEmbededFragmentIndexes;
-        curToBeEmbededFragmentPositions = VARS.curToBeEmbededFragmentPositions;
+        curToBeEmbededFragmentLocalPositions = VARS.curToBeEmbededFragmentLocalPositions;
         curBlocks = VARS.curBlocks;
         curBlockTileDatas = VARS.curBlockTileDatas;
         curCoordVectors = VARS.curCoordVectors;
@@ -286,7 +286,7 @@ public class CatDeath : MonoBehaviour
             curCarriedFragmentIniLocalPositions.Clear();
 
             curToBeEmbededFragmentIndexes.Clear();
-            curToBeEmbededFragmentPositions.Clear();
+            curToBeEmbededFragmentLocalPositions.Clear();
 
             VARS.IsCarryingAKey = false;
         }

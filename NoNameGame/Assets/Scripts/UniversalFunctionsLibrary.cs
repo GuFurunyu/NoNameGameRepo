@@ -535,6 +535,8 @@ public class UniversalFunctionsLibrary : MonoBehaviour
 
         //camSize
         SetCameraSize(camNormalSize);
+
+        VARS.IsJustOutOfMinimap = true;
     }
     #endregion
 

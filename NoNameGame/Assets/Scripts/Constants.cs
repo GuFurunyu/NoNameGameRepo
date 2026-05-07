@@ -26,6 +26,12 @@ public class Constants : MonoBehaviour
         "  \nDATAMANAGER\n --- ")]
     #endregion
 
+    #region GameStateManager
+    [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
+        "  \nGAMESTATEMANAGER\n --- ")]
+
+    #endregion
+
     #region RoomsManager
     [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
         "  \nROOMSMANAGER\n --- ")]
@@ -61,7 +67,7 @@ public class Constants : MonoBehaviour
 
     //energyFragmentsAndHoles
     public GameObject[] energyFragments = new GameObject[6];
-    public GameObject[] holeBlocks = new GameObject[6];
+    //public GameObject[] holeBlocks = new GameObject[6];
 
     //~?
     //Vector3 outerGravityVector = new Vector3(1, -1, 1);
@@ -130,9 +136,6 @@ public class Constants : MonoBehaviour
 
     //distance
     public float camMinimapDistanceToCubeCore;
-
-    //twistGuide
-    public GameObject twistGuide;
     #endregion
 
     #region Cat
@@ -153,6 +156,9 @@ public class Constants : MonoBehaviour
     #region Control
     [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
         "  \nCONTROL\n --- ")]
+    //triggerThreshold
+    public float intoMinimapDownJumpKeyDownThreshold;
+    public float backCenterDoubleUpKeyDownThreshold;
     #endregion
 
     #region CatCollision
@@ -518,6 +524,18 @@ public class Constants : MonoBehaviour
         keyP, keyQ, keyR, keyS, keyT, keyU, keyV, keyW, keyX, keyY, keyZ,
         keyUpArrow, keyDownArrow, keyLeftArrow, keyRightArrow
     }
+    #endregion
+
+    #region GuideManager
+    [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
+        "  \nGuideManager\n --- ")]
+    //guideTexts    
+    public GameObject keysGuideEmpty;
+    //public List<GameObject> keysGuideTexts = new List<GameObject>();
+    public GameObject intoMinimapGuideText;
+    public GameObject climbGuideText;
+    public GameObject twistGuideText;
+    public GameObject backCenterGuideText;
     #endregion
 
     #region AudioManager

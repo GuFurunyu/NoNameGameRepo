@@ -11,6 +11,8 @@ public class Control : MonoBehaviour
     GameObject gameManager;
 
     #region ConstantsUsed
+    float intoMinimapDownJumpKeyDownThreshold;
+    float backCenterDoubleUpKeyDownThreshold;
     #endregion
 
     #region VariablesUsed
@@ -36,6 +38,8 @@ public class Control : MonoBehaviour
         SEC = gameManager.GetComponent<ScriptsExecutionController>();
 
         #region ImportConstants
+        intoMinimapDownJumpKeyDownThreshold = CONS.intoMinimapDownJumpKeyDownThreshold;
+        backCenterDoubleUpKeyDownThreshold = CONS.backCenterDoubleUpKeyDownThreshold;
         #endregion
 
         #region ImportReferenceVariables
@@ -87,7 +91,7 @@ public class Control : MonoBehaviour
             VARS.IsInputtingConfirmKey = Input.GetKey(VARS.confirmKeyCode);
             VARS.IsInputtingBackKey = Input.GetKey(VARS.backKeyCode);
 
-            VARS.IsUpKeyDown = Input.GetKeyDown(VARS.upKeyCode);
+                VARS.IsUpKeyDown = Input.GetKeyDown(VARS.upKeyCode);
             VARS.IsDownKeyDown = Input.GetKeyDown(VARS.downKeyCode);
             if (!VARS.IsOptionPanelActivated)
             {
@@ -114,6 +118,38 @@ public class Control : MonoBehaviour
             }
             VARS.IsConfirmKeyUp = Input.GetKeyUp(VARS.upKeyCode);
             VARS.IsBackKeyUp = Input.GetKeyUp(VARS.downKeyCode);
+
+            //trigger
+            if (VARS.IsUpKeyDown)
+            {
+                //backCenterTrigger
+                if (Time.time - VARS.lastUpKeyDownTime < backCenterDoubleUpKeyDownThreshold)
+                {
+                    VARS.IsBackCenterTriggered = true;
+                }
+
+                VARS.lastUpKeyDownTime = Time.time;
+            }
+            if (VARS.IsDownKeyDown)
+            {
+                VARS.lastDownKeyDownTime = Time.time;
+            }
+            if (VARS.IsJumpKeyDown)
+            {
+                //intoMinimapTrigger
+                if (Time.time - VARS.lastDownKeyDownTime < intoMinimapDownJumpKeyDownThreshold)
+                {
+                    VARS.IsIntoMinimapTriggered = true;
+                }
+
+                //justOutOfMinimap
+                if (VARS.IsJustOutOfMinimap)
+                {
+                    VARS.IsJumpKeyDown = false;
+
+                    VARS.IsJustOutOfMinimap = false;
+                }
+            }
         }
         else
         {

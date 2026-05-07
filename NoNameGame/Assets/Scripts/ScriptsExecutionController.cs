@@ -33,6 +33,7 @@ public class ScriptsExecutionController : MonoBehaviour
         //catCollision
         VARS.IsCatCollisionMainPartExecutable =
             //Time.deltaTime < 0.0167f &&//~?
+            !VARS.IsPaused &&
             VARS.IsInNewRoomAllResetOver &&
             !VARS.IsRotating &&
             !VARS.IsTwisting &&
@@ -41,6 +42,7 @@ public class ScriptsExecutionController : MonoBehaviour
         //catMove
         VARS.IsCatMoveMainPartExecutable =
             //Time.deltaTime < 0.0167f &&//~?
+            !VARS.IsPaused &&
             VARS.IsInNewRoomAllResetOver &&
             !VARS.IsRotating &&
             !VARS.IsTwisting &&
@@ -55,6 +57,7 @@ public class ScriptsExecutionController : MonoBehaviour
 
         //catRotate
         VARS.IsCatRotateMainPartExecutable =
+            !VARS.IsPaused &&
             VARS.IsInNewRoomAllResetOver &&
             !VARS.IsTwisting &&
             !VARS.IsInMinimap &&
@@ -62,6 +65,7 @@ public class ScriptsExecutionController : MonoBehaviour
 
         //catEnergy
         VARS.IsCatEnergyResetExecutable =
+            !VARS.IsPaused &&
             VARS.IsInNewRoomAllResetOver &&
             !VARS.IsRotating &&
             !VARS.IsTwisting &&
@@ -78,6 +82,7 @@ public class ScriptsExecutionController : MonoBehaviour
 
         //catTrigger
         VARS.IsCatTriggerMainPartExecutable =
+            !VARS.IsPaused &&
             VARS.IsInNewRoomAllResetOver &&
             !VARS.IsRotating &&
             !VARS.IsTwisting &&
@@ -85,6 +90,7 @@ public class ScriptsExecutionController : MonoBehaviour
 
         //blocksManager
         VARS.IsBlocksManagerMainPartExecutable =
+            !VARS.IsPaused &&
             VARS.IsInNewRoomAllResetOver &&
             VARS.IsIniRotation &&
             !VARS.IsRotating &&
@@ -93,9 +99,11 @@ public class ScriptsExecutionController : MonoBehaviour
 
         //minimapManager
         VARS.IsMinimapMainPartExecutable =
+            VARS.IsMinimapActivated &&
             VARS.IsInNewRoomAllResetOver &&
             !VARS.IsZoomedOut &&
             !VARS.IsOptionPanelActivated /*&&
+            !VARS.IsInGuide*//*&&
             !VARS.IsInCenter*/;
 
         //optionsManager
@@ -104,6 +112,7 @@ public class ScriptsExecutionController : MonoBehaviour
             !VARS.IsRotating &&
             !VARS.IsTwisting &&
             !VARS.IsZoomedOut &&
-            !VARS.IsInMinimap;
+            !VARS.IsInMinimap &&
+            !VARS.IsInGuide;
     }
 }

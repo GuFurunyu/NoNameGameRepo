@@ -27,5 +27,15 @@ public class EDICustomTextureImporter : AssetPostprocessor
             importer.textureCompression = TextureImporterCompression.Uncompressed;
             importer.maxTextureSize = 512;
         }
+
+        if (assetPath.StartsWith("Assets/Resources/Pictures/GuideTexts"))
+        {
+            TextureImporter importer = (TextureImporter)assetImporter;
+            importer.textureType = TextureImporterType.Sprite;
+            importer.spritePixelsPerUnit = 1;
+            importer.filterMode = FilterMode.Point;
+            importer.textureCompression = TextureImporterCompression.Uncompressed;
+            importer.maxTextureSize = 512;
+        }
     }
 }

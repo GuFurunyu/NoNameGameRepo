@@ -40,8 +40,6 @@ public class CameraManager : MonoBehaviour
     float camNormalSize;
     float camZoomedOutMaxSize;
 
-    GameObject twistGuide;
-
     Transform catTransform;
     #endregion
 
@@ -73,7 +71,6 @@ public class CameraManager : MonoBehaviour
         zoomInAutoTriggerTime = CONS.zoomInAutoTriggerTime;
         camNormalSize = CONS.camNormalSize;
         camZoomedOutMaxSize = CONS.camZoomedOutMaxSize;
-        twistGuide = CONS.twistGuide;
         catTransform = CONS.catTransform;
         #endregion
 
@@ -337,21 +334,20 @@ public class CameraManager : MonoBehaviour
             //}
             #endregion
 
-            #region Guide
-            if (!VARS.HasTwisted &&
-                VARS.IsInCenter)
-            {
-                twistGuide.SetActive(true);
-            }
-            if (VARS.IsTwisting)
-            {
-                twistGuide.SetActive(false);
+            //#region Guide
+            //if (!VARS.HasTwisted &&
+            //    VARS.IsInCenter)
+            //{
+            //    twistGuide.SetActive(true);
+            //}
+            //if (VARS.IsTwisting)
+            //{
 
-                VARS.HasTwisted = true;
+            //    VARS.HasTwisted = true;
 
-                VARS.IsToWriteProgressData = true;
-            }
-            #endregion
+            //    VARS.IsToWriteProgressData = true;
+            //}
+            //#endregion
         }
     }
 }

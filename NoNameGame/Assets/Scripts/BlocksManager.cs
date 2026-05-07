@@ -811,7 +811,7 @@ public class BlocksManager : MonoBehaviour
 
                     if (GetNearBlockTypeIndex(1) == 0)
                     {
-                        Debug.Log(curCoordVector);
+                        //Debug.Log(curCoordVector);
 
                         //curLiquidMaxHeight
                         //if (curLiquidMaxHeight == 999)

@@ -37,9 +37,6 @@ public class Variables : MonoBehaviour
     [SerializeField] private bool _isToWriteProgressData;
     public bool IsToWriteProgressData { get { return _isToWriteProgressData; } set { _isToWriteProgressData = value; } }
 
-    [SerializeField] private bool _hasTwisted;
-    public bool HasTwisted { get { return _hasTwisted; } set { _hasTwisted = value; } }
-
     //keyCodesData
     [SerializeField] private bool _isToWriteKeyCodesData;
     public bool IsToWriteKeyCodesData { get { return _isToWriteKeyCodesData; } set { _isToWriteKeyCodesData = value; } }
@@ -76,6 +73,49 @@ public class Variables : MonoBehaviour
             _isWritingAllData = value;
         }
     }
+
+    //IsToStartNewGame
+    [SerializeField] private bool _IsToStartNewGame;
+    public bool IsToStartNewGame { get { return _IsToStartNewGame; } set { _IsToStartNewGame = value; } }
+
+    #endregion
+
+    #region GameStateManager
+    [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
+        "  \nGAMESTATEMANAGER\n --- ")]
+    [SerializeField] private bool _isPaused;
+    //public bool IsPaused
+    //{
+    //    get
+    //    {
+    //        _isPaused =
+    //            IsInMinimap ||
+    //            IsOptionPanelActivated;
+
+    //        return _isPaused;
+    //    }
+    //    set
+    //    {
+    //        _isPaused = value;
+    //    }
+    //}
+    public bool IsPaused { get { return _isPaused; } set { _isPaused = value; } }
+
+    //guide
+    [SerializeField] private bool _hasFinishedKeysGuide;
+    public bool HasFinishedKeysGuide { get { return _hasFinishedKeysGuide; } set { _hasFinishedKeysGuide = value; } }
+
+    [SerializeField] private bool _hasBeenIntoMinimap;
+    public bool HasBeenIntoMinimap { get { return _hasBeenIntoMinimap; } set { _hasBeenIntoMinimap = value; } }
+
+    [SerializeField] private bool _hasClimbed;
+    public bool HasClimbed { get { return _hasClimbed; } set { _hasClimbed = value; } }
+
+    [SerializeField] private bool _hasTwisted;
+    public bool HasTwisted { get { return _hasTwisted; } set { _hasTwisted = value; } }
+
+    [SerializeField] private bool _hasBackCentered;
+    public bool HasBackCentered { get { return _hasBackCentered; } set { _hasBackCentered = value; } }
 
     #endregion
 
@@ -190,6 +230,9 @@ public class Variables : MonoBehaviour
 
     //isCenterFulfilled
     public bool[] isCenterFulfilled = new bool[6];
+
+    //curLatestCenterSavePointPosition
+    public Vector3 curLatestCenterSavePointPosition;
 
     //edgeGatesLinkedToIndexes
     public List<int> edgeGateLinkedToIndexes = new List<int>();
@@ -436,6 +479,15 @@ public class Variables : MonoBehaviour
     //isInputting
     [SerializeField] private bool _isHorInputting;
     public bool IsHorInputting { get { return _isHorInputting; } set { _isHorInputting = value; } }
+
+    [SerializeField] private bool _isIntoMinimapTriggered;
+    public bool IsIntoMinimapTriggered { get { return _isIntoMinimapTriggered; } set { _isIntoMinimapTriggered = value; } }
+
+    [SerializeField] private bool _isBackCenterTriggered;
+    public bool IsBackCenterTriggered { get { return _isBackCenterTriggered; } set { _isBackCenterTriggered = value; } }
+
+    public float lastUpKeyDownTime = -1;
+    public float lastDownKeyDownTime = -1;
 
     //bool isVerInputting;
     #endregion
@@ -823,7 +875,7 @@ public class Variables : MonoBehaviour
     public List<Vector3> curCarriedFragmentIniLocalPositions = new List<Vector3>();
 
     public List<int> curToBeEmbededFragmentIndexes = new List<int>();
-    public List<Vector3> curToBeEmbededFragmentPositions = new List<Vector3>();
+    public List<Vector3> curToBeEmbededFragmentLocalPositions = new List<Vector3>();
 
     public float absorbingEnergyFragmentWaitingStartTime;
     [SerializeField] private bool _isEnergyFragmentBacked;
@@ -944,7 +996,7 @@ public class Variables : MonoBehaviour
     //catIniPosition
     public Vector3 catIniPosition;
 
-    [SerializeField] private bool _isJustReborn;
+    [SerializeField] private bool _isJustReborn = true;
     public bool IsJustReborn { get { return _isJustReborn; } set { _isJustReborn = value; } }
     #endregion
 
@@ -1027,11 +1079,18 @@ public class Variables : MonoBehaviour
     [SerializeField] private bool _isMinimapMainPartExecutable;
     public bool IsMinimapMainPartExecutable { get { return _isMinimapMainPartExecutable; } set { _isMinimapMainPartExecutable = value; } }
 
+    //isActivated
+    [SerializeField] private bool _isMinimapActivated;
+    public bool IsMinimapActivated { get { return _isMinimapActivated; } set { _isMinimapActivated = value; } }
+
     [SerializeField] private bool _isInMinimap;
     public bool IsInMinimap { get { return _isInMinimap; } set { _isInMinimap = value; } }
 
     [SerializeField] private bool _isMinimapRotating;
     public bool IsMinimapRotating { get { return _isMinimapRotating; } set { _isMinimapRotating = value; } }
+
+    [SerializeField] private bool _isJustOutOfMinimap;
+    public bool IsJustOutOfMinimap { get { return _isJustOutOfMinimap; } set { _isJustOutOfMinimap = value; } }
 
     //minimapRoomPlaneColor
     public Color curMinimapRoomPlaneColor;
@@ -1070,6 +1129,48 @@ public class Variables : MonoBehaviour
     //isExiting
     [SerializeField] private bool _isExiting;
     public bool IsExiting { get { return _isExiting; } set { _isExiting = value; } }
+
+    #endregion
+
+    #region GuideManager
+    [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
+        "  \nGUIDEMANAGER\n --- ")]
+    [SerializeField] private bool _isInGuide;
+    public bool IsInGuide
+    {
+        get
+        {
+            _isInGuide =
+                IsInKeysGuide ||
+                IsInIntoMinimapGuide ||
+                IsInClimbGuide ||
+                IsInTwistGuide ||
+                IsInBackCenterGuide;
+
+            return _isInGuide;
+        }
+        set
+        {
+            _isInGuide = value;
+        }
+    }
+
+    [SerializeField] private bool _isInKeysGuide;
+    public bool IsInKeysGuide { get { return _isInKeysGuide; } set { _isInKeysGuide = value; } }
+
+    [SerializeField] private bool _isInIntoMinimapGuide;
+    public bool IsInIntoMinimapGuide { get { return _isInIntoMinimapGuide; } set { _isInIntoMinimapGuide = value; } }
+
+    [SerializeField] private bool _isInClimbGuide;
+    public bool IsInClimbGuide { get { return _isInClimbGuide; } set { _isInClimbGuide = value; } }
+
+    [SerializeField] private bool _isInTwistGuide;
+    public bool IsInTwistGuide { get { return _isInTwistGuide; } set { _isInTwistGuide = value; } }
+
+    [SerializeField] private bool _isInBackCenterGuide;
+    public bool IsInBackCenterGuide { get { return _isInBackCenterGuide; } set { _isInBackCenterGuide = value; } }
+
+    public int curKeysGuideIndex;
 
     #endregion
 

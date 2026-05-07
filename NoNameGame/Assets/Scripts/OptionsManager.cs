@@ -147,7 +147,8 @@ public class OptionsManager : MonoBehaviour
             {
                 //intoKeySetSub
                 if (!isInKeySetSub &&
-                    VARS.IsConfirmKeyDown)
+                    (VARS.IsConfirmKeyDown ||
+                    Input.GetKey(KeyCode.Space)))
                 {
                     isFromOptionsToKeySetSub = true;
                 }
@@ -207,7 +208,8 @@ public class OptionsManager : MonoBehaviour
                     //toSetAKey
                     if (!isSettingAKey &&
                         curKeySetSubIndex < keySetSubEmpties.Count - 1 &&
-                        VARS.IsConfirmKeyDown)
+                        (VARS.IsConfirmKeyDown ||
+                    Input.GetKeyDown(KeyCode.Space)))
                     {
                         isSettingAKey = true;
 
@@ -249,6 +251,9 @@ public class OptionsManager : MonoBehaviour
                                     case 6:
                                         VARS.grabKeyCode = tempKeyCode;
                                         break;
+                                    case 7:
+                                        VARS.confirmKeyCode = tempKeyCode;
+                                        break;
                                 }
                                 curKeyCodes[curKeySetSubIndex] = tempKeyCode;
 
@@ -266,8 +271,8 @@ public class OptionsManager : MonoBehaviour
                     }
 
                     //ok
-                    if ((curKeySetSubIndex == keySetSubEmpties.Count - 1 &&
-                        VARS.IsConfirmKeyDown) ||
+                    if (curKeySetSubIndex == keySetSubEmpties.Count - 1 &&
+                        (VARS.IsConfirmKeyDown || Input.GetKeyDown(KeyCode.Space)) ||
                         VARS.IsBackKeyDown)
                     {
                         isFromKeySetSubToOptions = true;
@@ -289,10 +294,26 @@ public class OptionsManager : MonoBehaviour
             }
             #endregion
 
-            #region Exit
+            #region NewGame
             if (curOptionIndex == 1)
             {
-                if (VARS.IsConfirmKeyDown)
+                if (VARS.IsConfirmKeyDown ||
+                    Input.GetKeyDown(KeyCode.Space))
+                {
+                    optionsPanel.SetActive(false);
+                    VARS.IsOptionPanelActivated = false;
+
+                    VARS.IsToStartNewGame = true;
+                    VARS.IsToDie = true;
+                }
+            }
+            #endregion
+
+            #region Exit
+            if (curOptionIndex == 2)
+            {
+                if (VARS.IsConfirmKeyDown ||
+                    Input.GetKeyDown(KeyCode.Space))
                 {
                     VARS.IsWritingAllData = true;
                     VARS.IsExiting = true;

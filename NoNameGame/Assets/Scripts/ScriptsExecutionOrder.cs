@@ -33,6 +33,7 @@ public class ScriptsExecutionOrder : MonoBehaviour
         universalFunctionsLibrary,
         scriptsExecutionController,
         dataManager,
+        gameStateManager,
         roomsManager,
         curRoomManager,
         tileData,
@@ -49,6 +50,7 @@ public class ScriptsExecutionOrder : MonoBehaviour
         blocksManager,//fixedUpdate
         minimapManager,
         optionsManager,
+        guideManager,
         screenPostProcessor,
         audioManager,
         test

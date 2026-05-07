@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 [DefaultExecutionOrder((int)ScriptsExecutionOrder.ExecutionOrder.catMove)]
@@ -31,7 +32,7 @@ public class CatMove : MonoBehaviour
     float jumpPostInputStartTime;
 
     //wallJump
-    float wallJumpPreInputStartTime;
+    //float wallJumpPreInputStartTime;
     float wallJumpPostInputStartTime;
     bool isPostWallJumpToRight;
 
@@ -46,6 +47,8 @@ public class CatMove : MonoBehaviour
     float justEnterNewFaceTime;
 
     Transform catTransform;
+
+    GameObject catIniPositionPoint;
 
     float catMoveFixedDeltaTime;
 
@@ -136,6 +139,7 @@ public class CatMove : MonoBehaviour
         #region ImportConstants
         justEnterNewFaceTime = CONS.justEnterNewFaceTime;
         catTransform = CONS.catTransform;
+        catIniPositionPoint = CONS.catIniPositionPoint;
         catMoveFixedDeltaTime = CONS.catMoveFixedDeltaTime;
         horAcce = CONS.horAcce;
         horReverseAcce = CONS.horReverseAcce;
@@ -629,7 +633,7 @@ public class CatMove : MonoBehaviour
 
                     jumpPreInputStartTime = Time.time;
 
-                    wallJumpPreInputStartTime = Time.time;
+                    //wallJumpPreInputStartTime = Time.time;
 
                     if (Time.time - jumpPostInputStartTime <= jumpPostInputTres)
                     {
@@ -663,9 +667,14 @@ public class CatMove : MonoBehaviour
                 //specialJumps2
                 if (!VARS.IsInputtingUpKey)
                 {
-                    if (VARS.IsJumpKeyDown ||
-                        Time.time - wallJumpPreInputStartTime <= wallJumpPreInputThres)
+                    if (VARS.IsJumpKeyDown /*||
+                        Time.time - wallJumpPreInputStartTime <= wallJumpPreInputThres*/)
                     {
+                        //if (Time.time - wallJumpPreInputStartTime <= wallJumpPreInputThres)
+                        //{
+                        //    Debug.Log("enter");
+                        //}
+
                         //wallJump
                         if (isLeftBlocked)
                         {
@@ -701,6 +710,7 @@ public class CatMove : MonoBehaviour
                 //climb
                 if (VARS.IsAttachWall)
                 {
+                    //up
                     if (VARS.IsInputtingUpKey)
                     {
                         //verCurSpeed = curClimbSpeed;
@@ -718,6 +728,12 @@ public class CatMove : MonoBehaviour
 
                         //    isAttachWall = false;
                         //}
+                    }
+                    //down
+                    else if (VARS.IsInputtingDownKey)
+                    {
+                        VARS.verCurSpeed = -curClimbSpeed;
+                        VARS.curTargetEnergy += -climbEnergyDecreaseSpeed * 0.75f * Time.deltaTime;
                     }
                 }
             }
@@ -915,6 +931,19 @@ public class CatMove : MonoBehaviour
                 {
                     curAcceBonus = 1;
                 }
+            }
+            #endregion
+
+            #region BackCenter
+            if (VARS.IsBackCenterTriggered)
+            {
+                if (Vector3.Magnitude(VARS.curLatestCenterSavePointPosition) > 1)
+                {
+                    catIniPositionPoint.transform.position = VARS.curLatestCenterSavePointPosition;
+                    VARS.IsToDie = true;
+                }
+
+                VARS.IsBackCenterTriggered = false;
             }
             #endregion
 

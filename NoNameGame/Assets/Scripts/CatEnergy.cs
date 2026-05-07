@@ -65,7 +65,7 @@ public class CatEnergy : MonoBehaviour
         if (VARS.curEnergy < VARS.curTargetEnergy)
         {
             //UFL.AddCurEnergy(curEnergyChangeToTargetEnergySpeed * Time.deltaTime);
-            VARS.curEnergy += curEnergyChangeToTargetEnergySpeed * Time.deltaTime;
+            VARS.curEnergy += curEnergyChangeToTargetEnergySpeed * (1 + (VARS.curTargetEnergy - VARS.curEnergy) / 100) * Time.deltaTime;
 
             if (VARS.curEnergy > VARS.curTargetEnergy)
             {
@@ -77,7 +77,7 @@ public class CatEnergy : MonoBehaviour
         else if (VARS.curEnergy > VARS.curTargetEnergy)
         {
             //UFL.AddCurEnergy(-curEnergyChangeToTargetEnergySpeed * Time.deltaTime);
-            VARS.curEnergy += -curEnergyChangeToTargetEnergySpeed * Time.deltaTime;
+            VARS.curEnergy += -curEnergyChangeToTargetEnergySpeed * (1 + (VARS.curEnergy - VARS.curTargetEnergy) / 100) * Time.deltaTime;
 
             if (VARS.curEnergy < VARS.curTargetEnergy)
             {

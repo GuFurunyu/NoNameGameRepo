@@ -57,30 +57,34 @@ public class MinimapManager : MonoBehaviour
 
         if (VARS.IsMinimapMainPartExecutable)
         {
-            #region Minimap
             //intoMinimap
             if (!VARS.IsInMinimap)
             {
+                //VARS.IsJustOutOfMinimap = false;
+
                 //if (!VARS.IsZoomedOut &&
                 //    //VARS.IsIniRotation &&
                 //    !VARS.IsOptionPanelActivated)
                 //{
                 //    if (!VARS.IsInCenter)
                 //    {
-                        //if (VARS.IsInputtingUpKey)
-                        //{
-                        //    if (VARS.IsJumpKeyDown)
-                        //    {
-                        if (VARS.IsConfirmKeyDown)
-                        {
-                            UFL.IntoMinimap();
+                //if (VARS.IsInputtingUpKey)
+                //{
+                //    if (VARS.IsJumpKeyDown)
+                //    {
+                if (VARS.IsConfirmKeyDown)
+                //if (VARS.IsIntoMinimapTriggered)
+                {
+                    UFL.IntoMinimap();
 
-                            VARS.IsMinimapRotationCameraPointIndexNotInitialized = true;
+                    VARS.IsMinimapRotationCameraPointIndexNotInitialized = true;
 
-                            VARS.IsInMinimap = true;
-                        }
-                        //    }
-                        //}
+                    VARS.IsInMinimap = true;
+
+                    VARS.IsIntoMinimapTriggered = false;
+                }
+                //    }
+                //}
                 //    }
                 //}
             }
@@ -123,6 +127,7 @@ public class MinimapManager : MonoBehaviour
 
                     //outOfMinimap
                     if (VARS.IsConfirmKeyDown)
+                    //if (VARS.IsJumpKeyDown)
                     {
                         UFL.OutOfMinimap();
 
@@ -158,7 +163,6 @@ public class MinimapManager : MonoBehaviour
                     }
                 }
             }
-            #endregion
         }
     }
 }
