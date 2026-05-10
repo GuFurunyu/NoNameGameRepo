@@ -1,4 +1,3 @@
-using System.Reflection;
 using UnityEngine;
 
 [DefaultExecutionOrder((int)ScriptsExecutionOrder.ExecutionOrder.curRoomManager)]
@@ -12,6 +11,8 @@ public class CurRoomManager : MonoBehaviour
     GameObject gameManager;
 
     float tempFloat;
+    float tempFloat1;
+    float tempFloat2;
     Vector3 tempVector;
     Transform tempTransform;
     GameObject tempGameObject;
@@ -109,6 +110,18 @@ public class CurRoomManager : MonoBehaviour
             //camIniEulerangles = VARS.roomStableForwards[VARS.curRoomIndex] * Vector3.SignedAngle(Vector3.right, iniRight, VARS.roomStableForwards[VARS.curRoomIndex]);
 
             VARS.IsInNewRoomCurRoomManagerResetOver = true;
+        }
+        if (VARS.IsInNewRoomAllResetOver)
+        {
+            tempVector = catTransform.position - VARS.curRoomCenter;
+
+            tempFloat1 = Mathf.Abs(Vector3.Dot(tempVector, VARS.curUp));
+            tempFloat2 = Mathf.Abs(Vector3.Dot(tempVector, VARS.curRight));
+
+            if (tempFloat1 > (roomCoordBreadth / 2) + 2 || tempFloat2 > (roomCoordBreadth / 2) + 2)
+            {
+                VARS.IsToDie = true;
+            }
         }
     }
     //void GetPlaneDirections()

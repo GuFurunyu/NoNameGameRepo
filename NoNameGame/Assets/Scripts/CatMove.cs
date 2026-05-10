@@ -1,5 +1,5 @@
-using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Video;
 
 [DefaultExecutionOrder((int)ScriptsExecutionOrder.ExecutionOrder.catMove)]
 public class CatMove : MonoBehaviour
@@ -23,6 +23,7 @@ public class CatMove : MonoBehaviour
     float curGravityAcce;
     float curClimbSpeed;
     float verCurMaxSpeed;
+    float curHighJumpingMaxSpeed;
 
     //jumpPreInput
     bool isJumpPreInputed;
@@ -336,7 +337,8 @@ public class CatMove : MonoBehaviour
             }
 
             //isLeftBlocked
-            if (isLeftBlocked)
+            if (isLeftBlocked &&
+                VARS.curFacingDirectionIndex == 1)
             {
                 //if (horCurSpeed < 0)
                 //{
@@ -344,37 +346,38 @@ public class CatMove : MonoBehaviour
                 //}
 
                 //attachWall
-                if (!isOnGround)
+                //if (!isOnGround)
+                //{
+                if (VARS.IsInputtingLeftKey &&
+                    VARS.IsInputtingGrabKey)
                 {
-                    if (VARS.IsInputtingLeftKey &&
-                        VARS.IsInputtingGrabKey)
+                    //lastHorDirectionInput = rightKeyCode;
+                    //VARS.curFacingDirectionIndex = 1;
+
+                    if (VARS.curEnergy > 0)
                     {
-                        //lastHorDirectionInput = rightKeyCode;
-                        VARS.curFacingDirectionIndex = 1;
+                        //verCurSpeed = 0;
+                        //UFL.SetVerCurSpeed(0);
+                        VARS.verCurSpeed = 0;
 
-                        if (VARS.curEnergy > 0)
-                        {
-                            //verCurSpeed = 0;
-                            //UFL.SetVerCurSpeed(0);
-                            VARS.verCurSpeed = 0;
+                        VARS.IsAttachWall = true;
 
-                            VARS.IsAttachWall = true;
-
-                            VARS.curAttachedWallTile = VARS.curLeftTile;
-                        }
-                        else
-                        {
-                            VARS.IsAttachWall = false;
-                        }
+                        VARS.curAttachedWallTile = VARS.curLeftTile;
                     }
                     else
                     {
                         VARS.IsAttachWall = false;
                     }
                 }
+                else
+                {
+                    VARS.IsAttachWall = false;
+                }
+                //}
             }
             //ifRightBlocked
-            else if (isRightBlocked)
+            else if (isRightBlocked &&
+                VARS.curFacingDirectionIndex == 2)
             {
                 //if (horCurSpeed > 0)
                 //{
@@ -382,34 +385,34 @@ public class CatMove : MonoBehaviour
                 //}
 
                 //attachWall
-                if (!isOnGround)
+                //if (!isOnGround)
+                //{
+                if (VARS.IsInputtingRightKey &&
+                    VARS.IsInputtingGrabKey)
                 {
-                    if (VARS.IsInputtingRightKey &&
-                        VARS.IsInputtingGrabKey)
+                    //lastHorDirectionInput = rightKeyCode;
+                    //VARS.curFacingDirectionIndex = 2;
+
+                    if (VARS.curEnergy > 0)
                     {
-                        //lastHorDirectionInput = rightKeyCode;
-                        VARS.curFacingDirectionIndex = 2;
+                        //verCurSpeed = 0;
+                        //UFL.SetVerCurSpeed(0);
+                        VARS.verCurSpeed = 0;
 
-                        if (VARS.curEnergy > 0)
-                        {
-                            //verCurSpeed = 0;
-                            //UFL.SetVerCurSpeed(0);
-                            VARS.verCurSpeed = 0;
+                        VARS.IsAttachWall = true;
 
-                            VARS.IsAttachWall = true;
-
-                            VARS.curAttachedWallTile = VARS.curRightTile;
-                        }
-                        else
-                        {
-                            VARS.IsAttachWall = false;
-                        }
+                        VARS.curAttachedWallTile = VARS.curRightTile;
                     }
                     else
                     {
                         VARS.IsAttachWall = false;
                     }
                 }
+                else
+                {
+                    VARS.IsAttachWall = false;
+                }
+                //}
             }
             //awayFormWall
             else
@@ -532,9 +535,14 @@ public class CatMove : MonoBehaviour
                 else if (isInMist)
                 {
                     verCurIniSpeed = verIniSpeed / curMistTileData.fluidDrag;
-                    curGravityAcce = gravityAcce - gravityAcce * curMistTileData.mass *0.5f /*/ 2*/;
+                    curGravityAcce = gravityAcce - gravityAcce * curMistTileData.mass * 0.5f /*/ 2*/;
                     verCurMaxSpeed = verMaxSpeed / curMistTileData.fluidDrag;
                 }
+            }
+
+            if (!isInLiquid)
+            {
+                VARS.IsJustNotInLiquid = true;
             }
 
             if (isLeftBlocked)
@@ -555,11 +563,24 @@ public class CatMove : MonoBehaviour
             //outOfLiquidDeacce
             if (!isInLiquid &&
                 VARS.IsJustInLiquid &&
-                VARS.verCurSpeed > 0)
+                VARS.verCurSpeed > 0 &&
+                !VARS.IsHighJumping)
             {
                 VARS.verCurSpeed /= 2;
 
                 VARS.IsJustInLiquid = false;
+            }
+
+            //intoLiquidDeacce
+            if (isInLiquid &&
+                VARS.IsJustNotInLiquid &&
+                VARS.verCurSpeed < 0)
+            {
+                //Debug.Log("intoLiquidDeacce");
+
+                VARS.verCurSpeed /= 2;
+
+                VARS.IsJustNotInLiquid = false;
             }
 
             //just"||isInLiquid"?
@@ -576,6 +597,29 @@ public class CatMove : MonoBehaviour
                         //UFL.AddVerCurSpeed(-curGravityAcce * curRoomGravity * Time.deltaTime);
                         VARS.verCurSpeed += -curGravityAcce * curRoomGravity * Time.deltaTime;
                     }
+
+                    //highJump
+                    if (VARS.IsInputtingJumpKey)
+                    {
+                        if (VARS.IsHighJumping)
+                        {
+                            if (VARS.verCurSpeed > 0 &&
+                                VARS.verCurSpeed <= /*verCurMaxSpeed*/ curHighJumpingMaxSpeed)
+                            {
+                                //verCurSpeed += verAcce * Time.deltaTime;
+                                //UFL.AddVerCurSpeed(verAcce * Time.deltaTime);
+                                VARS.verCurSpeed += verAcce * Time.deltaTime;
+                            }
+                            else
+                            {
+                                VARS.IsHighJumping = false;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        VARS.IsHighJumping = false;
+                    }
                 }
 
                 //verCurSpeed = 0;
@@ -585,6 +629,8 @@ public class CatMove : MonoBehaviour
                     (isJumpPreInputed &&
                     Time.time - jumpPreInputStartTime <= jumpPreInputThres))
                 {
+                    //Debug.Log("jump");
+
                     Jump();
                 }
 
@@ -609,7 +655,7 @@ public class CatMove : MonoBehaviour
                     if (VARS.IsHighJumping)
                     {
                         if (VARS.verCurSpeed > 0 &&
-                            VARS.verCurSpeed <= verCurMaxSpeed)
+                            VARS.verCurSpeed <= /*verCurMaxSpeed*/ curHighJumpingMaxSpeed)
                         {
                             //verCurSpeed += verAcce * Time.deltaTime;
                             //UFL.AddVerCurSpeed(verAcce * Time.deltaTime);
@@ -982,9 +1028,20 @@ public class CatMove : MonoBehaviour
         if (VARS.curEnergy > jumpEnergyCost &&
             !VARS.IsHighJumping)
         {
+            UFL.AddCatPosition(VARS.curUp * 0.01f);
+
+            //Debug.Log("jump");
+
             //verCurSpeed = verCurIniSpeed;
             //UFL.SetVerCurSpeed(verCurIniSpeed);
             VARS.verCurSpeed = verCurIniSpeed;
+
+            curHighJumpingMaxSpeed = verCurMaxSpeed;
+
+            if (VARS.IsInLiquid)
+            {
+                curHighJumpingMaxSpeed += VARS.curLiquidTileData.mass;
+            }
 
             VARS.IsHighJumping = true;
 
@@ -993,6 +1050,8 @@ public class CatMove : MonoBehaviour
             //curEnergy -= jumpEnergyCost;
             //UFL.AddCurTargetEnergy(-jumpEnergyCost);
             VARS.curTargetEnergy += -jumpEnergyCost;
+
+            //VARS.IsJustJumped = true;
         }
     }
 }

@@ -1,8 +1,7 @@
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
-using System.Reflection;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 
 [DefaultExecutionOrder((int)ScriptsExecutionOrder.ExecutionOrder.dataManager)]
@@ -19,6 +18,7 @@ public class DataManager : MonoBehaviour
     {
         //guide
         public bool hasFinishedKeysGuide;
+        public bool hasJumped;
         public bool hasBeenIntoMinimap;
         public bool hasClimbed;
         public bool hasTwisted;
@@ -87,6 +87,9 @@ public class DataManager : MonoBehaviour
         //isCenterFulfilled
         public bool[] isCenterFulfilled = new bool[6];
 
+        //maxEnergyBonus
+        public float maxEnergyBonus;
+
         //curLatestCenterSavePointPosition
         public Vector3 curLatestCenterSavePointPosition;
 
@@ -106,7 +109,7 @@ public class DataManager : MonoBehaviour
         public KeyCode grabKeyCode;
         //public KeyCode dashKeyCode;
         public KeyCode acceKeyCode;
-        public KeyCode confirmKeyCode;
+        public KeyCode minimapKeyCode;
         public KeyCode backKeyCode;
     }
 
@@ -247,7 +250,7 @@ public class DataManager : MonoBehaviour
         WriteCatWorldData(true);
         WriteKeyCodesData(true);
 
-        tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "Version0.3.1.txt");
+        tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "Version0.3.5.txt");
 
         if (File.Exists(tempPath))
         {
@@ -304,9 +307,17 @@ public class DataManager : MonoBehaviour
 
         if (VARS.IsToStartNewGame)
         {
+            Debug.Log("startNewGame");
+
             SetNewGameData();
 
             VARS.IsToStartNewGame = false;
+
+            //#if UNITY_EDITOR
+            //UnityEditor.EditorApplication.isPlaying = false;
+            //#endif
+
+            //Application.Quit();
         }
     }
 
@@ -324,6 +335,7 @@ public class DataManager : MonoBehaviour
             curProgressData = JsonUtility.FromJson<ProgressData>(tempJsonString);
 
             VARS.HasFinishedKeysGuide = curProgressData.hasFinishedKeysGuide;
+            VARS.HasJumped = curProgressData.hasJumped;
             VARS.HasBeenIntoMinimap = curProgressData.hasBeenIntoMinimap;
             VARS.HasClimbed = curProgressData.hasClimbed;
             VARS.HasTwisted = curProgressData.hasTwisted;
@@ -340,6 +352,7 @@ public class DataManager : MonoBehaviour
             tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "InitialProgressData.txt");
 
         curProgressData.hasFinishedKeysGuide = VARS.HasFinishedKeysGuide;
+        curProgressData.hasJumped = VARS.HasJumped;
         curProgressData.hasBeenIntoMinimap = VARS.HasBeenIntoMinimap;
         curProgressData.hasClimbed = VARS.HasClimbed;
         curProgressData.hasTwisted = VARS.HasTwisted;
@@ -652,6 +665,9 @@ public class DataManager : MonoBehaviour
             //        holeBlocks[i].transform.position = roomCenters[tempInt] - roomStableForwards[tempInt] * 0.9f;
             //    }
             //}
+            
+            //maxEneryBonus
+            VARS.maxEnergyBonus = curCatWorldData.maxEnergyBonus;
 
             //curLatestCenterSavePointPosition
             VARS.curLatestCenterSavePointPosition = curCatWorldData.curLatestCenterSavePointPosition;
@@ -757,6 +773,9 @@ public class DataManager : MonoBehaviour
         //isCenterFulfilled
         curCatWorldData.isCenterFulfilled = isCenterFulfilled;
 
+        //maxEnergyBonus
+        curCatWorldData.maxEnergyBonus = VARS.maxEnergyBonus;
+
         //curLatestCenterSavePointPosition
         curCatWorldData.curLatestCenterSavePointPosition = VARS.curLatestCenterSavePointPosition;
 
@@ -794,7 +813,7 @@ public class DataManager : MonoBehaviour
             VARS.acceKeyCode = curKeyCodesData.acceKeyCode;
             VARS.grabKeyCode = curKeyCodesData.grabKeyCode;
             //VARS.dashKeyCode = curKeyCodesData.dashKeyCode;
-            VARS.confirmKeyCode = curKeyCodesData.confirmKeyCode;
+            VARS.minimapKeyCode = curKeyCodesData.minimapKeyCode;
             //VARS.backKeyCode = curKeyCodesData.backKeyCode;
 
             VARS.curKeyCodes.Clear();
@@ -807,7 +826,7 @@ public class DataManager : MonoBehaviour
             VARS.curKeyCodes.Add(VARS.acceKeyCode);
             VARS.curKeyCodes.Add(VARS.grabKeyCode);
             //VARS.curKeyCodes.Add(VARS.dashKeyCode);
-            VARS.curKeyCodes.Add(VARS.confirmKeyCode);
+            VARS.curKeyCodes.Add(VARS.minimapKeyCode);
             //VARS.curKeyCodes.Add(VARS.backKeyCode);
         }
         else
@@ -831,7 +850,7 @@ public class DataManager : MonoBehaviour
         curKeyCodesData.acceKeyCode = VARS.acceKeyCode;
         curKeyCodesData.grabKeyCode = VARS.grabKeyCode;
         //curKeyCodesData.dashKeyCode = VARS.dashKeyCode;
-        curKeyCodesData.confirmKeyCode = VARS.confirmKeyCode;
+        curKeyCodesData.minimapKeyCode = VARS.minimapKeyCode;
         //curKeyCodesData.backKeyCode = VARS.backKeyCode;
 
         tempJsonString = JsonUtility.ToJson(curKeyCodesData);
@@ -857,6 +876,11 @@ public class DataManager : MonoBehaviour
         ReadWorldData(true);
         ReadCatWorldData(true);
         ReadKeyCodesData(true);
+
+        WriteProgressData();
+        WriteWorldData();
+        WriteCatWorldData();
+        WriteKeyCodesData();
 
         Debug.Log("AllDataReset");
     }
@@ -1024,7 +1048,7 @@ public class DataManager : MonoBehaviour
         curKeyCodesData.acceKeyCode = VARS.acceKeyCode;
         curKeyCodesData.grabKeyCode = VARS.grabKeyCode;
         //curKeyCodesData.dashKeyCode = VARS.dashKeyCode;
-        curKeyCodesData.confirmKeyCode = VARS.confirmKeyCode;
+        curKeyCodesData.minimapKeyCode = VARS.minimapKeyCode;
         //curKeyCodesData.backKeyCode = VARS.backKeyCode;
 
         tempJsonString = JsonUtility.ToJson(curKeyCodesData);

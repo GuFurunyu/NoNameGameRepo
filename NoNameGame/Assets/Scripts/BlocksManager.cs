@@ -1,6 +1,4 @@
 using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 
@@ -48,10 +46,13 @@ public class BlocksManager : MonoBehaviour
     Vector3 nearCoordVector;
 
     //fluidHeight
-    public float curLiquidMaxHeight;
-    public float curGasMinHeight;
-    public float curLiquidMinHeight;
-    public float curGasMaxHeight;
+    public int curLiquidMaxHeight;
+    public int curGasMinHeight;
+    public int curLiquidMinHeight;
+    public int curGasMaxHeight;
+
+    public List<int> curLiquidHeights;
+    public List<int> curGasHeights;
 
     //fluidContinuousnessOptimization
     //public List<int> curMovedBlockIndexes = new List<int>();
@@ -153,6 +154,8 @@ public class BlocksManager : MonoBehaviour
     float gridBreadth;
     int roomCoordBreadth;
 
+    GameObject[] roomPlanes = new GameObject[54];
+
     List<GameObject> gates = new List<GameObject>();
 
     List<GameObject> edgeGates = new List<GameObject>();
@@ -253,6 +256,7 @@ public class BlocksManager : MonoBehaviour
         #region ImportConstants
         gridBreadth = CONS.gridBreadth;
         roomCoordBreadth = CONS.roomCoordBreadth;
+        roomPlanes = CONS.roomPlanes;
         gates = CONS.gates;
         edgeGates = CONS.edgeGates;
         locks = CONS.locks;
@@ -794,6 +798,9 @@ public class BlocksManager : MonoBehaviour
             curLiquidMinHeight = 999;
             curGasMaxHeight = -999;
 
+            curLiquidHeights.Clear();
+            curGasHeights.Clear();
+
             for (int i = 0; i < curBlocks.Count; i++)
             {
                 if (curBlocks[i].activeSelf == false)
@@ -808,9 +815,15 @@ public class BlocksManager : MonoBehaviour
                 {
                     //tempFloat = Vector3.Dot(curBlock.transform.localPosition, VARS.curUp);
                     tempFloat = Vector3.Dot(curCoordVector, VARS.curUp);
+                    tempInt = Mathf.RoundToInt(tempFloat);
 
                     if (GetNearBlockTypeIndex(1) == 0)
                     {
+                        if (!curLiquidHeights.Contains(tempInt))
+                        {
+                            curLiquidHeights.Add(tempInt);
+                        }
+
                         //Debug.Log(curCoordVector);
 
                         //curLiquidMaxHeight
@@ -818,9 +831,11 @@ public class BlocksManager : MonoBehaviour
                         //{
                         //    curLiquidMaxHeight = tempFloat;
                         //}
-                        if (tempFloat > curLiquidMaxHeight)
+                        //if (tempFloat > curLiquidMaxHeight)
+                        if (tempInt > curLiquidMaxHeight)
                         {
-                            curLiquidMaxHeight = tempFloat;
+                            //curLiquidMaxHeight = Mathf.RoundToInt(tempFloat);
+                            curLiquidMaxHeight = tempInt;
                         }
 
                         //curLiquidMinHeight
@@ -828,9 +843,11 @@ public class BlocksManager : MonoBehaviour
                         //{
                         //    curLiquidMinHeight = tempFloat;
                         //}
-                        if (tempFloat < curLiquidMinHeight)
+                        //if (tempFloat < curLiquidMinHeight)
+                        if (tempInt < curLiquidMinHeight)
                         {
-                            curLiquidMinHeight = tempFloat;
+                            //curLiquidMinHeight = Mathf.RoundToInt(tempFloat);
+                            curLiquidMinHeight = tempInt;
                         }
                     }
                 }
@@ -840,17 +857,25 @@ public class BlocksManager : MonoBehaviour
                 {
                     //tempFloat = Vector3.Dot(curBlock.transform.localPosition, VARS.curUp);
                     tempFloat = Vector3.Dot(curCoordVector, VARS.curUp);
+                    tempInt = Mathf.RoundToInt(tempFloat);
 
                     if (GetNearBlockTypeIndex(2) == 0)
                     {
+                        if(!curGasHeights.Contains(tempInt))
+                        {
+                            curGasHeights.Add(tempInt);
+                        }
+
                         //curGasMinHeight
                         //if (curGasMinHeight == 999)
                         //{
                         //    curGasMinHeight = tempFloat;
                         //}
-                        if (tempFloat < curGasMinHeight)
+                        //if (tempFloat < curGasMinHeight)
+                        if (tempInt < curGasMinHeight)
                         {
-                            curGasMinHeight = tempFloat;
+                            //curGasMinHeight = Mathf.RoundToInt(tempFloat);
+                            curGasMaxHeight = tempInt;
                         }
 
                         //curGasMaxHeight
@@ -858,9 +883,11 @@ public class BlocksManager : MonoBehaviour
                         //{
                         //    curGasMaxHeight = tempFloat;
                         //}
-                        if (tempFloat > curGasMaxHeight)
+                        //if (tempFloat > curGasMaxHeight)
+                        if (tempInt > curGasMaxHeight)
                         {
-                            curGasMaxHeight = tempFloat;
+                            //curGasMaxHeight = Mathf.RoundToInt(tempFloat);
+                            curGasMaxHeight = tempInt;
                         }
                     }
                 }
@@ -1082,23 +1109,28 @@ public class BlocksManager : MonoBehaviour
 
                                         tempChar = tempString[tempInt];
 
+                                        //planeForward-left, planeUp-up
                                         switch (tempChar)
                                         {
                                             case 'u':
                                                 CurBlockMove(i, 2, false, true);
                                                 tempVector = VARS.roomStableUps[VARS.curRoomIndex];
+                                                //tempVector = roomPlanes[VARS.curRoomIndex].transform.up;
                                                 break;
                                             case 'd':
                                                 CurBlockMove(i, 1, false, true);
                                                 tempVector = -VARS.roomStableUps[VARS.curRoomIndex];
+                                                //tempVector = -roomPlanes[VARS.curRoomIndex].transform.up;
                                                 break;
                                             case 'l':
                                                 CurBlockMove(i, 4, false, true);
                                                 tempVector = -VARS.roomStableRights[VARS.curRoomIndex];
+                                                //tempVector = roomPlanes[VARS.curRoomIndex].transform.forward;
                                                 break;
                                             case 'r':
                                                 CurBlockMove(i, 3, false, true);
                                                 tempVector = VARS.roomStableRights[VARS.curRoomIndex];
+                                                //tempVector = -roomPlanes[VARS.curRoomIndex].transform.forward;
                                                 break;
                                         }
                                     }
@@ -1158,9 +1190,25 @@ public class BlocksManager : MonoBehaviour
                                 //moveUp
                                 if (tempFloat1 < ((curLiquidMaxHeight - Vector3.Dot(/*curBlock.transform.localPosition*/curCoordVector, VARS.curUp)) / (curLiquidMaxHeight - curLiquidMinHeight)) /** 0.75*/)
                                 {
+                                    tempBool = true;
+                                    tempInt = Mathf.RoundToInt(Vector3.Dot(curCoordVector, VARS.curUp));
+                                    
+                                    while (tempInt < curLiquidMaxHeight)
+                                    {
+                                        tempInt++;
+                                        if (!curLiquidHeights.Contains(tempInt))
+                                        {
+                                            tempBool = false;
+                                            break;
+                                        }
+                                    }
+
                                     //Debug.Log(tempFloat1 + " " + (curLiquidMaxHeight - Vector3.Dot(curBlock.transform.localPosition, VARS.curUp)) / (curLiquidMaxHeight - curLiquidMinHeight));
 
-                                    CurBlockMove(i, 1);
+                                    if (tempBool)
+                                    {
+                                        CurBlockMove(i, 1);
+                                    }
                                 }
                                 else
                                 {
@@ -1209,7 +1257,23 @@ public class BlocksManager : MonoBehaviour
                                 //moveDown
                                 if (tempFloat1 < ((Vector3.Dot(/*curBlock.transform.localPosition*/curCoordVector, VARS.curUp) - curGasMinHeight) / (curGasMaxHeight - curGasMinHeight)) /** 0.75*/)
                                 {
-                                    CurBlockMove(i, 2);
+                                    tempBool = true;
+                                    tempInt = Mathf.RoundToInt(Vector3.Dot(curCoordVector, VARS.curUp));
+
+                                    while (tempInt > curGasMinHeight)
+                                    {
+                                        tempInt--;
+                                        if (!curGasHeights.Contains(tempInt))
+                                        {
+                                            tempBool = false;
+                                            break;
+                                        }
+                                    }
+
+                                    if (tempBool)
+                                    {
+                                        CurBlockMove(i, 2);
+                                    }
                                 }
                                 else
                                 {
@@ -1341,7 +1405,7 @@ public class BlocksManager : MonoBehaviour
                 #region Locks
                 if (curBlockTileData.blockTypeIndex == 7104)
                 {
-                    if (Vector3.Distance(curBlock.transform.position,catTransform.position) < unlockDistance &&
+                    if (Vector3.Distance(curBlock.transform.position, catTransform.position) < unlockDistance &&
                         VARS.IsCarryingAKey)
                     {
                         VARS.curUnlockingBlock = curBlock;
@@ -1597,6 +1661,12 @@ public class BlocksManager : MonoBehaviour
                 break;
         }
 
+        //activatedSavePonitFix
+        if (Vector3.Distance(VARS.curActivatedSavePointPosition, nearCoordVector + VARS.curPlaneEmpty.transform.position) < 0.9)
+        {
+            return 7004;
+        }
+
         for (int i = 0; i < curCoordVectors.Count; i++)
         {
             if (Mathf.RoundToInt(curCoordVectors[i].x) == Mathf.RoundToInt(nearCoordVector.x) &&
@@ -1664,14 +1734,14 @@ public class BlocksManager : MonoBehaviour
             curBlock.transform.position -= rightVector;
             curCoordVectors[curBlockIndex] -= rightVector;
 
-            curBlockTileData.continuousHorMovingTimes ++;
+            curBlockTileData.continuousHorMovingTimes++;
         }
         else if (dirIndex == 4)
         {
             curBlock.transform.position += rightVector;
             curCoordVectors[curBlockIndex] += rightVector;
 
-            curBlockTileData.continuousHorMovingTimes ++;
+            curBlockTileData.continuousHorMovingTimes++;
         }
 
         if (curBlockTileData.continuousHorMovingTimes > continuousHorMovingMaxTime)
@@ -1742,7 +1812,7 @@ public class BlocksManager : MonoBehaviour
                 tempGameObject = storedGasBlocks[VARS.curStoredGasBlockIndex++];
                 break;
             case 6401:
-                tempGameObject=storedElectricMistBlocks[VARS.curStoredElectricMistBlockIndex++];
+                tempGameObject = storedElectricMistBlocks[VARS.curStoredElectricMistBlockIndex++];
                 break;
             case 6402:
                 tempGameObject = storedLightElectricMistBlocks[VARS.curStoredLightElectricMistBlockIndex++];

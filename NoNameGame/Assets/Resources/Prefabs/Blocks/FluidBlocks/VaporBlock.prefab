@@ -290,9 +290,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inRoomIndex: 0
+  isNotToBeInCurBlocks: 0
+  isNotToBeDetected: 0
+  fragmentIndex: 0
   offsetThres: 0.2
   _stateOfMatterIndex: 3
   isMovable: 1
+  iniLocalPosition: {x: 0, y: 0, z: 0}
+  continuousHorMovingTimes: 0
   isPositionDetermined: 0
   isAffectedByGravity: 1
   isPlatform: 0
@@ -306,7 +311,7 @@ MonoBehaviour:
   elasticity: 0
   tackiness: 0
   friction: 1
-  fluidDrag: 1.5
+  fluidDrag: 1.2
   mass: 1
   temperature: 150
   electricity: 0

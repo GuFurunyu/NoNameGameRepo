@@ -72,6 +72,9 @@ public class Constants : MonoBehaviour
     //~?
     //Vector3 outerGravityVector = new Vector3(1, -1, 1);
 
+    //justByGate
+    public float justInGateOverTime;
+
     //gates
     public List<GameObject> gates = new List<GameObject>();
 
@@ -166,6 +169,10 @@ public class Constants : MonoBehaviour
         "  \nCATCOLLISION\n --- ")]
     //fixedDeltaTime
     public float catCollisionFixedDeltaTime;
+
+    //stuck
+    public float stuckWarmupTime;
+    public float sandStuckWarmupTime;
 
     //rayDistance
     public float rayDistance;
@@ -269,6 +276,7 @@ public class Constants : MonoBehaviour
 
     //energyFragment
     public float energyFragmentMaxEnergyBonus;
+    public float separatedEnergyFragmentMaxEnergyBonus;
 
     //energyCost
     public float jumpEnergyCost;
@@ -304,6 +312,7 @@ public class Constants : MonoBehaviour
         "  \nCATTRIGGER\n --- ")]
     //void
     public float intoVoidGapTime;
+    public float intoVoidWarmupTime;
 
     //fragment
     public float fragmentDistance;
@@ -373,6 +382,9 @@ public class Constants : MonoBehaviour
         "  \nCATDEATH\n --- ")]
     //storedVoidBlocks
     public GameObject storedVoidBlocksEmpty;
+
+    //justDied
+    public float justDiedOverTime;
     #endregion
 
     #region BlocksManager
@@ -532,6 +544,7 @@ public class Constants : MonoBehaviour
     //guideTexts    
     public GameObject keysGuideEmpty;
     //public List<GameObject> keysGuideTexts = new List<GameObject>();
+    public GameObject jumpGuideText;
     public GameObject intoMinimapGuideText;
     public GameObject climbGuideText;
     public GameObject twistGuideText;

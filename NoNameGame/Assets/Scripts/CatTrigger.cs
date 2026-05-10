@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
 using UnityEngine;
 
 [DefaultExecutionOrder((int)ScriptsExecutionOrder.ExecutionOrder.catTrigger)]
@@ -93,6 +92,7 @@ public class CatTrigger : MonoBehaviour
     List<GameObject> locks = new List<GameObject>();
 
     float energyFragmentMaxEnergyBonus;
+    float separatedEnergyFragmentMaxEnergyBonus;
 
     float keySpeed;
     float keyDistance;
@@ -199,6 +199,7 @@ public class CatTrigger : MonoBehaviour
         keys = CONS.keys;
         locks = CONS.locks;
         energyFragmentMaxEnergyBonus = CONS.energyFragmentMaxEnergyBonus;
+        separatedEnergyFragmentMaxEnergyBonus = CONS.separatedEnergyFragmentMaxEnergyBonus;
         keySpeed = CONS.keySpeed;
         keyDistance = CONS.keyDistance;
         connectedGateColor = CONS.connectedGateColor;
@@ -362,6 +363,8 @@ public class CatTrigger : MonoBehaviour
             #region SavePoint
             if (VARS.IsToActivateASavePoint)
             {
+                Debug.Log("activateASavePoint");
+
                 //deactivateTheLastSavePoint
                 //if (VARS.curActivatedSavePoint != null)
                 //{
@@ -384,24 +387,33 @@ public class CatTrigger : MonoBehaviour
                 //curActivatedSavePointRoomIndex
                 VARS.curActivatedSavePointRoomIndex = VARS.curRoomIndex;
 
-                VARS.IsToDetermineCurActivatedSavePointPosition = true;
+                if((VARS.curRoomIndex-4) % 9 == 0)
+                {
+                    VARS.IsActivatingACenterSavePoint = true;
+                }
 
-                VARS.IsToActivateCurSavePoint = true;
+                VARS.IsToDetermineCurActivatedSavePointPosition = true;
 
                 VARS.IsToActivateASavePoint = false;
             }
 
             if (VARS.IsToDetermineCurActivatedSavePointPosition)
             {
+                Debug.Log("determineCurActivatedSavePointPosition");
+
                 VARS.curActivatedSavePointPosition = savePoints[VARS.curActivatedSavePointIndex].transform.position;
 
                 //Debug.Log(VARS.curActivatedSavePointPosition);
+
+                VARS.IsToActivateCurSavePoint = true;
 
                 VARS.IsToDetermineCurActivatedSavePointPosition = false;
             }
 
             if (VARS.IsToActivateCurSavePoint)
             {
+                Debug.Log("activateCurSavePoint");
+
                 //activateCurSavePoint
                 //storedActivatedSavePointBlock.transform.position = VARS.curActivatedSavePoint.transform.position;
                 storedActivatedSavePointBlock.transform.position = VARS.curActivatedSavePointPosition;
@@ -417,9 +429,15 @@ public class CatTrigger : MonoBehaviour
                 //VARS.catIniPosition = VARS.curActivatedSavePointPosition - curRoomStableForward * 0.1f;
                 catIniPositionPoint.transform.position = VARS.curActivatedSavePointPosition - curRoomStableForward * 0.1f;
 
-                if ((VARS.curRoomIndex - 4) % 9 == 0)
+                //if ((VARS.curRoomIndex - 4) % 9 == 0)
+                //{
+                //    VARS.curLatestCenterSavePointPosition = catIniPositionPoint.transform.position;
+                //}
+                if (VARS.IsActivatingACenterSavePoint)
                 {
                     VARS.curLatestCenterSavePointPosition = catIniPositionPoint.transform.position;
+
+                    VARS.IsActivatingACenterSavePoint = false;
                 }
 
                 //Debug.Log("catIniPosition:" + VARS.catIniPosition);
@@ -668,18 +686,37 @@ public class CatTrigger : MonoBehaviour
                     }
                 }
 
-                //embed
-                if (VARS.IsInCenter &&
-                    !VARS.IsEmbeddingFragments)
-                {
-                    VARS.IsDeterminingToBeEmbededFragmentPositions = true;
-                    VARS.IsEmbeddingFragments = true;
-                }
-
                 //outOfFragments
                 if (curCarriedFragments.Count == 0)
                 {
                     VARS.IsCarryingFragments = false;
+                }
+
+                //embed
+                if (VARS.IsInCenter &&
+                    !VARS.IsEmbeddingFragments &&
+                    !VARS.IsCenterFulfilled &&
+                    !VARS.IsAbsorbingAnEnergyFragment)
+                {
+                    VARS.curEmbededFragmentCount = 0;
+                    for (int i = 0; i < curCarriedFragments.Count; i++)
+                    {
+                        if (curCarriedFragmentFaceIndexes[i] == VARS.curFaceIndex)
+                        {
+                            VARS.curEmbededFragmentCount++;
+                        }
+                    }
+
+                    Debug.Log("curEmbededFragmentCount: " + VARS.curEmbededFragmentCount);
+
+                    if (VARS.curEmbededFragmentCount > 0)
+                    {
+                        VARS.verCurSpeed = 0;
+                        VARS.horCurSpeed = 0;
+
+                        VARS.IsDeterminingToBeEmbededFragmentPositions = true;
+                        VARS.IsEmbeddingFragments = true;
+                    }
                 }
             }
             //embedding
@@ -708,7 +745,8 @@ public class CatTrigger : MonoBehaviour
 
                             //Debug.Log("curToBeEmbededFragmentPosition: " + (VARS.curRoomCenter + tempVector - VARS.curRoomStableForward * 0.9f));
 
-                            curCarriedFragments[curToBeEmbededFragmentIndexes[i]].transform.SetParent(VARS.curPlaneEmpty.transform, true);
+                            //curCarriedFragments[curToBeEmbededFragmentIndexes[i]].transform.SetParent(VARS.curPlaneEmpty.transform, true);
+                            curCarriedFragments[i].transform.SetParent(VARS.curPlaneEmpty.transform, true);
 
                             curToBeEmbededFragmentIndexes.Add(i);
                             //curToBeEmbededFragmentLocalPositions.Add(VARS.curRoomCenter + tempVector - VARS.curRoomStableForward * 0.9f);
@@ -730,7 +768,8 @@ public class CatTrigger : MonoBehaviour
                     
                     if (tempFloat > 0.2f)
                     {
-                        curCarriedFragments[curToBeEmbededFragmentIndexes[i]].transform.position += -tempVector.normalized * fragmentSpeed * tempFloat * Time.deltaTime;
+                        //curCarriedFragments[curToBeEmbededFragmentIndexes[i]].transform.position += -tempVector.normalized * fragmentSpeed * tempFloat * Time.deltaTime;
+                        curCarriedFragments[curToBeEmbededFragmentIndexes[i]].transform.localPosition += -tempVector.normalized * fragmentSpeed * tempFloat * Time.deltaTime;
                     }
                     else
                     {
@@ -767,7 +806,7 @@ public class CatTrigger : MonoBehaviour
 
                 if (curToBeEmbededFragmentIndexes.Count == 0)
                 {
-                    for (int i = 0; i < curCarriedFragments.Count; i++)
+                    for (int i = curCarriedFragments.Count - 1; i > -1 ; i--)
                     {
                         if (curCarriedFragmentFaceIndexes[i] == VARS.curFaceIndex)
                         {
@@ -783,6 +822,8 @@ public class CatTrigger : MonoBehaviour
 
                     VARS.IsEmbeddingFragments = false;
 
+                    VARS.IsCenterFulfilled = true;
+
                     if ((VARS.curFaceIndex == 1 && !isYellowFragmentsEmbeded.Contains(false)) ||
                         (VARS.curFaceIndex == 2 && !isPurpleFragmentsEmbeded.Contains(false)) ||
                         (VARS.curFaceIndex == 3 && !isOrangeFragmentsEmbeded.Contains(false)) ||
@@ -792,8 +833,8 @@ public class CatTrigger : MonoBehaviour
                     {
                         isCenterFulfilled[VARS.curFaceIndex - 1] = true;
 
-                        VARS.IsCenterFulfilled = true;
-                    }
+                        //VARS.IsCenterFulfilled = true;
+                    }                    
                 }
 
                 VARS.IsToWriteCatWorldData = true;
@@ -804,7 +845,7 @@ public class CatTrigger : MonoBehaviour
                 Debug.Log("centerFulfilled");
 
                 //holeBlocks[VARS.curFaceIndex - 1].transform.position = VARS.curRoomCenter - VARS.curRoomStableForward * 0.9f;
-                energyFragments[VARS.curFaceIndex - 1].transform.position = VARS.curRoomCenter - VARS.curRoomStableForward /** 0.9f*/;
+                energyFragments[VARS.curFaceIndex - 1].transform.position = VARS.curRoomCenter - VARS.curRoomStableForward * 1.1f /** 0.9f*/;
 
                 VARS.absorbingEnergyFragmentWaitingStartTime = Time.time;
                 VARS.IsEnergyFragmentBacked = false;
@@ -820,22 +861,22 @@ public class CatTrigger : MonoBehaviour
                     tempVector = energyFragments[VARS.curFaceIndex - 1].transform.position - catTransform.position /*- VARS.curRoomStableForward * 0.1f*/;
                     tempFloat = Vector3.Magnitude(tempVector);
 
-                    if (!VARS.IsEnergyFragmentBacked)
-                    {
-                        if (tempFloat < energyFragmentBackDistance)
-                        {
-                            energyFragments[VARS.curFaceIndex - 1].transform.position += tempVector * energyFragmentSpeed * (2 - tempFloat) * Time.deltaTime;
-                        }
-                        else
-                        {
-                            VARS.IsEnergyFragmentBacked = true;
-                        }
-                    }
-                    else
-                    {
+                    //if (!VARS.IsEnergyFragmentBacked)
+                    //{
+                    //    if (tempFloat < energyFragmentBackDistance)
+                    //    {
+                    //        energyFragments[VARS.curFaceIndex - 1].transform.position += tempVector * energyFragmentSpeed /** (2 - tempFloat)*/ * Time.deltaTime;
+                    //    }
+                    //    else
+                    //    {
+                    //        VARS.IsEnergyFragmentBacked = true;
+                    //    }
+                    //}
+                    //else
+                    //{
                         if (tempFloat > 0.1f)
                         {
-                            energyFragments[VARS.curFaceIndex - 1].transform.position += -tempVector * energyFragmentSpeed * (2 - tempFloat) * Time.deltaTime;
+                            energyFragments[VARS.curFaceIndex - 1].transform.position += -tempVector * energyFragmentSpeed /** (2 - tempFloat)*/ * Time.deltaTime;
                             //if (tempFloat < 1.5)
                             //{
                             //    energyFragments[VARS.curFaceIndex - 1].transform.localScale = Vector3.one * ((tempFloat + 0.5f) / 2);
@@ -846,13 +887,16 @@ public class CatTrigger : MonoBehaviour
                             energyFragments[VARS.curFaceIndex - 1].transform.position = Vector3.zero;
                             energyFragments[VARS.curFaceIndex - 1].transform.localScale = Vector3.one;
 
-                            VARS.maxEnergyBonus += energyFragmentMaxEnergyBonus;
+                            //VARS.maxEnergyBonus += energyFragmentMaxEnergyBonus;
+                            VARS.maxEnergyBonus += separatedEnergyFragmentMaxEnergyBonus * VARS.curEmbededFragmentCount;
+
+                            Debug.Log("separatedEnergyFragmentMaxEnergyBonus * VARS.curEmbededFragmentCount: " + separatedEnergyFragmentMaxEnergyBonus * VARS.curEmbededFragmentCount);
 
                             //holeBlocks[VARS.curFaceIndex - 1].transform.position = VARS.curRoomCenter - VARS.curRoomStableForward * 0.9f;
 
                             VARS.IsAbsorbingAnEnergyFragment = false;
                         }
-                    }
+                    //}
                 }
             }
             #endregion

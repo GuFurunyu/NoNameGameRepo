@@ -1,7 +1,4 @@
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using JetBrains.Annotations;
-using Unity.VisualScripting;
 using UnityEngine;
 //using ECB = Variables.ExecutionControlBool;
 
@@ -104,6 +101,9 @@ public class Variables : MonoBehaviour
     //guide
     [SerializeField] private bool _hasFinishedKeysGuide;
     public bool HasFinishedKeysGuide { get { return _hasFinishedKeysGuide; } set { _hasFinishedKeysGuide = value; } }
+
+    [SerializeField] private bool _hasJumped;
+    public bool HasJumped { get { return _hasJumped; } set { _hasJumped = value; } }
 
     [SerializeField] private bool _hasBeenIntoMinimap;
     public bool HasBeenIntoMinimap { get { return _hasBeenIntoMinimap; } set { _hasBeenIntoMinimap = value; } }
@@ -233,6 +233,35 @@ public class Variables : MonoBehaviour
 
     //curLatestCenterSavePointPosition
     public Vector3 curLatestCenterSavePointPosition;
+
+    [SerializeField] private bool _isActivatingACenterSavePoint;
+    public bool IsActivatingACenterSavePoint { get { return _isActivatingACenterSavePoint; } set { _isActivatingACenterSavePoint = value; } }
+
+    //[SerializeField] private bool _isRoomTransferViable;
+    //public bool IsRoomTransferViable
+    //{
+    //    get
+    //    {
+    //        _isRoomTransferViable =
+    //            IsJustStartedTheGame ||
+    //            IsJustByGate ||
+    //            IsJustDied;
+
+    //        return _isRoomTransferViable;
+    //    }
+    //    set
+    //    {
+    //        _isRoomTransferViable = value;
+    //    }
+    //}
+
+    [SerializeField] private bool _isJustByGate;
+    public bool IsJustByGate { get { return _isJustByGate; } set { _isJustByGate = value; } }
+
+    public float lastJustInGateTime;
+
+    //[SerializeField] private bool _isJustStartedTheGame = true;
+    //public bool IsJustStartedTheGame { get { return _isJustStartedTheGame; } set { _isJustStartedTheGame = value; } }
 
     //edgeGatesLinkedToIndexes
     public List<int> edgeGateLinkedToIndexes = new List<int>();
@@ -364,15 +393,15 @@ public class Variables : MonoBehaviour
     [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
         "  \nCONTROL\n --- ")]
     //keyCodes
-    public KeyCode upKeyCode = KeyCode.W;
-    public KeyCode downKeyCode = KeyCode.S;
-    public KeyCode leftKeyCode = KeyCode.A;
-    public KeyCode rightKeyCode = KeyCode.D;
-    public KeyCode jumpKeyCode = KeyCode.K;
+    public KeyCode upKeyCode = KeyCode.UpArrow;
+    public KeyCode downKeyCode = KeyCode.DownArrow;
+    public KeyCode leftKeyCode = KeyCode.LeftArrow;
+    public KeyCode rightKeyCode = KeyCode.RightArrow;
+    public KeyCode jumpKeyCode = KeyCode.Z;
     //public KeyCode dashKeyCode = KeyCode.L;
-    public KeyCode acceKeyCode = KeyCode.L;
-    public KeyCode grabKeyCode = KeyCode.J;
-    public KeyCode confirmKeyCode = KeyCode.Space;
+    public KeyCode acceKeyCode = KeyCode.X;
+    public KeyCode grabKeyCode = KeyCode.C;
+    public KeyCode minimapKeyCode = KeyCode.V;
     public KeyCode backKeyCode = KeyCode.Escape;
 
     [SerializeField] private bool _isKeyCodeChanged = true;
@@ -404,8 +433,8 @@ public class Variables : MonoBehaviour
     [SerializeField] private bool _isInputtingGrabKey;
     public bool IsInputtingGrabKey { get { return _isInputtingGrabKey; } set { _isInputtingGrabKey = value; } }
 
-    [SerializeField] private bool _isInputtingConfirmKey;
-    public bool IsInputtingConfirmKey { get { return _isInputtingConfirmKey; } set { _isInputtingConfirmKey = value; } }
+    [SerializeField] private bool _isInputtingMinimapKey;
+    public bool IsInputtingMinimapKey { get { return _isInputtingMinimapKey; } set { _isInputtingMinimapKey = value; } }
 
     [SerializeField] private bool _isInputtingBackKey;
     public bool IsInputtingBackKey { get { return _isInputtingBackKey; } set { _isInputtingBackKey = value; } }
@@ -436,8 +465,8 @@ public class Variables : MonoBehaviour
     [SerializeField] private bool _isGrabKeyDown;
     public bool IsGrabKeyDown { get { return _isGrabKeyDown; } set { _isGrabKeyDown = value; } }
 
-    [SerializeField] private bool _isConfirmKeyDown;
-    public bool IsConfirmKeyDown { get { return _isConfirmKeyDown; } set { _isConfirmKeyDown = value; } }
+    [SerializeField] private bool _isMinimapKeyDown;
+    public bool IsMinimapKeyDown { get { return _isMinimapKeyDown; } set { _isMinimapKeyDown = value; } }
 
     [SerializeField] private bool _isBackKeyDown;
     public bool IsBackKeyDown { get { return _isBackKeyDown; } set { _isBackKeyDown = value; } }
@@ -467,8 +496,8 @@ public class Variables : MonoBehaviour
     [SerializeField] private bool _isGrabKeyUp;
     public bool IsGrabKeyUp { get { return _isGrabKeyUp; } set { _isGrabKeyUp = value; } }
 
-    [SerializeField] private bool _isConfirmKeyUp;
-    public bool IsConfirmKeyUp { get { return _isConfirmKeyUp; } set { _isConfirmKeyUp = value; } }
+    [SerializeField] private bool _isMinimapKeyUp;
+    public bool IsMinimapKeyUp { get { return _isMinimapKeyUp; } set { _isMinimapKeyUp = value; } }
 
     [SerializeField] private bool _isBackKeyUp;
     public bool IsBackKeyUp { get { return _isBackKeyUp; } set { _isBackKeyUp = value; } }
@@ -489,6 +518,10 @@ public class Variables : MonoBehaviour
     public float lastUpKeyDownTime = -1;
     public float lastDownKeyDownTime = -1;
 
+    //specificKeys
+    [SerializeField] private bool _isSpaceDown;
+    public bool IsSpaceDown { get { return _isSpaceDown; } set { _isSpaceDown = value; } }
+
     //bool isVerInputting;
     #endregion
 
@@ -501,6 +534,10 @@ public class Variables : MonoBehaviour
     //executability
     [SerializeField] private bool _isCatCollisionMainPartExecutable;
     public bool IsCatCollisionMainPartExecutable { get { return _isCatCollisionMainPartExecutable; } set { _isCatCollisionMainPartExecutable = value; } }
+
+    //stuck
+    public float stuckStartTime;
+    public float sandStuckStartTime;
 
     public float curUpBlockDistance;
     public float curDownBlockDistance;
@@ -629,6 +666,10 @@ public class Variables : MonoBehaviour
     [SerializeField] private bool _isCatBeingMovedByRailBlock;
     public bool IsCatBeingMovedByRailBlock { get { return _isCatBeingMovedByRailBlock; } set { _isCatBeingMovedByRailBlock = value; } }
 
+    //affliction
+    [SerializeField] private bool _isTouchingAfflictingBlocks;
+    public bool IsTouchingAfflictingBlocks { get { return _isTouchingAfflictingBlocks; } set { _isTouchingAfflictingBlocks = value; } }
+
     //triggerTile
     public GameObject curTriggerTile;
     public TileData curTriggerTileData;
@@ -680,6 +721,16 @@ public class Variables : MonoBehaviour
     //justInLiquid
     [SerializeField] private bool _isJustInLiquid;
     public bool IsJustInLiquid { get { return _isJustInLiquid; } set { _isJustInLiquid = value; } }
+
+    //justNotInLiquid
+    [SerializeField] private bool _isJustNotInLiquid;
+    public bool IsJustNotInLiquid { get { return _isJustNotInLiquid; } set { _isJustNotInLiquid = value; } }
+
+    //[SerializeField] private bool _isJustJumped;
+    //public bool IsJustJumped { get { return _isJustJumped; } set { _isJustJumped = value; } }
+
+    //[SerializeField] private bool _isJumpSucessful;
+    //public bool IsJumpSucessful { get { return _isJumpSucessful; } set { _isJumpSucessful = value; } }
 
     #endregion
 
@@ -824,6 +875,7 @@ public class Variables : MonoBehaviour
 
     //void
     public float lastIntoVoidTime;
+    public float lastTouchedVoidTime;
     [SerializeField] private bool _isJustIntoVoid;
     public bool IsJustIntoVoid { get { return _isJustIntoVoid; } set { _isJustIntoVoid = value; } }
 
@@ -876,6 +928,7 @@ public class Variables : MonoBehaviour
 
     public List<int> curToBeEmbededFragmentIndexes = new List<int>();
     public List<Vector3> curToBeEmbededFragmentLocalPositions = new List<Vector3>();
+    public int curEmbededFragmentCount;
 
     public float absorbingEnergyFragmentWaitingStartTime;
     [SerializeField] private bool _isEnergyFragmentBacked;
@@ -992,6 +1045,12 @@ public class Variables : MonoBehaviour
     //toDie
     [SerializeField] private bool _isToDie;
     public bool IsToDie { get { return _isToDie; } set { _isToDie = value; } }
+
+    //justDied
+    //[SerializeField] private bool _isJustDied;
+    //public bool IsJustDied { get { return _isJustDied; } set { _isJustDied = value; } }
+
+    //public float lastJustDiedTime;
 
     //catIniPosition
     public Vector3 catIniPosition;
@@ -1142,6 +1201,7 @@ public class Variables : MonoBehaviour
         {
             _isInGuide =
                 IsInKeysGuide ||
+                IsInJumpGuide ||
                 IsInIntoMinimapGuide ||
                 IsInClimbGuide ||
                 IsInTwistGuide ||
@@ -1157,6 +1217,9 @@ public class Variables : MonoBehaviour
 
     [SerializeField] private bool _isInKeysGuide;
     public bool IsInKeysGuide { get { return _isInKeysGuide; } set { _isInKeysGuide = value; } }
+
+    [SerializeField] private bool _isInJumpGuide;
+    public bool IsInJumpGuide { get { return _isInJumpGuide; } set { _isInJumpGuide = value; } }
 
     [SerializeField] private bool _isInIntoMinimapGuide;
     public bool IsInIntoMinimapGuide { get { return _isInIntoMinimapGuide; } set { _isInIntoMinimapGuide = value; } }

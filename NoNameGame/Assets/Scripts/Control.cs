@@ -22,7 +22,7 @@ public class Control : MonoBehaviour
     //KeyCode downKeyCode;
     //KeyCode jumpKeyCode;
     //KeyCode dashKeyCode;
-    //KeyCode confirmKeyCode;
+    //KeyCode minimapKeyCode;
     //KeyCode backKeyCode;
 
     //bool isKeyCodeChanged;
@@ -66,7 +66,7 @@ public class Control : MonoBehaviour
         //    downKeyCode = VARS.downKeyCode;
         //    jumpKeyCode = VARS.jumpKeyCode;
         //    dashKeyCode = VARS.dashKeyCode;
-        //    confirmKeyCode = VARS.confirmKeyCode;
+        //    minimapKeyCode = VARS.minimapKeyCode;
         //    backKeyCode = VARS.backKeyCode;
 
         //    VARS.IsKeyCodeChanged = false;
@@ -88,7 +88,7 @@ public class Control : MonoBehaviour
                 VARS.IsInputtingAcceKey = Input.GetKey(VARS.acceKeyCode);
                 VARS.IsInputtingGrabKey = Input.GetKey(VARS.grabKeyCode);
             }
-            VARS.IsInputtingConfirmKey = Input.GetKey(VARS.confirmKeyCode);
+            VARS.IsInputtingMinimapKey = Input.GetKey(VARS.minimapKeyCode);
             VARS.IsInputtingBackKey = Input.GetKey(VARS.backKeyCode);
 
                 VARS.IsUpKeyDown = Input.GetKeyDown(VARS.upKeyCode);
@@ -102,7 +102,7 @@ public class Control : MonoBehaviour
                 VARS.IsAcceKeyDown = Input.GetKeyDown(VARS.acceKeyCode);
                 VARS.IsGrabKeyDown = Input.GetKeyDown(VARS.grabKeyCode);
             }
-            VARS.IsConfirmKeyDown = Input.GetKeyDown(VARS.confirmKeyCode);
+            VARS.IsMinimapKeyDown = Input.GetKeyDown(VARS.minimapKeyCode);
             VARS.IsBackKeyDown = Input.GetKeyDown(VARS.backKeyCode);
 
             VARS.IsUpKeyUp = Input.GetKeyUp(VARS.upKeyCode);
@@ -116,14 +116,16 @@ public class Control : MonoBehaviour
                 VARS.IsAcceKeyUp = Input.GetKeyUp(VARS.acceKeyCode);
                 VARS.IsGrabKeyUp = Input.GetKeyUp(VARS.grabKeyCode);
             }
-            VARS.IsConfirmKeyUp = Input.GetKeyUp(VARS.upKeyCode);
+            VARS.IsMinimapKeyUp = Input.GetKeyUp(VARS.upKeyCode);
             VARS.IsBackKeyUp = Input.GetKeyUp(VARS.downKeyCode);
 
             //trigger
             if (VARS.IsUpKeyDown)
             {
                 //backCenterTrigger
-                if (Time.time - VARS.lastUpKeyDownTime < backCenterDoubleUpKeyDownThreshold)
+                if (Time.time - VARS.lastUpKeyDownTime < backCenterDoubleUpKeyDownThreshold &&
+                    !VARS.IsOptionPanelActivated &&
+                    !VARS.IsInMinimap)
                 {
                     VARS.IsBackCenterTriggered = true;
                 }
@@ -142,14 +144,17 @@ public class Control : MonoBehaviour
                     VARS.IsIntoMinimapTriggered = true;
                 }
 
-                //justOutOfMinimap
-                if (VARS.IsJustOutOfMinimap)
-                {
-                    VARS.IsJumpKeyDown = false;
+                ////justOutOfMinimap
+                //if (VARS.IsJustOutOfMinimap)
+                //{
+                //    VARS.IsJumpKeyDown = false;
 
-                    VARS.IsJustOutOfMinimap = false;
-                }
+                //    VARS.IsJustOutOfMinimap = false;
+                //}
             }
+
+            //specificKeys
+            VARS.IsSpaceDown = Input.GetKeyDown(KeyCode.Space);
         }
         else
         {
@@ -160,7 +165,7 @@ public class Control : MonoBehaviour
             VARS.IsInputtingJumpKey = false;
             VARS.IsInputtingDashKey = false;
             VARS.IsInputtingGrabKey = false;
-            VARS.IsInputtingConfirmKey = false;
+            VARS.IsInputtingMinimapKey = false;
             VARS.IsInputtingBackKey = false;
 
             VARS.IsUpKeyDown = false;
@@ -170,7 +175,7 @@ public class Control : MonoBehaviour
             VARS.IsJumpKeyDown = false;
             VARS.IsDashKeyDown = false;
             VARS.IsGrabKeyDown = false;
-            VARS.IsConfirmKeyDown = false;
+            VARS.IsMinimapKeyDown = false;
             VARS.IsBackKeyDown = false;
 
             VARS.IsUpKeyUp = false;
@@ -180,8 +185,10 @@ public class Control : MonoBehaviour
             VARS.IsJumpKeyUp = false;
             VARS.IsDashKeyUp = false;
             VARS.IsGrabKeyUp = false;
-            VARS.IsConfirmKeyUp = false;
+            VARS.IsMinimapKeyUp = false;
             VARS.IsBackKeyUp = false;
+
+            VARS.IsSpaceDown = false;
         }
     }
 }

@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -13,19 +12,22 @@ public class GuideManager : MonoBehaviour
     GameObject gameManager;
 
     #region ConstantsUsed
+    Transform catTransform;
+
     //keyCodes
-    public List<KeyCode> keyCodes = new List<KeyCode>();
+    List<KeyCode> keyCodes = new List<KeyCode>();
 
     //keySprites
-    public List<Sprite> keySprites = new List<Sprite>();
-    public List<Sprite> keyChosenSprites = new List<Sprite>();
+    List<Sprite> keySprites = new List<Sprite>();
+    List<Sprite> keyChosenSprites = new List<Sprite>();
 
-    public GameObject keysGuideEmpty;
+    GameObject keysGuideEmpty;
     //public List<GameObject> keysGuideTexts = new List<GameObject>();
-    public GameObject intoMinimapGuideText;
-    public GameObject climbGuideText;
-    public GameObject twistGuideText;
-    public GameObject backCenterGuideText;
+    GameObject jumpGuideText;
+    GameObject intoMinimapGuideText;
+    GameObject climbGuideText;
+    GameObject twistGuideText;
+    GameObject backCenterGuideText;
     #endregion
 
     #region VariablesUsed
@@ -42,10 +44,12 @@ public class GuideManager : MonoBehaviour
         SEC = gameManager.GetComponent<ScriptsExecutionController>();
 
         #region ImportConstants
+        catTransform = CONS.catTransform;
         keyCodes = CONS.keyCodes;
         keySprites = CONS.keySprites;
         keyChosenSprites = CONS.keyChosenSprites;
         keysGuideEmpty = CONS.keysGuideEmpty;
+        jumpGuideText = CONS.jumpGuideText;
         intoMinimapGuideText = CONS.intoMinimapGuideText;
         climbGuideText = CONS.climbGuideText;
         twistGuideText = CONS.twistGuideText;
@@ -62,105 +66,128 @@ public class GuideManager : MonoBehaviour
         #endregion
 
         #region IntoGuide
-        if (!VARS.HasFinishedKeysGuide &&
-            !VARS.IsInKeysGuide)
+        if (!VARS.IsInGuide)
         {
-            keysGuideEmpty.SetActive(true);
-
-            VARS.IsInKeysGuide = true;
-        }
-
-        //intoMinimap
-        if (!VARS.HasBeenIntoMinimap &&
-            !VARS.IsInIntoMinimapGuide &&
-            VARS.curRoomIndex != 2)
-        {
-            VARS.IsMinimapActivated = true;
-
-            for (int i = 0; i < keyCodes.Count; i++)
+            //keys
+            if (!VARS.HasFinishedKeysGuide &&
+                !VARS.IsInKeysGuide)
             {
-                if (keyCodes[i] == VARS.confirmKeyCode)
-                {
-                    intoMinimapGuideText.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = keyChosenSprites[i];
-                    break;
-                }
+                keysGuideEmpty.SetActive(true);
+
+                VARS.IsInKeysGuide = true;
             }
-
-            intoMinimapGuideText.SetActive(true);
-
-            VARS.IsInIntoMinimapGuide = true;
-        }
-        //climb
-        else if (!VARS.HasClimbed &&
-            !VARS.IsInClimbGuide &&
-            VARS.IsRightBlocked &&
-            !VARS.IsOnGround &&
-            VARS.curRoomIndex > 2)
-        {
-
-            for (int i = 0; i < keyCodes.Count; i++)
+            //jump
+            else if (!VARS.HasJumped &&
+                !VARS.IsInJumpGuide &&
+                VARS.HasFinishedKeysGuide)
             {
-                if (keyCodes[i] == VARS.rightKeyCode)
+                for (int i = 0; i < keyCodes.Count; i++)
                 {
-                    climbGuideText.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = keyChosenSprites[i];
+                    if (keyCodes[i] == VARS.jumpKeyCode)
+                    {
+                        jumpGuideText.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = keyChosenSprites[i];
+                        break;
+                    }
                 }
-                else if (keyCodes[i] == VARS.grabKeyCode)
-                {
-                    climbGuideText.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = keyChosenSprites[i];
-                }
-                else if (keyCodes[i] == VARS.upKeyCode)
-                {
-                    climbGuideText.transform.GetChild(2).GetComponent<SpriteRenderer>().sprite = keyChosenSprites[i];
-                }
+
+                jumpGuideText.SetActive(true);
+
+                VARS.IsInJumpGuide = true;
             }
-
-            climbGuideText.SetActive(true);
-
-            VARS.IsInClimbGuide = true;
-        }
-        //twist
-        else if (!VARS.HasTwisted &&
-            !VARS.IsInTwistGuide &&
-            VARS.IsInCenter &&
-            Mathf.Abs(VARS.verCurSpeed) < 0.1f &&
-            Mathf.Abs(VARS.horCurSpeed) < 1)
-        {
-            for (int i = 0; i < keyCodes.Count; i++)
+            //intoMinimap
+            else if (!VARS.HasBeenIntoMinimap &&
+                !VARS.IsInIntoMinimapGuide &&
+                VARS.curRoomIndex != 2)
             {
-                if (keyCodes[i] == VARS.downKeyCode)
+                VARS.IsMinimapActivated = true;
+
+                for (int i = 0; i < keyCodes.Count; i++)
                 {
-                    twistGuideText.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = keyChosenSprites[i];
+                    if (keyCodes[i] == VARS.minimapKeyCode)
+                    {
+                        intoMinimapGuideText.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = keyChosenSprites[i];
+                        break;
+                    }
                 }
-                else if (keyCodes[i] == VARS.rightKeyCode)
-                {
-                    twistGuideText.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = keyChosenSprites[i];
-                }
+
+                intoMinimapGuideText.SetActive(true);
+
+                VARS.IsInIntoMinimapGuide = true;
             }
-
-            twistGuideText.SetActive(true);
-
-            VARS.IsInTwistGuide = true;
-        }
-        //backCenter
-        else if (!VARS.HasBackCentered &&
-            !VARS.IsInBackCenterGuide &&
-            VARS.HasTwisted && 
-            !VARS.IsInCenter &&
-            Vector3.Magnitude(VARS.curLatestCenterSavePointPosition) > 1)
-        {
-            for (int i = 0; i < keyCodes.Count; i++)
+            //climb
+            else if (!VARS.HasClimbed &&
+                !VARS.IsInClimbGuide &&
+                VARS.IsRightBlocked &&
+                !VARS.IsOnGround &&
+                VARS.curRoomIndex > 2)
             {
-                if (keyCodes[i] == VARS.upKeyCode)
+
+                for (int i = 0; i < keyCodes.Count; i++)
                 {
-                    backCenterGuideText.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = keyChosenSprites[i];
-                    backCenterGuideText.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = keyChosenSprites[i];
-                    break;
+                    if (keyCodes[i] == VARS.rightKeyCode)
+                    {
+                        climbGuideText.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = keyChosenSprites[i];
+                    }
+                    else if (keyCodes[i] == VARS.grabKeyCode)
+                    {
+                        climbGuideText.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = keyChosenSprites[i];
+                    }
+                    else if (keyCodes[i] == VARS.upKeyCode)
+                    {
+                        climbGuideText.transform.GetChild(2).GetComponent<SpriteRenderer>().sprite = keyChosenSprites[i];
+                    }
                 }
+
+                climbGuideText.SetActive(true);
+
+                VARS.IsInClimbGuide = true;
             }
+            //twist
+            else if (!VARS.HasTwisted &&
+                !VARS.IsInTwistGuide &&
+                VARS.IsInCenter &&
+                Mathf.Abs(VARS.verCurSpeed) < 0.1f &&
+                Mathf.Abs(VARS.horCurSpeed) < 1 &&
+                Vector3.Magnitude(VARS.curLatestCenterSavePointPosition) > 1)
+            {
+                for (int i = 0; i < keyCodes.Count; i++)
+                {
+                    if (keyCodes[i] == VARS.downKeyCode)
+                    {
+                        twistGuideText.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = keyChosenSprites[i];
+                    }
+                    else if (keyCodes[i] == VARS.rightKeyCode)
+                    {
+                        twistGuideText.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = keyChosenSprites[i];
+                    }
+                }
 
-            backCenterGuideText.SetActive(true);
+                twistGuideText.SetActive(true);
 
-            VARS.IsInBackCenterGuide = true;
+                VARS.IsInTwistGuide = true;
+            }
+            //backCenter
+            else if (!VARS.HasBackCentered &&
+                !VARS.IsInBackCenterGuide &&
+                VARS.HasTwisted &&
+                !VARS.IsInCenter &&
+                Vector3.Magnitude(VARS.curLatestCenterSavePointPosition) > 1 &&
+                Vector3.Distance(catTransform.position, VARS.curLatestCenterSavePointPosition) > 6)
+            {
+                for (int i = 0; i < keyCodes.Count; i++)
+                {
+                    if (keyCodes[i] == VARS.upKeyCode)
+                    {
+                        backCenterGuideText.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = keyChosenSprites[i];
+                        backCenterGuideText.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = keyChosenSprites[i];
+                        break;
+                    }
+                }
+
+                backCenterGuideText.SetActive(true);
+
+                VARS.IsInBackCenterGuide = true;
+            }
         }
         #endregion
 
@@ -284,10 +311,10 @@ public class GuideManager : MonoBehaviour
                     keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(2).gameObject.SetActive(true);
                 }
             }
-            //confirm
+            //Minimap
             else if (VARS.curKeysGuideIndex == 7)
             {
-                if (VARS.IsConfirmKeyDown)
+                if (VARS.IsMinimapKeyDown)
                 {
                     Debug.Log("keysGuideOver");
 
@@ -307,9 +334,23 @@ public class GuideManager : MonoBehaviour
                 }
             }
         }
+        //jump
+        if (VARS.IsInJumpGuide &&
+            VARS.IsInputtingJumpKey)
+        {
+            Debug.Log("jumpGuideOver");
+
+            jumpGuideText.SetActive(false);
+
+            VARS.HasJumped = true;
+
+            VARS.IsToWriteProgressData = true;
+
+            VARS.IsInJumpGuide = false;
+        }
         //intoMinimap
         if (VARS.IsInIntoMinimapGuide &&
-            VARS.IsConfirmKeyDown)
+            VARS.IsMinimapKeyDown)
         {
             Debug.Log("intoMinimapGuideOver");
 

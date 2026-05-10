@@ -147,8 +147,9 @@ public class OptionsManager : MonoBehaviour
             {
                 //intoKeySetSub
                 if (!isInKeySetSub &&
-                    (VARS.IsConfirmKeyDown ||
-                    Input.GetKey(KeyCode.Space)))
+                    /*(VARS.IsConfirmKeyDown ||
+                    VARS.IsSpaceDown)*/
+                    VARS.IsSpaceDown)
                 {
                     isFromOptionsToKeySetSub = true;
                 }
@@ -163,7 +164,8 @@ public class OptionsManager : MonoBehaviour
 
                     //Input.ResetInputAxes();
 
-                    VARS.IsConfirmKeyDown = false;
+                    //VARS.IsConfirmKeyDown = false;
+                    VARS.IsSpaceDown = false;
                 }
 
                 if (isInKeySetSub)
@@ -208,8 +210,9 @@ public class OptionsManager : MonoBehaviour
                     //toSetAKey
                     if (!isSettingAKey &&
                         curKeySetSubIndex < keySetSubEmpties.Count - 1 &&
-                        (VARS.IsConfirmKeyDown ||
-                    Input.GetKeyDown(KeyCode.Space)))
+                        /*(VARS.IsConfirmKeyDown ||
+                    VARS.IsSpaceDown)*/
+                        VARS.IsSpaceDown)
                     {
                         isSettingAKey = true;
 
@@ -252,7 +255,7 @@ public class OptionsManager : MonoBehaviour
                                         VARS.grabKeyCode = tempKeyCode;
                                         break;
                                     case 7:
-                                        VARS.confirmKeyCode = tempKeyCode;
+                                        VARS.minimapKeyCode = tempKeyCode;
                                         break;
                                 }
                                 curKeyCodes[curKeySetSubIndex] = tempKeyCode;
@@ -272,7 +275,7 @@ public class OptionsManager : MonoBehaviour
 
                     //ok
                     if (curKeySetSubIndex == keySetSubEmpties.Count - 1 &&
-                        (VARS.IsConfirmKeyDown || Input.GetKeyDown(KeyCode.Space)) ||
+                        /*(VARS.IsConfirmKeyDown || VARS.IsSpaceDown)*/VARS.IsSpaceDown ||
                         VARS.IsBackKeyDown)
                     {
                         isFromKeySetSubToOptions = true;
@@ -297,8 +300,9 @@ public class OptionsManager : MonoBehaviour
             #region NewGame
             if (curOptionIndex == 1)
             {
-                if (VARS.IsConfirmKeyDown ||
-                    Input.GetKeyDown(KeyCode.Space))
+                //if (VARS.IsConfirmKeyDown ||
+                //    VARS.IsSpaceDown)
+                if(VARS.IsSpaceDown)
                 {
                     optionsPanel.SetActive(false);
                     VARS.IsOptionPanelActivated = false;
@@ -312,8 +316,9 @@ public class OptionsManager : MonoBehaviour
             #region Exit
             if (curOptionIndex == 2)
             {
-                if (VARS.IsConfirmKeyDown ||
-                    Input.GetKeyDown(KeyCode.Space))
+                //if (VARS.IsConfirmKeyDown ||
+                //    VARS.IsSpaceDown)
+                if(VARS.IsSpaceDown)
                 {
                     VARS.IsWritingAllData = true;
                     VARS.IsExiting = true;

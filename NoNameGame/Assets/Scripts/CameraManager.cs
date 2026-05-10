@@ -209,7 +209,7 @@ public class CameraManager : MonoBehaviour
                         if (VARS.IsInCenter)
                         {
                             if (/*VARS.IsUpKeyDown*/
-                                VARS.IsConfirmKeyDown)
+                                VARS.IsMinimapKeyDown)
                             {
                                 VARS.IsToZoomOut = true;
                             }
@@ -271,7 +271,7 @@ public class CameraManager : MonoBehaviour
                             zoomInAutoTriggerStartTime = 0;
 
                             if (/*VARS.IsDownKeyUp*/
-                                VARS.IsConfirmKeyDown)
+                                VARS.IsMinimapKeyDown)
                             {
                                 VARS.IsToZoomIn = true;
                             }

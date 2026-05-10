@@ -72,7 +72,7 @@ public class MinimapManager : MonoBehaviour
                 //{
                 //    if (VARS.IsJumpKeyDown)
                 //    {
-                if (VARS.IsConfirmKeyDown)
+                if (VARS.IsMinimapKeyDown)
                 //if (VARS.IsIntoMinimapTriggered)
                 {
                     UFL.IntoMinimap();
@@ -126,7 +126,7 @@ public class MinimapManager : MonoBehaviour
                     }
 
                     //outOfMinimap
-                    if (VARS.IsConfirmKeyDown)
+                    if (VARS.IsMinimapKeyDown)
                     //if (VARS.IsJumpKeyDown)
                     {
                         UFL.OutOfMinimap();

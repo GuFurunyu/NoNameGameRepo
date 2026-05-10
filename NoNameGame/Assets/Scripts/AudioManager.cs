@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -56,29 +55,32 @@ public class AudioManager : MonoBehaviour
 
         if (VARS.IsInNewRoomAllResetOver)
         {
-            VARS.curAudioClipIndex = VARS.curFaceIndex - 1;
-
-            //ifEnterNewFacePlayItsBGM
-            if (storedAudioClipIndex != VARS.curAudioClipIndex)
+            if (VARS.HasJumped)
             {
-                storedAudioClipIndex = VARS.curAudioClipIndex;
+                VARS.curAudioClipIndex = VARS.curFaceIndex - 1;
 
-                VARS.IsFormerBgmFadingOut = true;
-            }
-            //formalBgmFadeOut
-            if (VARS.IsFormerBgmFadingOut)
-            {
-                audioSource.volume -= volumeFadingOutSpeed * Time.deltaTime;
-
-                if (audioSource.volume < volumeFadingOutThres)
+                //ifEnterNewFacePlayItsBGM
+                if (storedAudioClipIndex != VARS.curAudioClipIndex)
                 {
-                    audioSource.volume = normalVolume;
+                    storedAudioClipIndex = VARS.curAudioClipIndex;
 
-                    audioSource.clip = audioClips[storedAudioClipIndex];
-                    audioSource.Play();
-                    audioSource.loop = true;
+                    VARS.IsFormerBgmFadingOut = true;
+                }
+                //formalBgmFadeOut
+                if (VARS.IsFormerBgmFadingOut)
+                {
+                    audioSource.volume -= volumeFadingOutSpeed * Time.deltaTime;
 
-                    VARS.IsFormerBgmFadingOut = false;
+                    if (audioSource.volume < volumeFadingOutThres)
+                    {
+                        audioSource.volume = normalVolume;
+
+                        audioSource.clip = audioClips[storedAudioClipIndex];
+                        audioSource.Play();
+                        audioSource.loop = true;
+
+                        VARS.IsFormerBgmFadingOut = false;
+                    }
                 }
             }
         }

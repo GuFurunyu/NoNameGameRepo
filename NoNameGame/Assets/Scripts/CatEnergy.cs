@@ -125,7 +125,7 @@ public class CatEnergy : MonoBehaviour
 
                 //curEnergy += onGroundEnergyRestoreSpeed * Time.deltaTime;
                 //UFL.AddCurTargetEnergy(onGroundEnergyRestoreSpeed * Time.deltaTime);
-                VARS.curTargetEnergy += onGroundEnergyRestoreSpeed * Time.deltaTime;
+                VARS.curTargetEnergy += onGroundEnergyRestoreSpeed * ((maxEnergy + VARS.maxEnergyBonus) / maxEnergy) * Time.deltaTime;
             }
         }
         #endregion

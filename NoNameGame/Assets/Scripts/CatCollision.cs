@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 
 [DefaultExecutionOrder((int)ScriptsExecutionOrder.ExecutionOrder.catCollision)]
@@ -447,7 +446,8 @@ public class CatCollision : MonoBehaviour
 
             #region CurBlocksDetect
             UFL.GetCatCollisionInfo();
-            UFL.TransferAffliction();
+            //UFL.TransferAffliction();
+            UFL.DissipateAffliction();
             UFL.CollidTriggers();
             #endregion
 

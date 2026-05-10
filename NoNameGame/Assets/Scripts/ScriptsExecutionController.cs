@@ -53,6 +53,9 @@ public class ScriptsExecutionController : MonoBehaviour
             (VARS.IsInUpEdgeGate ||
             VARS.IsInDownEdgeGate)) &&
             !VARS.IsJustReborn &&
+            !VARS.IsEmbeddingFragments &&
+            !VARS.IsCenterFulfilled &&
+            !VARS.IsAbsorbingAnEnergyFragment &&
             !VARS.IsExiting;
 
         //catRotate

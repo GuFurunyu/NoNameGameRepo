@@ -1,7 +1,5 @@
 using System.Collections.Generic;
-using System.Threading.Tasks.Sources;
 using UnityEngine;
-using UnityEngine.Video;
 
 [DefaultExecutionOrder((int)ScriptsExecutionOrder.ExecutionOrder.catDeath)]
 public class CatDeath : MonoBehaviour
@@ -29,6 +27,8 @@ public class CatDeath : MonoBehaviour
     float maxEnergy;
 
     GameObject storedVoidBlocksEmpty;
+
+    float justDiedOverTime;
 
     List<GameObject> minimapRedFragments = new List<GameObject>();
     List<GameObject> minimapYellowFragments = new List<GameObject>();
@@ -85,6 +85,7 @@ public class CatDeath : MonoBehaviour
         catIniPositionPoint = CONS.catIniPositionPoint;
         maxEnergy = CONS.maxEnergy;
         storedVoidBlocksEmpty = CONS.storedVoidBlocksEmpty;
+        justDiedOverTime = CONS.justDiedOverTime;
         minimapRedFragments = CONS.minimapRedFragments;
         minimapYellowFragments = CONS.minimapYellowFragments;
         minimapBlueFragments = CONS.minimapBlueFragments;
@@ -137,10 +138,19 @@ public class CatDeath : MonoBehaviour
 
         if (VARS.IsToDie)
         {
+            //VARS.lastJustDiedTime = Time.time;
+
+            //VARS.IsJustDied = true;
+
             Die();
 
             VARS.IsToDie = false;
         }
+
+        //if (Time.time - VARS.lastJustDiedTime > justDiedOverTime)
+        //{
+        //    VARS.IsJustDied = false;
+        //}
     }
     void Die()
     {

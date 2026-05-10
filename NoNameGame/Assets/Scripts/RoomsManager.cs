@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 [DefaultExecutionOrder((int)ScriptsExecutionOrder.ExecutionOrder.roomsManager)]
@@ -11,6 +10,8 @@ public class RoomsManager : MonoBehaviour
     ScriptsExecutionController SEC;
 
     GameObject gameManager;
+
+    bool isInAnotherRoom;
 
     bool isTwistingPresetOver;
 
@@ -47,6 +48,8 @@ public class RoomsManager : MonoBehaviour
     Vector3[] faceStableRights = new Vector3[6];
 
     GameObject[] roomPlanes = new GameObject[54];
+
+    float justInGateOverTime;
 
     GameObject[] twistingCenters = new GameObject[6];
     Vector3[] twistingCenterClockwiseVectors = new Vector3[6];
@@ -110,6 +113,7 @@ public class RoomsManager : MonoBehaviour
         faceStableUps = CONS.faceStableUps;
         faceStableRights = CONS.faceStableRights;
         roomPlanes = CONS.roomPlanes;
+        justInGateOverTime = CONS.justInGateOverTime;
         twistingCenters = CONS.twistingCenters;
         twistingCenterClockwiseVectors = CONS.twistingCenterClockwiseVectors;
         twistSpeed = CONS.twistSpeed;
@@ -151,6 +155,10 @@ public class RoomsManager : MonoBehaviour
         curPlaneEmpty = VARS.curPlaneEmpty;
         #endregion
 
+        //Debug.Log(roomPlanes[19].transform.forward);
+        //Debug.Log(roomPlanes[19].transform.up);
+        //Debug.Log(roomPlanes[19].transform.right);
+
         ////edgeGateTriggerRefresh
         //for (int i = 0; i < edgeGateTriggers.Count; i++)
         //{
@@ -158,21 +166,52 @@ public class RoomsManager : MonoBehaviour
         //}
 
         #region IfIsInNewRoom
+        //justByGate
+        if (VARS.IsJustByGate &&
+            Time.time - VARS.lastJustInGateTime > justInGateOverTime)
+        {
+            VARS.IsJustByGate = false;
+        }
+
         if (UFL.IsInRoom(VARS.curRoomIndex, catTransform.position))
         {
         }
         else
         {
+            ////mustBeViable(~byGates)
+            //if (VARS.IsRoomTransferViable)
+            //{
+
+            isInAnotherRoom = false;
+
             for (int i = 0; i < roomCenters.Length; i++)
             {
                 if (UFL.IsInRoom(i, catTransform.position))
                 {
                     VARS.curRoomIndex = i;
+                    isInAnotherRoom = true;
                     break;
                 }
             }
 
-            VARS.IsIntoNewRoom = true;
+            //VARS.IsJustStartedTheGame = false;
+            //VARS.IsJustByGate = false;
+            //VARS.IsJustDied = false;
+
+            if (isInAnotherRoom)
+            {
+                VARS.IsIntoNewRoom = true;
+            }
+            else
+            {
+                VARS.IsToDie = true;
+            }
+            //}
+            ////elseDie
+            //else
+            //{
+            //    VARS.IsToDie = true;
+            //}
         }
 
         //if (VARS.IsIntoNewRoom)
@@ -221,7 +260,8 @@ public class RoomsManager : MonoBehaviour
             //control
             if (!VARS.IsTwisting)
             {
-                if (VARS.IsInCenter)
+                if (VARS.IsInCenter &&
+                    UFL.IsInRoom(VARS.curRoomIndex,VARS.curLatestCenterSavePointPosition))
                 {
                     if (VARS.IsInputtingDownKey)
                     {
@@ -357,12 +397,54 @@ public class RoomsManager : MonoBehaviour
                     //setTargetEulerangles
                     if (VARS.IsClockwiseTwisting)
                     {
-                        twistingTargetEulerangles = curTwistingCenter.transform.eulerAngles + twistingCenterClockwiseVectors[VARS.curFaceIndex - 1];
+                        //twistingTargetEulerangles = curTwistingCenter.transform.eulerAngles + twistingCenterClockwiseVectors[VARS.curFaceIndex - 1];
+
+                        //if (Mathf.Min(Mathf.Abs(Vector3.Dot(curTwistingCenter.transform.eulerAngles, twistingCenterClockwiseVectors[VARS.curFaceIndex - 1])),
+                        //       Mathf.Abs(Vector3.Dot(curTwistingCenter.transform.eulerAngles - Vector3.one * 360, twistingCenterClockwiseVectors[VARS.curFaceIndex - 1]))) < 1000)
+                        //{
+                        //    //twistingTargetEulerangles = curTwistingCenter.transform.eulerAngles - twistingCenterClockwiseVectors[VARS.curFaceIndex - 1];
+                        //    twistingTargetEulerangles *= -1;
+                        //}
+                        //else
+                        //{
+                        //    //twistingTargetEulerangles = curTwistingCenter.transform.eulerAngles + twistingCenterClockwiseVectors[VARS.curFaceIndex - 1];
+                        //}
+
+                        Quaternion curRotation = curTwistingCenter.transform.rotation;
+                        Quaternion deltaRotation = Quaternion.Euler(twistingCenterClockwiseVectors[VARS.curFaceIndex - 1]);
+                        Quaternion newRotation = curRotation * deltaRotation;
+                        twistingTargetEulerangles = newRotation.eulerAngles;
+
+                        Debug.Log("enter" + Mathf.Min(Mathf.Abs(Vector3.Dot(curTwistingCenter.transform.eulerAngles, twistingCenterClockwiseVectors[VARS.curFaceIndex - 1])),
+                               Mathf.Abs(Vector3.Dot(curTwistingCenter.transform.eulerAngles - Vector3.one * 360, twistingCenterClockwiseVectors[VARS.curFaceIndex - 1]))));
                     }
                     else
                     {
-                        twistingTargetEulerangles = curTwistingCenter.transform.eulerAngles + -twistingCenterClockwiseVectors[VARS.curFaceIndex - 1];
+                        //twistingTargetEulerangles = curTwistingCenter.transform.eulerAngles + -twistingCenterClockwiseVectors[VARS.curFaceIndex - 1];
+
+                        //if (Mathf.Min(Mathf.Abs(Vector3.Dot(curTwistingCenter.transform.eulerAngles, twistingCenterClockwiseVectors[VARS.curFaceIndex - 1])),
+                        //       Mathf.Abs(Vector3.Dot(curTwistingCenter.transform.eulerAngles - Vector3.one * 360, twistingCenterClockwiseVectors[VARS.curFaceIndex - 1]))) < 1000)
+                        //{
+                        //    //twistingTargetEulerangles = curTwistingCenter.transform.eulerAngles + twistingCenterClockwiseVectors[VARS.curFaceIndex - 1];
+                        //    twistingTargetEulerangles *= -1;
+                        //}
+                        //else
+                        //{
+                        //    //twistingTargetEulerangles = curTwistingCenter.transform.eulerAngles - twistingCenterClockwiseVectors[VARS.curFaceIndex - 1];
+                        //}
+
+                        Quaternion curRotation = curTwistingCenter.transform.rotation;
+                        Quaternion deltaRotation = Quaternion.Euler(-twistingCenterClockwiseVectors[VARS.curFaceIndex - 1]);
+                        Quaternion newRotation = curRotation * deltaRotation;
+                        twistingTargetEulerangles = newRotation.eulerAngles;
+
+                        Debug.Log("enter" + Mathf.Min(Mathf.Abs(Vector3.Dot(curTwistingCenter.transform.eulerAngles, twistingCenterClockwiseVectors[VARS.curFaceIndex - 1])),
+                               Mathf.Abs(Vector3.Dot(curTwistingCenter.transform.eulerAngles - Vector3.one * 360, twistingCenterClockwiseVectors[VARS.curFaceIndex - 1]))));
                     }
+
+                    Debug.Log("curTwistingCenter.transform.eulerAngles: " + curTwistingCenter.transform.eulerAngles);
+                    Debug.Log("twistingCenterClockwiseVectors[VARS.curFaceIndex - 1]: " + twistingCenterClockwiseVectors[VARS.curFaceIndex - 1]);
+                    Debug.Log("twistingTargetEulerangles: " + twistingTargetEulerangles);
 
                     isTwistingPresetOver = true;
                 }

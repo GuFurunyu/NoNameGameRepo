@@ -16,7 +16,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6361518371004588528
 Transform:
   m_ObjectHideFlags: 0
@@ -100,7 +100,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2780428314709562224
 Transform:
   m_ObjectHideFlags: 0
@@ -184,7 +184,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2415132475473541701
 Transform:
   m_ObjectHideFlags: 0
@@ -268,7 +268,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &58469296960374823
 Transform:
   m_ObjectHideFlags: 0
@@ -461,13 +461,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inRoomIndex: 0
+  isNotToBeInCurBlocks: 0
+  isNotToBeDetected: 0
+  fragmentIndex: 0
   offsetThres: 0.2
   _stateOfMatterIndex: 1
   isMovable: 0
+  iniLocalPosition: {x: 0, y: 0, z: 0}
+  continuousHorMovingTimes: 0
   isPositionDetermined: 0
   isAffectedByGravity: 0
   isPlatform: 0
   isNotClimbable: 0
+  isFragile: 0
+  railBlockIndex: 0
+  railBlockMoveStringStartIndex: 0
+  isLoop: 0
   sharpDirVector: {x: 0, y: 0, z: 0}
   toughness: 999
   elasticity: 0
@@ -476,7 +485,7 @@ MonoBehaviour:
   fluidDrag: 1
   mass: 1
   temperature: 0
-  conductivity: 0
+  electricity: 0
   toxicity: 0
   _blockTypeIndex: 7101
 --- !u!1 &5884650641751018948
@@ -495,7 +504,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2104820788006327312
 Transform:
   m_ObjectHideFlags: 0
@@ -579,7 +588,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &313546690062173572
 Transform:
   m_ObjectHideFlags: 0
