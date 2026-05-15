@@ -522,6 +522,9 @@ public class Variables : MonoBehaviour
     [SerializeField] private bool _isSpaceDown;
     public bool IsSpaceDown { get { return _isSpaceDown; } set { _isSpaceDown = value; } }
 
+    [SerializeField] private bool _isReturnDown;
+    public bool IsReturnDown { get { return _isReturnDown; } set { _isReturnDown = value; } }
+
     //bool isVerInputting;
     #endregion
 
@@ -731,6 +734,12 @@ public class Variables : MonoBehaviour
 
     //[SerializeField] private bool _isJumpSucessful;
     //public bool IsJumpSucessful { get { return _isJumpSucessful; } set { _isJumpSucessful = value; } }
+
+    [SerializeField] private bool _isClimbing;
+    public bool IsClimbing { get { return _isClimbing; } set { _isClimbing = value; } }
+
+    [SerializeField] private bool _isMovingInAttachingCeiling;
+    public bool IsMovingInAttachingCeiling { get { return _isMovingInAttachingCeiling; } set { _isMovingInAttachingCeiling = value; } }
 
     #endregion
 
@@ -1057,6 +1066,10 @@ public class Variables : MonoBehaviour
 
     [SerializeField] private bool _isJustReborn = true;
     public bool IsJustReborn { get { return _isJustReborn; } set { _isJustReborn = value; } }
+
+    [SerializeField] private bool _isToNotLoseCarriedFragments;
+    public bool IsToNotLoseCarriedFragments { get { return _isToNotLoseCarriedFragments; } set { _isToNotLoseCarriedFragments = value; } }
+
     #endregion
 
     #region BlocksManager

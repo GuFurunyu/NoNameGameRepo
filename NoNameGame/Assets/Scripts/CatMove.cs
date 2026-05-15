@@ -43,6 +43,11 @@ public class CatMove : MonoBehaviour
 
     //acce
     float curAcceBonus = 1;
+    float curGravityAcceBonus;
+    float curClimbingAcceBonus;    
+
+    float tempFloat;
+    Vector3 tempVector;
 
     #region ConstantsUsed
     float justEnterNewFaceTime;
@@ -83,7 +88,7 @@ public class CatMove : MonoBehaviour
     float dashIniSpeed;
     float dashTime;
 
-    //curAcceBonus
+    //acceBonus
     float acceBonus;
 
     float attachWallEnergyDecreaseSpeed;
@@ -476,6 +481,17 @@ public class CatMove : MonoBehaviour
                 }
             }
 
+            //movingInAttachingCeiling
+            if (VARS.IsAttachCeiling &&
+                VARS.horCurSpeed != 0)
+            {
+                VARS.IsMovingInAttachingCeiling = true;
+            }
+            else
+            {
+                VARS.IsMovingInAttachingCeiling = false;
+            }
+
             ////debug
             //VARS.horCurSpeed = 0;
 
@@ -494,14 +510,14 @@ public class CatMove : MonoBehaviour
                 if (isOnGround)
                 {
                     verCurIniSpeed = verIniSpeed;
-                    curGravityAcce = gravityAcce;
+                    curGravityAcce = gravityAcce * curGravityAcceBonus;
                     verCurMaxSpeed = verMaxSpeed - curDownTileData.tackiness;
                 }
                 //HR: ~fluid
                 else
                 {
                     verCurIniSpeed = verIniSpeed;
-                    curGravityAcce = gravityAcce;
+                    curGravityAcce = gravityAcce * curGravityAcceBonus;
                     verCurMaxSpeed = verMaxSpeed;
                 }
             }
@@ -512,15 +528,15 @@ public class CatMove : MonoBehaviour
                     verCurIniSpeed = verIniSpeed / curLiquidTileData.fluidDrag;
                     if (VARS.IsInputtingUpKey)
                     {
-                        curGravityAcce = gravityAcce - gravityAcce * curLiquidTileData.mass * (1 - buoyancyDistanceFixFloat) /** 3*/ /** 2*/ /** 1.5f*/ * 2;
+                        curGravityAcce = (gravityAcce - gravityAcce * curLiquidTileData.mass * (1 - buoyancyDistanceFixFloat) /** 3*/ /** 2*/ /** 1.5f*/ * 2) * curGravityAcceBonus;
                     }
                     else if (VARS.IsInputtingDownKey)
                     {
-                        curGravityAcce = gravityAcce - gravityAcce * curLiquidTileData.mass * (1 - buoyancyDistanceFixFloat) /** 3*/ /** 2*/ /** 1.5f*/ * 0.9f;
+                        curGravityAcce = (gravityAcce - gravityAcce * curLiquidTileData.mass * (1 - buoyancyDistanceFixFloat) /** 3*/ /** 2*/ /** 1.5f*/ * 0.9f) * curGravityAcceBonus;
                     }
                     else
                     {
-                        curGravityAcce = gravityAcce - gravityAcce * curLiquidTileData.mass * (1 - buoyancyDistanceFixFloat) /** 3*/ /** 2*/ * 1.5f;
+                        curGravityAcce = (gravityAcce - gravityAcce * curLiquidTileData.mass * (1 - buoyancyDistanceFixFloat) /** 3*/ /** 2*/ * 1.5f) * curGravityAcceBonus;
                     }
                     verCurMaxSpeed = verMaxSpeed / curLiquidTileData.fluidDrag;
 
@@ -529,13 +545,13 @@ public class CatMove : MonoBehaviour
                 else if (isInGas)
                 {
                     verCurIniSpeed = verIniSpeed / curGasTileData.fluidDrag;
-                    curGravityAcce = gravityAcce - gravityAcce * curGasTileData.mass * 0.5f /*/ 2*/;
+                    curGravityAcce = (gravityAcce - gravityAcce * curGasTileData.mass * 0.5f /*/ 2*/) * curGravityAcceBonus;
                     verCurMaxSpeed = verMaxSpeed / curGasTileData.fluidDrag;
                 }
                 else if (isInMist)
                 {
                     verCurIniSpeed = verIniSpeed / curMistTileData.fluidDrag;
-                    curGravityAcce = gravityAcce - gravityAcce * curMistTileData.mass * 0.5f /*/ 2*/;
+                    curGravityAcce = (gravityAcce - gravityAcce * curMistTileData.mass * 0.5f /*/ 2*/) * curGravityAcceBonus;
                     verCurMaxSpeed = verMaxSpeed / curMistTileData.fluidDrag;
                 }
             }
@@ -549,14 +565,14 @@ public class CatMove : MonoBehaviour
             {
                 if (VARS.IsInputtingLeftKey)
                 {
-                    curClimbSpeed = climbSpeed * curLeftTileData.friction;
+                    curClimbSpeed = climbSpeed * curLeftTileData.friction * curClimbingAcceBonus;
                 }
             }
             if (isRightBlocked)
             {
                 if (VARS.IsInputtingRightKey)
                 {
-                    curClimbSpeed = climbSpeed * curRightTileData.friction;
+                    curClimbSpeed = climbSpeed * curRightTileData.friction * curClimbingAcceBonus;
                 }
             }
 
@@ -581,6 +597,12 @@ public class CatMove : MonoBehaviour
                 VARS.verCurSpeed /= 2;
 
                 VARS.IsJustNotInLiquid = false;
+            }
+
+            //outOfHighJumping
+            if (VARS.IsJumpKeyDown)
+            {
+                VARS.IsHighJumping = false;
             }
 
             //just"||isInLiquid"?
@@ -774,13 +796,25 @@ public class CatMove : MonoBehaviour
 
                         //    isAttachWall = false;
                         //}
+
+                        VARS.IsClimbing = true;
                     }
                     //down
                     else if (VARS.IsInputtingDownKey)
                     {
                         VARS.verCurSpeed = -curClimbSpeed;
                         VARS.curTargetEnergy += -climbEnergyDecreaseSpeed * 0.75f * Time.deltaTime;
+
+                        VARS.IsClimbing = true;
                     }
+                    else
+                    {
+                        VARS.IsClimbing = false;
+                    }
+                }
+                else
+                {
+                    VARS.IsClimbing = false;
                 }
             }
 
@@ -969,6 +1003,11 @@ public class CatMove : MonoBehaviour
                 if (VARS.IsInAcce)
                 {
                     curAcceBonus = acceBonus;
+                    if (VARS.IsInputtingDownKey)
+                    {
+                        curGravityAcceBonus = acceBonus /** 2*/ * 1.5f;
+                    }
+                    curClimbingAcceBonus = acceBonus;
 
                     //UFL.AddCurTargetEnergy(-inAcceEnergyDecreaseSpeed * Time.deltaTime);
                     VARS.curTargetEnergy += -inAcceEnergyDecreaseSpeed * Time.deltaTime;
@@ -976,6 +1015,8 @@ public class CatMove : MonoBehaviour
                 else
                 {
                     curAcceBonus = 1;
+                    curGravityAcceBonus = 1;
+                    curClimbingAcceBonus = 1;
                 }
             }
             #endregion
@@ -985,6 +1026,11 @@ public class CatMove : MonoBehaviour
             {
                 if (Vector3.Magnitude(VARS.curLatestCenterSavePointPosition) > 1)
                 {
+                    if (VARS.IsCarryingFragments)
+                    {
+                        VARS.IsToNotLoseCarriedFragments = true;
+                    }
+
                     catIniPositionPoint.transform.position = VARS.curLatestCenterSavePointPosition;
                     VARS.IsToDie = true;
                 }
@@ -1029,6 +1075,27 @@ public class CatMove : MonoBehaviour
             !VARS.IsHighJumping)
         {
             UFL.AddCatPosition(VARS.curUp * 0.01f);
+
+            ////avoidTheCaseOfUnableToJumpOnPlatform
+            //if (VARS.curDownTileData.isPlatform)
+            //{
+            //    Debug.Log("enter");                
+
+            //    tempVector = catTransform.position - VARS.curDownTile.transform.position;
+            //    tempFloat = Vector3.Dot(tempVector, VARS.curUp);
+
+            //    Debug.Log(tempFloat);
+
+            //    while (tempFloat < 1)
+            //    {
+            //        tempVector = catTransform.position - VARS.curDownTile.transform.position;
+            //        tempFloat = Vector3.Dot(tempVector, VARS.curUp);
+
+            //        Debug.Log("while " + tempFloat);
+
+            //        UFL.AddCatPosition(VARS.curUp * 0.02f);
+            //    }
+            //}
 
             //Debug.Log("jump");
 

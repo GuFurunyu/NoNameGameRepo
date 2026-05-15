@@ -177,14 +177,14 @@ public class DataManager : MonoBehaviour
     Vector3[] roomStableUps = new Vector3[54];
     Vector3[] roomStableRights = new Vector3[54];
 
-    bool[] isRedFragmentsEmbeded = new bool[8];
-    bool[] isYellowFragmentsEmbeded = new bool[8];
-    bool[] isBlueFragmentsEmbeded = new bool[8];
-    bool[] isOrangeFragmentsEmbeded = new bool[8];
-    bool[] isGreenFragmentsEmbeded = new bool[8];
-    bool[] isPurpleFragmentsEmbeded = new bool[8];
+    //bool[] isRedFragmentsEmbeded = new bool[8];
+    //bool[] isYellowFragmentsEmbeded = new bool[8];
+    //bool[] isBlueFragmentsEmbeded = new bool[8];
+    //bool[] isOrangeFragmentsEmbeded = new bool[8];
+    //bool[] isGreenFragmentsEmbeded = new bool[8];
+    //bool[] isPurpleFragmentsEmbeded = new bool[8];
 
-    bool[] isCenterFulfilled = new bool[6];
+    //bool[] isCenterFulfilled = new bool[6];
     #endregion
 
 
@@ -236,13 +236,6 @@ public class DataManager : MonoBehaviour
         roomStableForwards = VARS.roomStableForwards;
         roomStableUps = VARS.roomStableUps;
         roomStableRights = VARS.roomStableRights;
-        isRedFragmentsEmbeded = VARS.isRedFragmentsEmbeded;
-        isYellowFragmentsEmbeded = VARS.isYellowFragmentsEmbeded;
-        isBlueFragmentsEmbeded = VARS.isBlueFragmentsEmbeded;
-        isOrangeFragmentsEmbeded = VARS.isOrangeFragmentsEmbeded;
-        isGreenFragmentsEmbeded = VARS.isGreenFragmentsEmbeded;
-        isPurpleFragmentsEmbeded = VARS.isPurpleFragmentsEmbeded;
-        isCenterFulfilled = VARS.isCenterFulfilled;
         #endregion
 
         WriteProgressData(true);
@@ -534,15 +527,15 @@ public class DataManager : MonoBehaviour
             VARS.IsToActivateCurSavePoint = true;
 
             //fragments
-            isRedFragmentsEmbeded = curCatWorldData.isRedFragmentsEmbeded;
-            isYellowFragmentsEmbeded = curCatWorldData.isYellowFragmentsEmbeded;
-            isBlueFragmentsEmbeded = curCatWorldData.isBlueFragmentsEmbeded;
-            isOrangeFragmentsEmbeded = curCatWorldData.isOrangeFragmentsEmbeded;
-            isGreenFragmentsEmbeded = curCatWorldData.isGreenFragmentsEmbeded;
-            isPurpleFragmentsEmbeded = curCatWorldData.isPurpleFragmentsEmbeded;
+            VARS.isRedFragmentsEmbeded = curCatWorldData.isRedFragmentsEmbeded;
+            VARS.isYellowFragmentsEmbeded = curCatWorldData.isYellowFragmentsEmbeded;
+            VARS.isBlueFragmentsEmbeded = curCatWorldData.isBlueFragmentsEmbeded;
+            VARS.isOrangeFragmentsEmbeded = curCatWorldData.isOrangeFragmentsEmbeded;
+            VARS.isGreenFragmentsEmbeded = curCatWorldData.isGreenFragmentsEmbeded;
+            VARS.isPurpleFragmentsEmbeded = curCatWorldData.isPurpleFragmentsEmbeded;
             for (int i = 0; i < redFragments.Count; i++)
             {
-                if (isRedFragmentsEmbeded[redFragments[i].GetComponent<TileData>().fragmentIndex - 1])
+                if (VARS.isRedFragmentsEmbeded[redFragments[i].GetComponent<TileData>().fragmentIndex - 1])
                 {
                     redFragments[i].transform.position = curCatWorldData.redEmbededFragmentPositions[redFragments[i].GetComponent<TileData>().fragmentIndex - 1];
                     for (int j = 0; j < 9; j++)
@@ -554,7 +547,7 @@ public class DataManager : MonoBehaviour
             }
             for (int i = 0; i < yellowFragments.Count; i++)
             {
-                if (isYellowFragmentsEmbeded[yellowFragments[i].GetComponent<TileData>().fragmentIndex - 1])
+                if (VARS.isYellowFragmentsEmbeded[yellowFragments[i].GetComponent<TileData>().fragmentIndex - 1])
                 {
                     yellowFragments[i].transform.position = curCatWorldData.yellowEmbededFragmentPositions[yellowFragments[i].GetComponent<TileData>().fragmentIndex - 1];
                     for (int j = 0; j < 9; j++)
@@ -566,7 +559,7 @@ public class DataManager : MonoBehaviour
             }
             for (int i = 0; i < blueFragments.Count; i++)
             {
-                if (isBlueFragmentsEmbeded[blueFragments[i].GetComponent<TileData>().fragmentIndex - 1])
+                if (VARS.isBlueFragmentsEmbeded[blueFragments[i].GetComponent<TileData>().fragmentIndex - 1])
                 {
                     blueFragments[i].transform.position = curCatWorldData.blueEmbededFragmentPositions[blueFragments[i].GetComponent<TileData>().fragmentIndex - 1];
                     for (int j = 0; j < 9; j++)
@@ -578,7 +571,7 @@ public class DataManager : MonoBehaviour
             }
             for (int i = 0; i < orangeFragments.Count; i++)
             {
-                if (isOrangeFragmentsEmbeded[orangeFragments[i].GetComponent<TileData>().fragmentIndex - 1])
+                if (VARS.isOrangeFragmentsEmbeded[orangeFragments[i].GetComponent<TileData>().fragmentIndex - 1])
                 {
                     orangeFragments[i].transform.position = curCatWorldData.orangeEmbededFragmentPositions[orangeFragments[i].GetComponent<TileData>().fragmentIndex - 1];
                     for (int j = 0; j < 9; j++)
@@ -590,7 +583,7 @@ public class DataManager : MonoBehaviour
             }
             for (int i = 0; i < greenFragments.Count; i++)
             {
-                if (isGreenFragmentsEmbeded[greenFragments[i].GetComponent<TileData>().fragmentIndex - 1])
+                if (VARS.isGreenFragmentsEmbeded[greenFragments[i].GetComponent<TileData>().fragmentIndex - 1])
                 {
                     greenFragments[i].transform.position = curCatWorldData.greenEmbededFragmentPositions[greenFragments[i].GetComponent<TileData>().fragmentIndex - 1];
                     for (int j = 0; j < 9; j++)
@@ -602,7 +595,7 @@ public class DataManager : MonoBehaviour
             }
             for (int i = 0; i < purpleFragments.Count; i++)
             {
-                if (isPurpleFragmentsEmbeded[purpleFragments[i].GetComponent<TileData>().fragmentIndex - 1])
+                if (VARS.isPurpleFragmentsEmbeded[purpleFragments[i].GetComponent<TileData>().fragmentIndex - 1])
                 {
                     purpleFragments[i].transform.position = curCatWorldData.purpleEmbededFragmentPositions[purpleFragments[i].GetComponent<TileData>().fragmentIndex - 1];
                     for (int j = 0; j < 9; j++)
@@ -614,49 +607,49 @@ public class DataManager : MonoBehaviour
             }
             for (int i = 0; i < minimapRedFragments.Count; i++)
             {
-                if (isRedFragmentsEmbeded[i])
+                if (VARS.isRedFragmentsEmbeded[i])
                 {
                     minimapRedFragments[i].GetComponent<MeshRenderer>().material = minimapCollectibleCollectedColor;
                 }
             }
             for (int i = 0; i < minimapYellowFragments.Count; i++)
             {
-                if (isYellowFragmentsEmbeded[i])
+                if (VARS.isYellowFragmentsEmbeded[i])
                 {
                     minimapYellowFragments[i].GetComponent<MeshRenderer>().material = minimapCollectibleCollectedColor;
                 }
             }
             for (int i = 0; i < minimapBlueFragments.Count; i++)
             {
-                if (isBlueFragmentsEmbeded[i])
+                if (VARS.isBlueFragmentsEmbeded[i])
                 {
                     minimapBlueFragments[i].GetComponent<MeshRenderer>().material = minimapCollectibleCollectedColor;
                 }
             }
             for (int i = 0; i < minimapOrangeFragments.Count; i++)
             {
-                if (isOrangeFragmentsEmbeded[i])
+                if (VARS.isOrangeFragmentsEmbeded[i])
                 {
                     minimapOrangeFragments[i].GetComponent<MeshRenderer>().material = minimapCollectibleCollectedColor;
                 }
             }
             for (int i = 0; i < minimapGreenFragments.Count; i++)
             {
-                if (isGreenFragmentsEmbeded[i])
+                if (VARS.isGreenFragmentsEmbeded[i])
                 {
                     minimapGreenFragments[i].GetComponent<MeshRenderer>().material = minimapCollectibleCollectedColor;
                 }
             }
             for (int i = 0; i < minimapPurpleFragments.Count; i++)
             {
-                if (isPurpleFragmentsEmbeded[i])
+                if (VARS.isPurpleFragmentsEmbeded[i])
                 {
                     minimapPurpleFragments[i].GetComponent<MeshRenderer>().material = minimapCollectibleCollectedColor;
                 }
             }
 
             //isCenterFulfilled
-            isCenterFulfilled = curCatWorldData.isCenterFulfilled;
+            VARS.isCenterFulfilled = curCatWorldData.isCenterFulfilled;
             //for (int i = 0; i < 6; i++)
             //{
             //    if (isCenterFulfilled[i])
@@ -715,16 +708,16 @@ public class DataManager : MonoBehaviour
         //}
 
         //fragments
-        curCatWorldData.isRedFragmentsEmbeded = isRedFragmentsEmbeded;
-        curCatWorldData.isYellowFragmentsEmbeded = isYellowFragmentsEmbeded;
-        curCatWorldData.isBlueFragmentsEmbeded = isBlueFragmentsEmbeded;
-        curCatWorldData.isOrangeFragmentsEmbeded = isOrangeFragmentsEmbeded;
-        curCatWorldData.isGreenFragmentsEmbeded = isGreenFragmentsEmbeded;
-        curCatWorldData.isPurpleFragmentsEmbeded = isPurpleFragmentsEmbeded;
+        curCatWorldData.isRedFragmentsEmbeded = VARS.isRedFragmentsEmbeded;
+        curCatWorldData.isYellowFragmentsEmbeded = VARS.isYellowFragmentsEmbeded;
+        curCatWorldData.isBlueFragmentsEmbeded = VARS.isBlueFragmentsEmbeded;
+        curCatWorldData.isOrangeFragmentsEmbeded = VARS.isOrangeFragmentsEmbeded;
+        curCatWorldData.isGreenFragmentsEmbeded = VARS.isGreenFragmentsEmbeded;
+        curCatWorldData.isPurpleFragmentsEmbeded = VARS.isPurpleFragmentsEmbeded;
         for (int i = 0; i < redFragments.Count; i++)
         {
             tempInt = redFragments[i].GetComponent<TileData>().fragmentIndex - 1;
-            if (isRedFragmentsEmbeded[tempInt])
+            if (VARS.isRedFragmentsEmbeded[tempInt])
             {
                 curCatWorldData.redEmbededFragmentPositions[tempInt] = redFragments[i].transform.position;
             }
@@ -732,7 +725,7 @@ public class DataManager : MonoBehaviour
         for (int i = 0; i < yellowFragments.Count; i++)
         {
             tempInt = yellowFragments[i].GetComponent<TileData>().fragmentIndex - 1;
-            if (isYellowFragmentsEmbeded[tempInt])
+            if (VARS.isYellowFragmentsEmbeded[tempInt])
             {
                 curCatWorldData.yellowEmbededFragmentPositions[tempInt] = yellowFragments[i].transform.position;
             }
@@ -740,7 +733,7 @@ public class DataManager : MonoBehaviour
         for (int i = 0; i < blueFragments.Count; i++)
         {
             tempInt = blueFragments[i].GetComponent<TileData>().fragmentIndex - 1;
-            if (isBlueFragmentsEmbeded[tempInt])
+            if (VARS.isBlueFragmentsEmbeded[tempInt])
             {
                 curCatWorldData.blueEmbededFragmentPositions[tempInt] = blueFragments[i].transform.position;
             }
@@ -748,7 +741,7 @@ public class DataManager : MonoBehaviour
         for (int i = 0; i < orangeFragments.Count; i++)
         {
             tempInt = orangeFragments[i].GetComponent<TileData>().fragmentIndex - 1;
-            if (isOrangeFragmentsEmbeded[tempInt])
+            if (VARS.isOrangeFragmentsEmbeded[tempInt])
             {
                 curCatWorldData.orangeEmbededFragmentPositions[tempInt] = orangeFragments[i].transform.position;
             }
@@ -756,7 +749,7 @@ public class DataManager : MonoBehaviour
         for (int i = 0; i < greenFragments.Count; i++)
         {
             tempInt = greenFragments[i].GetComponent<TileData>().fragmentIndex - 1;
-            if (isGreenFragmentsEmbeded[tempInt])
+            if (VARS.isGreenFragmentsEmbeded[tempInt])
             {
                 curCatWorldData.greenEmbededFragmentPositions[tempInt] = greenFragments[i].transform.position;
             }
@@ -764,14 +757,14 @@ public class DataManager : MonoBehaviour
         for (int i = 0; i < purpleFragments.Count; i++)
         {
             tempInt = purpleFragments[i].GetComponent<TileData>().fragmentIndex - 1;
-            if (isPurpleFragmentsEmbeded[tempInt])
+            if (VARS.isPurpleFragmentsEmbeded[tempInt])
             {
                 curCatWorldData.purpleEmbededFragmentPositions[tempInt] = purpleFragments[i].transform.position;
             }
         }
 
         //isCenterFulfilled
-        curCatWorldData.isCenterFulfilled = isCenterFulfilled;
+        curCatWorldData.isCenterFulfilled = VARS.isCenterFulfilled;
 
         //maxEnergyBonus
         curCatWorldData.maxEnergyBonus = VARS.maxEnergyBonus;
@@ -963,16 +956,16 @@ public class DataManager : MonoBehaviour
         //}
 
         //fragments
-        curCatWorldData.isRedFragmentsEmbeded = isRedFragmentsEmbeded;
-        curCatWorldData.isYellowFragmentsEmbeded = isYellowFragmentsEmbeded;
-        curCatWorldData.isBlueFragmentsEmbeded = isBlueFragmentsEmbeded;
-        curCatWorldData.isOrangeFragmentsEmbeded = isOrangeFragmentsEmbeded;
-        curCatWorldData.isGreenFragmentsEmbeded = isGreenFragmentsEmbeded;
-        curCatWorldData.isPurpleFragmentsEmbeded = isPurpleFragmentsEmbeded;
+        curCatWorldData.isRedFragmentsEmbeded = VARS.isRedFragmentsEmbeded;
+        curCatWorldData.isYellowFragmentsEmbeded = VARS.isYellowFragmentsEmbeded;
+        curCatWorldData.isBlueFragmentsEmbeded = VARS.isBlueFragmentsEmbeded;
+        curCatWorldData.isOrangeFragmentsEmbeded = VARS.isOrangeFragmentsEmbeded;
+        curCatWorldData.isGreenFragmentsEmbeded = VARS.isGreenFragmentsEmbeded;
+        curCatWorldData.isPurpleFragmentsEmbeded = VARS.isPurpleFragmentsEmbeded;
         for (int i = 0; i < redFragments.Count; i++)
         {
             tempInt = redFragments[i].GetComponent<TileData>().fragmentIndex - 1;
-            if (isRedFragmentsEmbeded[tempInt])
+            if (VARS.isRedFragmentsEmbeded[tempInt])
             {
                 curCatWorldData.redEmbededFragmentPositions[tempInt] = redFragments[i].transform.position;
             }
@@ -980,7 +973,7 @@ public class DataManager : MonoBehaviour
         for (int i = 0; i < yellowFragments.Count; i++)
         {
             tempInt = yellowFragments[i].GetComponent<TileData>().fragmentIndex - 1;
-            if (isYellowFragmentsEmbeded[tempInt])
+            if (VARS.isYellowFragmentsEmbeded[tempInt])
             {
                 curCatWorldData.yellowEmbededFragmentPositions[tempInt] = yellowFragments[i].transform.position;
             }
@@ -988,7 +981,7 @@ public class DataManager : MonoBehaviour
         for (int i = 0; i < blueFragments.Count; i++)
         {
             tempInt = blueFragments[i].GetComponent<TileData>().fragmentIndex - 1;
-            if (isBlueFragmentsEmbeded[tempInt])
+            if (VARS.isBlueFragmentsEmbeded[tempInt])
             {
                 curCatWorldData.blueEmbededFragmentPositions[tempInt] = blueFragments[i].transform.position;
             }
@@ -996,7 +989,7 @@ public class DataManager : MonoBehaviour
         for (int i = 0; i < orangeFragments.Count; i++)
         {
             tempInt = orangeFragments[i].GetComponent<TileData>().fragmentIndex - 1;
-            if (isOrangeFragmentsEmbeded[tempInt])
+            if (VARS.isOrangeFragmentsEmbeded[tempInt])
             {
                 curCatWorldData.orangeEmbededFragmentPositions[tempInt] = orangeFragments[i].transform.position;
             }
@@ -1004,7 +997,7 @@ public class DataManager : MonoBehaviour
         for (int i = 0; i < greenFragments.Count; i++)
         {
             tempInt = greenFragments[i].GetComponent<TileData>().fragmentIndex - 1;
-            if (isGreenFragmentsEmbeded[tempInt])
+            if (VARS.isGreenFragmentsEmbeded[tempInt])
             {
                 curCatWorldData.greenEmbededFragmentPositions[tempInt] = greenFragments[i].transform.position;
             }
@@ -1012,14 +1005,14 @@ public class DataManager : MonoBehaviour
         for (int i = 0; i < purpleFragments.Count; i++)
         {
             tempInt = purpleFragments[i].GetComponent<TileData>().fragmentIndex - 1;
-            if (isPurpleFragmentsEmbeded[tempInt])
+            if (VARS.isPurpleFragmentsEmbeded[tempInt])
             {
                 curCatWorldData.purpleEmbededFragmentPositions[tempInt] = purpleFragments[i].transform.position;
             }
         }
 
         //isCenterFulfilled
-        curCatWorldData.isCenterFulfilled = isCenterFulfilled;
+        curCatWorldData.isCenterFulfilled = VARS.isCenterFulfilled;
 
         //curLatestCenterSavePointPosition
         curCatWorldData.curLatestCenterSavePointPosition = VARS.curLatestCenterSavePointPosition;

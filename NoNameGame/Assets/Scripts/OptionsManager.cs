@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Video;
 
 [DefaultExecutionOrder((int)ScriptsExecutionOrder.ExecutionOrder.optionsManager)]
 public class OptionsManager : MonoBehaviour
@@ -149,7 +150,7 @@ public class OptionsManager : MonoBehaviour
                 if (!isInKeySetSub &&
                     /*(VARS.IsConfirmKeyDown ||
                     VARS.IsSpaceDown)*/
-                    VARS.IsSpaceDown)
+                    (VARS.IsSpaceDown || VARS.IsReturnDown))
                 {
                     isFromOptionsToKeySetSub = true;
                 }
@@ -166,6 +167,7 @@ public class OptionsManager : MonoBehaviour
 
                     //VARS.IsConfirmKeyDown = false;
                     VARS.IsSpaceDown = false;
+                    VARS.IsReturnDown = false;
                 }
 
                 if (isInKeySetSub)
@@ -212,7 +214,7 @@ public class OptionsManager : MonoBehaviour
                         curKeySetSubIndex < keySetSubEmpties.Count - 1 &&
                         /*(VARS.IsConfirmKeyDown ||
                     VARS.IsSpaceDown)*/
-                        VARS.IsSpaceDown)
+                        (VARS.IsSpaceDown || VARS.IsReturnDown))
                     {
                         isSettingAKey = true;
 
@@ -274,8 +276,8 @@ public class OptionsManager : MonoBehaviour
                     }
 
                     //ok
-                    if (curKeySetSubIndex == keySetSubEmpties.Count - 1 &&
-                        /*(VARS.IsConfirmKeyDown || VARS.IsSpaceDown)*/VARS.IsSpaceDown ||
+                    if ((curKeySetSubIndex == keySetSubEmpties.Count - 1 &&
+                        /*(VARS.IsConfirmKeyDown || VARS.IsSpaceDown)*/(VARS.IsSpaceDown || VARS.IsReturnDown)) ||
                         VARS.IsBackKeyDown)
                     {
                         isFromKeySetSubToOptions = true;
@@ -302,7 +304,7 @@ public class OptionsManager : MonoBehaviour
             {
                 //if (VARS.IsConfirmKeyDown ||
                 //    VARS.IsSpaceDown)
-                if(VARS.IsSpaceDown)
+                if(VARS.IsSpaceDown || VARS.IsReturnDown)
                 {
                     optionsPanel.SetActive(false);
                     VARS.IsOptionPanelActivated = false;
@@ -318,7 +320,7 @@ public class OptionsManager : MonoBehaviour
             {
                 //if (VARS.IsConfirmKeyDown ||
                 //    VARS.IsSpaceDown)
-                if(VARS.IsSpaceDown)
+                if(VARS.IsSpaceDown || VARS.IsReturnDown)
                 {
                     VARS.IsWritingAllData = true;
                     VARS.IsExiting = true;

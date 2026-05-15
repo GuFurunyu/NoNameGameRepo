@@ -15,6 +15,7 @@ public class CatDeath : MonoBehaviour
     GameObject[] storedVoidBlocks = new GameObject[512];
     int curStoredVoidBlockIndex;
 
+    Vector3 tempVector;
     Transform tempTransform;
 
     #region ConstantsUsed
@@ -255,50 +256,64 @@ public class CatDeath : MonoBehaviour
         //clearCarriedFragments
         if (VARS.IsCarryingFragments)
         {
-            for (int i = 0; i < curCarriedFragments.Count; i++)
+            if (!VARS.IsToNotLoseCarriedFragments)
             {
-                curCarriedFragments[i].transform.parent = curCarriedFragmentIniParents[i].transform;
-                curCarriedFragments[i].transform.localPosition = VARS.curCarriedFragmentIniLocalPositions[i];
+                for (int i = 0; i < curCarriedFragments.Count; i++)
+                {
+                    curCarriedFragments[i].transform.parent = curCarriedFragmentIniParents[i].transform;
+                    curCarriedFragments[i].transform.localPosition = VARS.curCarriedFragmentIniLocalPositions[i];
 
-                curCarriedFragments[i].GetComponent<TileData>().isNotToBeDetected = false;
+                    curCarriedFragments[i].GetComponent<TileData>().isNotToBeDetected = false;
 
-                //minimap
-                if (curCarriedFragmentFaceIndexes[i] == 1)
-                {
-                    minimapYellowFragments[curCarriedFragmentIndexes[i] - 1].GetComponent<MeshRenderer>().material = minimapYellowFragmentColor;
+                    //minimap
+                    if (curCarriedFragmentFaceIndexes[i] == 1)
+                    {
+                        minimapYellowFragments[curCarriedFragmentIndexes[i] - 1].GetComponent<MeshRenderer>().material = minimapYellowFragmentColor;
+                    }
+                    else if (curCarriedFragmentFaceIndexes[i] == 2)
+                    {
+                        minimapPurpleFragments[curCarriedFragmentIndexes[i] - 1].GetComponent<MeshRenderer>().material = minimapPurpleFragmentColor;
+                    }
+                    else if (curCarriedFragmentFaceIndexes[i] == 3)
+                    {
+                        minimapOrangeFragments[curCarriedFragmentIndexes[i] - 1].GetComponent<MeshRenderer>().material = minimapOrangeFragmentColor;
+                    }
+                    else if (curCarriedFragmentFaceIndexes[i] == 4)
+                    {
+                        minimapBlueFragments[curCarriedFragmentIndexes[i] - 1].GetComponent<MeshRenderer>().material = minimapBlueFragmentColor;
+                    }
+                    else if (curCarriedFragmentFaceIndexes[i] == 5)
+                    {
+                        minimapGreenFragments[curCarriedFragmentIndexes[i] - 1].GetComponent<MeshRenderer>().material = minimapGreenFragmentColor;
+                    }
+                    else if (curCarriedFragmentFaceIndexes[i] == 6)
+                    {
+                        minimapRedFragments[curCarriedFragmentIndexes[i] - 1].GetComponent<MeshRenderer>().material = minimapGreenFragmentColor;
+                    }
                 }
-                else if (curCarriedFragmentFaceIndexes[i] == 2)
-                {
-                    minimapPurpleFragments[curCarriedFragmentIndexes[i] - 1].GetComponent<MeshRenderer>().material = minimapPurpleFragmentColor;
-                }
-                else if (curCarriedFragmentFaceIndexes[i] == 3)
-                {
-                    minimapOrangeFragments[curCarriedFragmentIndexes[i] - 1].GetComponent<MeshRenderer>().material = minimapOrangeFragmentColor;
-                }
-                else if (curCarriedFragmentFaceIndexes[i] == 4)
-                {
-                    minimapBlueFragments[curCarriedFragmentIndexes[i] - 1].GetComponent<MeshRenderer>().material = minimapBlueFragmentColor;
-                }
-                else if (curCarriedFragmentFaceIndexes[i] == 5)
-                {
-                    minimapGreenFragments[curCarriedFragmentIndexes[i] - 1].GetComponent<MeshRenderer>().material = minimapGreenFragmentColor;
-                }
-                else if (curCarriedFragmentFaceIndexes[i] == 6)
-                {
-                    minimapRedFragments[curCarriedFragmentIndexes[i] - 1].GetComponent<MeshRenderer>().material = minimapGreenFragmentColor;
-                }
+
+                curCarriedFragments.Clear();
+                curCarriedFragmentFaceIndexes.Clear();
+                curCarriedFragmentIndexes.Clear();
+                curCarriedFragmentIniParents.Clear();
+                curCarriedFragmentIniLocalPositions.Clear();
+
+                curToBeEmbededFragmentIndexes.Clear();
+                curToBeEmbededFragmentLocalPositions.Clear();
+
+                VARS.IsCarryingFragments = false;
             }
+            else
+            {
+                tempVector = savePoints[VARS.curActivatedSavePointIndex].transform.position;
 
-            curCarriedFragments.Clear();
-            curCarriedFragmentFaceIndexes.Clear();
-            curCarriedFragmentIndexes.Clear();
-            curCarriedFragmentIniParents.Clear();
-            curCarriedFragmentIniLocalPositions.Clear();
+                for (int i = 0; i < curCarriedFragments.Count; i++)
+                {
+                    curCarriedFragments[i].transform.position = tempVector;
+                }
 
-            curToBeEmbededFragmentIndexes.Clear();
-            curToBeEmbededFragmentLocalPositions.Clear();
-
-            VARS.IsCarryingAKey = false;
+                VARS.IsToNotLoseCarriedFragments = false;
+            }
         }
 
         //catTransform.position = VARS.catIniPosition;

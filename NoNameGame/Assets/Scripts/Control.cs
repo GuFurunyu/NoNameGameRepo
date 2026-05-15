@@ -155,6 +155,7 @@ public class Control : MonoBehaviour
 
             //specificKeys
             VARS.IsSpaceDown = Input.GetKeyDown(KeyCode.Space);
+            VARS.IsReturnDown = Input.GetKeyDown(KeyCode.Return);
         }
         else
         {
