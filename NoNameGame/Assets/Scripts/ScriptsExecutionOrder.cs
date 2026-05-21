@@ -34,6 +34,7 @@ public class ScriptsExecutionOrder : MonoBehaviour
         scriptsExecutionController,
         dataManager,
         gameStateManager,
+        mainBoardManager,
         roomsManager,
         curRoomManager,
         tileData,

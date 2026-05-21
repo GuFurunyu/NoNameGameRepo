@@ -145,7 +145,7 @@ public class CameraManager : MonoBehaviour
             VARS.IsInNewRoomCameraManagerResetOver = true;
         }
 
-        if (VARS.IsInNewRoomAllResetOver)
+        if (VARS.IsCameraManagerMainPartExecutable)
         {
             #region InitializeSight
             if (VARS.IsToInitializeSight)

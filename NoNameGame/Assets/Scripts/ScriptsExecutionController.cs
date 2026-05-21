@@ -30,9 +30,15 @@ public class ScriptsExecutionController : MonoBehaviour
 
         #endregion
 
+        //cameraManager
+        VARS.IsCameraManagerMainPartExecutable =
+            !VARS.IsInMainBoard &&
+            VARS.IsInNewRoomAllResetOver;
+
         //catCollision
         VARS.IsCatCollisionMainPartExecutable =
             //Time.deltaTime < 0.0167f &&//~?
+            !VARS.IsInMainBoard &&
             !VARS.IsPaused &&
             VARS.IsInNewRoomAllResetOver &&
             !VARS.IsRotating &&
@@ -42,6 +48,7 @@ public class ScriptsExecutionController : MonoBehaviour
         //catMove
         VARS.IsCatMoveMainPartExecutable =
             //Time.deltaTime < 0.0167f &&//~?
+            !VARS.IsInMainBoard &&
             !VARS.IsPaused &&
             VARS.IsInNewRoomAllResetOver &&
             !VARS.IsRotating &&
@@ -60,6 +67,7 @@ public class ScriptsExecutionController : MonoBehaviour
 
         //catRotate
         VARS.IsCatRotateMainPartExecutable =
+            !VARS.IsInMainBoard &&
             !VARS.IsPaused &&
             VARS.IsInNewRoomAllResetOver &&
             !VARS.IsTwisting &&
@@ -68,12 +76,14 @@ public class ScriptsExecutionController : MonoBehaviour
 
         //catEnergy
         VARS.IsCatEnergyResetExecutable =
+            !VARS.IsInMainBoard &&
             !VARS.IsPaused &&
             VARS.IsInNewRoomAllResetOver &&
             !VARS.IsRotating &&
             !VARS.IsTwisting &&
             !VARS.IsJustIntoVoid &&
             !VARS.IsInAcce &&
+            !VARS.IsHighJumping &&
             !VARS.IsInHotState &&
             !VARS.IsInColdState &&
             !VARS.IsInElectricState &&
@@ -85,6 +95,7 @@ public class ScriptsExecutionController : MonoBehaviour
 
         //catTrigger
         VARS.IsCatTriggerMainPartExecutable =
+            !VARS.IsInMainBoard &&
             !VARS.IsPaused &&
             VARS.IsInNewRoomAllResetOver &&
             !VARS.IsRotating &&
@@ -93,6 +104,7 @@ public class ScriptsExecutionController : MonoBehaviour
 
         //blocksManager
         VARS.IsBlocksManagerMainPartExecutable =
+            !VARS.IsInMainBoard &&
             !VARS.IsPaused &&
             VARS.IsInNewRoomAllResetOver &&
             VARS.IsIniRotation &&
@@ -102,6 +114,7 @@ public class ScriptsExecutionController : MonoBehaviour
 
         //minimapManager
         VARS.IsMinimapMainPartExecutable =
+            !VARS.IsInMainBoard &&
             VARS.IsMinimapActivated &&
             VARS.IsInNewRoomAllResetOver &&
             !VARS.IsZoomedOut &&
@@ -111,11 +124,16 @@ public class ScriptsExecutionController : MonoBehaviour
 
         //optionsManager
         VARS.IsOptionsManagerActivationExecutable =
+            !VARS.IsInMainBoard &&
             VARS.IsInNewRoomAllResetOver &&
             !VARS.IsRotating &&
             !VARS.IsTwisting &&
             !VARS.IsZoomedOut &&
             !VARS.IsInMinimap &&
             !VARS.IsInGuide;
+
+        //guideManager
+        VARS.IsGuideManagerMainPartExecutable =
+            !VARS.IsInMainBoard;
     }
 }

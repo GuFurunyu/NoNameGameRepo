@@ -20,8 +20,19 @@ public class OptionsManager : MonoBehaviour
     bool isSettingAKey;
     int curSetKeyIndex;
 
+    bool isInNewGameSub;
+    int curNewGameSubIndex;
+
+    bool isInFragmentsSub;
+
     bool isFromOptionsToKeySetSub;
     bool isFromKeySetSubToOptions;
+
+    bool isFromOptionsToNewGameSub;
+    bool isFromNewGameSubToOptions;
+
+    bool isFromOptionsToFragmentsSub;
+    bool isFromFragmentsSubToOptions;
 
     Transform tempTransform;
     KeyCode tempKeyCode;
@@ -39,6 +50,25 @@ public class OptionsManager : MonoBehaviour
 
     List<Sprite> keySprites = new List<Sprite>();
     List<Sprite> keyChosenSprites = new List<Sprite>();
+
+    GameObject newGameSubEmpty;
+    List<GameObject> newGameSubEmpties = new List<GameObject>();
+
+    GameObject fragmentsSubEmpty;
+    GameObject redFragmentSubEmpty;
+    GameObject yellowFragmentSubEmpty;
+    GameObject blueFragmentSubEmpty;
+    GameObject orangeFragmentSubEmpty;
+    GameObject greenFragmentSubEmpty;
+    GameObject purpleFragmentSubEmpty;
+
+    Material optionsFragmentNotEmbeddedColor;
+    Material optionsRedFragmentColor;
+    Material optionsYellowFragmentColor;
+    Material optionsBlueFragmentColor;
+    Material optionsOrangeFragmentColor;
+    Material optionsGreenFragmentColor;
+    Material optionsPurpleFragmentColor;
     #endregion
 
     #region VariablesUsed
@@ -64,6 +94,22 @@ public class OptionsManager : MonoBehaviour
         keyCodes = CONS.keyCodes;
         keySprites = CONS.keySprites;
         keyChosenSprites = CONS.keyChosenSprites;
+        newGameSubEmpty = CONS.newGameSubEmpty;
+        newGameSubEmpties = CONS.newGameSubEmpties;
+        fragmentsSubEmpty = CONS.fragmentsSubEmpty;
+        redFragmentSubEmpty = CONS.redFragmentSubEmpty;
+        yellowFragmentSubEmpty = CONS.yellowFragmentSubEmpty;
+        blueFragmentSubEmpty = CONS.blueFragmentSubEmpty;
+        orangeFragmentSubEmpty = CONS.orangeFragmentSubEmpty;
+        greenFragmentSubEmpty = CONS.greenFragmentSubEmpty;
+        purpleFragmentSubEmpty = CONS.purpleFragmentSubEmpty;
+        optionsFragmentNotEmbeddedColor = CONS.optionsFragmentNotEmbeddedColor;
+        optionsRedFragmentColor = CONS.optionsRedFragmentColor;
+        optionsYellowFragmentColor = CONS.optionsYellowFragmentColor;
+        optionsBlueFragmentColor = CONS.optionsBlueFragmentColor;
+        optionsOrangeFragmentColor = CONS.optionsOrangeFragmentColor;
+        optionsGreenFragmentColor = CONS.optionsGreenFragmentColor;
+        optionsPurpleFragmentColor = CONS.optionsPurpleFragmentColor;
         #endregion
 
         #region ImportReferenceVariables
@@ -96,7 +142,9 @@ public class OptionsManager : MonoBehaviour
         {
             if (VARS.IsBackKeyDown)
             {
-                if (!isInKeySetSub)
+                if (!isInKeySetSub &&
+                    !isInFragmentsSub &&
+                    !isInNewGameSub)
                 {
                     optionsPanel.SetActive(!optionsPanel.activeSelf);
 
@@ -110,7 +158,9 @@ public class OptionsManager : MonoBehaviour
         if (VARS.IsOptionPanelActivated)
         {
             #region Options
-            if (!isInKeySetSub)
+            if (!isInKeySetSub &&
+                !isInFragmentsSub &&
+                !isInNewGameSub)
             {
                 //chooseOptions
                 if (VARS.IsDownKeyDown)
@@ -299,24 +349,202 @@ public class OptionsManager : MonoBehaviour
             }
             #endregion
 
-            #region NewGame
+            #region Fragments
             if (curOptionIndex == 1)
+            {
+                if (!isInFragmentsSub &&
+                    (VARS.IsSpaceDown || VARS.IsReturnDown))
+                {
+                    isFromOptionsToFragmentsSub = true;
+                }
+                if (isFromOptionsToFragmentsSub)
+                {
+                    for (int i = 0; i < redFragmentSubEmpty.transform.childCount; i++)
+                    {
+                        tempTransform = redFragmentSubEmpty.transform.GetChild(i);
+                        if (VARS.isRedFragmentsEmbeded[i])
+                            tempTransform.GetComponent<MeshRenderer>().material = optionsRedFragmentColor;
+                        else
+                            tempTransform.GetComponent<MeshRenderer>().material = optionsFragmentNotEmbeddedColor;
+                    }
+                    for (int i = 0; i < yellowFragmentSubEmpty.transform.childCount; i++)
+                    {
+                        tempTransform = yellowFragmentSubEmpty.transform.GetChild(i);
+                        if (VARS.isYellowFragmentsEmbeded[i])
+                            tempTransform.GetComponent<MeshRenderer>().material = optionsYellowFragmentColor;
+                        else
+                            tempTransform.GetComponent<MeshRenderer>().material = optionsFragmentNotEmbeddedColor;
+                    }
+                    for (int i = 0; i < blueFragmentSubEmpty.transform.childCount; i++)
+                    {
+                        tempTransform = blueFragmentSubEmpty.transform.GetChild(i);
+                        if (VARS.isBlueFragmentsEmbeded[i])
+                            tempTransform.GetComponent<MeshRenderer>().material = optionsBlueFragmentColor;
+                        else
+                            tempTransform.GetComponent<MeshRenderer>().material = optionsFragmentNotEmbeddedColor;
+                    }
+                    for (int i = 0; i < orangeFragmentSubEmpty.transform.childCount; i++)
+                    {
+                        tempTransform = orangeFragmentSubEmpty.transform.GetChild(i);
+                        if (VARS.isOrangeFragmentsEmbeded[i])
+                            tempTransform.GetComponent<MeshRenderer>().material = optionsOrangeFragmentColor;
+                        else
+                            tempTransform.GetComponent<MeshRenderer>().material = optionsFragmentNotEmbeddedColor;
+                    }
+                    for (int i = 0; i < greenFragmentSubEmpty.transform.childCount; i++)
+                    {
+                        tempTransform = greenFragmentSubEmpty.transform.GetChild(i);
+                        if (VARS.isGreenFragmentsEmbeded[i])
+                            tempTransform.GetComponent<MeshRenderer>().material = optionsGreenFragmentColor;
+                        else
+                            tempTransform.GetComponent<MeshRenderer>().material = optionsFragmentNotEmbeddedColor;
+                    }
+                    for (int i = 0; i < purpleFragmentSubEmpty.transform.childCount; i++)
+                    {
+                        tempTransform = purpleFragmentSubEmpty.transform.GetChild(i);
+                        if (VARS.isPurpleFragmentsEmbeded[i])
+                            tempTransform.GetComponent<MeshRenderer>().material = optionsPurpleFragmentColor;
+                        else
+                            tempTransform.GetComponent<MeshRenderer>().material = optionsFragmentNotEmbeddedColor;
+                    }
+
+                    isFromOptionsToFragmentsSub = false;
+
+                    isInFragmentsSub = true;
+
+                    optionsEmpty.SetActive(false);
+                    fragmentsSubEmpty.SetActive(true);
+
+                    //Input.ResetInputAxes();
+
+                    //VARS.IsConfirmKeyDown = false;
+                    VARS.IsSpaceDown = false;
+                    VARS.IsReturnDown = false;
+                }
+            }
+
+            if (isInFragmentsSub)
+            {
+                if ((VARS.IsSpaceDown || VARS.IsReturnDown) ||
+                    VARS.IsBackKeyDown)
+                {
+                    isFromFragmentsSubToOptions = true;
+                }
+                if (isFromFragmentsSubToOptions)
+                {
+                    isFromFragmentsSubToOptions = false;
+
+                    isInFragmentsSub = false;
+
+                    fragmentsSubEmpty.SetActive(false);
+                    optionsEmpty.SetActive(true);
+                }
+            }
+            #endregion
+
+            #region NewGame
+            if (curOptionIndex == 2)
             {
                 //if (VARS.IsConfirmKeyDown ||
                 //    VARS.IsSpaceDown)
-                if(VARS.IsSpaceDown || VARS.IsReturnDown)
-                {
-                    optionsPanel.SetActive(false);
-                    VARS.IsOptionPanelActivated = false;
+                //if(VARS.IsSpaceDown || VARS.IsReturnDown)
+                //{
+                //    optionsPanel.SetActive(false);
+                //    VARS.IsOptionPanelActivated = false;
 
-                    VARS.IsToStartNewGame = true;
-                    VARS.IsToDie = true;
+                //    VARS.IsToStartNewGame = true;
+                //    VARS.IsToDie = true;
+                //}
+                if (!isInNewGameSub &&
+                    (VARS.IsSpaceDown || VARS.IsReturnDown))
+                {
+                    isFromOptionsToNewGameSub = true;
+                }
+                if (isFromOptionsToNewGameSub)
+                {
+                    isFromOptionsToNewGameSub = false;
+
+                    isInNewGameSub = true;
+
+                    optionsEmpty.SetActive(false);
+                    newGameSubEmpty.SetActive(true);
+
+                    //Input.ResetInputAxes();
+
+                    //VARS.IsConfirmKeyDown = false;
+                    VARS.IsSpaceDown = false;
+                    VARS.IsReturnDown = false;
+                }
+
+                if (isInNewGameSub)
+                {
+                    //yesOrNo
+                    if (VARS.IsDownKeyDown)
+                    {
+                        curNewGameSubIndex++;
+
+                        if (curNewGameSubIndex > 1)
+                        {
+                            curNewGameSubIndex = 1;
+                        }
+                    }
+                    else if (VARS.IsUpKeyDown)
+                    {
+                        curNewGameSubIndex--;
+
+                        if (curNewGameSubIndex < 0)
+                        {
+                            curNewGameSubIndex = 0;
+                        }
+                    }
+
+                    //highLightTheChosenOne
+                    for (int i = 0; i < newGameSubEmpties.Count; i++)
+                    {
+                        tempTransform = newGameSubEmpties[i].transform;
+
+                        tempTransform.GetChild(0).gameObject.SetActive(i != curNewGameSubIndex);
+                        tempTransform.GetChild(1).gameObject.SetActive(i == curNewGameSubIndex);
+                    }
+
+                    //yes
+                    if (curNewGameSubIndex == 0 &&
+                        (VARS.IsSpaceDown || VARS.IsReturnDown))
+                    {
+                        newGameSubEmpty.SetActive(false);
+                        optionsEmpty.SetActive(true);
+                        isInNewGameSub = false;
+                        optionsPanel.SetActive(false);
+                        VARS.IsOptionPanelActivated = false;
+
+                        VARS.IsToStartNewGame = true;
+                        //VARS.IsToDie = true;
+                    }
+
+                    //no
+                    if ((curNewGameSubIndex == 1 &&
+                        (VARS.IsSpaceDown || VARS.IsReturnDown)) ||
+                        VARS.IsBackKeyDown)
+                    {
+                        isFromNewGameSubToOptions = true;
+                    }
+                    if (isFromNewGameSubToOptions)
+                    {
+                        isFromNewGameSubToOptions = false;
+
+                        isInNewGameSub = false;
+
+                        newGameSubEmpty.SetActive(false);
+                        optionsEmpty.SetActive(true);
+
+                        curNewGameSubIndex = 0;
+                    }
                 }
             }
             #endregion
 
             #region Exit
-            if (curOptionIndex == 2)
+            if (curOptionIndex == 3)
             {
                 //if (VARS.IsConfirmKeyDown ||
                 //    VARS.IsSpaceDown)

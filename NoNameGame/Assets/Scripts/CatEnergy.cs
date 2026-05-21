@@ -125,7 +125,7 @@ public class CatEnergy : MonoBehaviour
 
                 //curEnergy += onGroundEnergyRestoreSpeed * Time.deltaTime;
                 //UFL.AddCurTargetEnergy(onGroundEnergyRestoreSpeed * Time.deltaTime);
-                VARS.curTargetEnergy += onGroundEnergyRestoreSpeed * ((maxEnergy + VARS.maxEnergyBonus) / maxEnergy) * Time.deltaTime;
+                VARS.curTargetEnergy += onGroundEnergyRestoreSpeed * ((maxEnergy + VARS.maxEnergyBonus) / maxEnergy) * ( 1 + (maxEnergy + VARS.maxEnergyBonus - VARS.curTargetEnergy) / 50) * Time.deltaTime;
             }
         }
         #endregion
@@ -134,6 +134,8 @@ public class CatEnergy : MonoBehaviour
         if (VARS.curEnergy <= 0)
         {
             //UFL.DebugLog("outOfEnergy");
+
+            Debug.Log("outOfEnergyDie");
 
             VARS.IsToDie = true;
         }

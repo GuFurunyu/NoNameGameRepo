@@ -265,6 +265,10 @@ public class CatDeath : MonoBehaviour
 
                     curCarriedFragments[i].GetComponent<TileData>().isNotToBeDetected = false;
 
+                    curCarriedFragments[i].transform.GetChild(0).localScale = Vector3.one * 1.1f;
+                    curCarriedFragments[i].transform.GetChild(1).localScale = Vector3.one * 1.1f;
+                    curCarriedFragments[i].transform.GetChild(2).localScale = Vector3.one * 1.1f;
+
                     //minimap
                     if (curCarriedFragmentFaceIndexes[i] == 1)
                     {
@@ -288,7 +292,7 @@ public class CatDeath : MonoBehaviour
                     }
                     else if (curCarriedFragmentFaceIndexes[i] == 6)
                     {
-                        minimapRedFragments[curCarriedFragmentIndexes[i] - 1].GetComponent<MeshRenderer>().material = minimapGreenFragmentColor;
+                        minimapRedFragments[curCarriedFragmentIndexes[i] - 1].GetComponent<MeshRenderer>().material = minimapRedFragmentColor;
                     }
                 }
 
@@ -337,6 +341,8 @@ public class CatDeath : MonoBehaviour
         VARS.catCurTemperature = 0;
         VARS.catCurElectricity = 0;
         VARS.catCurToxicity = 0;
+
+        VARS.IsHighJumping = false;
 
         VARS.curFacingDirectionIndex = 0;
 

@@ -29,6 +29,9 @@ public class DataManager : MonoBehaviour
 
     public class WorldData
     {
+        //faceDirectionIndexes
+        public int[] faceDirectionIndexes = new int[6];
+
         //rooms
         public Vector3[] roomPlanePositions = new Vector3[54];
         public Vector3[] roomPlaneEulerangles = new Vector3[54];
@@ -243,7 +246,7 @@ public class DataManager : MonoBehaviour
         WriteCatWorldData(true);
         WriteKeyCodesData(true);
 
-        tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "Version0.3.5.txt");
+        tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "Version0.4.1.txt");
 
         if (File.Exists(tempPath))
         {
@@ -306,11 +309,11 @@ public class DataManager : MonoBehaviour
 
             VARS.IsToStartNewGame = false;
 
-            //#if UNITY_EDITOR
-            //UnityEditor.EditorApplication.isPlaying = false;
-            //#endif
+            #if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+            #endif
 
-            //Application.Quit();
+            Application.Quit();
         }
     }
 
@@ -370,6 +373,12 @@ public class DataManager : MonoBehaviour
             tempJsonString = File.ReadAllText(tempPath);
             curWorldData = JsonUtility.FromJson<WorldData>(tempJsonString);
 
+            for (int i = 0; i < 6; i++)
+            {
+                //faceDirectionIndexes
+                VARS.faceDirectionIndexes[i] = curWorldData.faceDirectionIndexes[i];
+            }
+
             for (int i = 0; i < 54; i++)
             {
                 //rooms
@@ -428,24 +437,30 @@ public class DataManager : MonoBehaviour
         else
             tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "InitialWorldData.txt");
 
+        for (int i = 0; i < 6; i++)
+        {
+            //faceDirectionIndexes
+            curWorldData.faceDirectionIndexes[i] = VARS.faceDirectionIndexes[i];
+        }
+
         for (int i = 0; i < 54; i++)
-            {
-                //rooms
-                tempTransform = roomPlanes[i].transform;
+        {
+            //rooms
+            tempTransform = roomPlanes[i].transform;
 
-                curWorldData.roomPlanePositions[i] = UFL.Vector3RoundToInt(tempTransform.position);
-                curWorldData.roomPlaneEulerangles[i] = UFL.Vector3RoundToInt(tempTransform.eulerAngles);
-                curWorldData.roomCenters[i] = roomCenters[i];
-                curWorldData.roomStableForwards[i] = roomStableForwards[i];
-                curWorldData.roomStableUps[i] = roomStableUps[i];
-                curWorldData.roomStableRights[i] = roomStableRights[i];
+            curWorldData.roomPlanePositions[i] = UFL.Vector3RoundToInt(tempTransform.position);
+            curWorldData.roomPlaneEulerangles[i] = UFL.Vector3RoundToInt(tempTransform.eulerAngles);
+            curWorldData.roomCenters[i] = roomCenters[i];
+            curWorldData.roomStableForwards[i] = roomStableForwards[i];
+            curWorldData.roomStableUps[i] = roomStableUps[i];
+            curWorldData.roomStableRights[i] = roomStableRights[i];
 
-                //minimapRooms
-                tempTransform = minimapRoomPlanes[i].transform;
+            //minimapRooms
+            tempTransform = minimapRoomPlanes[i].transform;
 
-                curWorldData.minimapRoomPlanePositions[i] = UFL.Vector3RoundToInt(tempTransform.position);
-                curWorldData.minimapRoomPlaneEulerangles[i] = UFL.Vector3RoundToInt(tempTransform.eulerAngles);
-            }
+            curWorldData.minimapRoomPlanePositions[i] = UFL.Vector3RoundToInt(tempTransform.position);
+            curWorldData.minimapRoomPlaneEulerangles[i] = UFL.Vector3RoundToInt(tempTransform.eulerAngles);
+        }
 
         tempJsonString = JsonUtility.ToJson(curWorldData);
 

@@ -26,6 +26,8 @@ public class MinimapManager : MonoBehaviour
     Transform camTransform;
 
     float minimapRotationMovingSpeed;
+
+    GameObject starDustsEmpty;
     #endregion
 
     #region VariablesUsed
@@ -44,6 +46,7 @@ public class MinimapManager : MonoBehaviour
         #region ImportConstants
         camTransform = CONS.camTransform;
         minimapRotationMovingSpeed = CONS.minimapRotationMovingSpeed;
+        starDustsEmpty = CONS.starDustsEmpty;
         #endregion
 
         #region ImportReferenceVariables
@@ -54,6 +57,18 @@ public class MinimapManager : MonoBehaviour
     {
         #region ImportValueVariables
         #endregion
+
+        //starDusts
+        if (VARS.IsInMainBoard ||
+            VARS.IsOptionPanelActivated ||
+            VARS.IsInKeysGuide)
+        {
+            starDustsEmpty.SetActive(false);
+        }
+        else
+        {
+            starDustsEmpty.SetActive(true);
+        }
 
         if (VARS.IsMinimapMainPartExecutable)
         {

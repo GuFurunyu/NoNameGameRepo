@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SocialPlatforms;
 
 [DefaultExecutionOrder((int)ScriptsExecutionOrder.ExecutionOrder.roomsManager)]
 public class RoomsManager : MonoBehaviour
@@ -28,13 +29,28 @@ public class RoomsManager : MonoBehaviour
     float twistingAccumulatedDegree;
     Vector3 twistingTargetEulerangles;
 
+    //gates
+    float curNearestGateDistance;
+    float curGateNearestLockDistance;
+
+    //edgeGates
+    float curNearestEdgeGateDistance;
+    int curNearestEdgeGateIndex;
+    float curEdgeGateNearestLockDistance;
+
+    //minimapGates
+    float curNearestMinimapGateDistance;
+    int curNearestMinimapGateIndex;
+
     int tempInt;
+    float tempFloat;
     float tempFloat1;
     float tempFloat2;
     float tempFloat3;
     float tempFloat4;
     Vector3 tempVector;
     GameObject tempGameObject;
+    Transform tempTransform;
 
     #region ConstantsUsed
     float gridBreadth;
@@ -55,9 +71,22 @@ public class RoomsManager : MonoBehaviour
     Vector3[] twistingCenterClockwiseVectors = new Vector3[6];
     float twistSpeed;
 
+    //gates
+    List<GameObject> gates = new List<GameObject>();
+
+    //edgeGates
+    List<GameObject> edgeGates = new List<GameObject>();
     List<GameObject> edgeGateTriggers = new List<GameObject>();
 
+    //gateColor
+    Material connectedGateColor;
+    Material unconnectedGateColor;
+
+    List<GameObject> locks = new List<GameObject>();
+
     List<GameObject> savePoints = new List<GameObject>();
+
+    List<GameObject> minimapGates = new List<GameObject>();
 
     float minimapRotationMovingSpeed;
 
@@ -81,10 +110,16 @@ public class RoomsManager : MonoBehaviour
     #region VariablesUsed
     GameObject curPlaneEmpty;
 
+    //int[] faceDirectionIndexes = new int[6];
+
     Vector3[] roomCenters = new Vector3[54];
     Vector3[] roomStableForwards = new Vector3[54];
     Vector3[] roomStableUps = new Vector3[54];
     Vector3[] roomStableRights = new Vector3[54];
+
+    List<int> edgeGateLinkedToIndexes = new List<int>();
+
+    List<int> deactivatedLockIndexes = new List<int>();
 
     GameObject[] storedSandBlocks = new GameObject[512];
     GameObject[] storedWaterBlocks = new GameObject[512];
@@ -117,8 +152,14 @@ public class RoomsManager : MonoBehaviour
         twistingCenters = CONS.twistingCenters;
         twistingCenterClockwiseVectors = CONS.twistingCenterClockwiseVectors;
         twistSpeed = CONS.twistSpeed;
+        gates = CONS.gates;
+        edgeGates = CONS.edgeGates;
         edgeGateTriggers = CONS.edgeGateTriggers;
+        connectedGateColor = CONS.connectedGateColor;
+        unconnectedGateColor = CONS.unconnectedGateColor;
+        locks = CONS.locks;
         savePoints = CONS.savePoints;
+        minimapGates = CONS.minimapGates;
         minimapRotationMovingSpeed = CONS.minimapRotationMovingSpeed;
         camTransform = CONS.camTransform;
         camMinimapDistanceToCubeCore = CONS.camMinimapDistanceToCubeCore;
@@ -139,6 +180,8 @@ public class RoomsManager : MonoBehaviour
         roomStableForwards = VARS.roomStableForwards;
         roomStableUps = VARS.roomStableUps;
         roomStableRights = VARS.roomStableRights;
+        edgeGateLinkedToIndexes = VARS.edgeGateLinkedToIndexes;
+        deactivatedLockIndexes = VARS.deactivatedLockIndexes;
         storedSandBlocks = VARS.storedSandBlocks;
         storedWaterBlocks = VARS.storedWaterBlocks;
         storedAcidBlocks = VARS.storedAcidBlocks;
@@ -189,7 +232,8 @@ public class RoomsManager : MonoBehaviour
                 if (UFL.IsInRoom(i, catTransform.position))
                 {
                     VARS.curRoomIndex = i;
-                    isInAnotherRoom = true;
+                    //isInAnotherRoom = true;
+                    VARS.IsIntoNewRoom = true;
                     break;
                 }
             }
@@ -198,14 +242,14 @@ public class RoomsManager : MonoBehaviour
             //VARS.IsJustByGate = false;
             //VARS.IsJustDied = false;
 
-            if (isInAnotherRoom)
-            {
-                VARS.IsIntoNewRoom = true;
-            }
-            else
-            {
-                VARS.IsToDie = true;
-            }
+            //if (isInAnotherRoom)
+            //{
+            //    VARS.IsIntoNewRoom = true;
+            //}
+            //else
+            //{
+            //    VARS.IsToDie = true;
+            //}
             //}
             ////elseDie
             //else
@@ -438,13 +482,13 @@ public class RoomsManager : MonoBehaviour
                         Quaternion newRotation = curRotation * deltaRotation;
                         twistingTargetEulerangles = newRotation.eulerAngles;
 
-                        Debug.Log("enter" + Mathf.Min(Mathf.Abs(Vector3.Dot(curTwistingCenter.transform.eulerAngles, twistingCenterClockwiseVectors[VARS.curFaceIndex - 1])),
-                               Mathf.Abs(Vector3.Dot(curTwistingCenter.transform.eulerAngles - Vector3.one * 360, twistingCenterClockwiseVectors[VARS.curFaceIndex - 1]))));
+                        //Debug.Log("enter" + Mathf.Min(Mathf.Abs(Vector3.Dot(curTwistingCenter.transform.eulerAngles, twistingCenterClockwiseVectors[VARS.curFaceIndex - 1])),
+                        //       Mathf.Abs(Vector3.Dot(curTwistingCenter.transform.eulerAngles - Vector3.one * 360, twistingCenterClockwiseVectors[VARS.curFaceIndex - 1]))));
                     }
 
-                    Debug.Log("curTwistingCenter.transform.eulerAngles: " + curTwistingCenter.transform.eulerAngles);
-                    Debug.Log("twistingCenterClockwiseVectors[VARS.curFaceIndex - 1]: " + twistingCenterClockwiseVectors[VARS.curFaceIndex - 1]);
-                    Debug.Log("twistingTargetEulerangles: " + twistingTargetEulerangles);
+                    //Debug.Log("curTwistingCenter.transform.eulerAngles: " + curTwistingCenter.transform.eulerAngles);
+                    //Debug.Log("twistingCenterClockwiseVectors[VARS.curFaceIndex - 1]: " + twistingCenterClockwiseVectors[VARS.curFaceIndex - 1]);
+                    //Debug.Log("twistingTargetEulerangles: " + twistingTargetEulerangles);
 
                     isTwistingPresetOver = true;
                 }
@@ -559,6 +603,18 @@ public class RoomsManager : MonoBehaviour
                     //setMinimapRoomPlanes
                     UFL.SetMinimapRoomPlanesByRoomPlanes();
 
+                    //faceDirectionIndexes
+                    if (!VARS.IsClockwiseTwisting)
+                    {
+                        VARS.faceDirectionIndexes[VARS.curFaceIndex - 1] = (VARS.faceDirectionIndexes[VARS.curFaceIndex - 1] + 1) % 4;
+                    }
+                    else
+                    {
+                        VARS.faceDirectionIndexes[VARS.curFaceIndex - 1] = (VARS.faceDirectionIndexes[VARS.curFaceIndex - 1] + 3) % 4;
+                    }
+
+                    VARS.IsToDetermineGatePassabilities = true;
+
                     isTwistingPresetOver = false;
 
                     twistingAccumulatedDegree = 0;
@@ -575,8 +631,280 @@ public class RoomsManager : MonoBehaviour
                 }
             }
             #endregion
+
+            if (VARS.IsToDetermineGatePassabilities)
+            {
+                #region DetermineGatePassabilities
+                //lockNotConnectedGates
+                for (int i = 0; i < gates.Count; i++)
+                {
+                    //if (gates[i].transform.parent != VARS.curPlaneEmpty.transform)
+                    //    continue;
+
+                    tempTransform = gates[i].transform;
+
+                    //findCurNearestGate
+                    curNearestGateDistance = 999;
+                    for (int j = 0; j < gates.Count; j++)
+                    {
+                        if (gates[j].transform.parent != tempTransform.parent)
+                        {
+                            if (Vector3.Distance(gates[j].transform.position, tempTransform.position) < curNearestGateDistance)
+                            {
+                                curNearestGateDistance = Vector3.Distance(gates[j].transform.position, tempTransform.position);
+                            }
+                        }
+                    }
+
+                    //linkConnectedGates
+                    if (curNearestGateDistance < 6 * gridBreadth)
+                    {
+                        //Debug.Log("enter1");
+                        //tempTransform.GetComponent<TileData>().triggerTypeIndex = 3;
+                        //toTrigger
+                        tempTransform.GetComponent<TileData>().stateOfMatterIndex = 0;
+                        for (int k = 0; k < tempTransform.childCount; k++)
+                        {
+                            tempTransform.GetChild(k).gameObject.SetActive(false);
+                        }
+
+                        tempTransform.GetComponent<MeshRenderer>().material = connectedGateColor;
+
+                        //minimapGate
+                        tempVector = UFL.Vector3WorldToMinimap(tempTransform.position);
+                        curNearestMinimapGateDistance = 999;
+                        for (int j = 0; j < minimapGates.Count; j++)
+                        {
+                            tempFloat = Vector3.Distance(minimapGates[j].transform.position, tempVector);
+                            if (tempFloat < curNearestMinimapGateDistance)
+                            {
+                                curNearestMinimapGateDistance = tempFloat;
+                                curNearestMinimapGateIndex = j;
+                            }
+                        }
+                        minimapGates[curNearestMinimapGateIndex].GetComponent<MeshRenderer>().material = connectedGateColor;
+                    }
+                    //lockNotConnectedGates
+                    else
+                    {
+                        //Debug.Log("enter2");
+                        //tempTransform.GetComponent<TileData>().triggerTypeIndex = 0;
+                        //toSolid
+                        tempTransform.GetComponent<TileData>().stateOfMatterIndex = 1;
+                        for (int k = 0; k < tempTransform.childCount; k++)
+                        {
+                            tempTransform.GetChild(k).gameObject.SetActive(true);
+                        }
+
+                        tempTransform.GetComponent<MeshRenderer>().material = unconnectedGateColor;
+
+                        //minimapGate
+                        tempVector = UFL.Vector3WorldToMinimap(tempTransform.position);
+                        curNearestMinimapGateDistance = 999;
+                        for (int j = 0; j < minimapGates.Count; j++)
+                        {
+                            tempFloat = Vector3.Distance(minimapGates[j].transform.position, tempVector);
+                            if (tempFloat < curNearestMinimapGateDistance)
+                            {
+                                curNearestMinimapGateDistance = tempFloat;
+                                curNearestMinimapGateIndex = j;
+                            }
+                        }
+                        minimapGates[curNearestMinimapGateIndex].GetComponent<MeshRenderer>().material = unconnectedGateColor;
+                    }
+
+                    //findCurNearestLock
+                    curGateNearestLockDistance = 999;
+                    for (int j = 0; j < locks.Count; j++)
+                    {
+                        if (locks[j].transform.parent != tempTransform.parent &&
+                            !deactivatedLockIndexes.Contains(j))
+                        {
+                            if (Vector3.Distance(locks[j].transform.position, tempTransform.position) < curGateNearestLockDistance)
+                            {
+                                curGateNearestLockDistance = Vector3.Distance(locks[j].transform.position, tempTransform.position);
+                            }
+                        }
+                    }
+
+                    //lockNotConnectedGates
+                    if (curGateNearestLockDistance < 6 * gridBreadth)
+                    {
+                        //Debug.Log("enter");
+
+                        //toSolid
+                        tempTransform.GetComponent<TileData>().stateOfMatterIndex = 1;
+                        for (int k = 0; k < tempTransform.childCount; k++)
+                        {
+                            tempTransform.GetChild(k).gameObject.SetActive(true);
+                        }
+
+                        tempTransform.GetComponent<MeshRenderer>().material = unconnectedGateColor;
+
+                        //minimapGate
+                        tempVector = UFL.Vector3WorldToMinimap(tempTransform.position);
+                        curNearestMinimapGateDistance = 999;
+                        for (int j = 0; j < minimapGates.Count; j++)
+                        {
+                            tempFloat = Vector3.Distance(minimapGates[j].transform.position, tempVector);
+                            if (tempFloat < curNearestMinimapGateDistance)
+                            {
+                                curNearestMinimapGateDistance = tempFloat;
+                                curNearestMinimapGateIndex = j;
+                            }
+                        }
+                        minimapGates[curNearestMinimapGateIndex].GetComponent<MeshRenderer>().material = unconnectedGateColor;
+                    }
+                }
+
+
+                //initializeEdgeGateLinkedToIndexes
+                edgeGateLinkedToIndexes.Clear();
+                for (int i = 0; i < edgeGates.Count; i++)
+                {
+                    edgeGateLinkedToIndexes.Add(-1);
+                }
+
+                //determineEdgeGatePassabilities
+                for (int i = 0; i < edgeGates.Count; i++)
+                {
+                    //if (edgeGates[i].transform.parent != VARS.curPlaneEmpty.transform)
+                    //    continue;
+
+                    tempTransform = edgeGates[i].transform;
+
+                    //for (int i = 0; i < edgeGates.Count; i++)
+                    //{
+                    //    if (edgeGates[i].transform.parent != curTriggerTile.transform.parent)
+                    //    {
+                    //        if (Vector3.Distance(edgeGates[i].transform.position, curTriggerTile.transform.position) < curNearestEdgeGateDistance)
+                    //        {
+                    //            curNearestEdgeGateDistance = Vector3.Distance(edgeGates[i].transform.position, curTriggerTile.transform.position);
+                    //            curNearestEdgeGateIndex = i;
+                    //        }
+                    //    }
+                    //}
+
+                    //findCurNearestEdgeGate
+                    curNearestEdgeGateDistance = 999;
+                    for (int j = 0; j < edgeGates.Count; j++)
+                    {
+                        if (edgeGates[j].transform.parent != tempTransform.parent)
+                        {
+                            if (Vector3.Distance(edgeGates[j].transform.position, tempTransform.position) < curNearestEdgeGateDistance)
+                            {
+                                curNearestEdgeGateDistance = Vector3.Distance(edgeGates[j].transform.position, tempTransform.position);
+                                curNearestEdgeGateIndex = j;
+                            }
+                        }
+                    }
+
+                    //linkConnectedEdgeGates
+                    if (curNearestEdgeGateDistance < 6 * gridBreadth)
+                    {
+                        //tempTransform.GetComponent<TileData>().triggerTypeIndex = 4;
+                        //toTrigger
+                        tempTransform.GetComponent<TileData>().stateOfMatterIndex = 0;
+                        edgeGateLinkedToIndexes[i] = curNearestEdgeGateIndex;
+                        for (int k = 0; k < tempTransform.childCount; k++)
+                        {
+                            tempTransform.GetChild(k).gameObject.SetActive(false);
+                        }
+
+                        tempTransform.GetComponent<MeshRenderer>().material = connectedGateColor;
+
+                        //minimapGate
+                        tempVector = UFL.Vector3WorldToMinimap(tempTransform.position);
+                        curNearestMinimapGateDistance = 999;
+                        for (int j = 0; j < minimapGates.Count; j++)
+                        {
+                            tempFloat = Vector3.Distance(minimapGates[j].transform.position, tempVector);
+                            if (tempFloat < curNearestMinimapGateDistance)
+                            {
+                                curNearestMinimapGateDistance = tempFloat;
+                                curNearestMinimapGateIndex = j;
+                            }
+                        }
+                        minimapGates[curNearestMinimapGateIndex].GetComponent<MeshRenderer>().material = connectedGateColor;
+                    }
+                    //lockNotConnectedEdgeGates
+                    else
+                    {
+                        //Debug.Log("enter3");
+                        //tempTransform.GetComponent<TileData>().triggerTypeIndex = 0;
+                        //toSolid
+                        tempTransform.GetComponent<TileData>().stateOfMatterIndex = 1;
+                        edgeGateLinkedToIndexes[i] = -1;
+                        for (int k = 0; k < tempTransform.childCount; k++)
+                        {
+                            tempTransform.GetChild(k).gameObject.SetActive(true);
+                        }
+
+                        tempTransform.GetComponent<MeshRenderer>().material = unconnectedGateColor;
+
+                        //minimapGate
+                        tempVector = UFL.Vector3WorldToMinimap(tempTransform.position);
+                        curNearestMinimapGateDistance = 999;
+                        for (int j = 0; j < minimapGates.Count; j++)
+                        {
+                            tempFloat = Vector3.Distance(minimapGates[j].transform.position, tempVector);
+                            if (tempFloat < curNearestMinimapGateDistance)
+                            {
+                                curNearestMinimapGateDistance = tempFloat;
+                                curNearestMinimapGateIndex = j;
+                            }
+                        }
+                        minimapGates[curNearestMinimapGateIndex].GetComponent<MeshRenderer>().material = unconnectedGateColor;
+                    }
+
+                    //findCurNearestLock
+                    curEdgeGateNearestLockDistance = 999;
+                    for (int j = 0; j < locks.Count; j++)
+                    {
+                        if (locks[j].transform.parent != tempTransform.parent &&
+                            !deactivatedLockIndexes.Contains(j))
+                        {
+                            if (Vector3.Distance(locks[j].transform.position, tempTransform.position) < curEdgeGateNearestLockDistance)
+                            {
+                                curEdgeGateNearestLockDistance = Vector3.Distance(locks[j].transform.position, tempTransform.position);
+                            }
+                        }
+                    }
+
+                    //lockNotConnectedGates
+                    if (curEdgeGateNearestLockDistance < 6 * gridBreadth)
+                    {
+                        //Debug.Log("enter4");
+                        //toSolid
+                        tempTransform.GetComponent<TileData>().stateOfMatterIndex = 1;
+                        for (int k = 0; k < tempTransform.childCount; k++)
+                        {
+                            tempTransform.GetChild(k).gameObject.SetActive(true);
+                        }
+
+                        tempTransform.GetComponent<MeshRenderer>().material = unconnectedGateColor;
+
+                        //minimapGate
+                        tempVector = UFL.Vector3WorldToMinimap(tempTransform.position);
+                        curNearestMinimapGateDistance = 999;
+                        for (int j = 0; j < minimapGates.Count; j++)
+                        {
+                            tempFloat = Vector3.Distance(minimapGates[j].transform.position, tempVector);
+                            if (tempFloat < curNearestMinimapGateDistance)
+                            {
+                                curNearestMinimapGateDistance = tempFloat;
+                                curNearestMinimapGateIndex = j;
+                            }
+                        }
+                        minimapGates[curNearestMinimapGateIndex].GetComponent<MeshRenderer>().material = unconnectedGateColor;
+                    }
+                }
+                #endregion
+
+                VARS.IsToDetermineGatePassabilities = false;
+            }
         }
-	}
+    }
 
     //void IntoNewRoom()
     //{

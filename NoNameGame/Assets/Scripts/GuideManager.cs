@@ -28,6 +28,8 @@ public class GuideManager : MonoBehaviour
     GameObject climbGuideText;
     GameObject twistGuideText;
     GameObject backCenterGuideText;
+
+    GameObject keysGuideMask;
     #endregion
 
     #region VariablesUsed
@@ -54,6 +56,7 @@ public class GuideManager : MonoBehaviour
         climbGuideText = CONS.climbGuideText;
         twistGuideText = CONS.twistGuideText;
         backCenterGuideText = CONS.backCenterGuideText;
+        keysGuideMask = CONS.keysGuideMask;
         #endregion
 
         #region ImportReferenceVariable
@@ -65,349 +68,364 @@ public class GuideManager : MonoBehaviour
         #region ImportValueVariables
         #endregion
 
-        #region IntoGuide
-        if (!VARS.IsInGuide)
+        //keysGuideMask
+        if (VARS.HasFinishedKeysGuide)
         {
-            //keys
-            if (!VARS.HasFinishedKeysGuide &&
-                !VARS.IsInKeysGuide)
-            {
-                keysGuideEmpty.SetActive(true);
+            keysGuideMask.SetActive(false);
+        }
 
-                VARS.IsInKeysGuide = true;
-            }
-            //jump
-            else if (!VARS.HasJumped &&
-                !VARS.IsInJumpGuide &&
-                VARS.HasFinishedKeysGuide)
+        if (VARS.IsGuideManagerMainPartExecutable)
+        {
+            #region IntoGuide
+            if (!VARS.IsInGuide)
             {
-                for (int i = 0; i < keyCodes.Count; i++)
+                //keys
+                if (!VARS.HasFinishedKeysGuide &&
+                    !VARS.IsInKeysGuide)
                 {
-                    if (keyCodes[i] == VARS.jumpKeyCode)
+                    keysGuideEmpty.SetActive(true);
+
+                    VARS.IsInKeysGuide = true;
+                }
+                //jump
+                else if (!VARS.HasJumped &&
+                    !VARS.IsInJumpGuide &&
+                    VARS.HasFinishedKeysGuide)
+                {
+                    for (int i = 0; i < keyCodes.Count; i++)
                     {
-                        jumpGuideText.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = keyChosenSprites[i];
-                        break;
+                        if (keyCodes[i] == VARS.jumpKeyCode)
+                        {
+                            jumpGuideText.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = keyChosenSprites[i];
+                            break;
+                        }
+                    }
+
+                    jumpGuideText.SetActive(true);
+
+                    VARS.curTargetEnergy = 0.1f;
+                    VARS.curEnergy = 0.1f;
+
+                    VARS.IsInJumpGuide = true;
+                }
+                //intoMinimap
+                else if (!VARS.HasBeenIntoMinimap &&
+                    !VARS.IsInIntoMinimapGuide &&
+                    VARS.curRoomIndex != 2)
+                {
+                    VARS.IsMinimapActivated = true;
+
+                    for (int i = 0; i < keyCodes.Count; i++)
+                    {
+                        if (keyCodes[i] == VARS.minimapKeyCode)
+                        {
+                            intoMinimapGuideText.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = keyChosenSprites[i];
+                            break;
+                        }
+                    }
+
+                    intoMinimapGuideText.SetActive(true);
+
+                    VARS.IsInIntoMinimapGuide = true;
+                }
+                //climb
+                else if (!VARS.HasClimbed &&
+                    !VARS.IsInClimbGuide &&
+                    VARS.IsRightBlocked &&
+                    !VARS.IsOnGround &&
+                    VARS.curRoomIndex > 2)
+                {
+
+                    for (int i = 0; i < keyCodes.Count; i++)
+                    {
+                        if (keyCodes[i] == VARS.rightKeyCode)
+                        {
+                            climbGuideText.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = keyChosenSprites[i];
+                        }
+                        else if (keyCodes[i] == VARS.grabKeyCode)
+                        {
+                            climbGuideText.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = keyChosenSprites[i];
+                        }
+                        else if (keyCodes[i] == VARS.upKeyCode)
+                        {
+                            climbGuideText.transform.GetChild(2).GetComponent<SpriteRenderer>().sprite = keyChosenSprites[i];
+                        }
+                    }
+
+                    climbGuideText.SetActive(true);
+
+                    VARS.IsInClimbGuide = true;
+                }
+                //twist
+                else if (!VARS.HasTwisted &&
+                    !VARS.IsInTwistGuide &&
+                    VARS.IsInCenter &&
+                    Mathf.Abs(VARS.verCurSpeed) < 0.1f &&
+                    Mathf.Abs(VARS.horCurSpeed) < 1 &&
+                    Vector3.Magnitude(VARS.curLatestCenterSavePointPosition) > 1)
+                {
+                    for (int i = 0; i < keyCodes.Count; i++)
+                    {
+                        if (keyCodes[i] == VARS.downKeyCode)
+                        {
+                            twistGuideText.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = keyChosenSprites[i];
+                        }
+                        else if (keyCodes[i] == VARS.rightKeyCode)
+                        {
+                            twistGuideText.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = keyChosenSprites[i];
+                        }
+                    }
+
+                    twistGuideText.SetActive(true);
+
+                    VARS.IsInTwistGuide = true;
+                }
+                //backCenter
+                else if (!VARS.HasBackCentered &&
+                    !VARS.IsInBackCenterGuide &&
+                    VARS.HasTwisted &&
+                    !VARS.IsInCenter &&
+                    Vector3.Magnitude(VARS.curLatestCenterSavePointPosition) > 1 &&
+                    Vector3.Distance(catTransform.position, VARS.curLatestCenterSavePointPosition) > 6)
+                {
+                    for (int i = 0; i < keyCodes.Count; i++)
+                    {
+                        if (keyCodes[i] == VARS.upKeyCode)
+                        {
+                            backCenterGuideText.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = keyChosenSprites[i];
+                            backCenterGuideText.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = keyChosenSprites[i];
+                            break;
+                        }
+                    }
+
+                    backCenterGuideText.SetActive(true);
+
+                    VARS.IsInBackCenterGuide = true;
+                }
+            }
+            #endregion
+
+            #region InGuide
+            //keysGuide
+            if (VARS.IsInKeysGuide)
+            {
+                //up
+                if (VARS.curKeysGuideIndex == 0)
+                {
+                    keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(0).gameObject.SetActive(false);
+                    keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(1).gameObject.SetActive(true);
+                    keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(2).gameObject.SetActive(true);
+
+                    if (VARS.IsUpKeyDown)
+                    {
+                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(0).gameObject.SetActive(true);
+                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(1).gameObject.SetActive(false);
+                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(2).gameObject.SetActive(false);
+
+                        VARS.curKeysGuideIndex++;
+
+                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(0).gameObject.SetActive(false);
+                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(1).gameObject.SetActive(true);
+                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(2).gameObject.SetActive(true);
                     }
                 }
+                //down
+                else if (VARS.curKeysGuideIndex == 1)
+                {
+                    if (VARS.IsDownKeyDown)
+                    {
+                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(0).gameObject.SetActive(true);
+                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(1).gameObject.SetActive(false);
+                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(2).gameObject.SetActive(false);
 
-                jumpGuideText.SetActive(true);
+                        VARS.curKeysGuideIndex++;
 
-                VARS.IsInJumpGuide = true;
+                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(0).gameObject.SetActive(false);
+                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(1).gameObject.SetActive(true);
+                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(2).gameObject.SetActive(true);
+                    }
+                }
+                //left
+                else if (VARS.curKeysGuideIndex == 2)
+                {
+                    if (VARS.IsLeftKeyDown)
+                    {
+                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(0).gameObject.SetActive(true);
+                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(1).gameObject.SetActive(false);
+                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(2).gameObject.SetActive(false);
+
+                        VARS.curKeysGuideIndex++;
+
+                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(0).gameObject.SetActive(false);
+                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(1).gameObject.SetActive(true);
+                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(2).gameObject.SetActive(true);
+                    }
+                }
+                //right
+                else if (VARS.curKeysGuideIndex == 3)
+                {
+                    if (VARS.IsRightKeyDown)
+                    {
+                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(0).gameObject.SetActive(true);
+                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(1).gameObject.SetActive(false);
+                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(2).gameObject.SetActive(false);
+
+                        VARS.curKeysGuideIndex++;
+
+                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(0).gameObject.SetActive(false);
+                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(1).gameObject.SetActive(true);
+                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(2).gameObject.SetActive(true);
+                    }
+                }
+                //jump
+                else if (VARS.curKeysGuideIndex == 4)
+                {
+                    if (VARS.IsJumpKeyDown)
+                    {
+                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(0).gameObject.SetActive(true);
+                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(1).gameObject.SetActive(false);
+                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(2).gameObject.SetActive(false);
+
+                        VARS.curKeysGuideIndex++;
+
+                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(0).gameObject.SetActive(false);
+                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(1).gameObject.SetActive(true);
+                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(2).gameObject.SetActive(true);
+                    }
+                }
+                //acce
+                else if (VARS.curKeysGuideIndex == 5)
+                {
+                    if (VARS.IsAcceKeyDown)
+                    {
+                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(0).gameObject.SetActive(true);
+                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(1).gameObject.SetActive(false);
+                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(2).gameObject.SetActive(false);
+
+                        VARS.curKeysGuideIndex++;
+
+                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(0).gameObject.SetActive(false);
+                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(1).gameObject.SetActive(true);
+                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(2).gameObject.SetActive(true);
+                    }
+                }
+                //grab
+                else if (VARS.curKeysGuideIndex == 6)
+                {
+                    if (VARS.IsGrabKeyDown)
+                    {
+                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(0).gameObject.SetActive(true);
+                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(1).gameObject.SetActive(false);
+                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(2).gameObject.SetActive(false);
+
+                        VARS.curKeysGuideIndex++;
+
+                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(0).gameObject.SetActive(false);
+                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(1).gameObject.SetActive(true);
+                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(2).gameObject.SetActive(true);
+                    }
+                }
+                //Minimap
+                else if (VARS.curKeysGuideIndex == 7)
+                {
+                    if (VARS.IsMinimapKeyDown)
+                    {
+                        Debug.Log("keysGuideOver");
+
+                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(0).gameObject.SetActive(true);
+                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(1).gameObject.SetActive(false);
+                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(2).gameObject.SetActive(false);
+
+                        VARS.curKeysGuideIndex = 0;
+
+                        keysGuideEmpty.SetActive(false);
+
+                        VARS.curTargetEnergy = 0.1f;
+                        VARS.curEnergy = 0.1f;
+
+                        VARS.HasFinishedKeysGuide = true;
+
+                        VARS.IsToWriteProgressData = true;
+
+                        VARS.IsInKeysGuide = false;
+                    }
+                }
+            }
+            //jump
+            if (VARS.IsInJumpGuide &&
+                VARS.IsInputtingJumpKey)
+            {
+                Debug.Log("jumpGuideOver");
+
+                jumpGuideText.SetActive(false);
+
+                VARS.HasJumped = true;
+
+                VARS.IsToWriteProgressData = true;
+
+                VARS.IsInJumpGuide = false;
             }
             //intoMinimap
-            else if (!VARS.HasBeenIntoMinimap &&
-                !VARS.IsInIntoMinimapGuide &&
-                VARS.curRoomIndex != 2)
+            if (VARS.IsInIntoMinimapGuide &&
+                VARS.IsMinimapKeyDown)
             {
-                VARS.IsMinimapActivated = true;
+                Debug.Log("intoMinimapGuideOver");
 
-                for (int i = 0; i < keyCodes.Count; i++)
-                {
-                    if (keyCodes[i] == VARS.minimapKeyCode)
-                    {
-                        intoMinimapGuideText.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = keyChosenSprites[i];
-                        break;
-                    }
-                }
+                intoMinimapGuideText.SetActive(false);
 
-                intoMinimapGuideText.SetActive(true);
+                VARS.HasBeenIntoMinimap = true;
 
-                VARS.IsInIntoMinimapGuide = true;
+                VARS.IsToWriteProgressData = true;
+
+                VARS.IsInIntoMinimapGuide = false;
             }
             //climb
-            else if (!VARS.HasClimbed &&
-                !VARS.IsInClimbGuide &&
-                VARS.IsRightBlocked &&
-                !VARS.IsOnGround &&
-                VARS.curRoomIndex > 2)
+            else if (VARS.IsInClimbGuide &&
+                VARS.IsInputtingRightKey &&
+                VARS.IsInputtingGrabKey &&
+                VARS.IsInputtingUpKey)
             {
+                Debug.Log("climbGuideOver");
 
-                for (int i = 0; i < keyCodes.Count; i++)
-                {
-                    if (keyCodes[i] == VARS.rightKeyCode)
-                    {
-                        climbGuideText.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = keyChosenSprites[i];
-                    }
-                    else if (keyCodes[i] == VARS.grabKeyCode)
-                    {
-                        climbGuideText.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = keyChosenSprites[i];
-                    }
-                    else if (keyCodes[i] == VARS.upKeyCode)
-                    {
-                        climbGuideText.transform.GetChild(2).GetComponent<SpriteRenderer>().sprite = keyChosenSprites[i];
-                    }
-                }
+                climbGuideText.SetActive(false);
 
-                climbGuideText.SetActive(true);
+                VARS.HasClimbed = true;
 
-                VARS.IsInClimbGuide = true;
+                VARS.IsToWriteProgressData = true;
+
+                VARS.IsInClimbGuide = false;
             }
+
             //twist
-            else if (!VARS.HasTwisted &&
-                !VARS.IsInTwistGuide &&
-                VARS.IsInCenter &&
-                Mathf.Abs(VARS.verCurSpeed) < 0.1f &&
-                Mathf.Abs(VARS.horCurSpeed) < 1 &&
-                Vector3.Magnitude(VARS.curLatestCenterSavePointPosition) > 1)
+            else if (VARS.IsInTwistGuide &&
+                VARS.IsInputtingDownKey &&
+                (VARS.IsInputtingLeftKey || VARS.IsInputtingRightKey))
             {
-                for (int i = 0; i < keyCodes.Count; i++)
-                {
-                    if (keyCodes[i] == VARS.downKeyCode)
-                    {
-                        twistGuideText.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = keyChosenSprites[i];
-                    }
-                    else if (keyCodes[i] == VARS.rightKeyCode)
-                    {
-                        twistGuideText.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = keyChosenSprites[i];
-                    }
-                }
+                Debug.Log("twistGuideOver");
 
-                twistGuideText.SetActive(true);
+                twistGuideText.SetActive(false);
 
-                VARS.IsInTwistGuide = true;
+                VARS.HasTwisted = true;
+
+                VARS.IsToWriteProgressData = true;
+
+                VARS.IsInTwistGuide = false;
             }
             //backCenter
-            else if (!VARS.HasBackCentered &&
-                !VARS.IsInBackCenterGuide &&
-                VARS.HasTwisted &&
-                !VARS.IsInCenter &&
-                Vector3.Magnitude(VARS.curLatestCenterSavePointPosition) > 1 &&
-                Vector3.Distance(catTransform.position, VARS.curLatestCenterSavePointPosition) > 6)
+            else if (VARS.IsInBackCenterGuide &&
+                VARS.IsBackCenterTriggered)
             {
-                for (int i = 0; i < keyCodes.Count; i++)
-                {
-                    if (keyCodes[i] == VARS.upKeyCode)
-                    {
-                        backCenterGuideText.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = keyChosenSprites[i];
-                        backCenterGuideText.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = keyChosenSprites[i];
-                        break;
-                    }
-                }
+                Debug.Log("backCenterGuideOver");
 
-                backCenterGuideText.SetActive(true);
+                backCenterGuideText.SetActive(false);
 
-                VARS.IsInBackCenterGuide = true;
+                VARS.HasBackCentered = true;
+
+                VARS.IsToWriteProgressData = true;
+
+                VARS.IsInBackCenterGuide = false;
             }
+            #endregion
         }
-        #endregion
-
-        #region InGuide
-        //keysGuide
-        if (VARS.IsInKeysGuide)
-        {
-            //up
-            if (VARS.curKeysGuideIndex == 0)
-            {
-                keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(0).gameObject.SetActive(false);
-                keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(1).gameObject.SetActive(true);
-                keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(2).gameObject.SetActive(true);
-
-                if (VARS.IsUpKeyDown)
-                {
-                    keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(0).gameObject.SetActive(true);
-                    keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(1).gameObject.SetActive(false);
-                    keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(2).gameObject.SetActive(false);
-
-                    VARS.curKeysGuideIndex++;
-
-                    keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(0).gameObject.SetActive(false);
-                    keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(1).gameObject.SetActive(true);
-                    keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(2).gameObject.SetActive(true);
-                }
-            }
-            //down
-            else if (VARS.curKeysGuideIndex == 1)
-            {
-                if (VARS.IsDownKeyDown)
-                {
-                    keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(0).gameObject.SetActive(true);
-                    keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(1).gameObject.SetActive(false);
-                    keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(2).gameObject.SetActive(false);
-
-                    VARS.curKeysGuideIndex++;
-
-                    keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(0).gameObject.SetActive(false);
-                    keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(1).gameObject.SetActive(true);
-                    keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(2).gameObject.SetActive(true);
-                }
-            }
-            //left
-            else if (VARS.curKeysGuideIndex == 2)
-            {
-                if (VARS.IsLeftKeyDown)
-                {
-                    keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(0).gameObject.SetActive(true);
-                    keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(1).gameObject.SetActive(false);
-                    keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(2).gameObject.SetActive(false);
-
-                    VARS.curKeysGuideIndex++;
-
-                    keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(0).gameObject.SetActive(false);
-                    keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(1).gameObject.SetActive(true);
-                    keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(2).gameObject.SetActive(true);
-                }
-            }
-            //right
-            else if (VARS.curKeysGuideIndex == 3)
-            {
-                if (VARS.IsRightKeyDown)
-                {
-                    keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(0).gameObject.SetActive(true);
-                    keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(1).gameObject.SetActive(false);
-                    keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(2).gameObject.SetActive(false);
-
-                    VARS.curKeysGuideIndex++;
-
-                    keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(0).gameObject.SetActive(false);
-                    keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(1).gameObject.SetActive(true);
-                    keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(2).gameObject.SetActive(true);
-                }
-            }
-            //jump
-            else if (VARS.curKeysGuideIndex == 4)
-            {
-                if (VARS.IsJumpKeyDown)
-                {
-                    keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(0).gameObject.SetActive(true);
-                    keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(1).gameObject.SetActive(false);
-                    keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(2).gameObject.SetActive(false);
-
-                    VARS.curKeysGuideIndex++;
-
-                    keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(0).gameObject.SetActive(false);
-                    keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(1).gameObject.SetActive(true);
-                    keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(2).gameObject.SetActive(true);
-                }
-            }
-            //acce
-            else if (VARS.curKeysGuideIndex == 5)
-            {
-                if (VARS.IsAcceKeyDown)
-                {
-                    keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(0).gameObject.SetActive(true);
-                    keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(1).gameObject.SetActive(false);
-                    keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(2).gameObject.SetActive(false);
-
-                    VARS.curKeysGuideIndex++;
-
-                    keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(0).gameObject.SetActive(false);
-                    keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(1).gameObject.SetActive(true);
-                    keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(2).gameObject.SetActive(true);
-                }
-            }
-            //grab
-            else if (VARS.curKeysGuideIndex == 6)
-            {
-                if (VARS.IsGrabKeyDown)
-                {
-                    keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(0).gameObject.SetActive(true);
-                    keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(1).gameObject.SetActive(false);
-                    keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(2).gameObject.SetActive(false);
-
-                    VARS.curKeysGuideIndex++;
-
-                    keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(0).gameObject.SetActive(false);
-                    keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(1).gameObject.SetActive(true);
-                    keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(2).gameObject.SetActive(true);
-                }
-            }
-            //Minimap
-            else if (VARS.curKeysGuideIndex == 7)
-            {
-                if (VARS.IsMinimapKeyDown)
-                {
-                    Debug.Log("keysGuideOver");
-
-                    keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(0).gameObject.SetActive(true);
-                    keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(1).gameObject.SetActive(false);
-                    keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(2).gameObject.SetActive(false);
-
-                    VARS.curKeysGuideIndex = 0;
-
-                    keysGuideEmpty.SetActive(false);
-
-                    VARS.HasFinishedKeysGuide = true;
-
-                    VARS.IsToWriteProgressData = true;
-
-                    VARS.IsInKeysGuide = false;
-                }
-            }
-        }
-        //jump
-        if (VARS.IsInJumpGuide &&
-            VARS.IsInputtingJumpKey)
-        {
-            Debug.Log("jumpGuideOver");
-
-            jumpGuideText.SetActive(false);
-
-            VARS.HasJumped = true;
-
-            VARS.IsToWriteProgressData = true;
-
-            VARS.IsInJumpGuide = false;
-        }
-        //intoMinimap
-        if (VARS.IsInIntoMinimapGuide &&
-            VARS.IsMinimapKeyDown)
-        {
-            Debug.Log("intoMinimapGuideOver");
-
-            intoMinimapGuideText.SetActive(false);
-
-            VARS.HasBeenIntoMinimap = true;
-
-            VARS.IsToWriteProgressData = true;
-
-            VARS.IsInIntoMinimapGuide = false;
-        }
-        //climb
-        else if (VARS.IsInClimbGuide &&
-            VARS.IsInputtingRightKey &&
-            VARS.IsInputtingGrabKey &&
-            VARS.IsInputtingUpKey)
-        {
-            Debug.Log("climbGuideOver");
-
-            climbGuideText.SetActive(false);
-
-            VARS.HasClimbed = true;
-
-            VARS.IsToWriteProgressData = true;
-
-            VARS.IsInClimbGuide = false;
-        }
-
-        //twist
-        else if (VARS.IsInTwistGuide &&
-            VARS.IsInputtingDownKey &&
-            (VARS.IsInputtingLeftKey || VARS.IsInputtingRightKey))
-        {
-            Debug.Log("twistGuideOver");
-
-            twistGuideText.SetActive(false);
-
-            VARS.HasTwisted = true;
-
-            VARS.IsToWriteProgressData= true;
-
-            VARS.IsInTwistGuide = false;
-        }
-        //backCenter
-        else if (VARS.IsInBackCenterGuide &&
-            VARS.IsBackCenterTriggered)
-        {
-            Debug.Log("backCenterGuideOver");
-
-            backCenterGuideText.SetActive(false);
-
-            VARS.HasBackCentered = true;
-
-            VARS.IsToWriteProgressData = true;
-
-            VARS.IsInBackCenterGuide = false;
-        }
-        #endregion
     }
 }

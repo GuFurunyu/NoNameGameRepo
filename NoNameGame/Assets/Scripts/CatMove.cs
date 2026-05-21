@@ -600,7 +600,8 @@ public class CatMove : MonoBehaviour
             }
 
             //outOfHighJumping
-            if (VARS.IsJumpKeyDown)
+            if (VARS.IsJumpKeyDown ||
+                !VARS.IsInputtingJumpKey)
             {
                 VARS.IsHighJumping = false;
             }
@@ -1031,6 +1032,8 @@ public class CatMove : MonoBehaviour
                         VARS.IsToNotLoseCarriedFragments = true;
                     }
 
+                    Debug.Log("backCenterDie");
+
                     catIniPositionPoint.transform.position = VARS.curLatestCenterSavePointPosition;
                     VARS.IsToDie = true;
                 }
@@ -1111,6 +1114,8 @@ public class CatMove : MonoBehaviour
             }
 
             VARS.IsHighJumping = true;
+
+            VARS.IsCatEnergyResetExecutable = false;
 
             VARS.IsContracting = true;
 

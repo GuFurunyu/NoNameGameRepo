@@ -39,6 +39,8 @@ public class GameStateManager : MonoBehaviour
         #region ImportValueVariables
         #endregion
 
+        
+
         VARS.IsPaused =
             VARS.IsInMinimap ||
             VARS.IsOptionPanelActivated ||

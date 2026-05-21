@@ -80,6 +80,9 @@ public class Variables : MonoBehaviour
     #region GameStateManager
     [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
         "  \nGAMESTATEMANAGER\n --- ")]
+    [SerializeField] private bool _isInMainBoard = true;
+    public bool IsInMainBoard { get { return _isInMainBoard; } set { _isInMainBoard = value; } }
+
     [SerializeField] private bool _isPaused;
     //public bool IsPaused
     //{
@@ -116,6 +119,12 @@ public class Variables : MonoBehaviour
 
     [SerializeField] private bool _hasBackCentered;
     public bool HasBackCentered { get { return _hasBackCentered; } set { _hasBackCentered = value; } }
+
+    #endregion
+
+    #region MainBoardManager
+    [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
+        "  \nMAINBOARDMANAGER\n --- ")]
 
     #endregion
 
@@ -213,6 +222,9 @@ public class Variables : MonoBehaviour
         }
     }
 
+    //faceDirectionIndexes
+    public int[] faceDirectionIndexes = new int[6];
+
     //roomsInfo
     public Vector3[] roomCenters = new Vector3[54];
     public Vector3[] roomStableForwards = new Vector3[54];
@@ -262,6 +274,9 @@ public class Variables : MonoBehaviour
 
     //[SerializeField] private bool _isJustStartedTheGame = true;
     //public bool IsJustStartedTheGame { get { return _isJustStartedTheGame; } set { _isJustStartedTheGame = value; } }
+
+    [SerializeField] private bool _isToDetermineGatePassabilities = true;
+    public bool IsToDetermineGatePassabilities { get { return _isToDetermineGatePassabilities; } set { _isToDetermineGatePassabilities = value; } }
 
     //edgeGatesLinkedToIndexes
     public List<int> edgeGateLinkedToIndexes = new List<int>();
@@ -347,6 +362,10 @@ public class Variables : MonoBehaviour
     #region CameraManager
     [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
         "  \nCAMERAMANAGER\n --- ")]
+    //executability
+    [SerializeField] private bool _isCameraManagerMainPartExecutable;
+    public bool IsCameraManagerMainPartExecutable { get { return _isCameraManagerMainPartExecutable; } set { _isCameraManagerMainPartExecutable = value; } }
+
     //iniEulerAngles
     public Vector3 camIniEulerangles;
 
@@ -678,6 +697,9 @@ public class Variables : MonoBehaviour
     public TileData curTriggerTileData;
     public GameObject curEdgeGate;
     public GameObject curKey;
+
+    //downThroughPlatform
+    public float downThroughPlatformStartTime;
     #endregion
 
     #region CatMove
@@ -1207,6 +1229,10 @@ public class Variables : MonoBehaviour
     #region GuideManager
     [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
         "  \nGUIDEMANAGER\n --- ")]
+    //executability
+    [SerializeField] private bool _isGuideManagerMainPartExecutable;
+    public bool IsGuideManagerMainPartExecutable { get { return _isGuideManagerMainPartExecutable; } set { _isGuideManagerMainPartExecutable = value; } }
+
     [SerializeField] private bool _isInGuide;
     public bool IsInGuide
     {
@@ -1253,16 +1279,23 @@ public class Variables : MonoBehaviour
     #region AudioManager
     [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
         "  \nAUDIOMANAGER\n --- ")]
-    //curAudioClipIndex
-    public int curAudioClipIndex;
+    //curInGameBGMIndex
+    public int curInGameBGMIndex = -1;
 
     //isFormerBgmFadingOut
     [SerializeField] private bool _isFormerBgmFadingOut;
+
     public bool IsFormerBgmFadingOut { get { return _isFormerBgmFadingOut; } set { _isFormerBgmFadingOut = value; } }
 
     //[SerializeField] private bool _isFormalBgmFadedOut;
     //public bool IsFormalBgmFadedOut { get { return _isFormalBgmFadedOut; } set { _isFormalBgmFadedOut = value; } }
 
+    //pitch
+    public float curPitch = 1;
+    public float curTargetAccumulatedChangedPitch;
+
+    [SerializeField] private bool _isChangingPitch;
+    public bool IsChangingPitch { get { return _isChangingPitch; } set { _isChangingPitch = value; } }
     #endregion
 
     void Start()

@@ -88,6 +88,8 @@ public class UniversalFunctionsLibrary : MonoBehaviour
     float stuckWarmupTime;
     float sandStuckWarmupTime;
 
+    float downThroughPlatformThreshold;
+
     float horMaxSpeed;
     float verMaxSpeed;
 
@@ -173,6 +175,7 @@ public class UniversalFunctionsLibrary : MonoBehaviour
         catTransform = CONS.catTransform;
         stuckWarmupTime = CONS.stuckWarmupTime;
         sandStuckWarmupTime = CONS.sandStuckWarmupTime;
+        downThroughPlatformThreshold = CONS.downThroughPlatformThreshold;
         horMaxSpeed = CONS.horMaxSpeed;
         verMaxSpeed = CONS.verMaxSpeed;
         temperatureTransferSpeed = CONS.temperatureTransferSpeed;
@@ -536,25 +539,25 @@ public class UniversalFunctionsLibrary : MonoBehaviour
             //roomPlanes[i].SetActive(false);
         }
 
-        //cat.GetComponent<MeshRenderer>().enabled = false;
+        cat.GetComponent<MeshRenderer>().enabled = false;
 
-        //for (int i = 0; i < cat.transform.childCount; i++)
-        //{
-        //    cat.transform.GetChild(i).gameObject.SetActive(false);
-        //}
+        for (int i = 0; i < cat.transform.childCount; i++)
+        {
+            cat.transform.GetChild(i).gameObject.SetActive(false);
+        }
 
-        //if (VARS.IsCarryingAKey)
-        //{
-        //    VARS.curCarriedKey.SetActive(false);
-        //}
+        if (VARS.IsCarryingAKey)
+        {
+            VARS.curCarriedKey.SetActive(false);
+        }
 
-        //if (VARS.IsCarryingFragments)
-        //{
-        //    for(int i=0;i<VARS.curCarriedFragments.Count; i++)
-        //    {
-        //        VARS.curCarriedFragments[i].SetActive(false);
-        //    }
-        //}
+        if (VARS.IsCarryingFragments)
+        {
+            for (int i = 0; i < VARS.curCarriedFragments.Count; i++)
+            {
+                VARS.curCarriedFragments[i].SetActive(false);
+            }
+        }
 
         //deactivateCurStoredBlocks
         if (VARS.curStoredSandBlockIndex > 0)
@@ -651,25 +654,25 @@ public class UniversalFunctionsLibrary : MonoBehaviour
             //roomPlanes[i].SetActive(true);
         }
 
-        //cat.GetComponent<MeshRenderer>().enabled = true;
+        cat.GetComponent<MeshRenderer>().enabled = true;
 
-        //for(int i=0;i<cat.transform.childCount; i++)
-        //{
-        //    cat.transform.GetChild(i).gameObject.SetActive(true);
-        //}
+        for (int i = 0; i < cat.transform.childCount; i++)
+        {
+            cat.transform.GetChild(i).gameObject.SetActive(true);
+        }
 
-        //if (VARS.IsCarryingAKey)
-        //{
-        //    VARS.curCarriedKey.SetActive(true);
-        //}
+        if (VARS.IsCarryingAKey)
+        {
+            VARS.curCarriedKey.SetActive(true);
+        }
 
-        //if (VARS.IsCarryingFragments)
-        //{
-        //    for (int i = 0; i < VARS.curCarriedFragments.Count; i++)
-        //    {
-        //        VARS.curCarriedFragments[i].SetActive(true);
-        //    }
-        //}
+        if (VARS.IsCarryingFragments)
+        {
+            for (int i = 0; i < VARS.curCarriedFragments.Count; i++)
+            {
+                VARS.curCarriedFragments[i].SetActive(true);
+            }
+        }
 
         //reactivateCurStoredBlocks
         if (VARS.curStoredSandBlockIndex > 0)
@@ -1023,6 +1026,19 @@ public class UniversalFunctionsLibrary : MonoBehaviour
 
         VARS.IsTouchingAfflictingBlocks = false;
 
+        //downThroughPlatform
+        if (VARS.IsInputtingDownKey)
+        {
+            if (VARS.downThroughPlatformStartTime == 0)
+            {
+                VARS.downThroughPlatformStartTime = Time.time;
+            }
+        }
+        else
+        {
+            VARS.downThroughPlatformStartTime = 0;
+        }
+
         for (int i = 0; i < curBlocks.Count; i++)
         {
             if (curBlocks[i].activeSelf == false ||
@@ -1070,6 +1086,8 @@ public class UniversalFunctionsLibrary : MonoBehaviour
                             }
                             else if (Time.time - VARS.stuckStartTime > stuckWarmupTime)
                             {
+                                UnityEngine.Debug.Log("stuckDie");
+
                                 VARS.stuckStartTime = 0;
 
                                 VARS.IsToDie = true;
@@ -1087,6 +1105,8 @@ public class UniversalFunctionsLibrary : MonoBehaviour
                                 }
                                 else if (Time.time - VARS.sandStuckStartTime > sandStuckWarmupTime)
                                 {
+                                    UnityEngine.Debug.Log("stuckDie");
+
                                     VARS.sandStuckStartTime = 0;
 
                                     VARS.IsToDie = true;
@@ -1179,7 +1199,8 @@ public class UniversalFunctionsLibrary : MonoBehaviour
                 }
                 //down
                 if ((!hasGotCurNearestDownBlock &&
-                    !(curBlockTileDatas[i].isPlatform && VARS.IsInputtingDownKey))||
+                    !(curBlockTileDatas[i].isPlatform /*&& VARS.IsInputtingDownKey*/ &&
+                    VARS.downThroughPlatformStartTime != 0 && Time.time - VARS.downThroughPlatformStartTime > downThroughPlatformThreshold))||
                     curBlockTileDatas[i].isFragile)
                 {
                     tempFloat1 = Mathf.Abs(Vector3.Dot(tempVector, VARS.curRight));
@@ -1677,6 +1698,8 @@ public class UniversalFunctionsLibrary : MonoBehaviour
     {
         if (curTileData != null)
         {
+            UnityEngine.Debug.Log("afflictionTransfer");
+
             //temperature
             if (!(EqualToZero(curTileData.temperature) &&
                 EqualToZero(VARS.catCurTemperature)))

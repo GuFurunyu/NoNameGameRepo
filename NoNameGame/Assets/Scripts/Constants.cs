@@ -32,6 +32,12 @@ public class Constants : MonoBehaviour
 
     #endregion
 
+    #region MainBoardManager
+    [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
+        "  \nMAINBOARDMANAGER\n --- ")]
+    public GameObject mainBoard;
+    #endregion
+
     #region RoomsManager
     [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
         "  \nROOMSMANAGER\n --- ")]
@@ -185,6 +191,9 @@ public class Constants : MonoBehaviour
     //~?
     [HideInInspector]
     public float positionFixOffset;
+
+    //downThroughPlatform
+    public float downThroughPlatformThreshold;
     #endregion
 
     #region CatMove
@@ -506,6 +515,9 @@ public class Constants : MonoBehaviour
     public Material minimapGreenFragmentColor;
     public Material minimapPurpleFragmentColor;
     public Material minimapCollectibleCollectedColor;
+
+    //starDusts
+    public GameObject starDustsEmpty;
     #endregion
 
     #region OptionsManager
@@ -536,6 +548,28 @@ public class Constants : MonoBehaviour
         keyP, keyQ, keyR, keyS, keyT, keyU, keyV, keyW, keyX, keyY, keyZ,
         keyUpArrow, keyDownArrow, keyLeftArrow, keyRightArrow
     }
+
+    //newGameSub
+    public GameObject newGameSubEmpty;
+    public List<GameObject> newGameSubEmpties = new List<GameObject>();
+
+    //fragmentsSub
+    public GameObject fragmentsSubEmpty;
+    public GameObject redFragmentSubEmpty;
+    public GameObject yellowFragmentSubEmpty;
+    public GameObject blueFragmentSubEmpty;
+    public GameObject orangeFragmentSubEmpty;
+    public GameObject greenFragmentSubEmpty;
+    public GameObject purpleFragmentSubEmpty;
+
+    //fragmentColors
+    public Material optionsFragmentNotEmbeddedColor;
+    public Material optionsRedFragmentColor;
+    public Material optionsYellowFragmentColor;
+    public Material optionsBlueFragmentColor;
+    public Material optionsOrangeFragmentColor;
+    public Material optionsGreenFragmentColor;
+    public Material optionsPurpleFragmentColor;
     #endregion
 
     #region GuideManager
@@ -549,6 +583,9 @@ public class Constants : MonoBehaviour
     public GameObject climbGuideText;
     public GameObject twistGuideText;
     public GameObject backCenterGuideText;
+
+    //keysGuideMask
+    public GameObject keysGuideMask;
     #endregion
 
     #region AudioManager
@@ -558,12 +595,16 @@ public class Constants : MonoBehaviour
     public AudioSource audioSource;
 
     //audioclips
-    public List<AudioClip> audioClips = new List<AudioClip>();
+    public AudioClip mainBoardBGM;
+    public List<AudioClip> inGameBGMs = new List<AudioClip>();
 
     //volume
     public float normalVolume;
     public float volumeFadingOutSpeed;
     public float volumeFadingOutThres;
+
+    //pitchChangingSpeed
+    public float pitchChangingSpeed;
     #endregion
 
     void Start()

@@ -308,13 +308,19 @@ public class CatTrigger : MonoBehaviour
                     //Debug.Log("tempVector: " + tempVector);
 
                     //triggerEdgeGate
-                    if (Vector3.Dot(catTransform.position - VARS.curEdgeGate.transform.position, tempVector) > 0.9f)
+                    if (Vector3.Dot(catTransform.position - VARS.curEdgeGate.transform.position, tempVector) > 0.9f /*0.95f*/)
                     {
                         //Debug.Log("enter");
                         //Debug.Log("cat: " + catTransform.position);
                         //Debug.Log("edgeGate: " + VARS.curEdgeGate.transform.position);
 
-                        VARS.IsEdgeGateTriggered = true;
+                        if ((tempVector == VARS.curUp && VARS.verCurSpeed > 0) ||
+                            (tempVector == -VARS.curUp && VARS.verCurSpeed < 0) ||
+                            (tempVector == -VARS.curRight && VARS.horCurSpeed < 0) ||
+                            (tempVector == VARS.curRight && VARS.horCurSpeed > 0))
+                        {
+                            VARS.IsEdgeGateTriggered = true;
+                        }
                     }
                 }
 
@@ -610,6 +616,8 @@ public class CatTrigger : MonoBehaviour
                     }
                     deactivatedMinimapLockIndexes.Add(curNearestMinimapLockIndex);
 
+                    VARS.IsToDetermineGatePassabilities = true;
+
                     VARS.IsUnlocking = false;
 
                     VARS.IsToWriteCatWorldData = true;
@@ -664,7 +672,7 @@ public class CatTrigger : MonoBehaviour
             //carrying
             if (VARS.IsCarryingFragments)
             {
-                //follow
+                //followAndCondense
                 for (int i = 0; i < curCarriedFragments.Count; i++)
                 {
                     //if (!VARS.IsEmbeddingFragments &&
@@ -683,6 +691,10 @@ public class CatTrigger : MonoBehaviour
                         {
                             curCarriedFragments[i].transform.position += tempVector.normalized * fragmentSpeed * tempFloat * Time.deltaTime;
                         }
+
+                        curCarriedFragments[i].transform.GetChild(0).localScale = Vector3.one * 0.45f;
+                        curCarriedFragments[i].transform.GetChild(1).localScale = Vector3.one * 0.45f;
+                        curCarriedFragments[i].transform.GetChild(2).localScale = Vector3.one * 0.45f;
                     }
                 }
 

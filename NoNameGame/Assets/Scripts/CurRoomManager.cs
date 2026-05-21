@@ -120,7 +120,9 @@ public class CurRoomManager : MonoBehaviour
 
             if (tempFloat1 > (roomCoordBreadth / 2) + 2 || tempFloat2 > (roomCoordBreadth / 2) + 2)
             {
-                VARS.IsToDie = true;
+                Debug.Log("outOfRoomDie");
+
+                //VARS.IsToDie = true;
             }
         }
     }
