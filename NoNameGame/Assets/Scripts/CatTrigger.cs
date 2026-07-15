@@ -61,6 +61,8 @@ public class CatTrigger : MonoBehaviour
     Vector3[] faceStableUps = new Vector3[6];
     Vector3[] faceStableRights = new Vector3[6];
 
+    GameObject[] roomPlanes = new GameObject[54];
+
     Transform camTransform;
 
     Transform catTransform;
@@ -182,6 +184,7 @@ public class CatTrigger : MonoBehaviour
         faces = CONS.faces;
         faceStableUps = CONS.faceStableUps;
         faceStableRights = CONS.faceStableRights;
+        roomPlanes = CONS.roomPlanes;
         camTransform = CONS.camTransform;
         catTransform = CONS.catTransform;
         catIniPositionPoint = CONS.catIniPositionPoint;
@@ -845,6 +848,8 @@ public class CatTrigger : MonoBehaviour
                     {
                         isCenterFulfilled[VARS.curFaceIndex - 1] = true;
 
+                        VARS.IsToActivateCenterFulfilledMasks = true;
+
                         //VARS.IsCenterFulfilled = true;
                     }                    
                 }
@@ -910,6 +915,78 @@ public class CatTrigger : MonoBehaviour
                         }
                     //}
                 }
+            }
+
+            //collect(directlyWhenTouched)
+            if (VARS.IsCollectingAFragment)
+            {
+                //determinePosition
+                tempVector1 = faceStableUps[VARS.curToBeCarriedFragmentFaceIndex - 1];
+                    tempVector2 = faceStableRights[VARS.curToBeCarriedFragmentFaceIndex - 1];
+                    switch (VARS.curToBeCarriedFragmentIndex)
+                    {
+                        case 1: tempVector = -tempVector1 - tempVector2; break;
+                        case 2: tempVector = -tempVector1; break;
+                        case 3: tempVector = -tempVector1 + tempVector2; break;
+                        case 4: tempVector = -tempVector2; break;
+                        case 5: tempVector = tempVector2; break;
+                        case 6: tempVector = tempVector1 - tempVector2; break;
+                        case 7: tempVector = tempVector1; break;
+                        case 8: tempVector = tempVector1 + tempVector2; break;
+                    }
+                VARS.curToBeCarriedFragment.transform.SetParent(roomPlanes[4 + 9 * (VARS.curToBeCarriedFragmentFaceIndex - 1)].transform.GetChild(0), true);
+                VARS.curToBeCarriedFragment.transform.localPosition = (tempVector - VARS.curRoomStableForward * 0.9f);
+
+                //outlineScale
+                VARS.curToBeCarriedFragment.transform.GetChild(0).localScale = Vector3.one * 0.45f;
+                VARS.curToBeCarriedFragment.transform.GetChild(1).localScale = Vector3.one * 0.45f;
+                VARS.curToBeCarriedFragment.transform.GetChild(2).localScale = Vector3.one * 0.45f;
+
+                //embed
+                switch (VARS.curToBeCarriedFragmentFaceIndex)
+                {
+                    case 1: isYellowFragmentsEmbeded[VARS.curToBeCarriedFragmentIndex - 1] = true; break;
+                    case 2: isPurpleFragmentsEmbeded[VARS.curToBeCarriedFragmentIndex - 1] = true; break;
+                    case 3: isOrangeFragmentsEmbeded[VARS.curToBeCarriedFragmentIndex - 1] = true; break;
+                    case 4: isBlueFragmentsEmbeded[VARS.curToBeCarriedFragmentIndex - 1] = true; break;
+                    case 5: isGreenFragmentsEmbeded[VARS.curToBeCarriedFragmentIndex - 1] = true; break;
+                    case 6: isRedFragmentsEmbeded[VARS.curToBeCarriedFragmentIndex - 1] = true; break;
+                }
+                for (int j = 0; j < 9; j++)
+                {
+                    VARS.curToBeCarriedFragment.transform.GetChild(j).gameObject.SetActive(j > 2);
+                }
+
+                //maxEnergyBonus
+                VARS.maxEnergyBonus += separatedEnergyFragmentMaxEnergyBonus;
+
+                //minimap
+                if (VARS.curToBeCarriedFragmentFaceIndex == 1)
+                {
+                    minimapYellowFragments[VARS.curToBeCarriedFragmentIndex - 1].GetComponent<MeshRenderer>().material = minimapCollectibleCollectedColor;
+                }
+                else if (VARS.curToBeCarriedFragmentFaceIndex == 2)
+                {
+                    minimapPurpleFragments[VARS.curToBeCarriedFragmentIndex - 1].GetComponent<MeshRenderer>().material = minimapCollectibleCollectedColor;
+                }
+                else if (VARS.curToBeCarriedFragmentFaceIndex == 3)
+                {
+                    minimapOrangeFragments[VARS.curToBeCarriedFragmentIndex - 1].GetComponent<MeshRenderer>().material = minimapCollectibleCollectedColor;
+                }
+                else if (VARS.curToBeCarriedFragmentFaceIndex == 4)
+                {
+                    minimapBlueFragments[VARS.curToBeCarriedFragmentIndex - 1].GetComponent<MeshRenderer>().material = minimapCollectibleCollectedColor;
+                }
+                else if (VARS.curToBeCarriedFragmentFaceIndex == 5)
+                {
+                    minimapGreenFragments[VARS.curToBeCarriedFragmentIndex - 1].GetComponent<MeshRenderer>().material = minimapCollectibleCollectedColor;
+                }
+                else if (VARS.curToBeCarriedFragmentFaceIndex == 6)
+                {
+                    minimapRedFragments[VARS.curToBeCarriedFragmentIndex - 1].GetComponent<MeshRenderer>().material = minimapCollectibleCollectedColor;
+                }
+
+                VARS.IsCollectingAFragment = false;
             }
             #endregion
 

@@ -2033,7 +2033,8 @@ public class UniversalFunctionsLibrary : MonoBehaviour
                     VARS.curToBeCarriedFragment = VARS.curTriggerTile;
                     VARS.curToBeCarriedFragmentFaceIndex = 6;
                     VARS.curToBeCarriedFragmentIndex = VARS.curTriggerTileData.fragmentIndex;
-                    VARS.IsToCarryAFragment = true;
+                    //VARS.IsToCarryAFragment = true;
+                    VARS.IsCollectingAFragment = true;
                 }
             }
 
@@ -2049,7 +2050,8 @@ public class UniversalFunctionsLibrary : MonoBehaviour
                     VARS.curToBeCarriedFragment = VARS.curTriggerTile;
                     VARS.curToBeCarriedFragmentFaceIndex = 1;
                     VARS.curToBeCarriedFragmentIndex = VARS.curTriggerTileData.fragmentIndex;
-                    VARS.IsToCarryAFragment = true;
+                    //VARS.IsToCarryAFragment = true;
+                    VARS.IsCollectingAFragment = true;
                 }
             }
 
@@ -2065,7 +2067,8 @@ public class UniversalFunctionsLibrary : MonoBehaviour
                     VARS.curToBeCarriedFragment = VARS.curTriggerTile;
                     VARS.curToBeCarriedFragmentFaceIndex = 4;
                     VARS.curToBeCarriedFragmentIndex = VARS.curTriggerTileData.fragmentIndex;
-                    VARS.IsToCarryAFragment = true;
+                    //VARS.IsToCarryAFragment = true;
+                    VARS.IsCollectingAFragment = true;
                 }
             }
 
@@ -2081,7 +2084,8 @@ public class UniversalFunctionsLibrary : MonoBehaviour
                     VARS.curToBeCarriedFragment = VARS.curTriggerTile;
                     VARS.curToBeCarriedFragmentFaceIndex = 3;
                     VARS.curToBeCarriedFragmentIndex = VARS.curTriggerTileData.fragmentIndex;
-                    VARS.IsToCarryAFragment = true;
+                    //VARS.IsToCarryAFragment = true;
+                    VARS.IsCollectingAFragment = true;
                 }
             }
 
@@ -2097,7 +2101,8 @@ public class UniversalFunctionsLibrary : MonoBehaviour
                     VARS.curToBeCarriedFragment = VARS.curTriggerTile;
                     VARS.curToBeCarriedFragmentFaceIndex = 5;
                     VARS.curToBeCarriedFragmentIndex = VARS.curTriggerTileData.fragmentIndex;
-                    VARS.IsToCarryAFragment = true;
+                    //VARS.IsToCarryAFragment = true;
+                    VARS.IsCollectingAFragment = true;
                 }
             }
 
@@ -2113,7 +2118,8 @@ public class UniversalFunctionsLibrary : MonoBehaviour
                     VARS.curToBeCarriedFragment = VARS.curTriggerTile;
                     VARS.curToBeCarriedFragmentFaceIndex = 2;
                     VARS.curToBeCarriedFragmentIndex = VARS.curTriggerTileData.fragmentIndex;
-                    VARS.IsToCarryAFragment = true;
+                    //VARS.IsToCarryAFragment = true;
+                    VARS.IsCollectingAFragment = true;
                 }
             }
 

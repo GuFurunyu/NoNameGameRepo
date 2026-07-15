@@ -256,6 +256,8 @@ public class CatDeath : MonoBehaviour
         //clearCarriedFragments
         if (VARS.IsCarryingFragments)
         {
+            VARS.IsToNotLoseCarriedFragments = true;
+
             if (!VARS.IsToNotLoseCarriedFragments)
             {
                 for (int i = 0; i < curCarriedFragments.Count; i++)

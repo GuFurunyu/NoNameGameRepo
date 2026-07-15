@@ -82,6 +82,8 @@ public class ScriptsExecutionController : MonoBehaviour
             !VARS.IsRotating &&
             !VARS.IsTwisting &&
             !VARS.IsJustIntoVoid &&
+            !VARS.IsInputtingDashKey &&
+            !VARS.IsDashing &&
             !VARS.IsInAcce &&
             !VARS.IsHighJumping &&
             !VARS.IsInHotState &&

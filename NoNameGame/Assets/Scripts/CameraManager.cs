@@ -40,6 +40,13 @@ public class CameraManager : MonoBehaviour
     float camNormalSize;
     float camZoomedOutMaxSize;
 
+    GameObject centerFulfilledMaskEmpty;
+    GameObject[] centerFulfilledMasks = new GameObject[4];
+    float centerFulfilledMaskMaxScale;
+    float centerFulfilledMaskExpandingSpeed;
+    float centerFulfilledMaskMaxDistance;
+    float centerFulfilledMaskMovingSpeed;
+
     Transform catTransform;
     #endregion
 
@@ -71,6 +78,12 @@ public class CameraManager : MonoBehaviour
         zoomInAutoTriggerTime = CONS.zoomInAutoTriggerTime;
         camNormalSize = CONS.camNormalSize;
         camZoomedOutMaxSize = CONS.camZoomedOutMaxSize;
+        centerFulfilledMaskEmpty = CONS.centerFulfilledMaskEmpty;
+        centerFulfilledMasks = CONS.centerFulfilledMasks;
+        centerFulfilledMaskMaxScale = CONS.centerFulfilledMaskMaxScale;
+        centerFulfilledMaskExpandingSpeed = CONS.centerFulfilledMaskExpandingSpeed;
+        centerFulfilledMaskMaxDistance = CONS.centerFulfilledMaskMaxDistance;
+        centerFulfilledMaskMovingSpeed = CONS.centerFulfilledMaskMovingSpeed;
         catTransform = CONS.catTransform;
         #endregion
 
@@ -125,7 +138,7 @@ public class CameraManager : MonoBehaviour
             //{
             //    initialSightMasks[i].transform.LookAt(initialSightMasks[i].transform.position + VARS.curRoomStableForward);
             //}
-            initialSightMasksEmpty.transform.localPosition = -VARS.curRoomStableForward * 4;
+            initialSightMasksEmpty.transform.localPosition = -VARS.curRoomStableForward /** 4*/;
             if (VARS.curFaceIndex == 1 ||
                 VARS.curFaceIndex == 2)
             {
@@ -153,7 +166,7 @@ public class CameraManager : MonoBehaviour
                 for (int i = 0; i < 4; i++)
                 {
                     initialSightMasks[i].SetActive(true);
-                    initialSightMasks[i].transform.position = catTransform.position - VARS.curRoomStableForward * 4;
+                    initialSightMasks[i].transform.position = catTransform.position - VARS.curRoomStableForward /** 4*/;
                     initialSightMasks[i].transform.localEulerAngles = Vector3.zero;
                 }
 
@@ -332,6 +345,62 @@ public class CameraManager : MonoBehaviour
             //{
             //    UFL.SetCameraEulerangles(new Vector3(camTransform.eulerAngles.x, camTransform.eulerAngles.y, VARS.camEuleranglesBeforeIntoMinimap.z));
             //}
+            #endregion
+
+            #region CenterFulfilledMasks
+            if (VARS.IsToActivateCenterFulfilledMasks)
+            {
+                centerFulfilledMaskEmpty.SetActive(true);
+                for (int i = 0; i < 4; i++)
+                {
+                    centerFulfilledMasks[i].SetActive(true);
+                    //centerFulfilledMasks[i].transform.localScale = Vector3.zero;
+                }
+
+                VARS.IsCenterFulfilledMasksActivated = true;
+                VARS.IsToActivateCenterFulfilledMasks = false;
+            }
+            if (VARS.IsCenterFulfilledMasksActivated)
+            {
+                //expand
+                if (centerFulfilledMasks[0].transform.localScale.x < centerFulfilledMaskMaxScale)
+                {
+                    for (int i = 0; i < 4; i++)
+                    {
+                        centerFulfilledMasks[i].transform.localScale += Vector3.one * centerFulfilledMaskExpandingSpeed * Time.deltaTime;
+                        centerFulfilledMasks[i].transform.localScale = new Vector3
+                            (centerFulfilledMasks[i].transform.localScale.x, centerFulfilledMasks[i].transform.localScale.y, 1);
+                    }
+                }
+                //move
+                else
+                {
+                    for (int i = 0; i < 4; i++)
+                    {
+                        centerFulfilledMasks[i].transform.localScale = new Vector3
+                            (centerFulfilledMaskMaxScale, centerFulfilledMaskMaxScale, 1);
+                    }
+                    if (centerFulfilledMasks[0].transform.localPosition.y < centerFulfilledMaskMaxDistance)
+                    {
+                        centerFulfilledMasks[0].transform.localPosition += Vector3.up * centerFulfilledMaskMovingSpeed * Time.deltaTime;
+                        centerFulfilledMasks[1].transform.localPosition += -Vector3.up * centerFulfilledMaskMovingSpeed * Time.deltaTime;
+                        centerFulfilledMasks[2].transform.localPosition += -Vector3.right * centerFulfilledMaskMovingSpeed * Time.deltaTime;
+                        centerFulfilledMasks[3].transform.localPosition += Vector3.right * centerFulfilledMaskMovingSpeed * Time.deltaTime;
+                    }
+                    else
+                    {
+                        centerFulfilledMaskEmpty.SetActive(false);
+
+                        for (int i = 0; i < 4; i++)
+                        {
+                            centerFulfilledMasks[i].transform.localScale = Vector3.zero;
+                            centerFulfilledMasks[i].transform.localPosition = Vector3.zero;
+                        }
+
+                        VARS.IsCenterFulfilledMasksActivated = false;
+                    }
+                }
+            }
             #endregion
 
             //#region Guide

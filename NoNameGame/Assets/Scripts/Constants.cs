@@ -145,6 +145,14 @@ public class Constants : MonoBehaviour
 
     //distance
     public float camMinimapDistanceToCubeCore;
+
+    //centerFulfilledMask
+    public GameObject centerFulfilledMaskEmpty;
+    public GameObject[] centerFulfilledMasks = new GameObject[4];
+    public float centerFulfilledMaskMaxScale;
+    public float centerFulfilledMaskExpandingSpeed;
+    public float centerFulfilledMaskMaxDistance;
+    public float centerFulfilledMaskMovingSpeed;
     #endregion
 
     #region Cat
@@ -234,6 +242,9 @@ public class Constants : MonoBehaviour
 
     //acceBonus
     public float acceBonus;
+
+    //horMovingAfterToCeiling
+    public float horMovingAfterToCeilingTime;
     #endregion
 
     #region CatRotate

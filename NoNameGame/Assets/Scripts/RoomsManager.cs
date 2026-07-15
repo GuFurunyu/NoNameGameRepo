@@ -209,59 +209,62 @@ public class RoomsManager : MonoBehaviour
         //}
 
         #region IfIsInNewRoom
-        //justByGate
-        if (VARS.IsJustByGate &&
-            Time.time - VARS.lastJustInGateTime > justInGateOverTime)
+        if (!VARS.IsTwisting)
         {
-            VARS.IsJustByGate = false;
-        }
-
-        if (UFL.IsInRoom(VARS.curRoomIndex, catTransform.position))
-        {
-        }
-        else
-        {
-            ////mustBeViable(~byGates)
-            //if (VARS.IsRoomTransferViable)
-            //{
-
-            isInAnotherRoom = false;
-
-            for (int i = 0; i < roomCenters.Length; i++)
+            //justByGate
+            if (VARS.IsJustByGate &&
+                Time.time - VARS.lastJustInGateTime > justInGateOverTime)
             {
-                if (UFL.IsInRoom(i, catTransform.position))
-                {
-                    VARS.curRoomIndex = i;
-                    //isInAnotherRoom = true;
-                    VARS.IsIntoNewRoom = true;
-                    break;
-                }
+                VARS.IsJustByGate = false;
             }
 
-            //VARS.IsJustStartedTheGame = false;
-            //VARS.IsJustByGate = false;
-            //VARS.IsJustDied = false;
+            if (UFL.IsInRoom(VARS.curRoomIndex, catTransform.position))
+            {
+            }
+            else
+            {
+                ////mustBeViable(~byGates)
+                //if (VARS.IsRoomTransferViable)
+                //{
 
-            //if (isInAnotherRoom)
+                isInAnotherRoom = false;
+
+                for (int i = 0; i < roomCenters.Length; i++)
+                {
+                    if (UFL.IsInRoom(i, catTransform.position))
+                    {
+                        VARS.curRoomIndex = i;
+                        //isInAnotherRoom = true;
+                        VARS.IsIntoNewRoom = true;
+                        break;
+                    }
+                }
+
+                //VARS.IsJustStartedTheGame = false;
+                //VARS.IsJustByGate = false;
+                //VARS.IsJustDied = false;
+
+                //if (isInAnotherRoom)
+                //{
+                //    VARS.IsIntoNewRoom = true;
+                //}
+                //else
+                //{
+                //    VARS.IsToDie = true;
+                //}
+                //}
+                ////elseDie
+                //else
+                //{
+                //    VARS.IsToDie = true;
+                //}
+            }
+
+            //if (VARS.IsIntoNewRoom)
             //{
-            //    VARS.IsIntoNewRoom = true;
-            //}
-            //else
-            //{
-            //    VARS.IsToDie = true;
-            //}
-            //}
-            ////elseDie
-            //else
-            //{
-            //    VARS.IsToDie = true;
+            //    IntoNewRoom();
             //}
         }
-
-        //if (VARS.IsIntoNewRoom)
-        //{
-        //    IntoNewRoom();
-        //}
         #endregion
 
         #region InNewRoomReset(OutVersion)
@@ -304,8 +307,9 @@ public class RoomsManager : MonoBehaviour
             //control
             if (!VARS.IsTwisting)
             {
-                if (VARS.IsInCenter &&
-                    UFL.IsInRoom(VARS.curRoomIndex,VARS.curLatestCenterSavePointPosition))
+                if (/*VARS.IsInCenter &&
+                    UFL.IsInRoom(VARS.curRoomIndex,VARS.curLatestCenterSavePointPosition)*/
+                    true)
                 {
                     if (VARS.IsInputtingDownKey)
                     {
@@ -526,9 +530,15 @@ public class RoomsManager : MonoBehaviour
                             curTwistingCenter.transform.Rotate(-curFaceStableForward * twistSpeed * Time.deltaTime);
                         }
                     }
+
+                    //cameraPosition
+                    UFL.SetCameraPosition(VARS.curPlaneEmpty.transform.position - VARS.curRoomStableForward * 7);
                 }
                 else
                 {
+                    //cameraPosition
+                    UFL.SetCameraPosition(VARS.curPlaneEmpty.transform.position - VARS.curRoomStableForward * 7);
+
                     //setPositionsAndEulerangles(~?)
                     curTwistingCenter.transform.eulerAngles = twistingTargetEulerangles;
 

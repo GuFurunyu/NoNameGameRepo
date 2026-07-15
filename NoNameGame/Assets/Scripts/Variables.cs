@@ -398,7 +398,16 @@ public class Variables : MonoBehaviour
     public bool IsZoomingIn { get { return _isZoomingIn; } set { _isZoomingIn = value; } }
 
 
+    //minimap
     public Vector3 camEuleranglesBeforeIntoMinimap;
+
+    //centerFulfilledMasks
+    [SerializeField] private bool _isToActivateCenterFulfilledMasks;
+    public bool IsToActivateCenterFulfilledMasks { get { return _isToActivateCenterFulfilledMasks; } set { _isToActivateCenterFulfilledMasks = value; } }
+
+    [SerializeField] private bool _isCenterFulfilledMasksActivated;
+    public bool IsCenterFulfilledMasksActivated { get { return _isCenterFulfilledMasksActivated; } set { _isCenterFulfilledMasksActivated = value; } }
+
     #endregion
 
     #region Cat
@@ -417,7 +426,7 @@ public class Variables : MonoBehaviour
     public KeyCode leftKeyCode = KeyCode.LeftArrow;
     public KeyCode rightKeyCode = KeyCode.RightArrow;
     public KeyCode jumpKeyCode = KeyCode.Z;
-    //public KeyCode dashKeyCode = KeyCode.L;
+    public KeyCode dashKeyCode = KeyCode.L;
     public KeyCode acceKeyCode = KeyCode.X;
     public KeyCode grabKeyCode = KeyCode.C;
     public KeyCode minimapKeyCode = KeyCode.V;
@@ -707,10 +716,26 @@ public class Variables : MonoBehaviour
         "  \nCATMOVE\n --- ")]
     //executability
     [SerializeField] private bool _isCatMoveMainPartExecutable;
+    public bool IsCatMoveMainPartExecutable { get { return _isCatMoveMainPartExecutable; } set { _isCatMoveMainPartExecutable = value; } }
+
+    //enabling
+    [SerializeField] private bool _isDashEnabled;
+    public bool IsDashEnabled { get { return _isDashEnabled; } set { _isDashEnabled = value; } }
+
+    [SerializeField] private bool _isAcceEnabled;
+    public bool IsAcceEnabled { get { return _isAcceEnabled; } set { _isAcceEnabled = value; } }
+
+    [SerializeField] private bool _isAttachWallEnabled;
+    public bool IsAttachWallEnabled { get { return _isAttachWallEnabled; } set { _isAttachWallEnabled = value; } }
+
+    [SerializeField] private bool _isClimbEnabled;
+    public bool IsClimbEnabled { get { return _isClimbEnabled; } set { _isClimbEnabled = value; } }
+
+    [SerializeField] private bool _isAttachCeilingEnabled;
+    public bool IsAttachCeilingEnabled { get { return _isAttachCeilingEnabled; } set { _isAttachCeilingEnabled = value; } }
 
     //fixedDeltaTime
     public float catMoveLastUpdatedTime;
-    public bool IsCatMoveMainPartExecutable { get { return _isCatMoveMainPartExecutable; } set { _isCatMoveMainPartExecutable = value; } }
 
     //curSpeed
     //public float horCurSpeed;
@@ -724,7 +749,9 @@ public class Variables : MonoBehaviour
     [SerializeField] private bool _isHighJumping;
     public bool IsHighJumping { get { return _isHighJumping; } set { _isHighJumping = value; } }
 
-    //isAcced
+    [SerializeField] private bool _isDashing;
+    public bool IsDashing { get { return _isDashing; } set { _isDashing = value; } }
+
     [SerializeField] private bool _isInAcce;
     public bool IsInAcce { get { return _isInAcce; } set { _isInAcce = value; } }
 
@@ -736,12 +763,6 @@ public class Variables : MonoBehaviour
     //isStill
     [SerializeField] private bool _isCatStill;
     public bool IsCatStill { get { return _isCatStill; } set { _isCatStill = value; } }
-
-    [SerializeField] private bool _isDashEnabled;
-    public bool IsDashEnabled { get { return _isDashEnabled; } set { _isDashEnabled = value; } }
-
-    [SerializeField] private bool _isAcceEnabled;
-    public bool IsAcceEnabled { get { return _isAcceEnabled; } set { _isAcceEnabled = value; } }
 
     //justInLiquid
     [SerializeField] private bool _isJustInLiquid;
@@ -762,6 +783,15 @@ public class Variables : MonoBehaviour
 
     [SerializeField] private bool _isMovingInAttachingCeiling;
     public bool IsMovingInAttachingCeiling { get { return _isMovingInAttachingCeiling; } set { _isMovingInAttachingCeiling = value; } }
+
+    //horMovingAfterToCeiling
+    [SerializeField] private bool _isHorMovingAfterToCeilingActivated;
+    public bool IsHorMovingAfterToCeilingActivated { get { return _isHorMovingAfterToCeilingActivated; } set { _isHorMovingAfterToCeilingActivated = value; } }
+
+    [SerializeField] private bool _isHorMovingAfterToCeiling;
+    public bool IsHorMovingAfterToCeiling { get { return _isHorMovingAfterToCeiling; } set { _isHorMovingAfterToCeiling = value; } }
+
+    public float horMovingAfterToCeilingStartTime;
 
     #endregion
 
@@ -946,6 +976,9 @@ public class Variables : MonoBehaviour
 
     //[SerializeField] private bool _isToCarryAPurpleFragment;
     //public bool IsToCarryAPurpleFragment { get { return _isToCarryAPurpleFragment; } set { _isToCarryAPurpleFragment = value; } }
+
+    [SerializeField] private bool _isCollectingAFragment;
+    public bool IsCollectingAFragment { get { return _isCollectingAFragment; } set { _isCollectingAFragment = value; } }
 
     public GameObject curToBeCarriedFragment;
     public int curToBeCarriedFragmentFaceIndex;
