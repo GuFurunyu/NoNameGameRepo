@@ -188,6 +188,8 @@ public class BlocksManager : MonoBehaviour
 
     int continuousHorMovingMaxTime;
 
+    float catCarriedByFluidGapTime;
+
     float unlockDistance;
 
     float fragileRustBlockToBeBrokenTime;
@@ -278,6 +280,7 @@ public class BlocksManager : MonoBehaviour
         railBlockFixedUpdateTime = CONS.railBlockFixedUpdateTime;
         mistMaxDistance = CONS.mistMaxDistance;
         continuousHorMovingMaxTime = CONS.continuousHorMovingMaxTime;
+        catCarriedByFluidGapTime = CONS.catCarriedByFluidGapTime;
         unlockDistance = CONS.unlockDistance;
         fragileRustBlockToBeBrokenTime = CONS.fragileRustBlockToBeBrokenTime;
         fragileRustBlockRespawnTime = CONS.fragileRustBlockRespawnTime;
@@ -407,6 +410,22 @@ public class BlocksManager : MonoBehaviour
                 else
                 {
                     VARS.IsNotToResetMovableBlockPositions = false;
+                }
+            }
+
+            //resetBreakableBlockStates
+            for (int i = 0; i < VARS.curPlaneEmpty.transform.childCount; i++)
+            {
+                tempTransform = VARS.curPlaneEmpty.transform.GetChild(i);
+                tempTileData = tempTransform.GetComponent<TileData>();
+
+                if (tempTileData != null &&
+                    tempTileData.toughness != 999)
+                {
+                    if (!tempTransform.gameObject.activeSelf)
+                    {
+                        tempTransform.gameObject.SetActive(true);
+                    }
                 }
             }
 
@@ -1696,7 +1715,9 @@ public class BlocksManager : MonoBehaviour
     {
         Vector3 upVector;
         Vector3 rightVector;
+        Vector3 movingVector = Vector3.zero;
 
+        //fluidContinuousnessOptimization
         if (VARS.IsFluidContinuousnessOptimizationActivated &&
             isFluid)
         {
@@ -1720,31 +1741,45 @@ public class BlocksManager : MonoBehaviour
 
         if (dirIndex == 1)
         {
-            curBlock.transform.position += upVector;
-            curCoordVectors[curBlockIndex] += upVector;
+            movingVector = upVector;
 
             curBlockTileData.continuousHorMovingTimes = 0;
         }
         else if (dirIndex == 2)
         {
-            curBlock.transform.position -= upVector;
-            curCoordVectors[curBlockIndex] -= upVector;
+            movingVector = -upVector;
 
             curBlockTileData.continuousHorMovingTimes = 0;
         }
         else if (dirIndex == 3)
         {
-            curBlock.transform.position -= rightVector;
-            curCoordVectors[curBlockIndex] -= rightVector;
+            movingVector = -rightVector;
 
             curBlockTileData.continuousHorMovingTimes++;
         }
         else if (dirIndex == 4)
         {
-            curBlock.transform.position += rightVector;
-            curCoordVectors[curBlockIndex] += rightVector;
+            movingVector = rightVector;
 
             curBlockTileData.continuousHorMovingTimes++;
+        }
+
+        curBlock.transform.position += movingVector;
+        curCoordVectors[curBlockIndex] += movingVector;
+
+        //catCarriedByFluid
+        if (((curBlock == VARS.curLiquidTile && dirIndex == 2) ||
+            (curBlock == VARS.curGasTile && dirIndex == 1) ||
+            curBlock == VARS.curMistTile) &&
+            ((dirIndex==2 && !VARS.IsOnGround) ||
+            (dirIndex==1 && !VARS.IsToCeiling) ||
+            (dirIndex==3 && !VARS.IsLeftBlocked) ||
+            (dirIndex==4 && !VARS.IsRightBlocked)) &&
+            Time.time - VARS.lastCatCarriedByFluidTime > catCarriedByFluidGapTime)
+        {
+            UFL.AddCatPosition(movingVector);
+
+            VARS.lastCatCarriedByFluidTime = Time.time;
         }
 
         if (curBlockTileData.continuousHorMovingTimes > continuousHorMovingMaxTime)

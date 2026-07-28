@@ -123,6 +123,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inRoomIndex: 0
   isNotToBeInCurBlocks: 0
+  isNotToBeDetected: 0
+  fragmentIndex: 0
   offsetThres: 0.2
   _stateOfMatterIndex: 1
   isMovable: 0
@@ -137,7 +139,7 @@ MonoBehaviour:
   railBlockMoveStringStartIndex: 0
   isLoop: 0
   sharpDirVector: {x: 0, y: 0, z: 0}
-  toughness: 20
+  toughness: 10
   elasticity: 0
   tackiness: 0
   friction: 1
@@ -247,7 +249,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6589059549560427646
 Transform:
   m_ObjectHideFlags: 0
@@ -331,7 +333,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &7680644075041368312
 Transform:
   m_ObjectHideFlags: 0

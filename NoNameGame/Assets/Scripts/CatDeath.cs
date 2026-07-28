@@ -169,6 +169,24 @@ public class CatDeath : MonoBehaviour
 
         //curStoredVoidBlockIndex++;
 
+        //clearCurTilesAndTileDatas
+        VARS.curUpTile = null;
+        VARS.curDownTile = null;
+        VARS.curLeftTile = null;
+        VARS.curRightTile = null;
+        VARS.curAttachedWallTile = null;
+        VARS.curAttachedCeilingTile = null;
+        VARS.curLiquidTile = null;
+        VARS.curGasTile = null;
+        VARS.curMistTile = null;
+        VARS.curUpTileData = null;
+        VARS.curDownTileData = null;
+        VARS.curLeftTileData = null;
+        VARS.curRightTileData = null;
+        VARS.curLiquidTileData = null;
+        VARS.curGasTileData = null;
+        VARS.curMistTileData = null;
+
         //resetMovableBlockLocalPositions
         for (int i = 0; i < curBlocks.Count; i++)
         {
@@ -234,6 +252,17 @@ public class CatDeath : MonoBehaviour
                 storedLightElectricMistBlocks[i].transform.position = Vector3.zero;
             }
             VARS.curStoredLightElectricMistBlockIndex = 0;
+        }
+        //resetBreakableBlockStates
+        for (int i = 0; i < curBlocks.Count; i++)
+        {
+            if (curBlockTileDatas[i].toughness != 999)
+            {
+                if (!curBlocks[i].activeSelf)
+                {
+                    curBlocks[i].SetActive(true);
+                }
+            }
         }
 
         VARS.IsInNewRoomBlocksManagerResetOver = false;
@@ -340,6 +369,7 @@ public class CatDeath : MonoBehaviour
         //VARS.verCurSpeed = 0;
         //UFL.SetVerCurSpeed(0);
         VARS.verCurSpeed = 0;
+
         VARS.catCurTemperature = 0;
         VARS.catCurElectricity = 0;
         VARS.catCurToxicity = 0;
@@ -368,6 +398,8 @@ public class CatDeath : MonoBehaviour
         //VARS.IsIntoNewRoom = true;
 
         VARS.IsInAcce = false;
+
+        VARS.IsDashing = false;
 
         VARS.IsJustReborn = true;
 

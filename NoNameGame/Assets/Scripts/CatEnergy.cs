@@ -135,7 +135,7 @@ public class CatEnergy : MonoBehaviour
         {
             //UFL.DebugLog("outOfEnergy");
 
-            Debug.Log("outOfEnergyDie");
+            //Debug.Log("outOfEnergyDie");
 
             VARS.IsToDie = true;
         }

@@ -304,12 +304,24 @@ public class RoomsManager : MonoBehaviour
                 UFL.HideOtherPlanes();
 
             #region Twist
+            //inCenterDetect
+            if ((VARS.curRoomIndex - 4) % 9 == 0 &&
+                Mathf.Abs(Vector3.Dot(catTransform.position - VARS.curRoomCenter, VARS.curRight)) < 2 &&
+                Mathf.Abs(Vector3.Dot(catTransform.position - VARS.curRoomCenter, VARS.curUp)) < 2)
+            {
+                VARS.IsInCenter = true;
+            }
+            else
+            {
+                VARS.IsInCenter = false;
+            }
+
             //control
             if (!VARS.IsTwisting)
             {
-                if (/*VARS.IsInCenter &&
-                    UFL.IsInRoom(VARS.curRoomIndex,VARS.curLatestCenterSavePointPosition)*/
-                    true)
+                if ((VARS.IsInCenter && UFL.IsInRoom(VARS.curRoomIndex, VARS.curLatestCenterSavePointPosition)) ||
+                    VARS.isCenterFulfilled[VARS.curRoomIndex / 9]
+                    /*true*/)
                 {
                     if (VARS.IsInputtingDownKey)
                     {

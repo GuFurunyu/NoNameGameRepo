@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 [DefaultExecutionOrder((int)ScriptsExecutionOrder.ExecutionOrder.curRoomManager)]
@@ -95,6 +96,13 @@ public class CurRoomManager : MonoBehaviour
             if (!VARS.IsRoomExplored[curRoomIndex])
             {
                 VARS.IsRoomExplored[curRoomIndex] = true;
+
+                VARS.IsToWriteCatWorldData = true;
+            }
+            //ifCurFaceNotExploredMarkItExplored
+            if (!VARS.IsFaceExplored[VARS.curFaceIndex - 1])
+            {
+                VARS.IsFaceExplored[VARS.curFaceIndex - 1] = true;
 
                 VARS.IsToWriteCatWorldData = true;
             }

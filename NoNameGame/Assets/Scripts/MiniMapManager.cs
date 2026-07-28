@@ -58,18 +58,6 @@ public class MinimapManager : MonoBehaviour
         #region ImportValueVariables
         #endregion
 
-        //starDusts
-        if (VARS.IsInMainBoard ||
-            VARS.IsOptionPanelActivated ||
-            VARS.IsInKeysGuide)
-        {
-            starDustsEmpty.SetActive(false);
-        }
-        else
-        {
-            starDustsEmpty.SetActive(true);
-        }
-
         if (VARS.IsMinimapMainPartExecutable)
         {
             //intoMinimap
@@ -178,6 +166,18 @@ public class MinimapManager : MonoBehaviour
                     }
                 }
             }
+        }
+
+        //starDusts
+        if (VARS.IsInMainBoard ||
+            VARS.IsOptionPanelActivated ||
+            VARS.IsInKeysGuide)
+        {
+            starDustsEmpty.SetActive(false);
+        }
+        else
+        {
+            starDustsEmpty.SetActive(true);
         }
     }
 }

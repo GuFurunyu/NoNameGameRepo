@@ -129,17 +129,23 @@ public class CatAppearance : MonoBehaviour
         #endregion
 
         #region Color
-        if (VARS.IsInNormalColor)
+        //bodyColor
+        if (!VARS.IsInFadedColor)
+        {
+            cat.GetComponent<MeshRenderer>().material = normalColor;
+        }
+        else
+        {
+            cat.GetComponent<MeshRenderer>().material = fadedColor;
+        }
+
+        //maskColor
+        if (VARS.IsMaskInNormalColor)
         {
             catEnergyMaskMeshRenderer.material = energyMaskNormalColor;
         }
         else
         {
-            //faded(rotationRestNumZero)
-            if (VARS.IsInFadedColor)
-            {
-                catEnergyMaskMeshRenderer.material = fadedColor;
-            }
             //afflicted
             if (VARS.IsAfflicted)
             {

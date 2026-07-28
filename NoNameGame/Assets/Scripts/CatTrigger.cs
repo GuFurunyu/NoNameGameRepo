@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 [DefaultExecutionOrder((int)ScriptsExecutionOrder.ExecutionOrder.catTrigger)]
@@ -372,7 +373,7 @@ public class CatTrigger : MonoBehaviour
             #region SavePoint
             if (VARS.IsToActivateASavePoint)
             {
-                Debug.Log("activateASavePoint");
+                //Debug.Log("activateASavePoint");
 
                 //deactivateTheLastSavePoint
                 //if (VARS.curActivatedSavePoint != null)
@@ -408,7 +409,7 @@ public class CatTrigger : MonoBehaviour
 
             if (VARS.IsToDetermineCurActivatedSavePointPosition)
             {
-                Debug.Log("determineCurActivatedSavePointPosition");
+                //Debug.Log("determineCurActivatedSavePointPosition");
 
                 VARS.curActivatedSavePointPosition = savePoints[VARS.curActivatedSavePointIndex].transform.position;
 
@@ -421,7 +422,7 @@ public class CatTrigger : MonoBehaviour
 
             if (VARS.IsToActivateCurSavePoint)
             {
-                Debug.Log("activateCurSavePoint");
+                //Debug.Log("activateCurSavePoint");
 
                 //activateCurSavePoint
                 //storedActivatedSavePointBlock.transform.position = VARS.curActivatedSavePoint.transform.position;
@@ -629,6 +630,14 @@ public class CatTrigger : MonoBehaviour
             #endregion
 
             #region Fragments
+            //checkIfCenterFulfilled
+            if (!isCenterFulfilled[0] && !isYellowFragmentsEmbeded.Contains(false)) isCenterFulfilled[0] = true;
+            if (!isCenterFulfilled[1] && !isPurpleFragmentsEmbeded.Contains(false)) isCenterFulfilled[1] = true;
+            if (!isCenterFulfilled[2] && !isOrangeFragmentsEmbeded.Contains(false)) isCenterFulfilled[2] = true;
+            if (!isCenterFulfilled[3] && !isBlueFragmentsEmbeded.Contains(false)) isCenterFulfilled[3] = true;
+            if (!isCenterFulfilled[4] && !isGreenFragmentsEmbeded.Contains(false)) isCenterFulfilled[4] = true;
+            if (!isCenterFulfilled[5] && !isRedFragmentsEmbeded.Contains(false)) isCenterFulfilled[5] = true;
+
             //toCarry
             if (VARS.IsToCarryAFragment)
             {
@@ -839,19 +848,19 @@ public class CatTrigger : MonoBehaviour
 
                     VARS.IsCenterFulfilled = true;
 
-                    if ((VARS.curFaceIndex == 1 && !isYellowFragmentsEmbeded.Contains(false)) ||
-                        (VARS.curFaceIndex == 2 && !isPurpleFragmentsEmbeded.Contains(false)) ||
-                        (VARS.curFaceIndex == 3 && !isOrangeFragmentsEmbeded.Contains(false)) ||
-                        (VARS.curFaceIndex == 4 && !isBlueFragmentsEmbeded.Contains(false)) ||
-                        (VARS.curFaceIndex == 5 && !isGreenFragmentsEmbeded.Contains(false)) ||
-                        (VARS.curFaceIndex == 6 && !isRedFragmentsEmbeded.Contains(false)))
-                    {
-                        isCenterFulfilled[VARS.curFaceIndex - 1] = true;
+                    //if ((VARS.curFaceIndex == 1 && !isYellowFragmentsEmbeded.Contains(false)) ||
+                    //    (VARS.curFaceIndex == 2 && !isPurpleFragmentsEmbeded.Contains(false)) ||
+                    //    (VARS.curFaceIndex == 3 && !isOrangeFragmentsEmbeded.Contains(false)) ||
+                    //    (VARS.curFaceIndex == 4 && !isBlueFragmentsEmbeded.Contains(false)) ||
+                    //    (VARS.curFaceIndex == 5 && !isGreenFragmentsEmbeded.Contains(false)) ||
+                    //    (VARS.curFaceIndex == 6 && !isRedFragmentsEmbeded.Contains(false)))
+                    //{
+                    //    isCenterFulfilled[VARS.curFaceIndex - 1] = true;
 
-                        VARS.IsToActivateCenterFulfilledMasks = true;
+                    //    VARS.IsToActivateCenterFulfilledMasks = true;
 
-                        //VARS.IsCenterFulfilled = true;
-                    }                    
+                    //    //VARS.IsCenterFulfilled = true;
+                    //}                    
                 }
 
                 VARS.IsToWriteCatWorldData = true;
@@ -957,8 +966,8 @@ public class CatTrigger : MonoBehaviour
                     VARS.curToBeCarriedFragment.transform.GetChild(j).gameObject.SetActive(j > 2);
                 }
 
-                //maxEnergyBonus
-                VARS.maxEnergyBonus += separatedEnergyFragmentMaxEnergyBonus;
+                ////maxEnergyBonus
+                //VARS.maxEnergyBonus += separatedEnergyFragmentMaxEnergyBonus;
 
                 //minimap
                 if (VARS.curToBeCarriedFragmentFaceIndex == 1)
@@ -985,6 +994,21 @@ public class CatTrigger : MonoBehaviour
                 {
                     minimapRedFragments[VARS.curToBeCarriedFragmentIndex - 1].GetComponent<MeshRenderer>().material = minimapCollectibleCollectedColor;
                 }
+
+                //setRoomFragmentCollected
+                VARS.IsRoomFragmentCollected[VARS.curRoomIndex] = true;
+
+                //setIsRotateEnabled
+                VARS.IsRotateEnabled = true;
+
+                //setHasCollectedFragment
+                if (!VARS.HasCollectedFragment)
+                {
+                    VARS.HasCollectedFragment = true;
+                }
+
+                VARS.IsToWriteProgressData = true;
+                VARS.IsToWriteCatWorldData = true;
 
                 VARS.IsCollectingAFragment = false;
             }

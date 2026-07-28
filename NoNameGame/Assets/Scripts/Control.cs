@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Video;
 
 [DefaultExecutionOrder((int)ScriptsExecutionOrder.ExecutionOrder.control)]
 public class Control : MonoBehaviour
@@ -129,8 +130,16 @@ public class Control : MonoBehaviour
                 {
                     VARS.IsBackCenterTriggered = true;
                 }
+                else
+                {
+                    VARS.IsBackCenterTriggered = false;
+                }
 
                 VARS.lastUpKeyDownTime = Time.time;
+            }
+            else
+            {
+                VARS.IsBackCenterTriggered = false;
             }
             if (VARS.IsDownKeyDown)
             {

@@ -20,6 +20,8 @@ public class DataManager : MonoBehaviour
         public bool hasFinishedKeysGuide;
         public bool hasJumped;
         public bool hasBeenIntoMinimap;
+        public bool hasCollectedFragment;
+        public bool hasRotated;
         public bool hasClimbed;
         public bool hasTwisted;
         public bool hasBackCentered;
@@ -60,8 +62,14 @@ public class DataManager : MonoBehaviour
         public Vector3 curActivatedSavePointPosition;
         public int curActivatedSavePointRoomIndex;
 
+        //exploredFaces
+        public bool[] isFaceExplored = new bool[6];
+
         //exploredRooms
         public bool[] isRoomExplored = new bool[54];
+
+        //collectedFragmentRooms
+        public bool[] isRoomFragmentCollected = new bool[54];
 
         //keysAndLocks
         public List<int> deactivatedKeyIndexes = new List<int>();
@@ -246,7 +254,7 @@ public class DataManager : MonoBehaviour
         WriteCatWorldData(true);
         WriteKeyCodesData(true);
 
-        tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "Version0.4.1.txt");
+        tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "Version0.5.2.txt");
 
         if (File.Exists(tempPath))
         {
@@ -333,6 +341,8 @@ public class DataManager : MonoBehaviour
             VARS.HasFinishedKeysGuide = curProgressData.hasFinishedKeysGuide;
             VARS.HasJumped = curProgressData.hasJumped;
             VARS.HasBeenIntoMinimap = curProgressData.hasBeenIntoMinimap;
+            VARS.HasCollectedFragment = curProgressData.hasCollectedFragment;
+            VARS.HasRotated = curProgressData.hasRotated;
             VARS.HasClimbed = curProgressData.hasClimbed;
             VARS.HasTwisted = curProgressData.hasTwisted;
             VARS.HasBackCentered = curProgressData.hasBackCentered;
@@ -350,6 +360,8 @@ public class DataManager : MonoBehaviour
         curProgressData.hasFinishedKeysGuide = VARS.HasFinishedKeysGuide;
         curProgressData.hasJumped = VARS.HasJumped;
         curProgressData.hasBeenIntoMinimap = VARS.HasBeenIntoMinimap;
+        curProgressData.hasCollectedFragment = VARS.HasCollectedFragment;
+        curProgressData.hasRotated = VARS.HasRotated;
         curProgressData.hasClimbed = VARS.HasClimbed;
         curProgressData.hasTwisted = VARS.HasTwisted;
         curProgressData.hasBackCentered = VARS.HasBackCentered;
@@ -493,8 +505,14 @@ public class DataManager : MonoBehaviour
             VARS.curActivatedSavePointPosition = curCatWorldData.curActivatedSavePointPosition;
             VARS.curActivatedSavePointRoomIndex = curCatWorldData.curActivatedSavePointRoomIndex;
 
+            //isFaceExplored
+            VARS.IsFaceExplored = curCatWorldData.isFaceExplored;
+
             //isRoomExplored
             VARS.IsRoomExplored = curCatWorldData.isRoomExplored;
+
+            //isRoomFragmentCollected
+            VARS.IsRoomFragmentCollected = curCatWorldData.isRoomFragmentCollected;
 
             //keysAndLocks
             VARS.deactivatedKeyIndexes = curCatWorldData.deactivatedKeyIndexes;
@@ -704,8 +722,14 @@ public class DataManager : MonoBehaviour
         storedActivatedSavePointBlock.transform.position = curCatWorldData.curActivatedSavePointPosition;
         curCatWorldData.curActivatedSavePointRoomIndex = VARS.curActivatedSavePointRoomIndex;
 
+        //isFaceExplored
+        curCatWorldData.isFaceExplored = VARS.IsFaceExplored;
+
         //isRoomExplored
         curCatWorldData.isRoomExplored = VARS.IsRoomExplored;
+
+        //isRoomFragmentCollected
+        curCatWorldData.isRoomFragmentCollected = VARS.IsRoomFragmentCollected;
 
         //keysAndLocks
         curCatWorldData.deactivatedKeyIndexes = VARS.deactivatedKeyIndexes;

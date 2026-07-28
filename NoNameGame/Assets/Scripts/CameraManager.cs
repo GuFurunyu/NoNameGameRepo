@@ -124,8 +124,8 @@ public class CameraManager : MonoBehaviour
             tempFloat = camTransform.eulerAngles.z;
             //camTransform.LookAt(CONS.roomPlanes[VARS.curRoomIndex].transform.position, VARS.curRoomStableUp);
             camTransform.LookAt(VARS.curRoomCenter, VARS.curRoomStableUp);
-            //VARS.camIniEulerangles = camTransform.eulerAngles;
-            //VARS.camIniEulerangles += Vector3.forward * Vector3.SignedAngle(camTransform.right, VARS.curRoomStableRight, VARS.curRoomStableForward);
+            VARS.camIniEulerangles = camTransform.eulerAngles;
+            VARS.camIniEulerangles += Vector3.forward * Vector3.SignedAngle(camTransform.right, VARS.curRoomStableRight, VARS.curRoomStableForward);
             //camTransform.eulerAngles = new Vector3(camTransform.eulerAngles.x, camTransform.eulerAngles.y, tempFloat);
 
             VARS.curUp = new Vector3
@@ -259,7 +259,8 @@ public class CameraManager : MonoBehaviour
                             {
                                 if (UFL.IsPlaneInTheFace(i, tempInt))
                                 {
-                                    if (UFL.IsRoomExplored(i))
+                                    if (/*UFL.IsRoomExplored(i)*/
+                                        VARS.IsRoomExplored[i])
                                     {
                                         roomPlanes[i].SetActive(true);
                                     }

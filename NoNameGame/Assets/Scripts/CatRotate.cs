@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Video;
 
 [DefaultExecutionOrder((int)ScriptsExecutionOrder.ExecutionOrder.catRotate)]
 public class CatRotate : MonoBehaviour
@@ -34,6 +35,7 @@ public class CatRotate : MonoBehaviour
 
     Transform camTransform;
 
+    GameObject cat;
     Transform catTransform;
 
     Vector3 leftRotationVector;
@@ -52,6 +54,9 @@ public class CatRotate : MonoBehaviour
     float returnIniRotationTime;
 
     float rotationEnergyCost;
+
+    Material fadedColor;
+    Material normalColor;
     #endregion
 
     #region VariablesUsed
@@ -94,6 +99,7 @@ public class CatRotate : MonoBehaviour
         gridBreadth = CONS.gridBreadth;
         roomCoordBreadth = CONS.roomCoordBreadth;
         camTransform = CONS.camTransform;
+        cat = CONS.cat;
         catTransform = CONS.catTransform;
         leftRotationVector = CONS.leftRotationVector;
         rightRotationVector = CONS.rightRotationVector;
@@ -104,6 +110,8 @@ public class CatRotate : MonoBehaviour
         rotationStep = CONS.rotationStep;
         returnIniRotationTime = CONS.returnIniRotationTime;
         rotationEnergyCost = CONS.rotationEnergyCost;
+        fadedColor = CONS.fadedColor;
+        normalColor = CONS.normalColor;
         #endregion
 
         #region ImportReferenceVariables
@@ -142,6 +150,9 @@ public class CatRotate : MonoBehaviour
         #region Rotate
         if (!VARS.IsInNewRoomCatRotateResetOver)
         {
+            //setIsRotateEnabled
+            VARS.IsRotateEnabled = VARS.IsRoomFragmentCollected[VARS.curRoomIndex];
+
             //ifNotByDeath
             if (VARS.outIniRotationStartTime != 0.1f)
                 VARS.outIniRotationStartTime = 0;
@@ -195,6 +206,8 @@ public class CatRotate : MonoBehaviour
                     targetDegree = Mathf.Abs(outIniRotationDegree);
 
                     VARS.IsRotating = true;
+                    VARS.IsOnGround = false;
+                    VARS.IsCatEnergyResetExecutable = false;
 
                     isIniRotated = true;
 
@@ -211,7 +224,8 @@ public class CatRotate : MonoBehaviour
                 //rotationControl
                 if (VARS.IsRotateEnabled &&
                     rotationRestNum > 0 &&
-                    !VARS.IsInCenter)
+                    !VARS.IsInCenter &&
+                    !VARS.isCenterFulfilled[VARS.curFaceIndex - 1])
                 {
                     if (/*VARS.curEnergy > rotationEnergyCost*/true)
                     {
@@ -224,6 +238,8 @@ public class CatRotate : MonoBehaviour
                                 targetEulerangles = camTransform.eulerAngles + leftRotationVector * targetDegree;
 
                                 VARS.IsRotating = true;
+                                VARS.IsOnGround = false;
+                                VARS.IsCatEnergyResetExecutable = false;
 
                                 isLeftRotated = true;
 
@@ -244,6 +260,8 @@ public class CatRotate : MonoBehaviour
                                 targetEulerangles = camTransform.eulerAngles + rightRotationVector * targetDegree;
 
                                 VARS.IsRotating = true;
+                                VARS.IsOnGround = false;
+                                VARS.IsCatEnergyResetExecutable = false;
 
                                 isLeftRotated = false;
 

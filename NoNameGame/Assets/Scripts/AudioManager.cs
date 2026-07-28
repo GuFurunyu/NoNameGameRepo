@@ -63,7 +63,8 @@ public class AudioManager : MonoBehaviour
         #region ImportValueVariables
         #endregion
 
-        //audioSource.volume = 0;
+        //noAudioSet
+        audioSource.volume = 0;
 
         //mainBoard
         if (VARS.IsInMainBoard)

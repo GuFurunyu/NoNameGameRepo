@@ -462,6 +462,9 @@ public class Constants : MonoBehaviour
     //continuousHorMovingMaxTime
     public int continuousHorMovingMaxTime;
 
+    //catCarriedByFluid
+    public float catCarriedByFluidGapTime;
+
     //lockedBlocks
     public float unlockDistance;
 
@@ -501,6 +504,9 @@ public class Constants : MonoBehaviour
 
     //centerTriangles
     public GameObject[] minimapCenterTriangleEmpties = new GameObject[6];
+
+    //centerDirectionSigns
+    public GameObject[] minimapCenterDirectionSignEmpties = new GameObject[6];
 
     //fragments
     public List<GameObject> minimapRedFragments = new List<GameObject>();
@@ -593,6 +599,7 @@ public class Constants : MonoBehaviour
     public GameObject intoMinimapGuideText;
     public GameObject climbGuideText;
     public GameObject twistGuideText;
+    public GameObject rotateGuideText;
     public GameObject backCenterGuideText;
 
     //keysGuideMask

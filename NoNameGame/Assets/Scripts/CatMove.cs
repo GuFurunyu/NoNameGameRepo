@@ -309,6 +309,7 @@ public class CatMove : MonoBehaviour
                     //forDash
                     //lastHorDirectionInput = leftKeyCode;
                     VARS.curFacingDirectionIndex = 1;
+                    VARS.curDashingDirectionIndex = 1;
 
                     if (VARS.horCurSpeed >= -horCurMaxSpeed &&
                         !VARS.IsLeftBlocked)
@@ -326,6 +327,7 @@ public class CatMove : MonoBehaviour
                 {
                     //lastHorDirectionInput = rightKeyCode;
                     VARS.curFacingDirectionIndex = 2;
+                    VARS.curDashingDirectionIndex= 2;
 
                     if (VARS.horCurSpeed <= horCurMaxSpeed &&
                         !VARS.IsRightBlocked)
@@ -507,6 +509,12 @@ public class CatMove : MonoBehaviour
             //horSpeedSum
             if (VARS.horCurSpeed != 0)
             {
+                //inDashingHorCurSpeedKeepsConstant
+                if (VARS.IsDashing)
+                {
+                    VARS.horCurSpeed = VARS.curDashHorSpeed;
+                }
+
                 //catTransform.position += curRight * VARS.horCurSpeed * Time.deltaTime;
                 UFL.AddCatPosition(curRight * VARS.horCurSpeed * Time.deltaTime);
             }
@@ -836,6 +844,24 @@ public class CatMove : MonoBehaviour
             //ifToCeiling
             if (isToCeiling)
             {
+                //horMovingAfterToCeiling
+                if (VARS.verCurSpeed > 0 || VARS.IsInputtingJumpKey)
+                {
+                    if (VARS.IsHorMovingAfterToCeilingActivated)
+                    {
+                        if (Mathf.Abs(VARS.horMovingAfterToCeilingStartTime) < 1e-6f)
+                        {
+                            //Debug.Log("horMovingAfterToCeiling");
+
+                            VARS.horMovingAfterToCeilingStartTime = Time.time;
+
+                            VARS.IsHorMovingAfterToCeiling = true;
+
+                            VARS.IsHorMovingAfterToCeilingActivated = false;
+                        }
+                    }
+                }
+
                 if (VARS.verCurSpeed > 0)
                 {
                     //verCurSpeed = 0;
@@ -872,19 +898,6 @@ public class CatMove : MonoBehaviour
                         VARS.IsAttachCeiling = false;
                     }
                 }
-
-                //horMovingAfterToCeiling
-                if (VARS.IsHorMovingAfterToCeilingActivated)
-                {
-                    if (VARS.horMovingAfterToCeilingStartTime == 0)
-                    {
-                        VARS.horMovingAfterToCeilingStartTime = Time.time;
-
-                        VARS.IsHorMovingAfterToCeiling = true;
-
-                        VARS.IsHorMovingAfterToCeilingActivated = false;
-                    }
-                }
             }
             else
             {
@@ -894,7 +907,13 @@ public class CatMove : MonoBehaviour
             //horMovingAfterToCeiling
             if (!VARS.IsHorMovingAfterToCeilingActivated && VARS.IsOnGround)
             {
+                //Debug.Log("horMovingAfterToCeilingReactivated");
+
                 VARS.IsHorMovingAfterToCeilingActivated = true;
+
+                VARS.horMovingAfterToCeilingStartTime = 0;
+
+                VARS.IsHorMovingAfterToCeiling = false;
             }
             if (VARS.IsHorMovingAfterToCeiling)
             {
@@ -941,7 +960,9 @@ public class CatMove : MonoBehaviour
                 {
                     if (/*VARS.curEnergy > dashEnergyCost*/true)
                     {
-                        if (VARS.IsDashKeyDown)
+                        if (!VARS.IsDashing &&
+                            ((VARS.IsOnGround && VARS.IsInputtingDashKey) ||
+                            (!VARS.IsOnGround && VARS.IsDashKeyDown)))
                         {
                             //dir
                             if (VARS.IsInputtingLeftKey)
@@ -955,12 +976,13 @@ public class CatMove : MonoBehaviour
                             else
                             {
                                 if (/*lastHorDirectionInput == leftKeyCode*/
-                                    VARS.curFacingDirectionIndex == 1)
+                                    VARS.curDashingDirectionIndex == 1)
                                 {
                                     dashVector = -curRight;
                                 }
                                 else if (/*lastHorDirectionInput == rightKeyCode*/
-                                    VARS.curFacingDirectionIndex == 2)
+                                    VARS.curDashingDirectionIndex == 2 ||
+                                    VARS.curDashingDirectionIndex == 0)
                                 {
                                     dashVector = curRight;
                                 }
@@ -984,7 +1006,9 @@ public class CatMove : MonoBehaviour
 
                             //horCurSpeed += Vector3.Dot(dashVector, curRight) * dashIniSpeed;
                             //UFL.AddHorCurSpeed(Vector3.Dot(dashVector, curRight) * dashIniSpeed);
-                            VARS.horCurSpeed += Vector3.Dot(dashVector, curRight) * dashIniSpeed;
+                            //VARS.horCurSpeed += Vector3.Dot(dashVector, curRight) * dashIniSpeed;
+                            VARS.curDashHorSpeed = Vector3.Dot(dashVector, curRight) * dashIniSpeed;
+                            VARS.horCurSpeed = VARS.curDashHorSpeed;
 
                             //dashMaxSpeed
                             if (VARS.horCurSpeed > dashIniSpeed)
@@ -1034,10 +1058,10 @@ public class CatMove : MonoBehaviour
                     }
                 }
 
-                if (!VARS.IsDashing && VARS.IsInputtingDashKey)
-                {
-                    VARS.curTargetEnergy += -dashEnergyCost;
-                }
+                //if (!VARS.IsDashing && VARS.IsInputtingDashKey)
+                //{
+                //    VARS.curTargetEnergy += -dashEnergyCost;
+                //}
             }
             #endregion
 
@@ -1098,7 +1122,7 @@ public class CatMove : MonoBehaviour
                     VARS.IsToDie = true;
                 }
 
-                VARS.IsBackCenterTriggered = false;
+                //VARS.IsBackCenterTriggered = false;
             }
             #endregion
 

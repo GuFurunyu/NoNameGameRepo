@@ -78,6 +78,7 @@ public class ScriptsExecutionController : MonoBehaviour
         VARS.IsCatEnergyResetExecutable =
             !VARS.IsInMainBoard &&
             !VARS.IsPaused &&
+            VARS.HasJumped &&
             VARS.IsInNewRoomAllResetOver &&
             !VARS.IsRotating &&
             !VARS.IsTwisting &&

@@ -111,6 +111,12 @@ public class Variables : MonoBehaviour
     [SerializeField] private bool _hasBeenIntoMinimap;
     public bool HasBeenIntoMinimap { get { return _hasBeenIntoMinimap; } set { _hasBeenIntoMinimap = value; } }
 
+    [SerializeField] private bool _hasCollectedFragment;
+    public bool HasCollectedFragment { get { return _hasCollectedFragment; } set { _hasCollectedFragment = value; } }
+
+    [SerializeField] private bool _hasRotated;
+    public bool HasRotated { get { return _hasRotated; } set { _hasRotated = value; } }
+
     [SerializeField] private bool _hasClimbed;
     public bool HasClimbed { get { return _hasClimbed; } set { _hasClimbed = value; } }
 
@@ -281,9 +287,31 @@ public class Variables : MonoBehaviour
     //edgeGatesLinkedToIndexes
     public List<int> edgeGateLinkedToIndexes = new List<int>();
 
+    //isFaceExploredList
+    [SerializeField] private bool[] _isFaceExplored = new bool[6];
+    public bool[] IsFaceExplored { get { return _isFaceExplored; } set { _isFaceExplored = value; } }
+
     //isRoomExploredList
     [SerializeField] private bool[] _isRoomExplored = new bool[54];
     public bool[] IsRoomExplored { get { return _isRoomExplored; } set { _isRoomExplored = value; } }
+
+    //isRoomFragmentCollectedList
+    [SerializeField] private bool[] _isRoomFragmentCollected = new bool[54];
+    public bool[] IsRoomFragmentCollected
+    {
+        get
+        {
+            _isRoomFragmentCollected[4] = true;
+            _isRoomFragmentCollected[13] = true;
+            _isRoomFragmentCollected[22] = true;
+            _isRoomFragmentCollected[31] = true;
+            _isRoomFragmentCollected[40] = true;
+            _isRoomFragmentCollected[49] = true;
+
+            return _isRoomFragmentCollected;
+        }
+        set { _isRoomFragmentCollected = value; }
+    }
 
     //center
     [SerializeField] private bool _isInCenter;
@@ -657,6 +685,11 @@ public class Variables : MonoBehaviour
     public GameObject curAttachedWallTile;
     public GameObject curAttachedCeilingTile;
 
+    //fluidTile
+    public GameObject curLiquidTile;
+    public GameObject curGasTile;
+    public GameObject curMistTile;
+
     //solidTileData
     public TileData curUpTileData;
     public TileData curDownTileData;
@@ -755,10 +788,13 @@ public class Variables : MonoBehaviour
     [SerializeField] private bool _isInAcce;
     public bool IsInAcce { get { return _isInAcce; } set { _isInAcce = value; } }
 
-
-    //curFacingDirection
+    //directionIndexes
     //1-left, 2-right
     public float curFacingDirectionIndex;
+    public float curDashingDirectionIndex;
+
+    //curDashHorSpeed
+    public float curDashHorSpeed;
 
     //isStill
     [SerializeField] private bool _isCatStill;
@@ -840,7 +876,7 @@ public class Variables : MonoBehaviour
         }
         set
         {
-            if (value == true) IsInNormalColor = false;
+            if (value == true) IsMaskInNormalColor = false;
 
             _isAfflicted = value;
         }
@@ -1075,18 +1111,18 @@ public class Variables : MonoBehaviour
     public bool IsContracting { get { return _isContracting; } set { _isContracting = value; } }
 
     //color
-    [SerializeField] private bool _isInNormalColor;
-    public bool IsInNormalColor
+    [SerializeField] private bool _isMaskInNormalColor;
+    public bool IsMaskInNormalColor
     {
         get
         {
-            IsInNormalColor =
+            IsMaskInNormalColor =
                 !IsAfflicted &&
                 !IsInFadedColor;
 
-            return _isInNormalColor;
+            return _isMaskInNormalColor;
         }
-        set { _isInNormalColor = value; }
+        set { _isMaskInNormalColor = value; }
     }
 
     [SerializeField] private bool _isInFadedColor;
@@ -1095,7 +1131,7 @@ public class Variables : MonoBehaviour
         get { return _isInFadedColor; }
         set
         {
-            if (value == true) IsInNormalColor = false;
+            if (value == true) IsMaskInNormalColor = false;
 
             _isInFadedColor = value;
         }
@@ -1186,6 +1222,9 @@ public class Variables : MonoBehaviour
     public int curStoredElectricMistBlockIndex;
     public int curStoredLightElectricMistBlockIndex;
 
+    //catCarriedByFluid
+    public float lastCatCarriedByFluidTime;
+
     //fragileBlocks
     public List<GameObject> curToBeBrokenFragileRustBlocks = new List<GameObject>();
     public List<float> curFragileRustBlockToBeBrokenStartTimes = new List<float>();
@@ -1275,6 +1314,7 @@ public class Variables : MonoBehaviour
                 IsInKeysGuide ||
                 IsInJumpGuide ||
                 IsInIntoMinimapGuide ||
+                IsInRotateGuide ||
                 IsInClimbGuide ||
                 IsInTwistGuide ||
                 IsInBackCenterGuide;
@@ -1287,6 +1327,25 @@ public class Variables : MonoBehaviour
         }
     }
 
+    [SerializeField] private bool _isInPauseGuide;
+    public bool IsInPauseGuide
+    {
+        get
+        {
+            _isInPauseGuide =
+                IsInKeysGuide ||
+                IsInJumpGuide ||
+                IsInClimbGuide;
+
+            return _isInPauseGuide;
+        }
+        
+        set
+        {
+            _isInPauseGuide = value;
+        }
+    }
+
     [SerializeField] private bool _isInKeysGuide;
     public bool IsInKeysGuide { get { return _isInKeysGuide; } set { _isInKeysGuide = value; } }
 
@@ -1295,6 +1354,9 @@ public class Variables : MonoBehaviour
 
     [SerializeField] private bool _isInIntoMinimapGuide;
     public bool IsInIntoMinimapGuide { get { return _isInIntoMinimapGuide; } set { _isInIntoMinimapGuide = value; } }
+
+    [SerializeField] private bool _isInRotateGuide;
+    public bool IsInRotateGuide { get { return _isInRotateGuide; } set { _isInRotateGuide = value; } }
 
     [SerializeField] private bool _isInClimbGuide;
     public bool IsInClimbGuide { get { return _isInClimbGuide; } set { _isInClimbGuide = value; } }
