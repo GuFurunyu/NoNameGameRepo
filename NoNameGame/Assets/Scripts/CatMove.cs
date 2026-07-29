@@ -38,7 +38,7 @@ public class CatMove : MonoBehaviour
     bool isPostWallJumpToRight;
 
     //dash
-    Vector3 dashVector;
+    //Vector3 VARS.curDashVector;
     float dashStartTime;
 
     //acce
@@ -967,47 +967,47 @@ public class CatMove : MonoBehaviour
                             //dir
                             if (VARS.IsInputtingLeftKey)
                             {
-                                dashVector = -curRight;
+                                VARS.curDashVector = -curRight;
                             }
                             else if (VARS.IsInputtingRightKey)
                             {
-                                dashVector = curRight;
+                                VARS.curDashVector = curRight;
                             }
                             else
                             {
                                 if (/*lastHorDirectionInput == leftKeyCode*/
                                     VARS.curDashingDirectionIndex == 1)
                                 {
-                                    dashVector = -curRight;
+                                    VARS.curDashVector = -curRight;
                                 }
                                 else if (/*lastHorDirectionInput == rightKeyCode*/
                                     VARS.curDashingDirectionIndex == 2 ||
                                     VARS.curDashingDirectionIndex == 0)
                                 {
-                                    dashVector = curRight;
+                                    VARS.curDashVector = curRight;
                                 }
                             }
 
                             //blockedReverse
-                            if (dashVector == -curRight)
+                            if (VARS.curDashVector == -curRight)
                             {
                                 if (isLeftBlocked)
                                 {
-                                    dashVector = curRight;
+                                    VARS.curDashVector = curRight;
                                 }
                             }
-                            else if (dashVector == curRight)
+                            else if (VARS.curDashVector == curRight)
                             {
                                 if (isRightBlocked)
                                 {
-                                    dashVector = -curRight;
+                                    VARS.curDashVector = -curRight;
                                 }
                             }
 
-                            //horCurSpeed += Vector3.Dot(dashVector, curRight) * dashIniSpeed;
-                            //UFL.AddHorCurSpeed(Vector3.Dot(dashVector, curRight) * dashIniSpeed);
-                            //VARS.horCurSpeed += Vector3.Dot(dashVector, curRight) * dashIniSpeed;
-                            VARS.curDashHorSpeed = Vector3.Dot(dashVector, curRight) * dashIniSpeed;
+                            //horCurSpeed += Vector3.Dot(VARS.curDashVector, curRight) * dashIniSpeed;
+                            //UFL.AddHorCurSpeed(Vector3.Dot(VARS.curDashVector, curRight) * dashIniSpeed);
+                            //VARS.horCurSpeed += Vector3.Dot(VARS.curDashVector, curRight) * dashIniSpeed;
+                            VARS.curDashHorSpeed = Vector3.Dot(VARS.curDashVector, curRight) * dashIniSpeed;
                             VARS.horCurSpeed = VARS.curDashHorSpeed;
 
                             //dashMaxSpeed
@@ -1042,8 +1042,8 @@ public class CatMove : MonoBehaviour
                 {
                     if (Time.time - dashStartTime > dashTime)
                     {
-                        //horCurSpeed -= Vector3.Dot(dashVector, curRight) * dashIniSpeed * 0.6f;
-                        //verCurSpeed -= Vector3.Dot(dashVector, curUp) * dashIniSpeed * 0.6f;
+                        //horCurSpeed -= Vector3.Dot(VARS.curDashVector, curRight) * dashIniSpeed * 0.6f;
+                        //verCurSpeed -= Vector3.Dot(VARS.curDashVector, curUp) * dashIniSpeed * 0.6f;
 
                         //horCurSpeed = 0;
                         //UFL.SetHorCurSpeed(0);
@@ -1055,6 +1055,10 @@ public class CatMove : MonoBehaviour
                         dashStartTime = 0;
 
                         VARS.IsDashing = false;
+
+                        VARS.IsPushing = false;
+
+                        VARS.IsJustDashDived = false;
                     }
                 }
 

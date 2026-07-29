@@ -24,6 +24,7 @@ public class GuideManager : MonoBehaviour
     GameObject keysGuideEmpty;
     //public List<GameObject> keysGuideTexts = new List<GameObject>();
     GameObject jumpGuideText;
+    GameObject dashGuideText;
     GameObject intoMinimapGuideText;
     GameObject climbGuideText;
     GameObject twistGuideText;
@@ -53,6 +54,7 @@ public class GuideManager : MonoBehaviour
         keyChosenSprites = CONS.keyChosenSprites;
         keysGuideEmpty = CONS.keysGuideEmpty;
         jumpGuideText = CONS.jumpGuideText;
+        dashGuideText = CONS.dashGuideText;
         intoMinimapGuideText = CONS.intoMinimapGuideText;
         climbGuideText = CONS.climbGuideText;
         twistGuideText = CONS.twistGuideText;
@@ -127,6 +129,24 @@ public class GuideManager : MonoBehaviour
                     VARS.curEnergy = 0.1f;
 
                     VARS.IsInJumpGuide = true;
+                }
+                //dash
+                if (!VARS.HasDashed &&
+                    !VARS.IsInDashGuide &&
+                     VARS.HasJumped)
+                {
+                    for (int i = 0; i < keyCodes.Count; i++)
+                    {
+                        if (keyCodes[i] == VARS.dashKeyCode)
+                        {
+                            dashGuideText.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = keyChosenSprites[i];
+                            break;
+                        }
+                    }
+
+                    dashGuideText.SetActive(true);
+
+                    VARS.IsInDashGuide = true;
                 }
                 //intoMinimap
                 if (!VARS.HasBeenIntoMinimap &&
@@ -408,6 +428,20 @@ public class GuideManager : MonoBehaviour
                 VARS.IsToWriteProgressData = true;
 
                 VARS.IsInJumpGuide = false;
+            }
+            //dash
+            if (VARS.IsInDashGuide &&
+                VARS.IsDashing)
+            {
+                Debug.Log("dashGuideOver");
+
+                dashGuideText.SetActive(false);
+
+                VARS.HasDashed = true;
+
+                VARS.IsToWriteProgressData = true;
+
+                VARS.IsInDashGuide = false;
             }
             //intoMinimap
             if (VARS.IsInIntoMinimapGuide &&

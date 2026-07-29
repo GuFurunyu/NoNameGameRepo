@@ -19,6 +19,7 @@ public class DataManager : MonoBehaviour
         //guide
         public bool hasFinishedKeysGuide;
         public bool hasJumped;
+        public bool hasDashed;
         public bool hasBeenIntoMinimap;
         public bool hasCollectedFragment;
         public bool hasRotated;
@@ -103,6 +104,9 @@ public class DataManager : MonoBehaviour
 
         //curLatestCenterSavePointPosition
         public Vector3 curLatestCenterSavePointPosition;
+
+        //isMinimapRoomPlaneExploredStableDirectionMarkingEdgeLinesActivated
+        public bool[] isMinimapRoomPlaneExploredStableDirectionMarkingEdgeLinesActivated = new bool[216];
 
         //isMinimapActivated
         public bool isMinimapActivated;
@@ -340,6 +344,7 @@ public class DataManager : MonoBehaviour
 
             VARS.HasFinishedKeysGuide = curProgressData.hasFinishedKeysGuide;
             VARS.HasJumped = curProgressData.hasJumped;
+            VARS.HasDashed = curProgressData.hasDashed;
             VARS.HasBeenIntoMinimap = curProgressData.hasBeenIntoMinimap;
             VARS.HasCollectedFragment = curProgressData.hasCollectedFragment;
             VARS.HasRotated = curProgressData.hasRotated;
@@ -359,6 +364,7 @@ public class DataManager : MonoBehaviour
 
         curProgressData.hasFinishedKeysGuide = VARS.HasFinishedKeysGuide;
         curProgressData.hasJumped = VARS.HasJumped;
+        curProgressData.hasDashed = VARS.HasDashed;
         curProgressData.hasBeenIntoMinimap = VARS.HasBeenIntoMinimap;
         curProgressData.hasCollectedFragment = VARS.HasCollectedFragment;
         curProgressData.hasRotated = VARS.HasRotated;
@@ -698,6 +704,9 @@ public class DataManager : MonoBehaviour
             //curLatestCenterSavePointPosition
             VARS.curLatestCenterSavePointPosition = curCatWorldData.curLatestCenterSavePointPosition;
 
+            //isMinimapRoomPlaneExploredStableDirectionMarkingEdgeLinesActivated
+            VARS.isMinimapRoomPlaneExploredStableDirectionMarkingEdgeLinesActivated = curCatWorldData.isMinimapRoomPlaneExploredStableDirectionMarkingEdgeLinesActivated;
+
             //isMinimapActivated
             VARS.IsMinimapActivated = curCatWorldData.isMinimapActivated;
         }
@@ -815,6 +824,9 @@ public class DataManager : MonoBehaviour
         curCatWorldData.deactivatedMinimapKeyIndexes = VARS.deactivatedMinimapKeyIndexes;
         curCatWorldData.deactivatedMinimapLockIndexes = VARS.deactivatedMinimapLockIndexes;
 
+        //isMinimapRoomPlaneExploredStableDirectionMarkingEdgeLinesActivated
+        curCatWorldData.isMinimapRoomPlaneExploredStableDirectionMarkingEdgeLinesActivated = VARS.isMinimapRoomPlaneExploredStableDirectionMarkingEdgeLinesActivated;
+
         //isMinimapActivated
         curCatWorldData.isMinimapActivated = VARS.IsMinimapActivated;
 
@@ -891,7 +903,7 @@ public class DataManager : MonoBehaviour
     }
     #endregion
 
-    #region StartNewGame
+    #region StartNewGame(CurrentlyNotUsable)
     void SetNewGameData()
     {
         //SetNewGameProgressData();

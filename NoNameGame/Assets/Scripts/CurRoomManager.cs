@@ -28,6 +28,8 @@ public class CurRoomManager : MonoBehaviour
     GameObject[] faces = new GameObject[6];
 
     Transform catTransform;
+
+    GameObject[] minimapRoomPlanes = new GameObject[54];
     #endregion
 
     #region VariablesUsed
@@ -48,6 +50,7 @@ public class CurRoomManager : MonoBehaviour
         roomCoordBreadth = CONS.roomCoordBreadth;
         faces = CONS.faces;
         catTransform = CONS.catTransform;
+        minimapRoomPlanes = CONS.minimapRoomPlanes;
         #endregion
 
         #region ImportReferenceVariables
@@ -117,6 +120,23 @@ public class CurRoomManager : MonoBehaviour
 
             //camIniEulerangles = VARS.roomStableForwards[VARS.curRoomIndex] * Vector3.SignedAngle(Vector3.right, iniRight, VARS.roomStableForwards[VARS.curRoomIndex]);
 
+            //isMinimapRoomPlaneExploredStableDirectionMarkingEdgeLinesActivated
+            for (int i = 0; i < 4; i++)
+            {
+                //determineTheUpStableDirectionMarkingEdgeLine
+                if (Vector3.Dot(minimapRoomPlanes[curRoomIndex].transform.GetChild(5 + i).position - minimapRoomPlanes[curRoomIndex].transform.position, VARS.curRoomStableUp) > 2)
+                {
+                    if (VARS.isMinimapRoomPlaneExploredStableDirectionMarkingEdgeLinesActivated[curRoomIndex * 4 + i] == false)
+                    {
+                        VARS.isMinimapRoomPlaneExploredStableDirectionMarkingEdgeLinesActivated[curRoomIndex * 4 + i] = true;
+
+                        VARS.IsToWriteCatWorldData = true;
+                    }
+
+                    break;
+                }
+            }
+
             VARS.IsInNewRoomCurRoomManagerResetOver = true;
         }
         if (VARS.IsInNewRoomAllResetOver)
@@ -128,7 +148,7 @@ public class CurRoomManager : MonoBehaviour
 
             if (tempFloat1 > (roomCoordBreadth / 2) + 2 || tempFloat2 > (roomCoordBreadth / 2) + 2)
             {
-                Debug.Log("outOfRoomDie");
+                //Debug.Log("outOfRoomDie");
 
                 //VARS.IsToDie = true;
             }

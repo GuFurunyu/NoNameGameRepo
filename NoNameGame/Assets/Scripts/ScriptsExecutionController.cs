@@ -91,6 +91,7 @@ public class ScriptsExecutionController : MonoBehaviour
             !VARS.IsInColdState &&
             !VARS.IsInElectricState &&
             !VARS.IsInToxicState &&
+            !VARS.IsDiving &&
             (VARS.IsOnGround ||
             VARS.IsInLiquid ||
             VARS.IsJustReborn) &&

@@ -108,6 +108,9 @@ public class Variables : MonoBehaviour
     [SerializeField] private bool _hasJumped;
     public bool HasJumped { get { return _hasJumped; } set { _hasJumped = value; } }
 
+    [SerializeField] private bool _hasDashed;
+    public bool HasDashed { get { return _hasDashed; } set { _hasDashed = value; } }
+
     [SerializeField] private bool _hasBeenIntoMinimap;
     public bool HasBeenIntoMinimap { get { return _hasBeenIntoMinimap; } set { _hasBeenIntoMinimap = value; } }
 
@@ -571,8 +574,6 @@ public class Variables : MonoBehaviour
     [SerializeField] private bool _isBackCenterTriggered;
     public bool IsBackCenterTriggered { get { return _isBackCenterTriggered; } set { _isBackCenterTriggered = value; } }
 
-    public float lastUpKeyDownTime = -1;
-    public float lastDownKeyDownTime = -1;
 
     //specificKeys
     [SerializeField] private bool _isSpaceDown;
@@ -582,6 +583,12 @@ public class Variables : MonoBehaviour
     public bool IsReturnDown { get { return _isReturnDown; } set { _isReturnDown = value; } }
 
     //bool isVerInputting;
+
+    //keyDownTimes
+    public float lastUpKeyDownTime = -1;
+    public float lastDownKeyDownTime = -1;
+    public float lastLeftKeyDownTime = -1;
+    public float lastRightKeyDownTime = -1;
     #endregion
 
     #region CatCollision
@@ -793,7 +800,8 @@ public class Variables : MonoBehaviour
     public float curFacingDirectionIndex;
     public float curDashingDirectionIndex;
 
-    //curDashHorSpeed
+    //dash
+    public Vector3 curDashVector;
     public float curDashHorSpeed;
 
     //isStill
@@ -1231,6 +1239,29 @@ public class Variables : MonoBehaviour
     public List<GameObject> curBrokenFragileRustBlocks = new List<GameObject>();
     public List<float> curFragileRustBlockBrokenTimes = new List<float>();
 
+    //pushableBlocks
+    [SerializeField] private bool _isPushing;
+    public bool IsPushing { get { return _isPushing; } set { _isPushing = value; } }
+    public float curAccumulatedPushingDistance;
+    public GameObject curPushedBlock;
+    public int curPushedBlockIndex;
+    public List<GameObject> curPushedBlocks = new List<GameObject>();
+    public List<int> curPushedBlockIndexes = new List<int>();
+    //[SerializeField] private bool _isCurPushedBlocksDetermined;
+    //public bool IsCurPushedBlocksDetermined { get { return _isCurPushedBlocksDetermined; } set { _isCurPushedBlocksDetermined = value; } }
+    [SerializeField] private bool _isJustAddedAnotherPushedBlock;
+    public bool IsJustAddedAnotherPushedBlock { get { return _isJustAddedAnotherPushedBlock; } set { _isJustAddedAnotherPushedBlock = value; } }
+    [SerializeField] private bool _isPushBlocked;
+    public bool IsPushBlocked { get { return _isPushBlocked; } set { _isPushBlocked = value; } }
+
+    //divableBlocks
+    [SerializeField] private bool _isDiving;
+    public bool IsDiving { get { return _isDiving; } set { _isDiving = value; } }
+    [SerializeField] private bool _isJustDashDived;
+    public bool IsJustDashDived { get { return _isJustDashDived; } set { _isJustDashDived = value; } }
+    public GameObject curDivedBlock;
+    public float lastDivingMoveTime;
+
     //railBlocks
     public List<GameObject> curRailBlocks = new List<GameObject>();
     public float railBlocksLastUpdateTime;
@@ -1275,6 +1306,9 @@ public class Variables : MonoBehaviour
     //keysAndLocks
     public List<int> deactivatedMinimapKeyIndexes = new List<int>();
     public List<int> deactivatedMinimapLockIndexes = new List<int>();
+
+    //isMinimapRoomPlaneExploredStableDirectionMarkingEdgeLinesActivated
+    public bool[] isMinimapRoomPlaneExploredStableDirectionMarkingEdgeLinesActivated = new bool[216];
     #endregion
 
     #region OptionsManager
@@ -1313,6 +1347,7 @@ public class Variables : MonoBehaviour
             _isInGuide =
                 IsInKeysGuide ||
                 IsInJumpGuide ||
+                IsInDashGuide ||
                 IsInIntoMinimapGuide ||
                 IsInRotateGuide ||
                 IsInClimbGuide ||
@@ -1351,6 +1386,9 @@ public class Variables : MonoBehaviour
 
     [SerializeField] private bool _isInJumpGuide;
     public bool IsInJumpGuide { get { return _isInJumpGuide; } set { _isInJumpGuide = value; } }
+
+    [SerializeField] private bool _isInDashGuide;
+    public bool IsInDashGuide { get { return _isInDashGuide; } set { _isInDashGuide = value; } }
 
     [SerializeField] private bool _isInIntoMinimapGuide;
     public bool IsInIntoMinimapGuide { get { return _isInIntoMinimapGuide; } set { _isInIntoMinimapGuide = value; } }

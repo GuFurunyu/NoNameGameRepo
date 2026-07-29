@@ -302,6 +302,7 @@ public class Constants : MonoBehaviour
     public float jumpEnergyCost;
     public float dashEnergyCost;
     public float rotationEnergyCost;
+    public float divingMoveEnergyCost;
 
     //energyDecreaseSpeed1
     public float jumpEnergyDecreaseSpeedFixParameter;
@@ -472,6 +473,10 @@ public class Constants : MonoBehaviour
     public float fragileRustBlockToBeBrokenTime;
     public float fragileRustBlockRespawnTime;
 
+    //divableBlocks
+    public float divingMoveInputThreshold;
+    public float divingMoveGapTime;
+
     //railBlocks
     public List<string> railBlockMoveStrings = new List<string>();
     #endregion
@@ -591,11 +596,12 @@ public class Constants : MonoBehaviour
 
     #region GuideManager
     [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
-        "  \nGuideManager\n --- ")]
+        "  \nGUIDEMANAGER\n --- ")]
     //guideTexts    
     public GameObject keysGuideEmpty;
     //public List<GameObject> keysGuideTexts = new List<GameObject>();
     public GameObject jumpGuideText;
+    public GameObject dashGuideText;
     public GameObject intoMinimapGuideText;
     public GameObject climbGuideText;
     public GameObject twistGuideText;

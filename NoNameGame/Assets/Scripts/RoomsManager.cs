@@ -475,8 +475,8 @@ public class RoomsManager : MonoBehaviour
                         Quaternion newRotation = curRotation * deltaRotation;
                         twistingTargetEulerangles = newRotation.eulerAngles;
 
-                        Debug.Log("enter" + Mathf.Min(Mathf.Abs(Vector3.Dot(curTwistingCenter.transform.eulerAngles, twistingCenterClockwiseVectors[VARS.curFaceIndex - 1])),
-                               Mathf.Abs(Vector3.Dot(curTwistingCenter.transform.eulerAngles - Vector3.one * 360, twistingCenterClockwiseVectors[VARS.curFaceIndex - 1]))));
+                        //Debug.Log("enter" + Mathf.Min(Mathf.Abs(Vector3.Dot(curTwistingCenter.transform.eulerAngles, twistingCenterClockwiseVectors[VARS.curFaceIndex - 1])),
+                        //       Mathf.Abs(Vector3.Dot(curTwistingCenter.transform.eulerAngles - Vector3.one * 360, twistingCenterClockwiseVectors[VARS.curFaceIndex - 1]))));
                     }
                     else
                     {

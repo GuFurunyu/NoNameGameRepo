@@ -58,6 +58,10 @@ public class TileData : MonoBehaviour
 
     public bool isFragile;
 
+    public bool isPushable;
+
+    public bool isDivable;
+
     //default: 0
     public int railBlockIndex;
 
@@ -117,7 +121,7 @@ public class TileData : MonoBehaviour
     //way2(x-x-xx(region-stateOfMatterIndex-mainType)):
     //  1-RedRegionBlocks
     //      1001-RedFragmentBlock
-    //      1101-RedBlock, 1102-DarkRedBlock, 1103-CoalBlock
+    //      1101-RedBlock, 1102-DarkRedBlock, 1103-CoalBlock, 1104-PushableCoalBlock
     //      1301-VaporBlock
     //  2-YellowRegionBlocks
     //      2001-YellowFragmentBlock
@@ -131,7 +135,7 @@ public class TileData : MonoBehaviour
     //      4101-OrangeBlock, 4102-DarkOrangeBlock, 4103-FragileRustBlock, 4104-RailRustBlock
     //  5-GreenRegionBlocks
     //      5001-GreenFragmentBlock
-    //      5101-GreenBlock, 5102-DarkGreenBlock, 5103-ElasticBlock
+    //      5101-GreenBlock, 5102-DarkGreenBlock, 5103-ElasticBlock, 5104-DivableCanopyBlock
     //      5201-AcidBlock
     //      5301-GasBlock
     //  6-PurpleRegionBlocks

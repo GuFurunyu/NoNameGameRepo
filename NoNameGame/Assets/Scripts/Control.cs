@@ -120,7 +120,25 @@ public class Control : MonoBehaviour
             VARS.IsMinimapKeyUp = Input.GetKeyUp(VARS.upKeyCode);
             VARS.IsBackKeyUp = Input.GetKeyUp(VARS.downKeyCode);
 
-            //trigger
+            //lastKeyDownTimes
+            if (VARS.IsUpKeyDown)
+            {
+                VARS.lastUpKeyDownTime = Time.time;
+            }
+            if (VARS.IsDownKeyDown)
+            {
+                VARS.lastDownKeyDownTime = Time.time;
+            }
+            if (VARS.IsLeftKeyDown)
+            {
+                VARS.lastLeftKeyDownTime = Time.time;
+            }
+            if (VARS.IsRightKeyDown)
+            {
+                VARS.lastRightKeyDownTime = Time.time;
+            }
+
+            //backCenterTrigger
             if (VARS.IsUpKeyDown)
             {
                 //backCenterTrigger
@@ -134,33 +152,29 @@ public class Control : MonoBehaviour
                 {
                     VARS.IsBackCenterTriggered = false;
                 }
-
-                VARS.lastUpKeyDownTime = Time.time;
             }
             else
             {
                 VARS.IsBackCenterTriggered = false;
             }
-            if (VARS.IsDownKeyDown)
-            {
-                VARS.lastDownKeyDownTime = Time.time;
-            }
-            if (VARS.IsJumpKeyDown)
-            {
-                //intoMinimapTrigger
-                if (Time.time - VARS.lastDownKeyDownTime < intoMinimapDownJumpKeyDownThreshold)
-                {
-                    VARS.IsIntoMinimapTriggered = true;
-                }
 
-                ////justOutOfMinimap
-                //if (VARS.IsJustOutOfMinimap)
-                //{
-                //    VARS.IsJumpKeyDown = false;
+            ////intoMinimapTrigger
+            //if (VARS.IsJumpKeyDown)
+            //{
+            //    //intoMinimapTrigger
+            //    if (Time.time - VARS.lastDownKeyDownTime < intoMinimapDownJumpKeyDownThreshold)
+            //    {
+            //        VARS.IsIntoMinimapTriggered = true;
+            //    }
 
-                //    VARS.IsJustOutOfMinimap = false;
-                //}
-            }
+            //    ////justOutOfMinimap
+            //    //if (VARS.IsJustOutOfMinimap)
+            //    //{
+            //    //    VARS.IsJumpKeyDown = false;
+
+            //    //    VARS.IsJustOutOfMinimap = false;
+            //    //}
+            //}
 
             //specificKeys
             VARS.IsSpaceDown = Input.GetKeyDown(KeyCode.Space);

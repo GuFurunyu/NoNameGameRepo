@@ -484,12 +484,15 @@ public class CatCollision : MonoBehaviour
             {
                 //UFL.DebugLog("onGroundDistanceFix");
 
+                //Debug.Log("curDownTile == curDivedBlock  " + (VARS.curDownTile == VARS.curDivedBlock));
+
                 tempVector = catTransform.position - VARS.curDownTile.transform.position;
                 tempFloat = Vector3.Dot(tempVector, curUp);
                 tempFloat1 = Vector3.Dot(tempVector, curRight);
                 if (tempFloat < gridBreadth /*- 0.01f*/ )
                 {
-                    if (Mathf.Abs(tempFloat1) < gridBreadth * 0.975f)
+                    if (Mathf.Abs(tempFloat1) < gridBreadth * 0.975f &&
+                        VARS.curDownTile != VARS.curDivedBlock)
                     {
                         //Debug.Log("distanceFix1:" + catTransform.position);
                         UFL.AddCatPosition(curUp * (gridBreadth - tempFloat /*+ 0.0075f*/));
@@ -504,13 +507,16 @@ public class CatCollision : MonoBehaviour
             {
                 //UFL.DebugLog("toCeilingDistanceFix");
 
+                //Debug.Log("curUpTile == curDivedBlock  " + (VARS.curUpTile == VARS.curDivedBlock));
+
                 tempVector = catTransform.position - VARS.curUpTile.transform.position;
                 tempFloat = Vector3.Dot(tempVector, -curUp);
                 tempFloat1 = Vector3.Dot(tempVector, curRight);
                 if (tempFloat < gridBreadth)
                 {
                     //if (Mathf.Abs(tempFloat1) < gridBreadth * 0.95f)
-                    if (Mathf.Abs(tempFloat1) < gridBreadth * 0.975f)
+                    if (Mathf.Abs(tempFloat1) < gridBreadth * 0.975f &&
+                        VARS.curUpTile != VARS.curDivedBlock)
                     {
                         UFL.AddCatPosition(-curUp * (gridBreadth - tempFloat));
                         //UFL.AddCatPosition(-curUp * (gridBreadth - tempFloat + 0.0075f));
@@ -527,34 +533,52 @@ public class CatCollision : MonoBehaviour
             {
                 //UFL.DebugLog("leftBlockedDistanceFix");
 
+                //Debug.Log("curLeftTile == curDivedBlock  " + (VARS.curLeftTile == VARS.curDivedBlock));
+
                 tempVector = catTransform.position - VARS.curLeftTile.transform.position;
                 tempFloat = Vector3.Dot(tempVector, curRight);
                 tempFloat1 = Vector3.Dot(tempVector, curUp);
                 if (tempFloat < gridBreadth)
                 {
-                    if (Mathf.Abs(tempFloat1) < gridBreadth * 0.95f)
+                    if (Mathf.Abs(tempFloat1) < gridBreadth * 0.95f &&
+                        VARS.curLeftTile != VARS.curDivedBlock)
                     {
                         UFL.AddCatPosition(curRight * (gridBreadth - tempFloat));
                     }
 
                     VARS.horCurSpeed = -VARS.horCurSpeed * VARS.curLeftTileData.elasticity;
+
+                    if (VARS.curDashHorSpeed < 0 &&
+                        VARS.curLeftTileData.elasticity > 1e-6f)
+                    {
+                        VARS.curDashHorSpeed = -VARS.curDashHorSpeed * VARS.curLeftTileData.elasticity;
+                    }
                 }
             }
             if (VARS.IsRightBlocked)
             {
                 //UFL.DebugLog("rightBlockedDistanceFix");
 
+                //Debug.Log("curRightTile == curDivedBlock  " + (VARS.curRightTile == VARS.curDivedBlock));
+
                 tempVector = catTransform.position - VARS.curRightTile.transform.position;
                 tempFloat = Vector3.Dot(tempVector, -curRight);
                 tempFloat1 = Vector3.Dot(tempVector, curUp);
                 if (tempFloat < gridBreadth)
                 {
-                    if (Mathf.Abs(tempFloat1) < gridBreadth * 0.95f)
+                    if (Mathf.Abs(tempFloat1) < gridBreadth * 0.95f &&
+                        VARS.curRightTile != VARS.curDivedBlock)
                     {
                         UFL.AddCatPosition(-curRight * (gridBreadth - tempFloat));
                     }
 
                     VARS.horCurSpeed = -VARS.horCurSpeed * VARS.curRightTileData.elasticity;
+
+                    if (VARS.curDashHorSpeed > 0 &&
+                        VARS.curRightTileData.elasticity > 1e-6f)
+                    {
+                        VARS.curDashHorSpeed = -VARS.curDashHorSpeed * VARS.curRightTileData.elasticity;
+                    }
                 }
             }
 
