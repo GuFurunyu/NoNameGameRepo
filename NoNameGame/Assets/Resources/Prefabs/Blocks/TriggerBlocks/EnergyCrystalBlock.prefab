@@ -374,14 +374,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inRoomIndex: 0
+  isNotToBeInCurBlocks: 0
+  isNotToBeDetected: 0
+  fragmentIndex: 0
   offsetThres: 0.2
   _stateOfMatterIndex: 0
   isMovable: 0
+  iniLocalPosition: {x: 0, y: 0, z: 0}
+  continuousHorMovingTimes: 0
   isPositionDetermined: 0
   isAffectedByGravity: 0
   isPlatform: 0
   isNotClimbable: 0
   isFragile: 0
+  isPushable: 0
+  isDivable: 0
   railBlockIndex: 0
   railBlockMoveStringStartIndex: 0
   isLoop: 0
@@ -395,4 +402,4 @@ MonoBehaviour:
   temperature: 0
   electricity: 0
   toxicity: 0
-  _blockTypeIndex: 7009
+  _blockTypeIndex: 6002

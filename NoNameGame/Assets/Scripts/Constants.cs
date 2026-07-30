@@ -319,6 +319,8 @@ public class Constants : MonoBehaviour
 
     //energyRestoreAmount
     public float elasticEnergyRestoreAmount;
+    public float energyCrystalEnergyRestoreAmount;
+    public float dashingInElectricMistEnergyRestoreAmount;
 
     //energyRestoreSpeed
     public float onGroundEnergyRestoreSpeed;
@@ -361,7 +363,6 @@ public class Constants : MonoBehaviour
     public float strawberriesContractionMin;
 
     //energyCrystal
-    public float energyCrystalPower;
     public float energyCrystalRespawnTime;
 
     //storedBlocks
@@ -415,7 +416,7 @@ public class Constants : MonoBehaviour
     public GameObject storedSandBlocksEmpty;
     public GameObject storedWaterBlocksEmpty;
     public GameObject storedAcidBlocksEmpty;
-    public GameObject storedVaporBlocksEmpty;
+    public GameObject storedSmogBlocksEmpty;
     public GameObject storedGasBlocksEmpty;
     public GameObject storedElectricMistBlocksEmpty;
     public GameObject storedLightElectricMistBlocksEmpty;

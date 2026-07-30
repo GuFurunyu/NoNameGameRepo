@@ -562,13 +562,37 @@ public class CatMove : MonoBehaviour
                 else if (isInGas)
                 {
                     verCurIniSpeed = verIniSpeed / curGasTileData.fluidDrag;
-                    curGravityAcce = (gravityAcce - gravityAcce * curGasTileData.mass * 0.5f /*/ 2*/) * curGravityAcceBonus;
+                    //curGravityAcce = (gravityAcce - gravityAcce * curGasTileData.mass * 0.5f /*/ 2*/) * curGravityAcceBonus;
+                    if (VARS.IsInputtingUpKey)
+                    {
+                        curGravityAcce = (gravityAcce - gravityAcce * curGasTileData.mass * 0.75f) * curGravityAcceBonus;
+                    }
+                    else if (VARS.IsInputtingDownKey)
+                    {
+                        curGravityAcce = (gravityAcce - gravityAcce * curGasTileData.mass * 0.5f) * curGravityAcceBonus;
+                    }
+                    else
+                    {
+                        curGravityAcce = (gravityAcce - gravityAcce * curGasTileData.mass * 0.25f) * curGravityAcceBonus;
+                    }
                     verCurMaxSpeed = verMaxSpeed / curGasTileData.fluidDrag;
                 }
                 else if (isInMist)
                 {
                     verCurIniSpeed = verIniSpeed / curMistTileData.fluidDrag;
-                    curGravityAcce = (gravityAcce - gravityAcce * curMistTileData.mass * 0.5f /*/ 2*/) * curGravityAcceBonus;
+                    //curGravityAcce = (gravityAcce - gravityAcce * curMistTileData.mass * 0.5f /*/ 2*/) * curGravityAcceBonus;
+                    if (VARS.IsInputtingUpKey)
+                    {
+                        curGravityAcce = (gravityAcce - gravityAcce * curMistTileData.mass * 0.75f) * curGravityAcceBonus;
+                    }
+                    else if (VARS.IsInputtingDownKey)
+                    {
+                        curGravityAcce = (gravityAcce - gravityAcce * curMistTileData.mass * 0.5f) * curGravityAcceBonus;
+                    }
+                    else
+                    {
+                        curGravityAcce = (gravityAcce - gravityAcce * curMistTileData.mass * 0.25f) * curGravityAcceBonus;
+                    }
                     verCurMaxSpeed = verMaxSpeed / curMistTileData.fluidDrag;
                 }
             }
@@ -1055,10 +1079,6 @@ public class CatMove : MonoBehaviour
                         dashStartTime = 0;
 
                         VARS.IsDashing = false;
-
-                        VARS.IsPushing = false;
-
-                        VARS.IsJustDashDived = false;
                     }
                 }
 

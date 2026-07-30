@@ -72,6 +72,8 @@ public class CatTrigger : MonoBehaviour
 
     float maxEnergy;
 
+    float energyCrystalEnergyRestoreAmount;
+
     float fragmentDistance;
     float fragmentSpeed;
     float energyFragmentSpeed;
@@ -107,7 +109,6 @@ public class CatTrigger : MonoBehaviour
     float strawberriesContractionMin;
     float strawberriesContractionSpeed;
 
-    float energyCrystalPower;
     float energyCrystalRespawnTime;
 
     GameObject[] minimapRoomPlanes = new GameObject[54];
@@ -190,6 +191,7 @@ public class CatTrigger : MonoBehaviour
         catTransform = CONS.catTransform;
         catIniPositionPoint = CONS.catIniPositionPoint;
         maxEnergy = CONS.maxEnergy;
+        energyCrystalEnergyRestoreAmount = CONS.energyCrystalEnergyRestoreAmount;
         fragmentDistance = CONS.fragmentDistance;
         fragmentSpeed = CONS.fragmentSpeed;
         energyFragmentSpeed = CONS.energyFragmentSpeed;
@@ -211,7 +213,6 @@ public class CatTrigger : MonoBehaviour
         strawberriesSpeed = CONS.strawberriesSpeed;
         strawberriesContractionMin = CONS.strawberriesContractionMin;
         strawberriesContractionSpeed = CONS.strawberriesContractionSpeed;
-        energyCrystalPower = CONS.energyCrystalPower;
         energyCrystalRespawnTime = CONS.energyCrystalRespawnTime;
         minimapRoomPlanes = CONS.minimapRoomPlanes;
         minimapRedFragments = CONS.minimapRedFragments;
@@ -1098,7 +1099,7 @@ public class CatTrigger : MonoBehaviour
                 //{
                 //    VARS.curEnergy = maxEnergy + VARS.maxEnergyBonus;
                 //}
-                VARS.curTargetEnergy += energyCrystalPower;
+                VARS.curTargetEnergy += energyCrystalEnergyRestoreAmount;
 
                 VARS.IsGettingAnEnergyCrystal = false;
             }

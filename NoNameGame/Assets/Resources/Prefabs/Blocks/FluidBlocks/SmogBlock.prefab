@@ -182,7 +182,7 @@ GameObject:
   - component: {fileID: 4562155487416528880}
   - component: {fileID: 2275904594174296949}
   m_Layer: 0
-  m_Name: VaporBlock
+  m_Name: SmogBlock
   m_TagString: Block
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

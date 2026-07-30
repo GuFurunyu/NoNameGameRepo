@@ -1067,7 +1067,7 @@ public class CatCollision : MonoBehaviour
 
                 //energyCrystal(get)
                 else if (/*curTileData.triggerTypeIndex == 2*/
-                    curTileData.blockTypeIndex == 7009)
+                    curTileData.blockTypeIndex == 6002)
                 {
                     if (curTile.transform.localScale != Vector3.one * 0.2f)
                     {

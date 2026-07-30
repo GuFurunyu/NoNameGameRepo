@@ -110,7 +110,7 @@ public class TileData : MonoBehaviour
     //  3-LiquidBlocks
     //      310-WaterBlock, 320-AcidBlock
     //  4-GasBlocks
-    //      410-VaporBlock, 420-GasBlock
+    //      410-SmogBlock, 420-GasBlock
     //  5-MistBlocks(~?)(~ElectricMist)
     //      510-ElectricMistBlock
     //  6-TriggerBlocks
@@ -122,7 +122,7 @@ public class TileData : MonoBehaviour
     //  1-RedRegionBlocks
     //      1001-RedFragmentBlock
     //      1101-RedBlock, 1102-DarkRedBlock, 1103-CoalBlock, 1104-PushableCoalBlock
-    //      1301-VaporBlock
+    //      1301-SmogBlock
     //  2-YellowRegionBlocks
     //      2001-YellowFragmentBlock
     //      2101-YellowBlock, 2102-DarkYellow, 2103-SandBlock
@@ -139,12 +139,12 @@ public class TileData : MonoBehaviour
     //      5201-AcidBlock
     //      5301-GasBlock
     //  6-PurpleRegionBlocks
-    //      6001-PurpleFragmentBlock
+    //      6001-PurpleFragmentBlock, 6002-EnergyCrystalBlock
     //      6101-PurpleBlock, 6102-DarkPurpleBlock, 6103-ElectricMistCenterBlock
     //      6401-ElectricMistBlock, 6402-LightElectricMistBlock
     //  7-UniversalBlocks
     //      7001-GateBlock, 7002-EdgeGateBlock, 7003-EdgeGateTriggerBlock, 7004-SavePointBlock, 7005-ActivatedSavePointBlock, 7006-CenterBlock, 7007-KeyBlock
-    //      7008-StrawberryBlock, 7009-EnergyCrystalBlock,
+    //      7008-StrawberryBlock
     //      7010-VoidBlock, 7011-EnergyFragmentBlock
     //      7101-(White)Block, 7102-Dark(White)Block, 7103-PlatformBlock, 7104-LockedBlock
     //public int blockTypeIndex;

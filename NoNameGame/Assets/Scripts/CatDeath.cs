@@ -65,7 +65,7 @@ public class CatDeath : MonoBehaviour
     GameObject[] storedSandBlocks = new GameObject[512];
     GameObject[] storedWaterBlocks = new GameObject[512];
     GameObject[] storedAcidBlocks = new GameObject[512];
-    GameObject[] storedVaporBlocks = new GameObject[512];
+    GameObject[] storedSmogBlocks = new GameObject[512];
     GameObject[] storedGasBlocks = new GameObject[512];
     GameObject[] storedElectricMistBlocks = new GameObject[512];
     GameObject[] storedLightElectricMistBlocks = new GameObject[512];
@@ -116,7 +116,7 @@ public class CatDeath : MonoBehaviour
         storedSandBlocks = VARS.storedSandBlocks;
         storedWaterBlocks = VARS.storedWaterBlocks;
         storedAcidBlocks = VARS.storedAcidBlocks;
-        storedVaporBlocks = VARS.storedVaporBlocks;
+        storedSmogBlocks = VARS.storedSmogBlocks;
         storedGasBlocks = VARS.storedGasBlocks;
         storedElectricMistBlocks = VARS.storedElectricMistBlocks;
         storedLightElectricMistBlocks = VARS.storedLightElectricMistBlocks;
@@ -221,13 +221,13 @@ public class CatDeath : MonoBehaviour
             }
             VARS.curStoredAcidBlockIndex = 0;
         }
-        if (VARS.curStoredVaporBlockIndex > 0)
+        if (VARS.curStoredSmogBlockIndex > 0)
         {
-            for (int i = 0; i < VARS.curStoredVaporBlockIndex + 1; i++)
+            for (int i = 0; i < VARS.curStoredSmogBlockIndex + 1; i++)
             {
-                storedVaporBlocks[i].transform.position = Vector3.zero;
+                storedSmogBlocks[i].transform.position = Vector3.zero;
             }
-            VARS.curStoredVaporBlockIndex = 0;
+            VARS.curStoredSmogBlockIndex = 0;
         }
         if (VARS.curStoredGasBlockIndex > 0)
         {

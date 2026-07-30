@@ -171,7 +171,7 @@ public class BlocksManager : MonoBehaviour
     GameObject storedSandBlocksEmpty;
     GameObject storedWaterBlocksEmpty;
     GameObject storedAcidBlocksEmpty;
-    GameObject storedVaporBlocksEmpty;
+    GameObject storedSmogBlocksEmpty;
     GameObject storedGasBlocksEmpty;
     GameObject storedElectricMistBlocksEmpty;
     GameObject storedLightElectricMistBlocksEmpty;
@@ -226,7 +226,7 @@ public class BlocksManager : MonoBehaviour
     GameObject[] storedSandBlocks = new GameObject[512];
     GameObject[] storedWaterBlocks = new GameObject[512];
     GameObject[] storedAcidBlocks = new GameObject[512];
-    GameObject[] storedVaporBlocks = new GameObject[512];
+    GameObject[] storedSmogBlocks = new GameObject[512];
     GameObject[] storedGasBlocks = new GameObject[512];
     GameObject[] storedElectricMistBlocks = new GameObject[512];
     GameObject[] storedLightElectricMistBlocks = new GameObject[512];
@@ -269,7 +269,7 @@ public class BlocksManager : MonoBehaviour
         storedSandBlocksEmpty = CONS.storedSandBlocksEmpty;
         storedWaterBlocksEmpty = CONS.storedWaterBlocksEmpty;
         storedAcidBlocksEmpty = CONS.storedAcidBlocksEmpty;
-        storedVaporBlocksEmpty = CONS.storedVaporBlocksEmpty;
+        storedSmogBlocksEmpty = CONS.storedSmogBlocksEmpty;
         storedGasBlocksEmpty = CONS.storedGasBlocksEmpty;
         storedElectricMistBlocksEmpty = CONS.storedElectricMistBlocksEmpty;
         storedLightElectricMistBlocksEmpty = CONS.storedLightElectricMistBlocksEmpty;
@@ -302,7 +302,7 @@ public class BlocksManager : MonoBehaviour
         storedSandBlocks = VARS.storedSandBlocks;
         storedWaterBlocks = VARS.storedWaterBlocks;
         storedAcidBlocks = VARS.storedAcidBlocks;
-        storedVaporBlocks = VARS.storedVaporBlocks;
+        storedSmogBlocks = VARS.storedSmogBlocks;
         storedGasBlocks = VARS.storedGasBlocks;
         storedElectricMistBlocks = VARS.storedElectricMistBlocks;
         storedLightElectricMistBlocks = VARS.storedLightElectricMistBlocks;
@@ -321,7 +321,7 @@ public class BlocksManager : MonoBehaviour
             storedSandBlocks[i] = storedSandBlocksEmpty.transform.GetChild(i).gameObject;
             storedWaterBlocks[i] = storedWaterBlocksEmpty.transform.GetChild(i).gameObject;
             storedAcidBlocks[i] = storedAcidBlocksEmpty.transform.GetChild(i).gameObject;
-            storedVaporBlocks[i] = storedVaporBlocksEmpty.transform.GetChild(i).gameObject;
+            storedSmogBlocks[i] = storedSmogBlocksEmpty.transform.GetChild(i).gameObject;
             storedGasBlocks[i] = storedGasBlocksEmpty.transform.GetChild(i).gameObject;
             storedElectricMistBlocks[i] = storedElectricMistBlocksEmpty.transform.GetChild(i).gameObject;
             storedLightElectricMistBlocks[i] = storedLightElectricMistBlocksEmpty.transform.GetChild(i).gameObject;
@@ -470,7 +470,7 @@ public class BlocksManager : MonoBehaviour
                 tempTransform = VARS.curPlaneEmpty.transform.GetChild(i);
 
                 if (tempTransform.GetComponent<TileData>() != null &&
-                    tempTransform.gameObject.activeSelf)
+                    (tempTransform.gameObject.activeSelf || tempTransform.GetComponent<TileData>().blockTypeIndex == 4103 || tempTransform.GetComponent<TileData>().blockTypeIndex == 6002))
                 {
                     tempTileData = tempTransform.GetComponent<TileData>();
 
@@ -1481,7 +1481,7 @@ public class BlocksManager : MonoBehaviour
                         VARS.curStoredSandBlockIndex = 0;
                         VARS.curStoredWaterBlockIndex = 0;
                         VARS.curStoredAcidBlockIndex = 0;
-                        VARS.curStoredVaporBlockIndex = 0;
+                        VARS.curStoredSmogBlockIndex = 0;
                         VARS.curStoredGasBlockIndex = 0;
                         VARS.curStoredElectricMistBlockIndex = 0;
                         VARS.curStoredLightElectricMistBlockIndex = 0;
@@ -1769,8 +1769,8 @@ public class BlocksManager : MonoBehaviour
 
         //catCarriedByFluid
         if (((curBlock == VARS.curLiquidTile && dirIndex == 2) ||
-            (curBlock == VARS.curGasTile && dirIndex == 1) ||
-            curBlock == VARS.curMistTile) &&
+            (curBlock == VARS.curGasTile && dirIndex == 1) /*||
+            curBlock == VARS.curMistTile*/) &&
             ((dirIndex==2 && !VARS.IsOnGround) ||
             (dirIndex==1 && !VARS.IsToCeiling) ||
             (dirIndex==3 && !VARS.IsLeftBlocked) ||
@@ -1844,7 +1844,7 @@ public class BlocksManager : MonoBehaviour
                 tempGameObject = storedAcidBlocks[VARS.curStoredAcidBlockIndex++];
                 break;
             case 1301:
-                tempGameObject = storedVaporBlocks[VARS.curStoredVaporBlockIndex++];
+                tempGameObject = storedSmogBlocks[VARS.curStoredSmogBlockIndex++];
                 break;
             case 5301:
                 tempGameObject = storedGasBlocks[VARS.curStoredGasBlockIndex++];

@@ -102,6 +102,8 @@ public class UniversalFunctionsLibrary : MonoBehaviour
 
     float intoVoidEnergyLost;
 
+    float dashingInElectricMistEnergyRestoreAmount;
+
     float intoVoidGapTime;
     float intoVoidWarmupTime;
 
@@ -147,7 +149,7 @@ public class UniversalFunctionsLibrary : MonoBehaviour
     GameObject[] storedSandBlocks = new GameObject[512];
     GameObject[] storedWaterBlocks = new GameObject[512];
     GameObject[] storedAcidBlocks = new GameObject[512];
-    GameObject[] storedVaporBlocks = new GameObject[512];
+    GameObject[] storedSmogBlocks = new GameObject[512];
     GameObject[] storedGasBlocks = new GameObject[512];
     GameObject[] storedElectricMistBlocks = new GameObject[512];
     GameObject[] storedLightElectricMistBlocks = new GameObject[512];
@@ -192,6 +194,7 @@ public class UniversalFunctionsLibrary : MonoBehaviour
         toxicityTransferSpeed = CONS.toxicityTransferSpeed;
         divingMoveEnergyCost = CONS.divingMoveEnergyCost;
         intoVoidEnergyLost = CONS.intoVoidEnergyLost;
+        dashingInElectricMistEnergyRestoreAmount = CONS.dashingInElectricMistEnergyRestoreAmount;
         intoVoidGapTime = CONS.intoVoidGapTime;
         intoVoidWarmupTime = CONS.intoVoidWarmupTime;
         activateSavePointGapTime = CONS.activateSavePointGapTime;
@@ -222,7 +225,7 @@ public class UniversalFunctionsLibrary : MonoBehaviour
         storedSandBlocks = VARS.storedSandBlocks;
         storedWaterBlocks = VARS.storedWaterBlocks;
         storedAcidBlocks = VARS.storedAcidBlocks;
-        storedVaporBlocks = VARS.storedVaporBlocks;
+        storedSmogBlocks = VARS.storedSmogBlocks;
         storedGasBlocks = VARS.storedGasBlocks;
         storedElectricMistBlocks = VARS.storedElectricMistBlocks;
         storedLightElectricMistBlocks = VARS.storedLightElectricMistBlocks;
@@ -619,13 +622,13 @@ public class UniversalFunctionsLibrary : MonoBehaviour
             }
             VARS.curStoredAcidBlockIndex = 0;
         }
-        if (VARS.curStoredVaporBlockIndex > 0)
+        if (VARS.curStoredSmogBlockIndex > 0)
         {
-            for (int i = 0; i < VARS.curStoredVaporBlockIndex + 1; i++)
+            for (int i = 0; i < VARS.curStoredSmogBlockIndex + 1; i++)
             {
-                storedVaporBlocks[i].SetActive(false);
+                storedSmogBlocks[i].SetActive(false);
             }
-            VARS.curStoredVaporBlockIndex = 0;
+            VARS.curStoredSmogBlockIndex = 0;
         }
         if (VARS.curStoredGasBlockIndex > 0)
         {
@@ -742,13 +745,13 @@ public class UniversalFunctionsLibrary : MonoBehaviour
             }
             VARS.curStoredAcidBlockIndex = 0;
         }
-        if (VARS.curStoredVaporBlockIndex > 0)
+        if (VARS.curStoredSmogBlockIndex > 0)
         {
-            for (int i = 0; i < VARS.curStoredVaporBlockIndex + 1; i++)
+            for (int i = 0; i < VARS.curStoredSmogBlockIndex + 1; i++)
             {
-                storedVaporBlocks[i].SetActive(true);
+                storedSmogBlocks[i].SetActive(true);
             }
-            VARS.curStoredVaporBlockIndex = 0;
+            VARS.curStoredSmogBlockIndex = 0;
         }
         if (VARS.curStoredGasBlockIndex > 0)
         {
@@ -1345,7 +1348,8 @@ public class UniversalFunctionsLibrary : MonoBehaviour
 
                                     //divable
                                     if (curBlockTileDatas[i].isDivable &&
-                                        (VARS.IsInputtingDownKey && Time.time - VARS.lastDownKeyDownTime > divingMoveInputThreshold && Time.time - VARS.lastDivingMoveTime > divingMoveGapTime) &&
+                                        (VARS.verCurSpeed < -15 ||
+                                        (VARS.IsInputtingDownKey && Time.time - VARS.lastDownKeyDownTime > divingMoveInputThreshold && Time.time - VARS.lastDivingMoveTime > divingMoveGapTime)) &&
                                         Mathf.Abs(VARS.horCurSpeed) < 0.1f)
                                     {
                                         VARS.curDivedBlock = curBlocks[i];
@@ -1356,8 +1360,6 @@ public class UniversalFunctionsLibrary : MonoBehaviour
                                         VARS.lastDivingMoveTime = Time.time;
 
                                         VARS.curTargetEnergy += -divingMoveEnergyCost;
-
-                                        VARS.IsJustDashDived = true;
 
                                         VARS.IsDiving = true;
 
@@ -1421,7 +1423,7 @@ public class UniversalFunctionsLibrary : MonoBehaviour
                                 {
                                     if (VARS.IsInputtingLeftKey /*|| VARS.IsInputtingRightKey*/ /*&&
                                         VARS.IsInputtingAcceKey*/)
-                                        tempFloat4 = (0.05f - (Mathf.Abs(VARS.verCurSpeed) / verMaxSpeed) / 100) /** 8*/ /** 4*/ /** 2*/ * 1 /** 0.5f*/ /** 0.25f*/;
+                                        tempFloat4 = (0.05f - (Mathf.Abs(VARS.verCurSpeed) / verMaxSpeed) / 100) /** 8*/ /** 4*/ /** 2*/ /** 1*/ * 0.75f /** 0.5f*/ /** 0.25f*/;
                                     else
                                         tempFloat4 = 0;
                                 }
@@ -1617,7 +1619,7 @@ public class UniversalFunctionsLibrary : MonoBehaviour
                                 {
                                     if (/*VARS.IsInputtingLeftKey ||*/ VARS.IsInputtingRightKey /*&&
                                         VARS.IsInputtingAcceKey*/)
-                                        tempFloat4 = (0.05f - (Mathf.Abs(VARS.verCurSpeed) / verMaxSpeed) / 100) /** 8*/ /** 4*/ /** 2*/ * 1 /** 0.5f*/ /** 0.25f*/;
+                                        tempFloat4 = (0.05f - (Mathf.Abs(VARS.verCurSpeed) / verMaxSpeed) / 100) /** 8*/ /** 4*/ /** 2*/ /** 1*/ * 0.75f /** 0.5f*/ /** 0.25f*/;
                                     else
                                         tempFloat4 = 0;
                                 }
@@ -1902,6 +1904,13 @@ public class UniversalFunctionsLibrary : MonoBehaviour
                             CurTileTransferAffliction(curBlockTileDatas[i]);
 
                             VARS.IsTouchingAfflictingBlocks = true;
+                        }
+
+                        //restoreEnergyByDashingInElectricMist
+                        if (VARS.IsDashing &&
+                            !VARS.IsJustRestoredEnergyByDashingInElectricMist)
+                        {
+                            VARS.curTargetEnergy += dashingInElectricMistEnergyRestoreAmount;
                         }
 
                         VARS.curMistTile = curBlocks[i];
@@ -2324,7 +2333,7 @@ public class UniversalFunctionsLibrary : MonoBehaviour
 
             //energyCrystal(get)
             else if (/*VARS.curTriggerTileData.triggerTypeIndex == 2*/
-                VARS.curTriggerTileData.blockTypeIndex == 7009)
+                VARS.curTriggerTileData.blockTypeIndex == 6002)
             {
                 //if (VARS.curTriggerTile.transform.localScale != Vector3.one * 0.2f)
                 //if (Vector3.Distance(VARS.curTriggerTile.transform.localScale, Vector3.one * 0.2f) < 0.1f)

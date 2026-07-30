@@ -790,7 +790,26 @@ public class Variables : MonoBehaviour
     public bool IsHighJumping { get { return _isHighJumping; } set { _isHighJumping = value; } }
 
     [SerializeField] private bool _isDashing;
-    public bool IsDashing { get { return _isDashing; } set { _isDashing = value; } }
+    public bool IsDashing
+    {
+        get
+        {
+            return _isDashing;
+        }
+        set
+        {
+            if (value == false)
+            {
+                IsPushing = false;
+
+                IsJustDashDived = false;
+
+                IsJustRestoredEnergyByDashingInElectricMist = false;
+            }
+
+            _isDashing = value;
+        }
+    }
 
     [SerializeField] private bool _isInAcce;
     public bool IsInAcce { get { return _isInAcce; } set { _isInAcce = value; } }
@@ -968,6 +987,10 @@ public class Variables : MonoBehaviour
     //public float curTargetEnergy;
     [SerializeField] private float _curTargetEnergy;
     public float curTargetEnergy { get { return _curTargetEnergy; } set { _curTargetEnergy = value; } }
+
+    //isJustRestoredEnergyByDashingInElectricMist
+    [SerializeField] private bool _isJustRestoredEnergyByDashingInElectricMist;
+    public bool IsJustRestoredEnergyByDashingInElectricMist { get { return _isJustRestoredEnergyByDashingInElectricMist; } set { _isJustRestoredEnergyByDashingInElectricMist = value; } }
 
     #endregion
 
@@ -1218,14 +1241,14 @@ public class Variables : MonoBehaviour
     public GameObject[] storedSandBlocks = new GameObject[512];
     public GameObject[] storedWaterBlocks = new GameObject[512];
     public GameObject[] storedAcidBlocks = new GameObject[512];
-    public GameObject[] storedVaporBlocks = new GameObject[512];
+    public GameObject[] storedSmogBlocks = new GameObject[512];
     public GameObject[] storedGasBlocks = new GameObject[512];
     public GameObject[] storedElectricMistBlocks = new GameObject[512];
     public GameObject[] storedLightElectricMistBlocks = new GameObject[512];
     public int curStoredSandBlockIndex;
     public int curStoredWaterBlockIndex;
     public int curStoredAcidBlockIndex;
-    public int curStoredVaporBlockIndex;
+    public int curStoredSmogBlockIndex;
     public int curStoredGasBlockIndex;
     public int curStoredElectricMistBlockIndex;
     public int curStoredLightElectricMistBlockIndex;

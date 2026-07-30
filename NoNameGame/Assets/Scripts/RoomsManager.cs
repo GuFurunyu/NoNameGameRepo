@@ -101,7 +101,7 @@ public class RoomsManager : MonoBehaviour
     GameObject storedSandBlocksEmpty;
     GameObject storedWaterBlocksEmpty;
     GameObject storedAcidBlocksEmpty;
-    GameObject storedVaporBlocksEmpty;
+    GameObject storedSmogBlocksEmpty;
     GameObject storedGasBlocksEmpty;
     GameObject storedElectricMistBlocksEmpty;
     GameObject storedLightElectricMistBlocksEmpty;
@@ -124,7 +124,7 @@ public class RoomsManager : MonoBehaviour
     GameObject[] storedSandBlocks = new GameObject[512];
     GameObject[] storedWaterBlocks = new GameObject[512];
     GameObject[] storedAcidBlocks = new GameObject[512];
-    GameObject[] storedVaporBlocks = new GameObject[512];
+    GameObject[] storedSmogBlocks = new GameObject[512];
     GameObject[] storedGasBlocks = new GameObject[512];
     GameObject[] storedElectricMistBlocks = new GameObject[512];
     GameObject[] storedLightElectricMistBlocks = new GameObject[512];
@@ -168,7 +168,7 @@ public class RoomsManager : MonoBehaviour
         storedSandBlocksEmpty = CONS.storedSandBlocksEmpty;
         storedWaterBlocksEmpty = CONS.storedWaterBlocksEmpty;
         storedAcidBlocksEmpty = CONS.storedAcidBlocksEmpty;
-        storedVaporBlocksEmpty = CONS.storedVaporBlocksEmpty;
+        storedSmogBlocksEmpty = CONS.storedSmogBlocksEmpty;
         storedGasBlocksEmpty = CONS.storedGasBlocksEmpty;
         storedElectricMistBlocksEmpty = CONS.storedElectricMistBlocksEmpty;
         storedLightElectricMistBlocksEmpty = CONS.storedLightElectricMistBlocksEmpty;
@@ -185,7 +185,7 @@ public class RoomsManager : MonoBehaviour
         storedSandBlocks = VARS.storedSandBlocks;
         storedWaterBlocks = VARS.storedWaterBlocks;
         storedAcidBlocks = VARS.storedAcidBlocks;
-        storedVaporBlocks = VARS.storedVaporBlocks;
+        storedSmogBlocks = VARS.storedSmogBlocks;
         storedGasBlocks = VARS.storedGasBlocks;
         storedElectricMistBlocks = VARS.storedElectricMistBlocks;
         storedLightElectricMistBlocks = VARS.storedLightElectricMistBlocks;
@@ -420,11 +420,11 @@ public class RoomsManager : MonoBehaviour
                             storedAcidBlocks[i].transform.SetParent(curTwistingCenter.transform, true);
                         }
                     }
-                    if (VARS.curStoredVaporBlockIndex > 0)
+                    if (VARS.curStoredSmogBlockIndex > 0)
                     {
-                        for (int i = 0; i < VARS.curStoredVaporBlockIndex + 1; i++)
+                        for (int i = 0; i < VARS.curStoredSmogBlockIndex + 1; i++)
                         {
-                            storedVaporBlocks[i].transform.SetParent(curTwistingCenter.transform, true);
+                            storedSmogBlocks[i].transform.SetParent(curTwistingCenter.transform, true);
                         }
                     }
                     if (VARS.curStoredGasBlockIndex > 0)
@@ -581,11 +581,11 @@ public class RoomsManager : MonoBehaviour
                             storedAcidBlocks[i].transform.SetParent(storedAcidBlocksEmpty.transform, true);
                         }
                     }
-                    if (VARS.curStoredVaporBlockIndex > 0)
+                    if (VARS.curStoredSmogBlockIndex > 0)
                     {
-                        for (int i = 0; i < VARS.curStoredVaporBlockIndex + 1; i++)
+                        for (int i = 0; i < VARS.curStoredSmogBlockIndex + 1; i++)
                         {
-                            storedVaporBlocks[i].transform.SetParent(storedVaporBlocksEmpty.transform, true);
+                            storedSmogBlocks[i].transform.SetParent(storedSmogBlocksEmpty.transform, true);
                         }
                     }
                     if (VARS.curStoredGasBlockIndex > 0)
