@@ -12,6 +12,19 @@ public class EDIBlocksArranger : EditorWindow
     // 颜色到方块的映射列表
     public List<ColorMapping> colorMappings = new List<ColorMapping>();
 
+    // 保存的映射列表
+    [System.Serializable]
+    public class MappingList
+    {
+        public string name;
+        public List<ColorMapping> mappings = new List<ColorMapping>();
+    }
+    private List<MappingList> savedMappingLists = new List<MappingList>();
+
+    // 重命名相关
+    private string renameBuffer = "";
+    private int renamingIndex = -1;
+
     // 滚动位置
     private Vector2 scrollPosition;
 
@@ -44,6 +57,57 @@ public class EDIBlocksArranger : EditorWindow
         }
     }
 
+    // 用于序列化List
+    [System.Serializable]
+    private class SerializationWrapper<T>
+    {
+        public List<T> list;
+        public SerializationWrapper(List<T> l) { list = l; }
+    }
+
+    // EditorPrefs Key
+    private const string MappingListsPrefsKey = "EDIBlocksArranger_MappingLists";
+
+    [MenuItem("Tools/BlocksArranger")]
+    static void Init()
+    {
+        EditorWindow.GetWindow<EDIBlocksArranger>("BlocksArranger");
+    }
+
+    private void OnEnable()
+    {
+        LoadMappingLists();
+    }
+
+    private void OnDisable()
+    {
+        SaveMappingLists();
+    }
+
+    private void SaveMappingLists()
+    {
+        // 只序列化可序列化的部分
+        string json = JsonUtility.ToJson(new SerializationWrapper<MappingList>(savedMappingLists));
+        EditorPrefs.SetString(MappingListsPrefsKey, json);
+    }
+
+    private void LoadMappingLists()
+    {
+        if (EditorPrefs.HasKey(MappingListsPrefsKey))
+        {
+            string json = EditorPrefs.GetString(MappingListsPrefsKey);
+            var wrapper = JsonUtility.FromJson<SerializationWrapper<MappingList>>(json);
+            if (wrapper != null && wrapper.list != null)
+                savedMappingLists = wrapper.list;
+            else
+                savedMappingLists = new List<MappingList>();
+        }
+        else
+        {
+            savedMappingLists = new List<MappingList>();
+        }
+    }
+
     void AutoSetRoomStableDirections()
     {
         if (curPlaneEmpty == null || curPlaneEmpty.transform.parent == null || curPlaneEmpty.transform.parent.parent == null)
@@ -62,19 +126,80 @@ public class EDIBlocksArranger : EditorWindow
         }
     }
 
-    [MenuItem("Tools/BlocksArranger")]
-    static void Init()
-    {
-        EditorWindow.GetWindow<EDIBlocksArranger>("BlocksArranger");
-    }
-
     void OnGUI()
     {
-        // 开始滚动视图
         scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
 
         EditorGUILayout.LabelField("Color Mappings", EditorStyles.boldLabel);
         EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+
+        // SaveMapping按钮
+        if (GUILayout.Button("Save Mapping"))
+        {
+            int nextNum = savedMappingLists.Count + 1;
+            savedMappingLists.Add(new MappingList
+            {
+                name = $"MappingList{nextNum}",
+                mappings = new List<ColorMapping>(colorMappings)
+            });
+            SaveMappingLists();
+        }
+
+        // 显示保存的映射列表
+        for (int i = 0; i < savedMappingLists.Count; i++)
+        {
+            EditorGUILayout.BeginHorizontal("box");
+            if (renamingIndex == i)
+            {
+                renameBuffer = EditorGUILayout.TextField(renameBuffer, GUILayout.Width(120));
+                if (GUILayout.Button("OK", GUILayout.Width(35)))
+                {
+                    savedMappingLists[i].name = renameBuffer;
+                    renamingIndex = -1;
+                    SaveMappingLists();
+                }
+                if (GUILayout.Button("Cancel", GUILayout.Width(50)))
+                {
+                    renamingIndex = -1;
+                }
+            }
+            else
+            {
+                EditorGUILayout.LabelField(savedMappingLists[i].name, GUILayout.Width(120));
+                if (GUILayout.Button("Rename", GUILayout.Width(55)))
+                {
+                    renamingIndex = i;
+                    renameBuffer = savedMappingLists[i].name;
+                }
+            }
+            if (GUILayout.Button("Load", GUILayout.Width(45)))
+            {
+                colorMappings = new List<ColorMapping>(savedMappingLists[i].mappings);
+            }
+            if (GUILayout.Button("Delete", GUILayout.Width(55)))
+            {
+                savedMappingLists.RemoveAt(i);
+                SaveMappingLists();
+                if (renamingIndex == i) renamingIndex = -1;
+                i--;
+                continue;
+            }
+            EditorGUILayout.EndHorizontal();
+        }
+
+        // AddNewMapping按钮
+        if (GUILayout.Button("Add New Mapping"))
+        {
+            colorMappings.Add(new ColorMapping());
+        }
+
+        // 清空所有映射的按钮
+        if (GUILayout.Button("Clear All Mappings"))
+        {
+            colorMappings.Clear();
+        }
+
+        EditorGUILayout.Space();
 
         // 显示所有颜色映射
         for (int i = 0; i < colorMappings.Count; i++)
@@ -107,18 +232,6 @@ public class EDIBlocksArranger : EditorWindow
             EditorGUILayout.Space();
         }
 
-        // 添加新映射的按钮
-        if (GUILayout.Button("Add New Mapping"))
-        {
-            colorMappings.Add(new ColorMapping());
-        }
-
-        // 清空所有映射的按钮
-        if (GUILayout.Button("Clear All Mappings"))
-        {
-            colorMappings.Clear();
-        }
-
         EditorGUILayout.Space();
         EditorGUILayout.LabelField("Scene Settings", EditorStyles.boldLabel);
         EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
@@ -143,7 +256,6 @@ public class EDIBlocksArranger : EditorWindow
         }
         EditorGUILayout.EndHorizontal();
 
-        // 结束滚动视图
         EditorGUILayout.EndScrollView();
     }
 

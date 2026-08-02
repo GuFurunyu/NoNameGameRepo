@@ -123,7 +123,23 @@ public class Control : MonoBehaviour
             //lastKeyDownTimes
             if (VARS.IsUpKeyDown)
             {
+                //backCenterTrigger
+                if (Time.time - VARS.lastUpKeyDownTime < backCenterDoubleUpKeyDownThreshold &&
+                    !VARS.IsOptionPanelActivated &&
+                    !VARS.IsInMinimap)
+                {
+                    VARS.IsBackCenterTriggered = true;
+                }
+                else
+                {
+                    VARS.IsBackCenterTriggered = false;
+                }
+
                 VARS.lastUpKeyDownTime = Time.time;
+            }
+            else
+            {
+                VARS.IsBackCenterTriggered = false;
             }
             if (VARS.IsDownKeyDown)
             {
@@ -136,26 +152,6 @@ public class Control : MonoBehaviour
             if (VARS.IsRightKeyDown)
             {
                 VARS.lastRightKeyDownTime = Time.time;
-            }
-
-            //backCenterTrigger
-            if (VARS.IsUpKeyDown)
-            {
-                //backCenterTrigger
-                if (Time.time - VARS.lastUpKeyDownTime < backCenterDoubleUpKeyDownThreshold &&
-                    !VARS.IsOptionPanelActivated &&
-                    !VARS.IsInMinimap)
-                {
-                    VARS.IsBackCenterTriggered = true;
-                }
-                else
-                {
-                    VARS.IsBackCenterTriggered = false;
-                }
-            }
-            else
-            {
-                VARS.IsBackCenterTriggered = false;
             }
 
             ////intoMinimapTrigger

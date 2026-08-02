@@ -957,6 +957,12 @@ public class CatMove : MonoBehaviour
                     VARS.verCurSpeed = -verFallMaxSpeed;
                 }
 
+                //inDashingVerCurSpeedKeepsZero
+                if (VARS.IsDashing)
+                {
+                    VARS.verCurSpeed = 0;
+                }
+
                 ////debug
                 //VARS.verCurSpeed = 0;
 

@@ -1424,18 +1424,18 @@ public class BlocksManager : MonoBehaviour
                 #endregion
                 #endregion
 
-                #region Locks
-                if (curBlockTileData.blockTypeIndex == 7104)
-                {
-                    if (Vector3.Distance(curBlock.transform.position, catTransform.position) < unlockDistance &&
-                        VARS.IsCarryingAKey)
-                    {
-                        VARS.curUnlockingBlock = curBlock;
+                //#region Locks
+                //if (curBlockTileData.blockTypeIndex == 7104)
+                //{
+                //    if (Vector3.Distance(curBlock.transform.position, catTransform.position) < unlockDistance &&
+                //        VARS.IsCarryingAKey)
+                //    {
+                //        VARS.curUnlockingBlock = curBlock;
 
-                        VARS.IsUnlocking = true;
-                    }
-                }
-                #endregion
+                //        VARS.IsUnlocking = true;
+                //    }
+                //}
+                //#endregion
             }
 
             #region FluidContinuousnessOptimization

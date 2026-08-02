@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1607560790811288823}
   - component: {fileID: 4562155487416528880}
   m_Layer: 0
-  m_Name: MinimapVaporBlock
+  m_Name: MinimapPushableCoalBlock
   m_TagString: Block
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -62,7 +62,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 3e7d6822dd92e2243b4afb72c3c0546f, type: 2}
+  - {fileID: 2100000, guid: 4bf1898078bc1c74588f9445abb5196e, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

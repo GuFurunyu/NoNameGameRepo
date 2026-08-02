@@ -545,8 +545,8 @@ public class UniversalFunctionsLibrary : MonoBehaviour
                 //VARS.curMinimapRoomPlaneColor = minimapRoomPlanes[i].GetComponent<MeshRenderer>().material.GetColor("_MainColor");
                 //minimapRoomPlanes[i].GetComponent<MeshRenderer>().material.SetColor("_MainColor", Color.white);
                 minimapRoomPlanes[i].transform.GetChild(2).gameObject.SetActive(true);
-                minimapRoomPlanes[i].transform.GetChild(3).gameObject.SetActive(true);
-                minimapRoomPlanes[i].transform.GetChild(4).gameObject.SetActive(true);
+                //minimapRoomPlanes[i].transform.GetChild(3).gameObject.SetActive(true);
+                //minimapRoomPlanes[i].transform.GetChild(4).gameObject.SetActive(true);
                 minimapRoomPlanes[i].GetComponent<MeshRenderer>().material.SetFloat("_OutlineWidth", 0.5f);
 
                 if ((i - 4) % 9 == 0)
@@ -1233,6 +1233,15 @@ public class UniversalFunctionsLibrary : MonoBehaviour
                                 {
                                     //DebugLog("enter");
 
+                                    //lock
+                                    if (curBlockTileDatas[i].blockTypeIndex == 7104 &&
+                                        VARS.IsCarryingAKey)
+                                    {
+                                        VARS.curUnlockingBlock = curBlocks[i];
+
+                                        VARS.IsUnlocking = true;
+                                    }
+
                                     //affliction
                                     if (curBlockTileDatas[i].temperature != 0 ||
                                         curBlockTileDatas[i].electricity != 0 ||
@@ -1324,6 +1333,15 @@ public class UniversalFunctionsLibrary : MonoBehaviour
 
                                 if (curDownBlockDistance < gridBreadth + 0.025f - tempFloat4)
                                 {
+                                    //lock
+                                    if (curBlockTileDatas[i].blockTypeIndex == 7104 &&
+                                        VARS.IsCarryingAKey)
+                                    {
+                                        VARS.curUnlockingBlock = curBlocks[i];
+
+                                        VARS.IsUnlocking = true;
+                                    }
+
                                     //affliction
                                     if (curBlockTileDatas[i].temperature != 0 ||
                                         curBlockTileDatas[i].electricity != 0 ||
@@ -1434,6 +1452,15 @@ public class UniversalFunctionsLibrary : MonoBehaviour
 
                                 if (curLeftBlockDistance < gridBreadth + 0.025f - tempFloat4)
                                 {
+                                    //lock
+                                    if (curBlockTileDatas[i].blockTypeIndex == 7104 &&
+                                        VARS.IsCarryingAKey)
+                                    {
+                                        VARS.curUnlockingBlock = curBlocks[i];
+
+                                        VARS.IsUnlocking = true;
+                                    }
+
                                     //affliction
                                     if (curBlockTileDatas[i].temperature != 0 ||
                                         curBlockTileDatas[i].electricity != 0 ||
@@ -1630,6 +1657,15 @@ public class UniversalFunctionsLibrary : MonoBehaviour
 
                                 if (curRightBlockDistance < gridBreadth + 0.025f - tempFloat4)
                                 {
+                                    //lock
+                                    if (curBlockTileDatas[i].blockTypeIndex == 7104 &&
+                                        VARS.IsCarryingAKey)
+                                    {
+                                        VARS.curUnlockingBlock = curBlocks[i];
+
+                                        VARS.IsUnlocking = true;
+                                    }
+
                                     //affliction
                                     if (curBlockTileDatas[i].temperature != 0 ||
                                         curBlockTileDatas[i].electricity != 0 ||

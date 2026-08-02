@@ -14,6 +14,8 @@ public class GuideManager : MonoBehaviour
     #region ConstantsUsed
     Transform catTransform;
 
+    GameObject catIniPositionPoint;
+
     //keyCodes
     List<KeyCode> keyCodes = new List<KeyCode>();
 
@@ -49,6 +51,7 @@ public class GuideManager : MonoBehaviour
 
         #region ImportConstants
         catTransform = CONS.catTransform;
+        catIniPositionPoint = CONS.catIniPositionPoint;
         keyCodes = CONS.keyCodes;
         keySprites = CONS.keySprites;
         keyChosenSprites = CONS.keyChosenSprites;
@@ -133,7 +136,8 @@ public class GuideManager : MonoBehaviour
                 //dash
                 if (!VARS.HasDashed &&
                     !VARS.IsInDashGuide &&
-                     VARS.HasJumped)
+                     VARS.HasJumped &&
+                     Vector3.Distance(catTransform.position, catIniPositionPoint.transform.position) > 6)
                 {
                     for (int i = 0; i < keyCodes.Count; i++)
                     {
