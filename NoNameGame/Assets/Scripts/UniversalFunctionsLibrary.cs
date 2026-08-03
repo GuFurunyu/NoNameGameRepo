@@ -545,8 +545,8 @@ public class UniversalFunctionsLibrary : MonoBehaviour
                 //VARS.curMinimapRoomPlaneColor = minimapRoomPlanes[i].GetComponent<MeshRenderer>().material.GetColor("_MainColor");
                 //minimapRoomPlanes[i].GetComponent<MeshRenderer>().material.SetColor("_MainColor", Color.white);
                 minimapRoomPlanes[i].transform.GetChild(2).gameObject.SetActive(true);
-                //minimapRoomPlanes[i].transform.GetChild(3).gameObject.SetActive(true);
-                //minimapRoomPlanes[i].transform.GetChild(4).gameObject.SetActive(true);
+                minimapRoomPlanes[i].transform.GetChild(3).gameObject.SetActive(true);
+                minimapRoomPlanes[i].transform.GetChild(4).gameObject.SetActive(true);
                 minimapRoomPlanes[i].GetComponent<MeshRenderer>().material.SetFloat("_OutlineWidth", 0.5f);
 
                 if ((i - 4) % 9 == 0)
@@ -1366,7 +1366,7 @@ public class UniversalFunctionsLibrary : MonoBehaviour
 
                                     //divable
                                     if (curBlockTileDatas[i].isDivable &&
-                                        (VARS.verCurSpeed < -15 ||
+                                        (VARS.verCurSpeed < -5 ||
                                         (VARS.IsInputtingDownKey && Time.time - VARS.lastDownKeyDownTime > divingMoveInputThreshold && Time.time - VARS.lastDivingMoveTime > divingMoveGapTime)) &&
                                         Mathf.Abs(VARS.horCurSpeed) < 0.1f)
                                     {
@@ -1563,8 +1563,8 @@ public class UniversalFunctionsLibrary : MonoBehaviour
                                     if (curBlockTileDatas[i].isDivable &&
                                         ((VARS.IsDashing && !VARS.IsJustDashDived) ||
                                         (VARS.IsInputtingLeftKey && Time.time - VARS.lastLeftKeyDownTime > divingMoveInputThreshold && Time.time - VARS.lastDivingMoveTime > divingMoveGapTime)) &&
-                                        Mathf.Abs(VARS.verCurSpeed) < 0.1f &&
-                                        (VARS.IsOnGround || VARS.IsToCeiling))
+                                        Mathf.Abs(VARS.verCurSpeed) < 0.1f /*&&
+                                        (VARS.IsOnGround || VARS.IsToCeiling)*/)
                                     {
                                         VARS.curDivedBlock = curBlocks[i];
 
@@ -1765,8 +1765,8 @@ public class UniversalFunctionsLibrary : MonoBehaviour
                                     if (curBlockTileDatas[i].isDivable &&
                                         ((VARS.IsDashing && !VARS.IsJustDashDived) ||
                                         (VARS.IsInputtingRightKey && Time.time - VARS.lastRightKeyDownTime > divingMoveInputThreshold && Time.time - VARS.lastDivingMoveTime > divingMoveGapTime)) &&
-                                        Mathf.Abs(VARS.verCurSpeed) < 0.1f &&
-                                        (VARS.IsOnGround || VARS.IsToCeiling))
+                                        Mathf.Abs(VARS.verCurSpeed) < 0.1f /*&&
+                                        (VARS.IsOnGround || VARS.IsToCeiling)*/)
                                     {
                                         VARS.curDivedBlock = curBlocks[i];
 

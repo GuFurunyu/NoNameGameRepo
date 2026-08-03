@@ -461,6 +461,40 @@ public class BlocksManager : MonoBehaviour
             curRailBlockInitialPositions.Clear();
             curRailBlockMoveStringIndex = -1;
 
+            //railBlockMovingVectorPoints
+            if (roomPlanes[VARS.curRoomIndex].transform.childCount > 2)
+            {
+                if (roomPlanes[VARS.curRoomIndex].transform.Find("RailBlocksMovingUpVectorPoint") != null)
+                {
+                    VARS.curRailBlocksMovingUpVectorPoint = roomPlanes[VARS.curRoomIndex].transform.Find("RailBlocksMovingUpVectorPoint").gameObject;
+                    VARS.curRailBlocksMovingUpVector = (VARS.curRailBlocksMovingUpVectorPoint.transform.position - roomPlanes[VARS.curRoomIndex].transform.position).normalized;
+                    //Debug.Log((VARS.curRailBlocksMovingUpVectorPoint.transform.position - roomPlanes[VARS.curRoomIndex].transform.position));
+                    //Debug.Log((VARS.curRailBlocksMovingUpVectorPoint.transform.position - roomPlanes[VARS.curRoomIndex].transform.position).normalized);
+                }
+                else
+                {
+                    VARS.curRailBlocksMovingUpVectorPoint = null;
+                    VARS.curRailBlocksMovingUpVector = Vector3.zero;
+                }
+                if (roomPlanes[VARS.curRoomIndex].transform.Find("RailBlocksMovingRightVectorPoint") != null)
+                {
+                    VARS.curRailBlocksMovingRightVectorPoint = roomPlanes[VARS.curRoomIndex].transform.Find("RailBlocksMovingRightVectorPoint").gameObject;
+                    VARS.curRailBlocksMovingRightVector = (VARS.curRailBlocksMovingRightVectorPoint.transform.position - roomPlanes[VARS.curRoomIndex].transform.position).normalized;
+                }
+                else
+                {
+                    VARS.curRailBlocksMovingRightVectorPoint = null;
+                    VARS.curRailBlocksMovingRightVector = Vector3.zero;
+                }
+            }
+            else
+            {
+                VARS.curRailBlocksMovingUpVectorPoint = null;
+                VARS.curRailBlocksMovingRightVectorPoint = null;
+                VARS.curRailBlocksMovingUpVector = Vector3.zero;
+                VARS.curRailBlocksMovingRightVector = Vector3.zero;
+            }
+
             ////blockInfoMatrix
             //blockInfoMatrixList.Clear();
 
@@ -883,7 +917,7 @@ public class BlocksManager : MonoBehaviour
 
                     if (GetNearBlockTypeIndex(2) == 0)
                     {
-                        if(!curGasHeights.Contains(tempInt))
+                        if (!curGasHeights.Contains(tempInt))
                         {
                             curGasHeights.Add(tempInt);
                         }
@@ -986,26 +1020,37 @@ public class BlocksManager : MonoBehaviour
                                 switch (tempChar)
                                 {
                                     case 'u':
-                                        tempVector = VARS.roomStableUps[VARS.curRoomIndex];
-                                        tempVector1 = VARS.roomStableRights[VARS.curRoomIndex];
+                                        //tempVector = VARS.roomStableUps[VARS.curRoomIndex];
+                                        //tempVector1 = VARS.roomStableRights[VARS.curRoomIndex];
+                                        tempVector = VARS.curRailBlocksMovingUpVector;
+                                        tempVector1 = VARS.curRailBlocksMovingRightVector;
                                         tempInt = 1;
                                         break;
                                     case 'd':
-                                        tempVector = -VARS.roomStableUps[VARS.curRoomIndex];
-                                        tempVector1 = VARS.roomStableRights[VARS.curRoomIndex];
+                                        //tempVector = -VARS.roomStableUps[VARS.curRoomIndex];
+                                        //tempVector1 = VARS.roomStableRights[VARS.curRoomIndex];
+                                        tempVector = -VARS.curRailBlocksMovingUpVector;
+                                        tempVector1 = VARS.curRailBlocksMovingRightVector;
                                         tempInt = 2;
                                         break;
                                     case 'l':
-                                        tempVector = -VARS.roomStableRights[VARS.curRoomIndex];
-                                        tempVector1 = VARS.roomStableUps[VARS.curRoomIndex];
+                                        //tempVector = -VARS.roomStableRights[VARS.curRoomIndex];
+                                        //tempVector1 = VARS.roomStableUps[VARS.curRoomIndex];
+                                        tempVector = -VARS.curRailBlocksMovingRightVector;
+                                        tempVector1 = VARS.curRailBlocksMovingUpVector;
                                         tempInt = 3;
                                         break;
                                     case 'r':
-                                        tempVector = VARS.roomStableRights[VARS.curRoomIndex];
-                                        tempVector1 = VARS.roomStableUps[VARS.curRoomIndex];
+                                        //tempVector = VARS.roomStableRights[VARS.curRoomIndex];
+                                        //tempVector1 = VARS.roomStableUps[VARS.curRoomIndex];
+                                        tempVector = VARS.curRailBlocksMovingRightVector;
+                                        tempVector1 = VARS.curRailBlocksMovingUpVector;
                                         tempInt = 4;
                                         break;
                                 }
+
+                                //Debug.Log("tempVector: " + tempVector);
+                                //Debug.Log("tempVector1: " + tempVector1);
 
                                 //if (i == curCarryCatRailBlockIndex)
                                 //{
@@ -1065,7 +1110,7 @@ public class BlocksManager : MonoBehaviour
                                     //    VARS.horCurSpeed = 0;
                                     //}
 
-                                    CurBlockMove(i, tempInt, false, true);
+                                    CurBlockMove(i, tempInt, false, false, true);
 
                                     //avoidCatIntoWall
                                     for (int j = 0; j < curBlocks.Count; j++)
@@ -1087,7 +1132,7 @@ public class BlocksManager : MonoBehaviour
                                 }
                                 else
                                 {
-                                    CurBlockMove(i, tempInt, false, true);
+                                    CurBlockMove(i, tempInt, false, false, true);
                                 }
                             }
                             //back
@@ -1108,16 +1153,20 @@ public class BlocksManager : MonoBehaviour
                                         switch (tempChar)
                                         {
                                             case 'u':
-                                                tempVector = VARS.roomStableUps[VARS.curRoomIndex];
+                                                //tempVector = VARS.roomStableUps[VARS.curRoomIndex];
+                                                tempVector = VARS.curRailBlocksMovingUpVector;
                                                 break;
                                             case 'd':
-                                                tempVector = -VARS.roomStableUps[VARS.curRoomIndex];
+                                                //tempVector = -VARS.roomStableUps[VARS.curRoomIndex];
+                                                tempVector = -VARS.curRailBlocksMovingUpVector;
                                                 break;
                                             case 'l':
-                                                tempVector = -VARS.roomStableRights[VARS.curRoomIndex];
+                                                //tempVector = -VARS.roomStableRights[VARS.curRoomIndex];
+                                                tempVector = -VARS.curRailBlocksMovingRightVector;
                                                 break;
                                             case 'r':
-                                                tempVector = VARS.roomStableRights[VARS.curRoomIndex];
+                                                //tempVector = VARS.roomStableRights[VARS.curRoomIndex];
+                                                tempVector = VARS.curRailBlocksMovingRightVector;
                                                 break;
                                         }
                                         UFL.AddCatPosition(tempVector * 0.02f);
@@ -1135,24 +1184,28 @@ public class BlocksManager : MonoBehaviour
                                         switch (tempChar)
                                         {
                                             case 'u':
-                                                CurBlockMove(i, 2, false, true);
-                                                tempVector = VARS.roomStableUps[VARS.curRoomIndex];
+                                                CurBlockMove(i, 2, false, false, true);
+                                                //tempVector = VARS.roomStableUps[VARS.curRoomIndex];
                                                 //tempVector = roomPlanes[VARS.curRoomIndex].transform.up;
+                                                tempVector = VARS.curRailBlocksMovingUpVector;
                                                 break;
                                             case 'd':
-                                                CurBlockMove(i, 1, false, true);
-                                                tempVector = -VARS.roomStableUps[VARS.curRoomIndex];
+                                                CurBlockMove(i, 1, false, false, true);
+                                                //tempVector = -VARS.roomStableUps[VARS.curRoomIndex];
                                                 //tempVector = -roomPlanes[VARS.curRoomIndex].transform.up;
+                                                tempVector = -VARS.curRailBlocksMovingUpVector;
                                                 break;
                                             case 'l':
-                                                CurBlockMove(i, 4, false, true);
-                                                tempVector = -VARS.roomStableRights[VARS.curRoomIndex];
+                                                CurBlockMove(i, 4, false, false, true);
+                                                //tempVector = -VARS.roomStableRights[VARS.curRoomIndex];
                                                 //tempVector = roomPlanes[VARS.curRoomIndex].transform.forward;
+                                                tempVector = -VARS.curRailBlocksMovingRightVector;
                                                 break;
                                             case 'r':
-                                                CurBlockMove(i, 3, false, true);
-                                                tempVector = VARS.roomStableRights[VARS.curRoomIndex];
+                                                CurBlockMove(i, 3, false, false, true);
+                                                //tempVector = VARS.roomStableRights[VARS.curRoomIndex];
                                                 //tempVector = -roomPlanes[VARS.curRoomIndex].transform.forward;
+                                                tempVector = VARS.curRailBlocksMovingRightVector;
                                                 break;
                                         }
                                     }
@@ -1214,7 +1267,7 @@ public class BlocksManager : MonoBehaviour
                                 {
                                     tempBool = true;
                                     tempInt = Mathf.RoundToInt(Vector3.Dot(curCoordVector, VARS.curUp));
-                                    
+
                                     while (tempInt < curLiquidMaxHeight)
                                     {
                                         tempInt++;
@@ -1711,7 +1764,7 @@ public class BlocksManager : MonoBehaviour
         return 0;
     }
 
-    void CurBlockMove(int curBlockIndex, int dirIndex, bool isFluid = true, bool isStableDir = false)
+    void CurBlockMove(int curBlockIndex, int dirIndex, bool isFluid = true, bool isStableDir = false, bool isRail = false)
     {
         Vector3 upVector;
         Vector3 rightVector;
@@ -1732,6 +1785,12 @@ public class BlocksManager : MonoBehaviour
         {
             upVector = VARS.roomStableUps[VARS.curRoomIndex];
             rightVector = VARS.roomStableRights[VARS.curRoomIndex];
+        }
+        //ifIsRail
+        else if (isRail)
+        {
+            upVector = VARS.curRailBlocksMovingUpVector;
+            rightVector = VARS.curRailBlocksMovingRightVector;
         }
         else
         {
@@ -1771,10 +1830,10 @@ public class BlocksManager : MonoBehaviour
         if (((curBlock == VARS.curLiquidTile && dirIndex == 2) ||
             (curBlock == VARS.curGasTile && dirIndex == 1) /*||
             curBlock == VARS.curMistTile*/) &&
-            ((dirIndex==2 && !VARS.IsOnGround) ||
-            (dirIndex==1 && !VARS.IsToCeiling) ||
-            (dirIndex==3 && !VARS.IsLeftBlocked) ||
-            (dirIndex==4 && !VARS.IsRightBlocked)) &&
+            ((dirIndex == 2 && !VARS.IsOnGround) ||
+            (dirIndex == 1 && !VARS.IsToCeiling) ||
+            (dirIndex == 3 && !VARS.IsLeftBlocked) ||
+            (dirIndex == 4 && !VARS.IsRightBlocked)) &&
             Time.time - VARS.lastCatCarriedByFluidTime > catCarriedByFluidGapTime)
         {
             UFL.AddCatPosition(movingVector);

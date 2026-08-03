@@ -1290,6 +1290,10 @@ public class Variables : MonoBehaviour
     public float railBlocksLastUpdateTime;
     public List<Vector3> curRailBlockInitialPositions = new List<Vector3>();
     public Vector3 curCatMovedByRailBlockVector;
+    public GameObject curRailBlocksMovingUpVectorPoint;
+    public GameObject curRailBlocksMovingRightVectorPoint;
+    public Vector3 curRailBlocksMovingUpVector;
+    public Vector3 curRailBlocksMovingRightVector;
     #endregion
 
     #region MinimapManager
