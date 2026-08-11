@@ -1050,6 +1050,14 @@ public class UniversalFunctionsLibrary : MonoBehaviour
         VARS.curTriggerTile = null;
         VARS.curTriggerTileData = null;
 
+        VARS.curUpLeftTile = null;
+        VARS.curUpRightTile = null;
+        VARS.curDownLeftTile = null;
+        VARS.curDownRightTile = null;
+        VARS.curLeftUpTile = null;
+        VARS.curLeftDownTile = null;
+        VARS.curRightUpTile = null;
+        VARS.curRightDownTile = null;
         VARS.curUpTile = null;
         VARS.curDownTile = null;
         VARS.curLeftTile = null;
@@ -1058,6 +1066,14 @@ public class UniversalFunctionsLibrary : MonoBehaviour
         VARS.curGasTile = null;
         VARS.curMistTile = null;
 
+        VARS.curUpLeftTileData = null;
+        VARS.curUpRightTileData = null;
+        VARS.curDownLeftTileData = null;
+        VARS.curDownRightTileData = null;
+        VARS.curLeftUpTileData = null;
+        VARS.curLeftDownTileData = null;
+        VARS.curRightUpTileData = null;
+        VARS.curRightDownTileData = null;
         VARS.curUpTileData = null;
         VARS.curDownTileData = null;
         VARS.curLeftTileData = null;
@@ -1065,6 +1081,31 @@ public class UniversalFunctionsLibrary : MonoBehaviour
         VARS.curLiquidTileData = null;
         VARS.curGasTileData = null;
         VARS.curMistTileData = null;
+
+        VARS.curUpLeftTileVerDistance = 999;
+        VARS.curUpLeftTileHorDistance = -999;
+        VARS.curUpRightTileVerDistance = 999;
+        VARS.curUpRightTileHorDistance = 999;
+        VARS.curUpTileVerDistance = 999;
+        VARS.curUpTileHorDistance = -999;
+        VARS.curDownLeftTileVerDistance = -999;
+        VARS.curDownLeftTileHorDistance = -999;
+        VARS.curDownRightTileVerDistance = -999;
+        VARS.curDownRightTileHorDistance = 999;
+        VARS.curDownTileVerDistance = -999;
+        VARS.curDownTileHorDistance = -999;
+        VARS.curLeftUpTileHorDistance = -999;
+        VARS.curLeftUpTileVerDistance = 999;
+        VARS.curLeftDownTileHorDistance = -999;
+        VARS.curLeftDownTileVerDistance = -999;
+        VARS.curLeftTileHorDistance = -999;
+        VARS.curLeftTileVerDistance = 999;
+        VARS.curRightUpTileHorDistance = 999;
+        VARS.curRightUpTileVerDistance = 999;
+        VARS.curRightDownTileHorDistance = 999;
+        VARS.curRightDownTileVerDistance = -999;
+        VARS.curRightTileHorDistance = 999;
+        VARS.curRightTileVerDistance = 999;
 
         curUpBlockDistance = 999;
         curDownBlockDistance = 999;
@@ -1189,633 +1230,385 @@ public class UniversalFunctionsLibrary : MonoBehaviour
                 }
 
                 //up
-                if ((!hasGotCurNearestUpBlock &&
+                if ((/*!hasGotCurNearestUpBlock &&*/
                 !curBlockTileDatas[i].isPlatform) ||
                 curBlockTileDatas[i].isFragile)
                 {
-                    tempFloat1 = Mathf.Abs(Vector3.Dot(tempVector, VARS.curRight));
+                    //verDistance
+                    tempFloat = Vector3.Dot(-tempVector, VARS.curUp);
 
-                    if (tempFloat1 < gridBreadth - 0.025f)
+                    //horDistance
+                    //tempFloat1 = Mathf.Abs(Vector3.Dot(tempVector, VARS.curRight));
+                    tempFloat1 = Vector3.Dot(-tempVector, VARS.curRight);
+
+                    //verDistanceDetect
+                    if (tempFloat > 0.5f && tempFloat < 1.1f && Mathf.Abs(tempFloat) > Mathf.Abs(tempFloat1))
                     {
-                        tempFloat = Vector3.Dot(tempVector, -VARS.curUp);
-
-                        if (tempFloat > 0.5f &&
-                            tempFloat < gridBreadth + 0.1f /*0.01f*/ &&
-                            tempFloat > tempFloat1)
+                        //horDistanceDetect
+                        //upLeft
+                        if (tempFloat1 <= 0 && tempFloat1 > -1.05f && tempFloat1 > VARS.curUpLeftTileHorDistance)
                         {
-                            if (tempFloat < curUpBlockDistance)
-                            {
-                                curUpBlockDistance = tempFloat;
-
-                                curUpBlockHorDistance = tempFloat1;
-
-                                if (/*VARS.IsLeftBlocked || VARS.IsRightBlocked*/
-                                    //VARS.IsToCeiling &&
-                                    !VARS.IsLeftBlocked && !VARS.IsRightBlocked &&
-                                    curUpBlockHorDistance > /*0.9f*/ 0.8f &&
-                                    !VARS.IsMovingInAttachingCeiling &&
-                                    Mathf.Abs(VARS.horCurSpeed) < 1)
-                                {
-                                    if (VARS.IsHighJumping ||
-                                        VARS.IsInputtingJumpKey ||
-                                        VARS.IsInputtingUpKey /*||
-                                        VARS.IsInputtingDownKey*/)
-                                        tempFloat4 = (0.05f - (Mathf.Abs(VARS.horCurSpeed) / horMaxSpeed) / 100) /** 16*/ /** 12*/ * 8 /** 4*/ /** 2*/ /** 0.5f*/;
-                                    else
-                                        tempFloat4 = 0;
-                                }
-                                else
-                                {
-                                    tempFloat4 = 0;
-                                }
-
-                                if (curUpBlockDistance < gridBreadth + 0.025f - tempFloat4)
-                                {
-                                    //DebugLog("enter");
-
-                                    //lock
-                                    if (curBlockTileDatas[i].blockTypeIndex == 7104 &&
-                                        VARS.IsCarryingAKey)
-                                    {
-                                        VARS.curUnlockingBlock = curBlocks[i];
-
-                                        VARS.IsUnlocking = true;
-                                    }
-
-                                    //affliction
-                                    if (curBlockTileDatas[i].temperature != 0 ||
-                                        curBlockTileDatas[i].electricity != 0 ||
-                                        curBlockTileDatas[i].toxicity != 0)
-                                    {
-                                        if (VARS.IsAttachCeiling)
-                                        {
-                                            CurTileTransferAffliction(curBlockTileDatas[i]);
-                                        }
-                                        else
-                                        {
-                                            CurTileTransferAffliction(curBlockTileDatas[i], 0.5f);
-                                        }
-
-                                        VARS.IsTouchingAfflictingBlocks = true;
-                                    }
-
-                                    //breakable
-                                    if (VARS.verCurSpeed > curBlockTileDatas[i].toughness)
-                                    {
-                                        curBlocks[i].SetActive(false);
-
-                                        VARS.verCurSpeed += -curBlockTileDatas[i].toughness * 0.75f;
-                                    }
-                                    else
-                                    {
-                                        //UnityEngine.Debug.Log("ceilingDetected");
-
-                                        VARS.curUpTile = curBlocks[i];
-                                        VARS.curUpTileData = curBlockTileDatas[i];
-                                        VARS.IsCeilingDetected = true;
-
-                                        hasGotCurNearestUpBlock = true;
-                                    }
-                                }
-                            }
-                            //fragile
-                            if (curBlockTileDatas[i].isFragile &&
-                                //VARS.IsAttachCeiling &&
-                                VARS.IsInputtingUpKey &&
-                                tempFloat1 < 0.9f)
-                            {
-                                BreakCurFragileTile(curBlocks[i], curToBeBrokenFragileRustBlocks, curFragileRustBlockToBeBrokenStartTimes);
-                            }
+                            VARS.curUpLeftTile = curBlocks[i];
+                            VARS.curUpLeftTileData = curBlockTileDatas[i];
+                            VARS.curUpLeftTileVerDistance = tempFloat;
+                            VARS.curUpLeftTileHorDistance = tempFloat1;
                         }
+                        //upRight
+                        else if (tempFloat1 > 0 && tempFloat1 < 1.05f && tempFloat1 < VARS.curUpRightTileHorDistance)
+                        {
+                            VARS.curUpRightTile = curBlocks[i];
+                            VARS.curUpRightTileData = curBlockTileDatas[i];
+                            VARS.curUpRightTileVerDistance = tempFloat;
+                            VARS.curUpRightTileHorDistance = tempFloat1;
+                        }
+                        ////up
+                        //else if (tempFloat1 >= -0.5f && tempFloat1 < 0.5f)
+                        //{
+                        //    VARS.curUpTile = curBlocks[i];
+                        //    VARS.curUpTileData = curBlockTileDatas[i];
+                        //    VARS.curUpTileVerDistance = tempFloat;
+                        //    VARS.curUpTileHorDistance = tempFloat1;
+                        //}
                     }
+
+                    #region outVersion
+                    ////horDistanceDetect
+                    //if (tempFloat1 < gridBreadth - 0.025f)
+                    //{
+                    //    //verDistance
+                    //    tempFloat = Vector3.Dot(tempVector, -VARS.curUp);
+
+                    //    //verDistanceDetect
+                    //    if (tempFloat > 0.5f &&
+                    //        tempFloat < gridBreadth + 0.1f /*0.01f*/ &&
+                    //        tempFloat > tempFloat1)
+                    //    {
+                    //        if (tempFloat < curUpBlockDistance)
+                    //        {
+                    //            //curUpBlockDistance = tempFloat;
+
+                    //            //curUpBlockHorDistance = tempFloat1;
+
+                    //            if (/*VARS.IsLeftBlocked || VARS.IsRightBlocked*/
+                    //                //VARS.IsToCeiling &&
+                    //                !VARS.IsLeftBlocked && !VARS.IsRightBlocked &&
+                    //                curUpBlockHorDistance > /*0.9f*/ 0.8f &&
+                    //                !VARS.IsMovingInAttachingCeiling &&
+                    //                Mathf.Abs(VARS.horCurSpeed) < 1)
+                    //            {
+                    //                if (VARS.IsHighJumping ||
+                    //                    VARS.IsInputtingJumpKey ||
+                    //                    VARS.IsInputtingUpKey /*||
+                    //                    VARS.IsInputtingDownKey*/)
+                    //                    tempFloat4 = (0.05f - (Mathf.Abs(VARS.horCurSpeed) / horMaxSpeed) / 100) /** 16*/ /** 12*/ * 8 /** 4*/ /** 2*/ /** 0.5f*/;
+                    //                else
+                    //                    tempFloat4 = 0;
+                    //            }
+                    //            else
+                    //            {
+                    //                tempFloat4 = 0;
+                    //            }
+
+                    //            if (curUpBlockDistance < gridBreadth /*+ 0.025f*/ - tempFloat4)
+                    //            {
+                    //                //DebugLog("enter");
+
+                    //                ////breakable
+                    //                //if (VARS.verCurSpeed <= curBlockTileDatas[i].toughness)
+                    //                //{
+                    //                //UnityEngine.Debug.Log("ceilingDetected");
+
+                    //                VARS.curUpTile = curBlocks[i];
+                    //                VARS.curUpTileData = curBlockTileDatas[i];
+                    //                VARS.IsCeilingDetected = true;
+
+                    //                hasGotCurNearestUpBlock = true;
+                    //                //}
+                    //            }
+                    //        }
+                    //    }
+                    //}
+                    #endregion
                 }
                 //down
-                if ((!hasGotCurNearestDownBlock &&
+                if ((/*!hasGotCurNearestDownBlock &&*/
                     !(curBlockTileDatas[i].isPlatform /*&& VARS.IsInputtingDownKey*/ &&
                     VARS.downThroughPlatformStartTime != 0 && Time.time - VARS.downThroughPlatformStartTime > downThroughPlatformThreshold)) ||
                     curBlockTileDatas[i].isFragile)
                 {
-                    tempFloat1 = Mathf.Abs(Vector3.Dot(tempVector, VARS.curRight));
+                    //verDistance
+                    tempFloat = Vector3.Dot(-tempVector, VARS.curUp);
 
-                    if (tempFloat1 < gridBreadth - 0.025f)
+                    //horDistance
+                    tempFloat1 = Vector3.Dot(-tempVector, VARS.curRight);
+
+                    //verDistanceDetect
+                    if (tempFloat < -0.5f && tempFloat > -1.1f && Mathf.Abs(tempFloat) > Mathf.Abs(tempFloat1))
                     {
-                        tempFloat = Vector3.Dot(tempVector, VARS.curUp);
-
-                        if (tempFloat > 0.5f &&
-                            tempFloat < gridBreadth + 0.1f /*0.01f*/ &&
-                            tempFloat > tempFloat1)
+                        //horDistanceDetect
+                        //downLeft
+                        if (tempFloat1 <= 0 && tempFloat1 > -1.05f && tempFloat1 > VARS.curDownLeftTileHorDistance)
                         {
-                            if (tempFloat < curDownBlockDistance)
-                            {
-                                curDownBlockDistance = tempFloat;
-
-                                curDownBlockHorDistance = tempFloat1;
-
-                                if (/*VARS.IsLeftBlocked || VARS.IsRightBlocked*/
-                                    //VARS.IsOnGround &&
-                                    !VARS.IsLeftBlocked && !VARS.IsRightBlocked &&
-                                    curDownBlockHorDistance > /*0.9f*/ 0.8f &&
-                                    Mathf.Abs(VARS.horCurSpeed) < 1)
-                                {
-                                    if (/*VARS.IsHighJumping ||
-                                        VARS.IsInputtingJumpKey ||
-                                        VARS.IsInputtingUpKey ||*/
-                                        VARS.IsInputtingDownKey
-                                        /*VARS.IsDownKeyDown*/)
-                                        tempFloat4 = (0.05f - (Mathf.Abs(VARS.horCurSpeed) / horMaxSpeed) / 100) /** 16*/ * 12 /** 8*/ /** 4*/ /** 2*/ /** 0.5f*/;
-                                    else
-                                        tempFloat4 = 0;
-                                }
-                                else
-                                {
-                                    tempFloat4 = 0;
-                                }
-
-                                if (curDownBlockDistance < gridBreadth + 0.025f - tempFloat4)
-                                {
-                                    //lock
-                                    if (curBlockTileDatas[i].blockTypeIndex == 7104 &&
-                                        VARS.IsCarryingAKey)
-                                    {
-                                        VARS.curUnlockingBlock = curBlocks[i];
-
-                                        VARS.IsUnlocking = true;
-                                    }
-
-                                    //affliction
-                                    if (curBlockTileDatas[i].temperature != 0 ||
-                                        curBlockTileDatas[i].electricity != 0 ||
-                                        curBlockTileDatas[i].toxicity != 0)
-                                    {
-                                        if (!VARS.IsAttachCeiling)
-                                        {
-                                            CurTileTransferAffliction(curBlockTileDatas[i]);
-                                        }
-                                        else
-                                        {
-                                            CurTileTransferAffliction(curBlockTileDatas[i], 0.5f);
-                                        }
-
-                                        VARS.IsTouchingAfflictingBlocks = true;
-                                    }
-
-                                    if (curBlockTileDatas[i].isPlatform)
-                                    {
-                                        VARS.IsHighJumping = false;
-                                    }
-
-                                    //divable
-                                    if (curBlockTileDatas[i].isDivable &&
-                                        (VARS.verCurSpeed < -5 ||
-                                        (VARS.IsInputtingDownKey && Time.time - VARS.lastDownKeyDownTime > divingMoveInputThreshold && Time.time - VARS.lastDivingMoveTime > divingMoveGapTime)) &&
-                                        Mathf.Abs(VARS.horCurSpeed) < 0.1f)
-                                    {
-                                        VARS.curDivedBlock = curBlocks[i];
-
-                                        AddCatPosition(Vector3.Dot(curBlocks[i].transform.position - catTransform.position, VARS.curUp) * VARS.curUp +
-                                            Vector3.Dot(curBlocks[i].transform.position - catTransform.position, VARS.curRight) * VARS.curRight);
-
-                                        VARS.lastDivingMoveTime = Time.time;
-
-                                        VARS.curTargetEnergy += -divingMoveEnergyCost;
-
-                                        VARS.IsDiving = true;
-
-                                        VARS.IsCatEnergyResetExecutable = false;
-                                    }
-
-                                    //breakable
-                                    if (-VARS.verCurSpeed > curBlockTileDatas[i].toughness)
-                                    {
-                                        curBlocks[i].SetActive(false);
-
-                                        VARS.verCurSpeed += curBlockTileDatas[i].toughness * 0.75f;
-                                    }
-                                    else
-                                    {
-                                        VARS.curDownTile = curBlocks[i];
-                                        VARS.curDownTileData = curBlockTileDatas[i];
-                                        VARS.IsGroundDetected = true;
-
-                                        hasGotCurNearestDownBlock = true;
-                                    }
-                                }
-                            }
-                            //fragile
-                            if (curBlockTileDatas[i].isFragile &&
-                                tempFloat1 < 0.9f)
-                            {
-                                BreakCurFragileTile(curBlocks[i], curToBeBrokenFragileRustBlocks, curFragileRustBlockToBeBrokenStartTimes);
-                            }
+                            VARS.curDownLeftTile = curBlocks[i];
+                            VARS.curDownLeftTileData = curBlockTileDatas[i];
+                            VARS.curDownLeftTileVerDistance = tempFloat;
+                            VARS.curDownLeftTileHorDistance = tempFloat1;
+                        }
+                        //downRight
+                        else if (tempFloat1 > 0 && tempFloat1 < 1.05f && tempFloat1 < VARS.curDownRightTileHorDistance)
+                        {
+                            VARS.curDownRightTile = curBlocks[i];
+                            VARS.curDownRightTileData = curBlockTileDatas[i];
+                            VARS.curDownRightTileVerDistance = tempFloat;
+                            VARS.curDownRightTileHorDistance = tempFloat1;
                         }
                     }
+
+                    #region outVersion
+                    //tempFloat1 = Mathf.Abs(Vector3.Dot(tempVector, VARS.curRight));
+
+                    //if (tempFloat1 < gridBreadth - 0.025f)
+                    //{
+                    //    tempFloat = Vector3.Dot(tempVector, VARS.curUp);
+
+                    //    if (tempFloat > 0.5f &&
+                    //        tempFloat < gridBreadth + 0.1f /*0.01f*/ &&
+                    //        tempFloat > tempFloat1)
+                    //    {
+                    //        if (tempFloat < curDownBlockDistance)
+                    //        {
+                    //            curDownBlockDistance = tempFloat;
+
+                    //            curDownBlockHorDistance = tempFloat1;
+
+                    //            if (/*VARS.IsLeftBlocked || VARS.IsRightBlocked*/
+                    //                //VARS.IsOnGround &&
+                    //                !VARS.IsLeftBlocked && !VARS.IsRightBlocked &&
+                    //                curDownBlockHorDistance > /*0.9f*/ 0.8f &&
+                    //                Mathf.Abs(VARS.horCurSpeed) < 1)
+                    //            {
+                    //                if (/*VARS.IsHighJumping ||
+                    //                    VARS.IsInputtingJumpKey ||
+                    //                    VARS.IsInputtingUpKey ||*/
+                    //                    VARS.IsInputtingDownKey
+                    //                    /*VARS.IsDownKeyDown*/)
+                    //                    tempFloat4 = (0.05f - (Mathf.Abs(VARS.horCurSpeed) / horMaxSpeed) / 100) /** 16*/ * 12 /** 8*/ /** 4*/ /** 2*/ /** 0.5f*/;
+                    //                else
+                    //                    tempFloat4 = 0;
+                    //            }
+                    //            else
+                    //            {
+                    //                tempFloat4 = 0;
+                    //            }
+
+                    //            if (curDownBlockDistance < gridBreadth /*+ 0.025f*/ - tempFloat4)
+                    //            {
+                    //                //platform
+                    //                if (curBlockTileDatas[i].isPlatform)
+                    //                {
+                    //                    VARS.IsHighJumping = false;
+                    //                }
+
+                    //                ////breakable
+                    //                //if(-VARS.verCurSpeed <= curBlockTileDatas[i].toughness)
+                    //                //{
+                    //                    VARS.curDownTile = curBlocks[i];
+                    //                    VARS.curDownTileData = curBlockTileDatas[i];
+                    //                    VARS.IsGroundDetected = true;
+
+                    //                    hasGotCurNearestDownBlock = true;
+                    //                //}
+                    //            }
+                    //        }
+                    //    }
+                    //}
+                    #endregion
                 }
                 //left
-                if ((!hasGotCurNearestLeftBlock &&
+                if ((/*!hasGotCurNearestLeftBlock &&*/
                     !curBlockTileDatas[i].isPlatform) ||
                     curBlockTileDatas[i].isFragile)
                 {
-                    tempFloat1 = Mathf.Abs(Vector3.Dot(tempVector, VARS.curUp));
+                    //horDistance
+                    tempFloat = Vector3.Dot(-tempVector, VARS.curRight);
 
-                    if (tempFloat1 < gridBreadth - 0.025f)
+                    //verDistance
+                    tempFloat1 = Vector3.Dot(-tempVector, VARS.curUp);
+
+                    //horDistanceDetect
+                    if (tempFloat < -0.5f && tempFloat > -1.1f && Mathf.Abs(tempFloat) > Mathf.Abs(tempFloat1))
                     {
-                        tempFloat = Vector3.Dot(tempVector, VARS.curRight);
-
-                        if (tempFloat > 0.5f &&
-                            tempFloat < gridBreadth + 0.1f /*0.01f*/ &&
-                            tempFloat > tempFloat1)
+                        ////verDistanceDetect
+                        //if (tempFloat1 > -0.75f && tempFloat1 < 0.75f)
+                        //{
+                        //    VARS.curLeftTile = curBlocks[i];
+                        //    VARS.curLeftTileData = curBlockTileDatas[i];
+                        //    VARS.curLeftTileHorDistance = tempFloat;
+                        //    VARS.curLeftTileVerDistance = tempFloat1;
+                        //}
+                        //leftUp
+                        if (tempFloat1 >= 0 && tempFloat1 < 1.05f && tempFloat1 < VARS.curLeftUpTileVerDistance)
                         {
-                            if (tempFloat < curLeftBlockDistance)
-                            {
-                                curLeftBlockDistance = tempFloat;
-
-                                curLeftBlockVerDistance = tempFloat1;
-
-                                if (/*VARS.IsOnGround || VARS.IsToCeiling*/
-                                    //VARS.IsLeftBlocked &&
-                                    !VARS.IsOnGround && !VARS.IsToCeiling &&
-                                    curLeftBlockVerDistance > /*0.9f*/ 0.8f &&
-                                    !VARS.IsAttachWall &&
-                                    !VARS.IsClimbing &&
-                                    Mathf.Abs(VARS.verCurSpeed) < 6)
-                                {
-                                    if (VARS.IsInputtingLeftKey /*|| VARS.IsInputtingRightKey*/ /*&&
-                                        VARS.IsInputtingAcceKey*/)
-                                        tempFloat4 = (0.05f - (Mathf.Abs(VARS.verCurSpeed) / verMaxSpeed) / 100) /** 8*/ /** 4*/ /** 2*/ /** 1*/ * 0.75f /** 0.5f*/ /** 0.25f*/;
-                                    else
-                                        tempFloat4 = 0;
-                                }
-                                else
-                                {
-                                    tempFloat4 = 0;
-                                }
-
-                                if (curLeftBlockDistance < gridBreadth + 0.025f - tempFloat4)
-                                {
-                                    //lock
-                                    if (curBlockTileDatas[i].blockTypeIndex == 7104 &&
-                                        VARS.IsCarryingAKey)
-                                    {
-                                        VARS.curUnlockingBlock = curBlocks[i];
-
-                                        VARS.IsUnlocking = true;
-                                    }
-
-                                    //affliction
-                                    if (curBlockTileDatas[i].temperature != 0 ||
-                                        curBlockTileDatas[i].electricity != 0 ||
-                                        curBlockTileDatas[i].toxicity != 0)
-                                    {
-                                        if (VARS.IsAttachWall && VARS.curFacingDirectionIndex == 1)
-                                        {
-                                            CurTileTransferAffliction(curBlockTileDatas[i]);
-                                        }
-                                        else
-                                        {
-                                            CurTileTransferAffliction(curBlockTileDatas[i], 0.5f);
-                                        }
-
-                                        VARS.IsTouchingAfflictingBlocks = true;
-                                    }
-
-                                    //pushable
-                                    if (curBlockTileDatas[i].isPushable &&
-                                        VARS.IsDashing &&
-                                        !VARS.IsPushing)
-                                    {
-                                        VARS.curPushedBlock = curBlocks[i];
-                                        VARS.curPushedBlockIndex = i;
-
-                                        VARS.IsPushing = true;
-                                        VARS.IsPushBlocked = false;
-
-                                        VARS.curAccumulatedPushingDistance = 0;
-                                    }
-                                    if (VARS.IsPushing &&
-                                        !VARS.IsPushBlocked)
-                                    {
-                                        //UnityEngine.Debug.Log("isPushing");
-
-                                        VARS.curAccumulatedPushingDistance += Mathf.Abs(VARS.curDashHorSpeed) * Time.deltaTime;
-
-                                        if (VARS.curAccumulatedPushingDistance >= 1)
-                                        {
-                                            VARS.curPushedBlocks.Clear();
-                                            VARS.curPushedBlockIndexes.Clear();
-                                            //VARS.IsCurPushedBlocksDetermined = false;
-
-                                            //determineCurPushedBlocks
-                                            VARS.curPushedBlocks.Add(VARS.curPushedBlock);
-                                            VARS.curPushedBlockIndexes.Add(VARS.curPushedBlockIndex);
-                                            while (/*!VARS.IsCurPushedBlocksDetermined*/true)
-                                            {
-                                                VARS.IsJustAddedAnotherPushedBlock = false;
-
-                                                for (int j = 0; j < curBlocks.Count; j++)
-                                                {
-                                                    if (Mathf.Abs(Vector3.Dot(curBlocks[j].transform.position - VARS.curPushedBlocks[VARS.curPushedBlocks.Count - 1].transform.position, VARS.curUp)) < 0.5f &&
-                                                        Vector3.Dot(curBlocks[j].transform.position - VARS.curPushedBlocks[VARS.curPushedBlocks.Count - 1].transform.position, VARS.curDashVector) > 0 &&
-                                                        Vector3.Dot(curBlocks[j].transform.position - VARS.curPushedBlocks[VARS.curPushedBlocks.Count - 1].transform.position, VARS.curDashVector) < 1.5f)
-                                                    {
-                                                        if (curBlockTileDatas[j].isPushable)
-                                                        {
-                                                            VARS.curPushedBlocks.Add(curBlocks[j]);
-                                                            VARS.curPushedBlockIndexes.Add(j);
-
-                                                            VARS.IsJustAddedAnotherPushedBlock = true;
-
-                                                            break;
-                                                        }
-                                                        else if (curBlockTileDatas[j].stateOfMatterIndex <= 1)
-                                                        {
-                                                            VARS.IsPushBlocked = true;
-
-                                                            break;
-                                                        }
-                                                    }
-                                                }
-
-                                                //VARS.IsCurPushedBlocksDetermined = !VARS.IsJustAddedAnotherPushedBlock;
-
-                                                if (!VARS.IsJustAddedAnotherPushedBlock)
-                                                {
-                                                    break;
-                                                }
-                                            }
-
-                                            //push
-                                            if (!VARS.IsPushBlocked)
-                                            {
-                                                //UnityEngine.Debug.Log("push");
-                                                for (int j = 0; j < VARS.curPushedBlocks.Count; j++)
-                                                {
-                                                    VARS.curPushedBlocks[j].transform.position += VARS.curDashVector;
-                                                    curCoordVectors[j] += VARS.curDashVector;
-                                                }
-                                                AddCatPosition(VARS.curDashVector);
-
-                                                VARS.curAccumulatedPushingDistance = 0;
-                                            }
-                                        }
-                                    }
-
-                                    //divable
-                                    if (curBlockTileDatas[i].isDivable &&
-                                        ((VARS.IsDashing && !VARS.IsJustDashDived) ||
-                                        (VARS.IsInputtingLeftKey && Time.time - VARS.lastLeftKeyDownTime > divingMoveInputThreshold && Time.time - VARS.lastDivingMoveTime > divingMoveGapTime)) &&
-                                        Mathf.Abs(VARS.verCurSpeed) < 0.1f /*&&
-                                        (VARS.IsOnGround || VARS.IsToCeiling)*/)
-                                    {
-                                        VARS.curDivedBlock = curBlocks[i];
-
-                                        AddCatPosition(Vector3.Dot(curBlocks[i].transform.position - catTransform.position, VARS.curUp) * VARS.curUp +
-                                            Vector3.Dot(curBlocks[i].transform.position - catTransform.position, VARS.curRight) * VARS.curRight);
-
-                                        VARS.lastDivingMoveTime = Time.time;
-
-                                        VARS.curTargetEnergy += -divingMoveEnergyCost;
-
-                                        VARS.IsJustDashDived = true;
-
-                                        VARS.IsDiving = true;
-
-                                        VARS.IsCatEnergyResetExecutable = false;                                        
-                                    }
-
-                                    //breakable
-                                    if (-VARS.horCurSpeed > curBlockTileDatas[i].toughness)
-                                    {
-                                        curBlocks[i].SetActive(false);
-
-                                        VARS.horCurSpeed += curBlockTileDatas[i].toughness * 0.75f;
-
-                                        if (VARS.IsDashing)
-                                        {
-                                            VARS.curDashHorSpeed += curBlockTileDatas[i].toughness * 0.75f;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        VARS.curLeftTile = curBlocks[i];
-                                        VARS.curLeftTileData = curBlockTileDatas[i];
-                                        VARS.IsLeftBlockDetected = true;
-
-                                        hasGotCurNearestLeftBlock = true;
-                                    }
-                                }
-                            }
-                            //fragile
-                            if (curBlockTileDatas[i].isFragile &&
-                                (VARS.IsAttachWall || VARS.IsInAcce || VARS.IsDashing) &&
-                                VARS.curFacingDirectionIndex == 1 &&
-                                tempFloat1 < 0.9f)
-                            {
-                                BreakCurFragileTile(curBlocks[i], curToBeBrokenFragileRustBlocks, curFragileRustBlockToBeBrokenStartTimes);
-                            }
+                            VARS.curLeftUpTile = curBlocks[i];
+                            VARS.curLeftUpTileData = curBlockTileDatas[i];
+                            VARS.curLeftUpTileHorDistance = tempFloat;
+                            VARS.curLeftUpTileVerDistance = tempFloat1;
+                        }
+                        //leftDown
+                        else if (tempFloat1 < 0 && tempFloat1 > -1.05f && tempFloat1 > VARS.curLeftDownTileVerDistance)
+                        {
+                            VARS.curLeftDownTile = curBlocks[i];
+                            VARS.curLeftDownTileData = curBlockTileDatas[i];
+                            VARS.curLeftDownTileHorDistance = tempFloat;
+                            VARS.curLeftDownTileVerDistance = tempFloat1;
                         }
                     }
+
+                    #region outVersion
+                    //tempFloat1 = Mathf.Abs(Vector3.Dot(tempVector, VARS.curUp));
+
+                    //if (tempFloat1 < gridBreadth - 0.025f)
+                    //{
+                    //    tempFloat = Vector3.Dot(tempVector, VARS.curRight);
+
+                    //    if (tempFloat > 0.5f &&
+                    //        tempFloat < gridBreadth + 0.1f /*0.01f*/ &&
+                    //        tempFloat > tempFloat1)
+                    //    {
+                    //        if (tempFloat < curLeftBlockDistance)
+                    //        {
+                    //            curLeftBlockDistance = tempFloat;
+
+                    //            curLeftBlockVerDistance = tempFloat1;
+
+                    //            if (/*VARS.IsOnGround || VARS.IsToCeiling*/
+                    //                //VARS.IsLeftBlocked &&
+                    //                !VARS.IsOnGround && !VARS.IsToCeiling &&
+                    //                curLeftBlockVerDistance > /*0.9f*/ 0.8f &&
+                    //                !VARS.IsAttachWall &&
+                    //                !VARS.IsClimbing &&
+                    //                Mathf.Abs(VARS.verCurSpeed) < 6)
+                    //            {
+                    //                if (VARS.IsInputtingLeftKey /*|| VARS.IsInputtingRightKey*/ /*&&
+                    //                    VARS.IsInputtingAcceKey*/)
+                    //                    tempFloat4 = (0.05f - (Mathf.Abs(VARS.verCurSpeed) / verMaxSpeed) / 100) /** 8*/ /** 4*/ /** 2*/ /** 1*/ * 0.75f /** 0.5f*/ /** 0.25f*/;
+                    //                else
+                    //                    tempFloat4 = 0;
+                    //            }
+                    //            else
+                    //            {
+                    //                tempFloat4 = 0;
+                    //            }
+
+                    //            if (curLeftBlockDistance < gridBreadth /*+ 0.025f*/ - tempFloat4)
+                    //            {
+                    //                ////breakable
+                    //                //if (-VARS.horCurSpeed <= curBlockTileDatas[i].toughness)
+                    //                //{
+                    //                    VARS.curLeftTile = curBlocks[i];
+                    //                    VARS.curLeftTileData = curBlockTileDatas[i];
+                    //                    VARS.IsLeftBlockDetected = true;
+
+                    //                    hasGotCurNearestLeftBlock = true;
+                    //                //}
+                    //            }
+                    //        }
+                    //    }
+                    //}
+                    #endregion
                 }
                 //right
-                if ((!hasGotCurNearestRightBlock
-                    && !curBlockTileDatas[i].isPlatform) ||
+                if ((/*!hasGotCurNearestRightBlock &&*/
+                    !curBlockTileDatas[i].isPlatform) ||
                     curBlockTileDatas[i].isFragile)
                 {
-                    tempFloat1 = Mathf.Abs(Vector3.Dot(tempVector, VARS.curUp));
+                    //horDistance
+                    tempFloat = Vector3.Dot(-tempVector, VARS.curRight);
 
-                    if (tempFloat1 < gridBreadth - 0.025f)
+                    //verDistance
+                    tempFloat1 = Vector3.Dot(-tempVector, VARS.curUp);
+
+                    //horDistanceDetect
+                    if (tempFloat > 0.5f && tempFloat < 1.1f && Mathf.Abs(tempFloat) > Mathf.Abs(tempFloat1))
                     {
-                        tempFloat = Vector3.Dot(tempVector, -VARS.curRight);
-
-                        if (tempFloat > 0.5f &&
-                            tempFloat < gridBreadth + 0.1f /*0.01f*/ &&
-                            tempFloat > tempFloat1)
+                        ////verDistanceDetect
+                        //if (tempFloat1 > -0.75f && tempFloat1 < 0.75f)
+                        //{
+                        //    VARS.curRightTile = curBlocks[i];
+                        //    VARS.curRightTileData = curBlockTileDatas[i];
+                        //    VARS.curRightTileHorDistance = tempFloat;
+                        //    VARS.curRightTileVerDistance = tempFloat1;
+                        //}
+                        //rightUp
+                        if (tempFloat1 >= 0 && tempFloat1 < 1.05f && tempFloat1 < VARS.curRightUpTileVerDistance)
                         {
-                            if (tempFloat < curRightBlockDistance)
-                            {
-                                curRightBlockDistance = tempFloat;
-
-                                curRightBlockVerDistance = tempFloat1;
-
-                                if (/*VARS.IsOnGround || VARS.IsToCeiling*/
-                                    //VARS.IsRightBlocked &&
-                                    !VARS.IsOnGround && !VARS.IsToCeiling &&
-                                    curRightBlockVerDistance > /*0.9f*/ 0.8f &&
-                                    !VARS.IsAttachWall &&
-                                    !VARS.IsClimbing &&
-                                    Mathf.Abs(VARS.verCurSpeed) < 6)
-                                {
-                                    if (/*VARS.IsInputtingLeftKey ||*/ VARS.IsInputtingRightKey /*&&
-                                        VARS.IsInputtingAcceKey*/)
-                                        tempFloat4 = (0.05f - (Mathf.Abs(VARS.verCurSpeed) / verMaxSpeed) / 100) /** 8*/ /** 4*/ /** 2*/ /** 1*/ * 0.75f /** 0.5f*/ /** 0.25f*/;
-                                    else
-                                        tempFloat4 = 0;
-                                }
-                                else
-                                {
-                                    tempFloat4 = 0;
-                                }
-
-                                if (curRightBlockDistance < gridBreadth + 0.025f - tempFloat4)
-                                {
-                                    //lock
-                                    if (curBlockTileDatas[i].blockTypeIndex == 7104 &&
-                                        VARS.IsCarryingAKey)
-                                    {
-                                        VARS.curUnlockingBlock = curBlocks[i];
-
-                                        VARS.IsUnlocking = true;
-                                    }
-
-                                    //affliction
-                                    if (curBlockTileDatas[i].temperature != 0 ||
-                                        curBlockTileDatas[i].electricity != 0 ||
-                                        curBlockTileDatas[i].toxicity != 0)
-                                    {
-                                        if (VARS.IsAttachWall && VARS.curFacingDirectionIndex == 2)
-                                        {
-                                            CurTileTransferAffliction(curBlockTileDatas[i]);
-                                        }
-                                        else
-                                        {
-                                            CurTileTransferAffliction(curBlockTileDatas[i], 0.5f);
-                                        }
-
-                                        VARS.IsTouchingAfflictingBlocks = true;
-                                    }
-
-                                    //pushable
-                                    if (curBlockTileDatas[i].isPushable &&
-                                        VARS.IsDashing &&
-                                        !VARS.IsPushing)
-                                    {
-                                        VARS.curAccumulatedPushingDistance = 0;
-
-                                        VARS.IsPushing = true;
-                                        VARS.IsPushBlocked = false;
-                                    }
-                                    if (VARS.IsPushing &&
-                                        !VARS.IsPushBlocked)
-                                    {
-                                        //UnityEngine.Debug.Log("isPushing");
-
-                                        VARS.curAccumulatedPushingDistance += Mathf.Abs(VARS.curDashHorSpeed) * Time.deltaTime;
-
-                                        if (VARS.curAccumulatedPushingDistance >= 1)
-                                        {
-                                            VARS.curPushedBlocks.Clear();
-                                            VARS.curPushedBlockIndexes.Clear();
-                                            //VARS.IsCurPushedBlocksDetermined = false;
-
-                                            //determineCurPushedBlocks
-                                            VARS.curPushedBlocks.Add(curBlocks[i]);
-                                            VARS.curPushedBlockIndexes.Add(i);
-                                            while (/*!VARS.IsCurPushedBlocksDetermined*/true)
-                                            {
-                                                VARS.IsJustAddedAnotherPushedBlock = false;
-
-                                                for (int j = 0; j < curBlocks.Count; j++)
-                                                {
-                                                    if (Mathf.Abs(Vector3.Dot(curBlocks[j].transform.position - VARS.curPushedBlocks[VARS.curPushedBlocks.Count - 1].transform.position, VARS.curUp)) < 0.5f &&
-                                                        Vector3.Dot(curBlocks[j].transform.position - VARS.curPushedBlocks[VARS.curPushedBlocks.Count - 1].transform.position, VARS.curDashVector) > 0 &&
-                                                        Vector3.Dot(curBlocks[j].transform.position - VARS.curPushedBlocks[VARS.curPushedBlocks.Count - 1].transform.position, VARS.curDashVector) < 1.5f)
-                                                    {
-                                                        if (curBlockTileDatas[j].isPushable)
-                                                        {
-                                                            VARS.curPushedBlocks.Add(curBlocks[j]);
-                                                            VARS.curPushedBlockIndexes.Add(j);
-
-                                                            VARS.IsJustAddedAnotherPushedBlock = true;
-
-                                                            break;
-                                                        }
-                                                        else if (curBlockTileDatas[j].stateOfMatterIndex <= 1)
-                                                        {
-                                                            VARS.IsPushBlocked = true;
-
-                                                            break;
-                                                        }
-                                                    }
-                                                }
-
-                                                //VARS.IsCurPushedBlocksDetermined = !VARS.IsJustAddedAnotherPushedBlock;
-
-                                                if (!VARS.IsJustAddedAnotherPushedBlock)
-                                                {
-                                                    break;
-                                                }
-                                            }
-
-                                            //push
-                                            if (!VARS.IsPushBlocked)
-                                            {
-                                                //UnityEngine.Debug.Log("push");
-                                                for (int j = 0; j < VARS.curPushedBlocks.Count; j++)
-                                                {
-                                                    VARS.curPushedBlocks[j].transform.position += VARS.curDashVector;
-                                                    curCoordVectors[j] += VARS.curDashVector;
-                                                }
-                                                AddCatPosition(VARS.curDashVector);
-
-                                                VARS.curAccumulatedPushingDistance = 0;
-                                            }
-                                        }
-                                    }
-
-                                    //divable
-                                    if (curBlockTileDatas[i].isDivable &&
-                                        ((VARS.IsDashing && !VARS.IsJustDashDived) ||
-                                        (VARS.IsInputtingRightKey && Time.time - VARS.lastRightKeyDownTime > divingMoveInputThreshold && Time.time - VARS.lastDivingMoveTime > divingMoveGapTime)) &&
-                                        Mathf.Abs(VARS.verCurSpeed) < 0.1f /*&&
-                                        (VARS.IsOnGround || VARS.IsToCeiling)*/)
-                                    {
-                                        VARS.curDivedBlock = curBlocks[i];
-
-                                        AddCatPosition(Vector3.Dot(curBlocks[i].transform.position - catTransform.position, VARS.curUp) * VARS.curUp +
-                                            Vector3.Dot(curBlocks[i].transform.position - catTransform.position, VARS.curRight) * VARS.curRight);
-
-                                        VARS.lastDivingMoveTime = Time.time;
-
-                                        VARS.curTargetEnergy += -divingMoveEnergyCost;
-
-                                        VARS.IsJustDashDived = true;
-
-                                        VARS.IsDiving = true;
-
-                                        VARS.IsCatEnergyResetExecutable = false;
-                                    }
-
-                                    //breakable
-                                    if (VARS.horCurSpeed > curBlockTileDatas[i].toughness)
-                                    {
-                                        curBlocks[i].SetActive(false);
-
-                                        VARS.horCurSpeed += -curBlockTileDatas[i].toughness * 0.75f;
-
-                                        if (VARS.IsDashing)
-                                        {
-                                            VARS.curDashHorSpeed += -curBlockTileDatas[i].toughness * 0.75f;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        VARS.curRightTile = curBlocks[i];
-                                        VARS.curRightTileData = curBlockTileDatas[i];
-                                        VARS.IsRightBlockDetected = true;
-
-                                        hasGotCurNearestRightBlock = true;
-                                    }
-                                }
-                            }
-                            //fragile
-                            if (curBlockTileDatas[i].isFragile &&
-                                (VARS.IsAttachWall || VARS.IsInAcce || VARS.IsDashing) &&
-                                VARS.curFacingDirectionIndex == 2 &&
-                                tempFloat1 < 0.9f)
-                            {
-                                BreakCurFragileTile(curBlocks[i], curToBeBrokenFragileRustBlocks, curFragileRustBlockToBeBrokenStartTimes);
-                            }
+                            VARS.curRightUpTile = curBlocks[i];
+                            VARS.curRightUpTileData = curBlockTileDatas[i];
+                            VARS.curRightUpTileHorDistance = tempFloat;
+                            VARS.curRightUpTileVerDistance = tempFloat1;
+                        }
+                        //rightDown
+                        else if (tempFloat1 < 0 && tempFloat1 > -1.05f && tempFloat1 > VARS.curRightDownTileVerDistance)
+                        {
+                            VARS.curRightDownTile = curBlocks[i];
+                            VARS.curRightDownTileData = curBlockTileDatas[i];
+                            VARS.curRightDownTileHorDistance = tempFloat;
+                            VARS.curRightDownTileVerDistance = tempFloat1;
                         }
                     }
+
+                    #region outVersion
+                    //tempFloat1 = Mathf.Abs(Vector3.Dot(tempVector, VARS.curUp));
+
+                    //if (tempFloat1 < gridBreadth - 0.025f)
+                    //{
+                    //    tempFloat = Vector3.Dot(tempVector, -VARS.curRight);
+
+                    //    if (tempFloat > 0.5f &&
+                    //        tempFloat < gridBreadth + 0.1f /*0.01f*/ &&
+                    //        tempFloat > tempFloat1)
+                    //    {
+                    //        if (tempFloat < curRightBlockDistance)
+                    //        {
+                    //            curRightBlockDistance = tempFloat;
+
+                    //            curRightBlockVerDistance = tempFloat1;
+
+                    //            if (/*VARS.IsOnGround || VARS.IsToCeiling*/
+                    //                //VARS.IsRightBlocked &&
+                    //                !VARS.IsOnGround && !VARS.IsToCeiling &&
+                    //                curRightBlockVerDistance > /*0.9f*/ 0.8f &&
+                    //                !VARS.IsAttachWall &&
+                    //                !VARS.IsClimbing &&
+                    //                Mathf.Abs(VARS.verCurSpeed) < 6)
+                    //            {
+                    //                if (/*VARS.IsInputtingLeftKey ||*/ VARS.IsInputtingRightKey /*&&
+                    //                    VARS.IsInputtingAcceKey*/)
+                    //                    tempFloat4 = (0.05f - (Mathf.Abs(VARS.verCurSpeed) / verMaxSpeed) / 100) /** 8*/ /** 4*/ /** 2*/ /** 1*/ * 0.75f /** 0.5f*/ /** 0.25f*/;
+                    //                else
+                    //                    tempFloat4 = 0;
+                    //            }
+                    //            else
+                    //            {
+                    //                tempFloat4 = 0;
+                    //            }
+
+                    //            if (curRightBlockDistance < gridBreadth /*+ 0.025f*/ - tempFloat4)
+                    //            {
+                    //                ////breakable
+                    //                //if (VARS.horCurSpeed <= curBlockTileDatas[i].toughness)
+                    //                //{
+                    //                    VARS.curRightTile = curBlocks[i];
+                    //                    VARS.curRightTileData = curBlockTileDatas[i];
+                    //                    VARS.IsRightBlockDetected = true;
+
+                    //                    hasGotCurNearestRightBlock = true;
+                    //                //}
+                    //            }
+                    //        }
+                    //    }
+                    //}
+                    #endregion
                 }
             }
 
@@ -1830,7 +1623,7 @@ public class UniversalFunctionsLibrary : MonoBehaviour
                 //        tempFloat = Vector3.Dot(tempVector, -VARS.curUp);
 
                 //        if (tempFloat > 0 &&
-                //            tempFloat < gridBreadth + 0.025f &&
+                //            tempFloat < gridBreadth /*+ 0.025f*/ &&
                 //            tempFloat > tempFloat1)
                 //        {
                 //            VARS.buoyancyDistanceFixFloat = 0;
@@ -1959,42 +1752,6 @@ public class UniversalFunctionsLibrary : MonoBehaviour
             }
         }
 
-        if (VARS.IsCeilingDetected)
-        {
-            VARS.IsCeilingDetected = false;
-            VARS.IsToCeiling = true;
-        }
-        else
-        {
-            VARS.IsToCeiling = false;
-        }
-        if (VARS.IsGroundDetected)
-        {
-            VARS.IsGroundDetected = false;
-            VARS.IsOnGround = true;
-        }
-        else
-        {
-            VARS.IsOnGround = false;
-        }
-        if (VARS.IsLeftBlockDetected)
-        {
-            VARS.IsLeftBlockDetected = false;
-            VARS.IsLeftBlocked = true;
-        }
-        else
-        {
-            VARS.IsLeftBlocked = false;
-        }
-        if (VARS.IsRightBlockDetected)
-        {
-            VARS.IsRightBlockDetected = false;
-            VARS.IsRightBlocked = true;
-        }
-        else
-        {
-            VARS.IsRightBlocked = false;
-        }
         if (VARS.IsLiquidDetected)
         {
             VARS.IsLiquidDetected = false;
@@ -2092,6 +1849,888 @@ public class UniversalFunctionsLibrary : MonoBehaviour
         VARS.curDownBlockDistance = curDownBlockDistance;
         VARS.curLeftBlockDistance = curLeftBlockDistance;
         VARS.curRightBlockDistance = curRightBlockDistance;
+    }
+
+    public void CollidSolids()
+    {
+        #region collid
+        #region up
+        //oneGridTunnelEntryEasingFloat
+        if (!VARS.IsLeftBlocked && !VARS.IsRightBlocked &&
+            VARS.curUpLeftTileHorDistance < -0.8f && VARS.curUpRightTileHorDistance > 0.8f &&
+            !VARS.IsHorMovingAfterToCeiling &&
+            Mathf.Abs(VARS.horCurSpeed) < 1)
+        {
+            if (VARS.IsHighJumping ||
+                VARS.IsInputtingJumpKey ||
+                VARS.IsInputtingUpKey)
+                VARS.curUpOneGridTunnelEntryEasingFloat = (0.05f - (Mathf.Abs(VARS.horCurSpeed) / horMaxSpeed) / 100) /** 16*/ /** 12*/ * 8 /** 4*/ /** 2*/ /** 0.5f*/;
+            else
+                VARS.curUpOneGridTunnelEntryEasingFloat = 0;
+        }
+
+        //upLeft
+        if (-VARS.curUpLeftTileHorDistance <= VARS.curUpRightTileHorDistance &&
+        VARS.curUpLeftTileHorDistance > -(1 /*+ 0.025f*/ - VARS.curUpOneGridTunnelEntryEasingFloat))
+        {
+            VARS.curUpTile = VARS.curUpLeftTile;
+            VARS.curUpTileData = VARS.curUpLeftTileData;
+            VARS.IsCeilingDetected = true;
+
+            //hasGotCurNearestUpBlock = true;
+        }
+        //upRight
+        else if (-VARS.curUpLeftTileHorDistance > VARS.curUpRightTileHorDistance &&
+            VARS.curUpRightTileHorDistance < 1 /*+ 0.025f*/ - VARS.curUpOneGridTunnelEntryEasingFloat)
+        {
+            VARS.curUpTile = VARS.curUpRightTile;
+            VARS.curUpTileData = VARS.curUpRightTileData;
+            VARS.IsCeilingDetected = true;
+
+            //hasGotCurNearestUpBlock = true;
+        }
+        #endregion
+
+        #region down
+        //oneGridTunnelEntryEasingFloat
+        if (/*!VARS.IsLeftBlocked && !VARS.IsRightBlocked &&*/
+            VARS.curDownLeftTileHorDistance < -0.8f && VARS.curDownRightTileHorDistance > 0.8f &&
+            Mathf.Abs(VARS.horCurSpeed) < 1)
+        {
+            if (/*VARS.IsInputtingDownKey*/
+                /*VARS.IsDownKeyDown*/true)
+                VARS.curDownOneGridTunnelEntryEasingFloat = (0.05f - (Mathf.Abs(VARS.horCurSpeed) / horMaxSpeed) / 100) * 16 /** 12*/ /** 8*/ /** 4*/ /** 2*/ /** 0.5f*/;
+            else
+                VARS.curDownOneGridTunnelEntryEasingFloat = 0;
+        }
+        else
+        {
+            VARS.curDownOneGridTunnelEntryEasingFloat = 0;
+        }
+
+        //downLeft
+        if (-VARS.curDownLeftTileHorDistance <= VARS.curDownRightTileHorDistance &&
+        VARS.curDownLeftTileHorDistance > -(1 /*+ 0.025f*/ - VARS.curDownOneGridTunnelEntryEasingFloat))
+        {
+            VARS.curDownTile = VARS.curDownLeftTile;
+            VARS.curDownTileData = VARS.curDownLeftTileData;
+            VARS.IsGroundDetected = true;
+        }
+        //downRight
+        else if (-VARS.curDownLeftTileHorDistance > VARS.curDownRightTileHorDistance &&
+            VARS.curDownRightTileHorDistance < 1 /*+ 0.025f*/ - VARS.curDownOneGridTunnelEntryEasingFloat)
+        {
+            VARS.curDownTile = VARS.curDownRightTile;
+            VARS.curDownTileData = VARS.curDownRightTileData;
+            VARS.IsGroundDetected = true;
+        }
+        #endregion
+
+        #region left
+        //oneGridTunnelEntryEasingFloat
+        if (/*!VARS.IsOnGround && !VARS.IsToCeiling &&*/
+            VARS.curLeftUpTileVerDistance > 0.8f && VARS.curLeftDownTileVerDistance < -0.8f &&
+            !VARS.IsAttachWall &&
+            !VARS.IsClimbing &&
+            Mathf.Abs(VARS.verCurSpeed) < 6)
+        {
+            if (VARS.IsInputtingLeftKey ||
+                VARS.IsInputtingDashKey)
+                VARS.curLeftOneGridTunnelEntryEasingFloat = (0.05f - (Mathf.Abs(VARS.verCurSpeed) / verMaxSpeed) / 100) /** 8*/ * 4 /** 2*/ /** 1*/ /** 0.75f*/ /** 0.5f*/ /** 0.25f*/;
+            else
+                VARS.curLeftOneGridTunnelEntryEasingFloat = 0;
+        }
+        else
+        {
+            VARS.curLeftOneGridTunnelEntryEasingFloat = 0;
+        }
+
+        //leftUp
+        if (VARS.curLeftUpTileVerDistance <= -VARS.curLeftDownTileVerDistance &&
+            VARS.curLeftUpTileVerDistance < 1 /*+ 0.025f*/ - VARS.curLeftOneGridTunnelEntryEasingFloat)
+        {
+            VARS.curLeftTile = VARS.curLeftUpTile;
+            VARS.curLeftTileData = VARS.curLeftUpTileData;
+            VARS.IsLeftBlockDetected = true;
+        }
+        //leftDown
+        else if (VARS.curLeftUpTileVerDistance > -VARS.curLeftDownTileVerDistance &&
+            VARS.curLeftDownTileVerDistance > -(1 /*+ 0.025f*/ - VARS.curLeftOneGridTunnelEntryEasingFloat))
+        {
+            VARS.curLeftTile = VARS.curLeftDownTile;
+            VARS.curLeftTileData = VARS.curLeftDownTileData;
+            VARS.IsLeftBlockDetected = true;
+        }
+        #endregion
+
+        #region right
+        //oneGridTunnelEntryEasingFloat
+        if (/*!VARS.IsOnGround && !VARS.IsToCeiling &&*/
+            VARS.curRightUpTileVerDistance > 0.8f && VARS.curRightDownTileVerDistance < -0.8f &&
+            !VARS.IsAttachWall &&
+            !VARS.IsClimbing &&
+            Mathf.Abs(VARS.verCurSpeed) < 6)
+        {
+            if (VARS.IsInputtingRightKey ||
+                VARS.IsInputtingDashKey)
+                VARS.curRightOneGridTunnelEntryEasingFloat = (0.05f - (Mathf.Abs(VARS.verCurSpeed) / verMaxSpeed) / 100) /** 8*/ * 4 /** 2*/ /** 1*/ /** 0.75f*/ /** 0.5f*/ /** 0.25f*/;
+            else
+                VARS.curRightOneGridTunnelEntryEasingFloat = 0;
+        }
+        else
+        {
+            VARS.curRightOneGridTunnelEntryEasingFloat = 0;
+        }
+
+        //rightUp
+        if (VARS.curRightUpTileVerDistance <= -VARS.curRightDownTileVerDistance &&
+            VARS.curRightUpTileVerDistance < 1 /*+ 0.025f*/ - VARS.curRightOneGridTunnelEntryEasingFloat)
+        {
+            VARS.curRightTile = VARS.curRightUpTile;
+            VARS.curRightTileData = VARS.curRightUpTileData;
+            VARS.IsRightBlockDetected = true;
+        }
+        //rightDown
+        else if (VARS.curRightUpTileVerDistance > -VARS.curRightDownTileVerDistance &&
+            VARS.curRightDownTileVerDistance > -(1 /*+ 0.025f*/ - VARS.curRightOneGridTunnelEntryEasingFloat))
+        {
+            VARS.curRightTile = VARS.curRightDownTile;
+            VARS.curRightTileData = VARS.curRightDownTileData;
+            VARS.IsRightBlockDetected = true;
+        }
+        #endregion
+
+        //collisionStates
+        if (VARS.IsCeilingDetected)
+        {
+            VARS.IsCeilingDetected = false;
+            VARS.IsToCeiling = true;
+        }
+        else
+        {
+            VARS.IsToCeiling = false;
+        }
+        if (VARS.IsGroundDetected)
+        {
+            VARS.IsGroundDetected = false;
+            VARS.IsOnGround = true;
+        }
+        else
+        {
+            VARS.IsOnGround = false;
+        }
+        if (VARS.IsLeftBlockDetected)
+        {
+            VARS.IsLeftBlockDetected = false;
+            VARS.IsLeftBlocked = true;
+        }
+        else
+        {
+            VARS.IsLeftBlocked = false;
+        }
+        if (VARS.IsRightBlockDetected)
+        {
+            VARS.IsRightBlockDetected = false;
+            VARS.IsRightBlocked = true;
+        }
+        else
+        {
+            VARS.IsRightBlocked = false;
+        }
+        #endregion
+
+        #region lock
+        //up
+        if (VARS.curUpTileData != null && VARS.curUpTileData.blockTypeIndex == 7104 &&
+            VARS.IsCarryingAKey)
+        {
+            VARS.curUnlockingBlock = VARS.curUpTile;
+
+            VARS.IsUnlocking = true;
+        }
+        //down
+        if (VARS.curDownTileData != null && VARS.curDownTileData.blockTypeIndex == 7104 &&
+            VARS.IsCarryingAKey)
+        {
+            VARS.curUnlockingBlock = VARS.curDownTile;
+
+            VARS.IsUnlocking = true;
+        }
+        //left
+        if (VARS.curLeftTileData != null && VARS.curLeftTileData.blockTypeIndex == 7104 &&
+            VARS.IsCarryingAKey)
+        {
+            VARS.curUnlockingBlock = VARS.curLeftTile;
+
+            VARS.IsUnlocking = true;
+        }
+        //right
+        if (VARS.curRightTileData != null && VARS.curRightTileData.blockTypeIndex == 7104 &&
+            VARS.IsCarryingAKey)
+        {
+            VARS.curUnlockingBlock = VARS.curRightTile;
+
+            VARS.IsUnlocking = true;
+        }
+        #endregion
+
+        #region affliction
+        //up
+        if (VARS.curUpTileData != null &&
+            (VARS.curUpTileData.temperature != 0 ||
+            VARS.curUpTileData.electricity != 0 ||
+            VARS.curUpTileData.toxicity != 0))
+        {
+            if (/*VARS.IsAttachCeiling*/VARS.IsHorMovingAfterToCeiling)
+            {
+                CurTileTransferAffliction(VARS.curUpTileData);
+            }
+            else
+            {
+                CurTileTransferAffliction(VARS.curUpTileData, 0.5f);
+            }
+
+            VARS.IsTouchingAfflictingBlocks = true;
+        }
+        //down
+        if (VARS.curDownTileData != null &&
+            (VARS.curDownTileData.temperature != 0 ||
+            VARS.curDownTileData.electricity != 0 ||
+            VARS.curDownTileData.toxicity != 0))
+        {
+            if (/*!VARS.IsAttachCeiling*/!VARS.IsHorMovingAfterToCeiling)
+            {
+                CurTileTransferAffliction(VARS.curDownTileData);
+            }
+            else
+            {
+                CurTileTransferAffliction(VARS.curDownTileData, 0.5f);
+            }
+
+            VARS.IsTouchingAfflictingBlocks = true;
+        }
+        //left
+        if (VARS.curLeftTileData != null &&
+            (VARS.curLeftTileData.temperature != 0 ||
+            VARS.curLeftTileData.electricity != 0 ||
+            VARS.curLeftTileData.toxicity != 0))
+        {
+            if (/*VARS.IsAttachWall*/VARS.IsInputtingLeftKey && VARS.curFacingDirectionIndex == 1)
+            {
+                CurTileTransferAffliction(VARS.curLeftTileData);
+            }
+            else
+            {
+                CurTileTransferAffliction(VARS.curLeftTileData, 0.5f);
+            }
+
+            VARS.IsTouchingAfflictingBlocks = true;
+        }
+        //right
+        if (VARS.curRightTileData != null &&
+            (VARS.curRightTileData.temperature != 0 ||
+            VARS.curRightTileData.electricity != 0 ||
+            VARS.curRightTileData.toxicity != 0))
+        {
+            if (/*VARS.IsAttachWall*/VARS.IsInputtingRightKey && VARS.curFacingDirectionIndex == 2)
+            {
+                CurTileTransferAffliction(VARS.curRightTileData);
+            }
+            else
+            {
+                CurTileTransferAffliction(VARS.curRightTileData, 0.5f);
+            }
+
+            VARS.IsTouchingAfflictingBlocks = true;
+        }
+        #endregion
+
+        #region pushable
+        #region left
+        //leftUp
+        if (VARS.curLeftUpTileData != null &&
+            VARS.curLeftUpTileData.isPushable &&
+            VARS.IsDashing &&
+            !VARS.IsUpPushing)
+        {
+            VARS.curUpPushedBlock = VARS.curLeftUpTile;
+            for (int i = 0; i < curBlocks.Count; i++)
+            {
+                if (curBlocks[i] == VARS.curLeftUpTile)
+                {
+                    VARS.curUpPushedBlockIndex = i;
+                    break;
+                }
+            }
+
+            VARS.IsUpPushing = true;
+            VARS.IsPushBlocked = false;
+
+            VARS.curAccumulatedUpPushingDistance = 0;
+        }
+        if (VARS.IsUpPushing &&
+            !VARS.IsPushBlocked)
+        {
+            //UnityEngine.Debug.Log("isPushing");
+
+            VARS.curAccumulatedUpPushingDistance += Mathf.Abs(VARS.curDashHorSpeed) * Time.deltaTime;
+
+            if (VARS.curAccumulatedUpPushingDistance >= 1)
+            {
+                VARS.curUpPushedBlocks.Clear();
+                VARS.curUpPushedBlockIndexes.Clear();
+                //VARS.IsCurPushedBlocksDetermined = false;
+
+                //determineCurPushedBlocks
+                VARS.curUpPushedBlocks.Add(VARS.curUpPushedBlock);
+                VARS.curUpPushedBlockIndexes.Add(VARS.curUpPushedBlockIndex);
+                while (/*!VARS.IsCurPushedBlocksDetermined*/true)
+                {
+                    VARS.IsJustAddedAnotherUpPushedBlock = false;
+
+                    for (int j = 0; j < curBlocks.Count; j++)
+                    {
+                        if (Mathf.Abs(Vector3.Dot(curBlocks[j].transform.position - VARS.curUpPushedBlocks[VARS.curUpPushedBlocks.Count - 1].transform.position, VARS.curUp)) < 0.5f &&
+                            Vector3.Dot(curBlocks[j].transform.position - VARS.curUpPushedBlocks[VARS.curUpPushedBlocks.Count - 1].transform.position, VARS.curDashVector) > 0 &&
+                            Vector3.Dot(curBlocks[j].transform.position - VARS.curUpPushedBlocks[VARS.curUpPushedBlocks.Count - 1].transform.position, VARS.curDashVector) < 1.5f)
+                        {
+                            if (curBlockTileDatas[j].isPushable)
+                            {
+                                VARS.curUpPushedBlocks.Add(curBlocks[j]);
+                                VARS.curUpPushedBlockIndexes.Add(j);
+
+                                VARS.IsJustAddedAnotherUpPushedBlock = true;
+
+                                break;
+                            }
+                            else if (curBlockTileDatas[j].stateOfMatterIndex <= 1)
+                            {
+                                VARS.IsPushBlocked = true;
+
+                                break;
+                            }
+                        }
+                    }
+
+                    //VARS.IsCurPushedBlocksDetermined = !VARS.IsJustAddedAnotherPushedBlock;
+
+                    if (!VARS.IsJustAddedAnotherUpPushedBlock)
+                    {
+                        break;
+                    }
+                }
+
+                //push
+                if (!VARS.IsPushBlocked)
+                {
+                    //UnityEngine.Debug.Log("push");
+                    for (int j = 0; j < VARS.curUpPushedBlocks.Count; j++)
+                    {
+                        VARS.curUpPushedBlocks[j].transform.position += VARS.curDashVector;
+                        curCoordVectors[j] += VARS.curDashVector;
+                    }
+                    AddCatPosition(VARS.curDashVector);
+
+                    VARS.curAccumulatedDownPushingDistance = 0;
+                }
+            }
+        }
+        //leftDown
+        if (VARS.curLeftDownTileData != null &&
+            VARS.curLeftDownTileData.isPushable &&
+            VARS.IsDashing &&
+            !VARS.IsDownPushing)
+        {
+            VARS.curDownPushedBlock = VARS.curLeftDownTile;
+            for (int i = 0; i < curBlocks.Count; i++)
+            {
+                if (curBlocks[i] == VARS.curLeftDownTile)
+                {
+                    VARS.curDownPushedBlockIndex = i;
+                    break;
+                }
+            }
+
+            VARS.IsDownPushing = true;
+            VARS.IsPushBlocked = false;
+
+            VARS.curAccumulatedDownPushingDistance = 0;
+        }
+        if (VARS.IsDownPushing &&
+            !VARS.IsPushBlocked)
+        {
+            //UnityEngine.Debug.Log("isPushing");
+
+            VARS.curAccumulatedDownPushingDistance += Mathf.Abs(VARS.curDashHorSpeed) * Time.deltaTime;
+
+            if (VARS.curAccumulatedDownPushingDistance >= 1)
+            {
+                VARS.curDownPushedBlocks.Clear();
+                VARS.curDownPushedBlockIndexes.Clear();
+                //VARS.IsCurPushedBlocksDetermined = false;
+
+                //determineCurPushedBlocks
+                VARS.curDownPushedBlocks.Add(VARS.curDownPushedBlock);
+                VARS.curDownPushedBlockIndexes.Add(VARS.curDownPushedBlockIndex);
+                while (/*!VARS.IsCurPushedBlocksDetermined*/true)
+                {
+                    VARS.IsJustAddedAnotherDownPushedBlock = false;
+
+                    for (int j = 0; j < curBlocks.Count; j++)
+                    {
+                        if (Mathf.Abs(Vector3.Dot(curBlocks[j].transform.position - VARS.curDownPushedBlocks[VARS.curDownPushedBlocks.Count - 1].transform.position, VARS.curUp)) < 0.5f &&
+                            Vector3.Dot(curBlocks[j].transform.position - VARS.curDownPushedBlocks[VARS.curDownPushedBlocks.Count - 1].transform.position, VARS.curDashVector) > 0 &&
+                            Vector3.Dot(curBlocks[j].transform.position - VARS.curDownPushedBlocks[VARS.curDownPushedBlocks.Count - 1].transform.position, VARS.curDashVector) < 1.5f)
+                        {
+                            if (curBlockTileDatas[j].isPushable)
+                            {
+                                VARS.curDownPushedBlocks.Add(curBlocks[j]);
+                                VARS.curDownPushedBlockIndexes.Add(j);
+
+                                VARS.IsJustAddedAnotherDownPushedBlock = true;
+
+                                break;
+                            }
+                            else if (curBlockTileDatas[j].stateOfMatterIndex <= 1)
+                            {
+                                VARS.IsPushBlocked = true;
+
+                                break;
+                            }
+                        }
+                    }
+
+                    //VARS.IsCurPushedBlocksDetermined = !VARS.IsJustAddedAnotherPushedBlock;
+
+                    if (!VARS.IsJustAddedAnotherDownPushedBlock)
+                    {
+                        break;
+                    }
+                }
+
+                //push
+                if (!VARS.IsPushBlocked)
+                {
+                    //UnityEngine.Debug.Log("push");
+                    for (int j = 0; j < VARS.curDownPushedBlocks.Count; j++)
+                    {
+                        VARS.curDownPushedBlocks[j].transform.position += VARS.curDashVector;
+                        curCoordVectors[j] += VARS.curDashVector;
+                    }
+                    AddCatPosition(VARS.curDashVector);
+
+                    VARS.curAccumulatedDownPushingDistance = 0;
+                }
+            }
+        }
+        #endregion
+
+        #region right
+        //rightUp
+        if (VARS.curRightUpTileData != null &&
+            VARS.curRightUpTileData.isPushable &&
+            VARS.IsDashing &&
+            !VARS.IsUpPushing)
+        {
+            VARS.curUpPushedBlock = VARS.curRightUpTile;
+            for (int i = 0; i < curBlocks.Count; i++)
+            {
+                if (curBlocks[i] == VARS.curRightUpTile)
+                {
+                    VARS.curUpPushedBlockIndex = i;
+                    break;
+                }
+            }
+
+            VARS.IsUpPushing = true;
+            VARS.IsPushBlocked = false;
+
+            VARS.curAccumulatedUpPushingDistance = 0;
+        }
+        if (VARS.IsUpPushing &&
+            !VARS.IsPushBlocked)
+        {
+            //UnityEngine.Debug.Log("isPushing");
+
+            VARS.curAccumulatedUpPushingDistance += Mathf.Abs(VARS.curDashHorSpeed) * Time.deltaTime;
+
+            if (VARS.curAccumulatedUpPushingDistance >= 1)
+            {
+                VARS.curUpPushedBlocks.Clear();
+                VARS.curUpPushedBlockIndexes.Clear();
+                //VARS.IsCurPushedBlocksDetermined = false;
+
+                //determineCurPushedBlocks
+                VARS.curUpPushedBlocks.Add(VARS.curUpPushedBlock);
+                VARS.curUpPushedBlockIndexes.Add(VARS.curUpPushedBlockIndex);
+                while (/*!VARS.IsCurPushedBlocksDetermined*/true)
+                {
+                    VARS.IsJustAddedAnotherUpPushedBlock = false;
+
+                    for (int j = 0; j < curBlocks.Count; j++)
+                    {
+                        if (Mathf.Abs(Vector3.Dot(curBlocks[j].transform.position - VARS.curUpPushedBlocks[VARS.curUpPushedBlocks.Count - 1].transform.position, VARS.curUp)) < 0.5f &&
+                            Vector3.Dot(curBlocks[j].transform.position - VARS.curUpPushedBlocks[VARS.curUpPushedBlocks.Count - 1].transform.position, VARS.curDashVector) > 0 &&
+                            Vector3.Dot(curBlocks[j].transform.position - VARS.curUpPushedBlocks[VARS.curUpPushedBlocks.Count - 1].transform.position, VARS.curDashVector) < 1.5f)
+                        {
+                            if (curBlockTileDatas[j].isPushable)
+                            {
+                                VARS.curUpPushedBlocks.Add(curBlocks[j]);
+                                VARS.curUpPushedBlockIndexes.Add(j);
+
+                                VARS.IsJustAddedAnotherUpPushedBlock = true;
+
+                                break;
+                            }
+                            else if (curBlockTileDatas[j].stateOfMatterIndex <= 1)
+                            {
+                                VARS.IsPushBlocked = true;
+
+                                break;
+                            }
+                        }
+                    }
+
+                    //VARS.IsCurPushedBlocksDetermined = !VARS.IsJustAddedAnotherPushedBlock;
+
+                    if (!VARS.IsJustAddedAnotherUpPushedBlock)
+                    {
+                        break;
+                    }
+                }
+
+                //push
+                if (!VARS.IsPushBlocked)
+                {
+                    //UnityEngine.Debug.Log("push");
+                    for (int j = 0; j < VARS.curUpPushedBlocks.Count; j++)
+                    {
+                        VARS.curUpPushedBlocks[j].transform.position += VARS.curDashVector;
+                        curCoordVectors[j] += VARS.curDashVector;
+                    }
+                    AddCatPosition(VARS.curDashVector);
+
+                    VARS.curAccumulatedDownPushingDistance = 0;
+                }
+            }
+        }
+        //rightDown
+        if (VARS.curRightDownTileData != null &&
+            VARS.curRightDownTileData.isPushable &&
+            VARS.IsDashing &&
+            !VARS.IsDownPushing)
+        {
+            VARS.curDownPushedBlock = VARS.curRightDownTile;
+            for (int i = 0; i < curBlocks.Count; i++)
+            {
+                if (curBlocks[i] == VARS.curRightDownTile)
+                {
+                    VARS.curDownPushedBlockIndex = i;
+                    break;
+                }
+            }
+
+            VARS.IsDownPushing = true;
+            VARS.IsPushBlocked = false;
+
+            VARS.curAccumulatedDownPushingDistance = 0;
+        }
+        if (VARS.IsDownPushing &&
+            !VARS.IsPushBlocked)
+        {
+            //UnityEngine.Debug.Log("isPushing");
+
+            VARS.curAccumulatedDownPushingDistance += Mathf.Abs(VARS.curDashHorSpeed) * Time.deltaTime;
+
+            if (VARS.curAccumulatedDownPushingDistance >= 1)
+            {
+                VARS.curDownPushedBlocks.Clear();
+                VARS.curDownPushedBlockIndexes.Clear();
+                //VARS.IsCurPushedBlocksDetermined = false;
+
+                //determineCurPushedBlocks
+                VARS.curDownPushedBlocks.Add(VARS.curDownPushedBlock);
+                VARS.curDownPushedBlockIndexes.Add(VARS.curDownPushedBlockIndex);
+                while (/*!VARS.IsCurPushedBlocksDetermined*/true)
+                {
+                    VARS.IsJustAddedAnotherDownPushedBlock = false;
+
+                    for (int j = 0; j < curBlocks.Count; j++)
+                    {
+                        if (Mathf.Abs(Vector3.Dot(curBlocks[j].transform.position - VARS.curDownPushedBlocks[VARS.curDownPushedBlocks.Count - 1].transform.position, VARS.curUp)) < 0.5f &&
+                            Vector3.Dot(curBlocks[j].transform.position - VARS.curDownPushedBlocks[VARS.curDownPushedBlocks.Count - 1].transform.position, VARS.curDashVector) > 0 &&
+                            Vector3.Dot(curBlocks[j].transform.position - VARS.curDownPushedBlocks[VARS.curDownPushedBlocks.Count - 1].transform.position, VARS.curDashVector) < 1.5f)
+                        {
+                            if (curBlockTileDatas[j].isPushable)
+                            {
+                                VARS.curDownPushedBlocks.Add(curBlocks[j]);
+                                VARS.curDownPushedBlockIndexes.Add(j);
+
+                                VARS.IsJustAddedAnotherDownPushedBlock = true;
+
+                                break;
+                            }
+                            else if (curBlockTileDatas[j].stateOfMatterIndex <= 1)
+                            {
+                                VARS.IsPushBlocked = true;
+
+                                break;
+                            }
+                        }
+                    }
+
+                    //VARS.IsCurPushedBlocksDetermined = !VARS.IsJustAddedAnotherPushedBlock;
+
+                    if (!VARS.IsJustAddedAnotherDownPushedBlock)
+                    {
+                        break;
+                    }
+                }
+
+                //push
+                if (!VARS.IsPushBlocked)
+                {
+                    //UnityEngine.Debug.Log("push");
+                    for (int j = 0; j < VARS.curDownPushedBlocks.Count; j++)
+                    {
+                        VARS.curDownPushedBlocks[j].transform.position += VARS.curDashVector;
+                        curCoordVectors[j] += VARS.curDashVector;
+                    }
+                    AddCatPosition(VARS.curDashVector);
+
+                    VARS.curAccumulatedDownPushingDistance = 0;
+                }
+            }
+        }
+        #endregion
+        #endregion
+
+        #region divable
+        //down
+        if (VARS.curDownTile != null &&
+            VARS.curDownTileData.isDivable &&
+            (VARS.verCurSpeed < -5 ||
+            (VARS.IsInputtingDownKey && Time.time - VARS.lastDownKeyDownTime > divingMoveInputThreshold && Time.time - VARS.lastDivingMoveTime > divingMoveGapTime)) &&
+            Mathf.Abs(VARS.horCurSpeed) < 0.1f)
+        {
+            VARS.curDivedBlock = VARS.curDownTile;
+
+            AddCatPosition(Vector3.Dot(VARS.curDownTile.transform.position - catTransform.position, VARS.curUp) * VARS.curUp +
+                Vector3.Dot(VARS.curDownTile.transform.position - catTransform.position, VARS.curRight) * VARS.curRight);
+
+            VARS.lastDivingMoveTime = Time.time;
+
+            VARS.curTargetEnergy += -divingMoveEnergyCost;
+
+            VARS.IsDiving = true;
+
+            VARS.IsCatEnergyResetExecutable = false;
+        }
+        //left
+        if (VARS.curLeftTileData != null &&
+            VARS.curLeftTileData.isDivable &&
+            ((VARS.IsDashing && !VARS.IsJustDashDived) ||
+            (VARS.IsInputtingLeftKey && Time.time - VARS.lastLeftKeyDownTime > divingMoveInputThreshold && Time.time - VARS.lastDivingMoveTime > divingMoveGapTime)) &&
+            Mathf.Abs(VARS.verCurSpeed) < 0.1f /*&&
+                                        (VARS.IsOnGround || VARS.IsToCeiling)*/)
+        {
+            VARS.curDivedBlock = VARS.curLeftTile;
+
+            AddCatPosition(Vector3.Dot(VARS.curLeftTile.transform.position - catTransform.position, VARS.curUp) * VARS.curUp +
+                Vector3.Dot(VARS.curLeftTile.transform.position - catTransform.position, VARS.curRight) * VARS.curRight);
+
+            VARS.lastDivingMoveTime = Time.time;
+
+            VARS.curTargetEnergy += -divingMoveEnergyCost;
+
+            VARS.IsJustDashDived = true;
+
+            VARS.IsDiving = true;
+
+            VARS.IsCatEnergyResetExecutable = false;
+        }
+        //right
+        if (VARS.curRightTileData != null &&
+            VARS.curRightTileData.isDivable &&
+            ((VARS.IsDashing && !VARS.IsJustDashDived) ||
+            (VARS.IsInputtingRightKey && Time.time - VARS.lastRightKeyDownTime > divingMoveInputThreshold && Time.time - VARS.lastDivingMoveTime > divingMoveGapTime)) &&
+            Mathf.Abs(VARS.verCurSpeed) < 0.1f /*&&
+                                        (VARS.IsOnGround || VARS.IsToCeiling)*/)
+        {
+            VARS.curDivedBlock = VARS.curRightTile;
+
+            AddCatPosition(Vector3.Dot(VARS.curRightTile.transform.position - catTransform.position, VARS.curUp) * VARS.curUp +
+                Vector3.Dot(VARS.curRightTile.transform.position - catTransform.position, VARS.curRight) * VARS.curRight);
+
+            VARS.lastDivingMoveTime = Time.time;
+
+            VARS.curTargetEnergy += -divingMoveEnergyCost;
+
+            VARS.IsJustDashDived = true;
+
+            VARS.IsDiving = true;
+
+            VARS.IsCatEnergyResetExecutable = false;
+        }
+        #endregion
+
+        #region breakable
+        //upLeft
+        if (VARS.curUpLeftTileData != null &&
+            VARS.verCurSpeed > VARS.curUpLeftTileData.toughness)
+        {
+            VARS.curUpLeftTile.SetActive(false);
+
+            VARS.verCurSpeed += -VARS.curUpLeftTileData.toughness * 0.75f;
+        }
+        //upRight
+        if (VARS.curUpRightTileData != null &&
+            VARS.verCurSpeed > VARS.curUpRightTileData.toughness)
+        {
+            VARS.curUpRightTile.SetActive(false);
+
+            VARS.verCurSpeed += -VARS.curUpRightTileData.toughness * 0.75f;
+        }
+        //downLeft
+        if (VARS.curDownLeftTileData != null &&
+            -VARS.verCurSpeed > VARS.curDownLeftTileData.toughness)
+        {
+            VARS.curDownLeftTile.SetActive(false);
+
+            VARS.verCurSpeed += VARS.curDownLeftTileData.toughness * 0.75f;
+        }
+        //downRight
+        if (VARS.curDownRightTileData != null &&
+            -VARS.verCurSpeed > VARS.curDownRightTileData.toughness)
+        {
+            VARS.curDownRightTile.SetActive(false);
+
+            VARS.verCurSpeed += VARS.curDownRightTileData.toughness * 0.75f;
+        }
+        //leftUp
+        if (VARS.curLeftUpTileData != null &&
+            -VARS.horCurSpeed > VARS.curLeftUpTileData.toughness)
+        {
+            VARS.curLeftUpTile.SetActive(false);
+
+            VARS.horCurSpeed += VARS.curLeftUpTileData.toughness * 0.75f;
+
+            if (VARS.IsDashing)
+            {
+                VARS.curDashHorSpeed += VARS.curLeftUpTileData.toughness * 0.75f;
+            }
+        }
+        //leftDown
+        if (VARS.curLeftDownTileData != null &&
+            -VARS.horCurSpeed > VARS.curLeftDownTileData.toughness)
+        {
+            VARS.curLeftDownTile.SetActive(false);
+
+            VARS.horCurSpeed += VARS.curLeftDownTileData.toughness * 0.75f;
+
+            if (VARS.IsDashing)
+            {
+                VARS.curDashHorSpeed += VARS.curLeftDownTileData.toughness * 0.75f;
+            }
+        }
+        //rightUp
+        if (VARS.curRightUpTileData != null &&
+            VARS.horCurSpeed > VARS.curRightUpTileData.toughness)
+        {
+            VARS.curRightUpTile.SetActive(false);
+
+            VARS.horCurSpeed += -VARS.curRightUpTileData.toughness * 0.75f;
+
+            if (VARS.IsDashing)
+            {
+                VARS.curDashHorSpeed += -VARS.curRightUpTileData.toughness * 0.75f;
+            }
+        }
+        //rightDown
+        if (VARS.curRightDownTileData != null &&
+            VARS.horCurSpeed > VARS.curRightDownTileData.toughness)
+        {
+            VARS.curRightDownTile.SetActive(false);
+
+            VARS.horCurSpeed += -VARS.curRightDownTileData.toughness * 0.75f;
+
+            if (VARS.IsDashing)
+            {
+                VARS.curDashHorSpeed += -VARS.curRightDownTileData.toughness * 0.75f;
+            }
+        }
+        #endregion
+
+        #region fragile
+        //upLeft
+        if (VARS.curUpLeftTileData != null &&
+            VARS.curUpLeftTileData.isFragile &&
+            //VARS.IsAttachCeiling &&
+            VARS.IsInputtingUpKey /*&&
+            tempFloat1 < 0.9f*/)
+        {
+            BreakCurFragileTile(VARS.curUpLeftTile, curToBeBrokenFragileRustBlocks, curFragileRustBlockToBeBrokenStartTimes);
+        }
+        //upRight
+        if (VARS.curUpRightTileData != null &&
+            VARS.curUpRightTileData.isFragile &&
+            //VARS.IsAttachCeiling &&
+            VARS.IsInputtingUpKey /*&&
+            tempFloat1 < 0.9f*/)
+        {
+            BreakCurFragileTile(VARS.curUpRightTile, curToBeBrokenFragileRustBlocks, curFragileRustBlockToBeBrokenStartTimes);
+        }
+        //downLeft
+        if (VARS.curDownLeftTileData != null &&
+            VARS.curDownLeftTileData.isFragile /*&&
+            tempFloat1 < 0.9f*/)
+        {
+            BreakCurFragileTile(VARS.curDownLeftTile, curToBeBrokenFragileRustBlocks, curFragileRustBlockToBeBrokenStartTimes);
+        }
+        //downRight
+        if (VARS.curDownRightTileData != null &&
+            VARS.curDownRightTileData.isFragile /*&&
+            tempFloat1 < 0.9f*/)
+        {
+            BreakCurFragileTile(VARS.curDownRightTile, curToBeBrokenFragileRustBlocks, curFragileRustBlockToBeBrokenStartTimes);
+        }
+        //leftUp
+        if (VARS.curLeftUpTileData != null &&
+            VARS.curLeftUpTileData.isFragile &&
+            (VARS.IsAttachWall || VARS.IsInAcce || VARS.IsDashing) &&
+            VARS.curFacingDirectionIndex == 1 /*&&
+            tempFloat1 < 0.9f*/)
+        {
+            BreakCurFragileTile(VARS.curLeftUpTile, curToBeBrokenFragileRustBlocks, curFragileRustBlockToBeBrokenStartTimes);
+        }
+        //leftDown
+        if (VARS.curLeftDownTileData != null &&
+            VARS.curLeftDownTileData.isFragile &&
+            (VARS.IsAttachWall || VARS.IsInAcce || VARS.IsDashing) &&
+            VARS.curFacingDirectionIndex == 1 /*&&
+            tempFloat1 < 0.9f*/)
+        {
+            BreakCurFragileTile(VARS.curLeftDownTile, curToBeBrokenFragileRustBlocks, curFragileRustBlockToBeBrokenStartTimes);
+        }
+        //rightUp
+        if (VARS.curRightUpTileData != null &&
+            VARS.curRightUpTileData.isFragile &&
+            (VARS.IsAttachWall || VARS.IsInAcce || VARS.IsDashing) &&
+            VARS.curFacingDirectionIndex == 2 /*&&
+            tempFloat1 < 0.9f*/)
+        {
+            BreakCurFragileTile(VARS.curLeftUpTile, curToBeBrokenFragileRustBlocks, curFragileRustBlockToBeBrokenStartTimes);
+        }
+        //rightDown
+        if (VARS.curRightDownTileData != null &&
+            VARS.curRightDownTileData.isFragile &&
+            (VARS.IsAttachWall || VARS.IsInAcce || VARS.IsDashing) &&
+            VARS.curFacingDirectionIndex == 2 /*&&
+            tempFloat1 < 0.9f*/)
+        {
+            BreakCurFragileTile(VARS.curRightDownTile, curToBeBrokenFragileRustBlocks, curFragileRustBlockToBeBrokenStartTimes);
+        }
+        #endregion
     }
 
     public void CurTileTransferAffliction(TileData curTileData, float speedFix = 1)
@@ -2544,6 +3183,14 @@ public class UniversalFunctionsLibrary : MonoBehaviour
 
     public void ClearCurCollisionTileDatas()
     {
+        VARS.curUpLeftTileData = null;
+        VARS.curUpRightTileData = null;
+        VARS.curDownLeftTileData = null;
+        VARS.curDownRightTileData = null;
+        VARS.curLeftUpTileData = null;
+        VARS.curLeftDownTileData = null;
+        VARS.curRightUpTileData = null;
+        VARS.curRightDownTileData = null;
         VARS.curUpTileData = null;
         VARS.curDownTileData = null;
         VARS.curLeftTileData = null;

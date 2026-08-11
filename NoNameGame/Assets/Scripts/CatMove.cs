@@ -988,11 +988,12 @@ public class CatMove : MonoBehaviour
             {
                 if (dashStartTime == 0)
                 {
-                    if (/*VARS.curEnergy > dashEnergyCost*/true)
+                    if (VARS.curEnergy > dashEnergyCost/*true*/)
                     {
                         if (!VARS.IsDashing &&
-                            ((VARS.IsOnGround && VARS.IsInputtingDashKey) ||
-                            (!VARS.IsOnGround && VARS.IsDashKeyDown)))
+                            /*((VARS.IsOnGround && VARS.IsInputtingDashKey) ||
+                            (!VARS.IsOnGround && VARS.IsDashKeyDown))*/
+                            VARS.IsInputtingDashKey)
                         {
                             //dir
                             if (VARS.IsInputtingLeftKey)
@@ -1188,7 +1189,7 @@ public class CatMove : MonoBehaviour
     }
     void Jump()
     {
-        if (/*VARS.curEnergy > jumpEnergyCost &&*/
+        if (VARS.curEnergy > jumpEnergyCost &&
             !VARS.IsHighJumping)
         {
             UFL.AddCatPosition(VARS.curUp * 0.01f);

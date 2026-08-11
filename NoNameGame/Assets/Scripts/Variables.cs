@@ -685,6 +685,14 @@ public class Variables : MonoBehaviour
     public bool IsAttachCeiling { get { return _isAttachCeiling; } set { _isAttachCeiling = value; } }
 
     //solidTile
+    public GameObject curUpLeftTile;
+    public GameObject curUpRightTile;
+    public GameObject curDownLeftTile;
+    public GameObject curDownRightTile;
+    public GameObject curLeftUpTile;
+    public GameObject curLeftDownTile;
+    public GameObject curRightUpTile;
+    public GameObject curRightDownTile;
     public GameObject curUpTile;
     public GameObject curDownTile;
     public GameObject curLeftTile;
@@ -698,6 +706,14 @@ public class Variables : MonoBehaviour
     public GameObject curMistTile;
 
     //solidTileData
+    public TileData curUpLeftTileData;
+    public TileData curUpRightTileData;
+    public TileData curDownLeftTileData;
+    public TileData curDownRightTileData;
+    public TileData curLeftUpTileData;
+    public TileData curLeftDownTileData;
+    public TileData curRightUpTileData;
+    public TileData curRightDownTileData;
     public TileData curUpTileData;
     public TileData curDownTileData;
     public TileData curLeftTileData;
@@ -711,6 +727,38 @@ public class Variables : MonoBehaviour
     public TileData curLiquidTileData;
     public TileData curGasTileData;
     public TileData curMistTileData;
+
+    //solidTileDistances
+    public float curUpLeftTileVerDistance;
+    public float curUpLeftTileHorDistance;
+    public float curUpRightTileVerDistance;
+    public float curUpRightTileHorDistance;
+    public float curUpTileVerDistance;
+    public float curUpTileHorDistance;
+    public float curDownLeftTileVerDistance;
+    public float curDownLeftTileHorDistance;
+    public float curDownRightTileVerDistance;
+    public float curDownRightTileHorDistance;
+    public float curDownTileVerDistance;
+    public float curDownTileHorDistance;
+    public float curLeftUpTileHorDistance;
+    public float curLeftUpTileVerDistance;
+    public float curLeftDownTileHorDistance;
+    public float curLeftDownTileVerDistance;
+    public float curLeftTileHorDistance;
+    public float curLeftTileVerDistance;
+    public float curRightUpTileHorDistance;
+    public float curRightUpTileVerDistance;
+    public float curRightDownTileHorDistance;
+    public float curRightDownTileVerDistance;
+    public float curRightTileHorDistance;
+    public float curRightTileVerDistance;
+
+    //oneGridTunnelEntryEasingFloats
+    public float curUpOneGridTunnelEntryEasingFloat;
+    public float curDownOneGridTunnelEntryEasingFloat;
+    public float curLeftOneGridTunnelEntryEasingFloat;
+    public float curRightOneGridTunnelEntryEasingFloat;
 
     //~?
     public float buoyancyDistanceFixFloat;
@@ -800,7 +848,8 @@ public class Variables : MonoBehaviour
         {
             if (value == false)
             {
-                IsPushing = false;
+                IsUpPushing = false;
+                IsDownPushing = false;
 
                 IsJustDashDived = false;
 
@@ -1263,17 +1312,26 @@ public class Variables : MonoBehaviour
     public List<float> curFragileRustBlockBrokenTimes = new List<float>();
 
     //pushableBlocks
-    [SerializeField] private bool _isPushing;
-    public bool IsPushing { get { return _isPushing; } set { _isPushing = value; } }
-    public float curAccumulatedPushingDistance;
-    public GameObject curPushedBlock;
-    public int curPushedBlockIndex;
-    public List<GameObject> curPushedBlocks = new List<GameObject>();
-    public List<int> curPushedBlockIndexes = new List<int>();
+    [SerializeField] private bool _isUpPushing;
+    public bool IsUpPushing { get { return _isUpPushing; } set { _isUpPushing = value; } }
+    [SerializeField] private bool _isDownPushing;
+    public bool IsDownPushing { get { return _isDownPushing; } set { _isDownPushing = value; } }
+    public float curAccumulatedUpPushingDistance;
+    public float curAccumulatedDownPushingDistance;
+    public GameObject curUpPushedBlock;
+    public GameObject curDownPushedBlock;
+    public int curUpPushedBlockIndex;
+    public int curDownPushedBlockIndex;
+    public List<GameObject> curUpPushedBlocks = new List<GameObject>();
+    public List<GameObject> curDownPushedBlocks = new List<GameObject>();
+    public List<int> curUpPushedBlockIndexes = new List<int>();
+    public List<int> curDownPushedBlockIndexes = new List<int>();
     //[SerializeField] private bool _isCurPushedBlocksDetermined;
     //public bool IsCurPushedBlocksDetermined { get { return _isCurPushedBlocksDetermined; } set { _isCurPushedBlocksDetermined = value; } }
-    [SerializeField] private bool _isJustAddedAnotherPushedBlock;
-    public bool IsJustAddedAnotherPushedBlock { get { return _isJustAddedAnotherPushedBlock; } set { _isJustAddedAnotherPushedBlock = value; } }
+    [SerializeField] private bool _isJustAddedAnotherUpPushedBlock;
+    public bool IsJustAddedAnotherUpPushedBlock { get { return _isJustAddedAnotherUpPushedBlock; } set { _isJustAddedAnotherUpPushedBlock = value; } }
+    [SerializeField] private bool _isJustAddedAnotherDownPushedBlock;
+    public bool IsJustAddedAnotherDownPushedBlock { get { return _isJustAddedAnotherDownPushedBlock; } set { _isJustAddedAnotherDownPushedBlock = value; } }
     [SerializeField] private bool _isPushBlocked;
     public bool IsPushBlocked { get { return _isPushBlocked; } set { _isPushBlocked = value; } }
 

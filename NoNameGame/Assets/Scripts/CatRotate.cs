@@ -227,7 +227,7 @@ public class CatRotate : MonoBehaviour
                     !VARS.IsInCenter &&
                     !VARS.isCenterFulfilled[VARS.curFaceIndex - 1])
                 {
-                    if (/*VARS.curEnergy > rotationEnergyCost*/true)
+                    if (VARS.curEnergy > rotationEnergyCost/*true*/)
                     {
                         if (VARS.IsInputtingDownKey)
                         {

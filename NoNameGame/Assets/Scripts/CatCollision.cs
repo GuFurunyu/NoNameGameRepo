@@ -446,6 +446,7 @@ public class CatCollision : MonoBehaviour
 
             #region CurBlocksDetect
             UFL.GetCatCollisionInfo();
+            UFL.CollidSolids();
             //UFL.TransferAffliction();
             UFL.DissipateAffliction();
             UFL.CollidTriggers();
@@ -494,6 +495,8 @@ public class CatCollision : MonoBehaviour
                     if (Mathf.Abs(tempFloat1) < gridBreadth * 0.975f &&
                         VARS.curDownTile != VARS.curDivedBlock)
                     {
+                        Debug.Log("onGroundDistanceFix");
+
                         //Debug.Log("distanceFix1:" + catTransform.position);
                         UFL.AddCatPosition(curUp * (gridBreadth - tempFloat /*+ 0.0075f*/));
                         //Debug.Log("distanceFix2:" + catTransform.position);
@@ -518,6 +521,8 @@ public class CatCollision : MonoBehaviour
                     if (Mathf.Abs(tempFloat1) < gridBreadth * 0.975f &&
                         VARS.curUpTile != VARS.curDivedBlock)
                     {
+                        Debug.Log("toCeilingDistanceFix");
+
                         UFL.AddCatPosition(-curUp * (gridBreadth - tempFloat));
                         //UFL.AddCatPosition(-curUp * (gridBreadth - tempFloat + 0.0075f));
                     }
@@ -543,6 +548,8 @@ public class CatCollision : MonoBehaviour
                     if (Mathf.Abs(tempFloat1) < gridBreadth * 0.95f &&
                         VARS.curLeftTile != VARS.curDivedBlock)
                     {
+                        Debug.Log("leftBlockedDistanceFix");
+
                         UFL.AddCatPosition(curRight * (gridBreadth - tempFloat));
                     }
 
@@ -569,6 +576,8 @@ public class CatCollision : MonoBehaviour
                     if (Mathf.Abs(tempFloat1) < gridBreadth * 0.95f &&
                         VARS.curRightTile != VARS.curDivedBlock)
                     {
+                        Debug.Log("rightBlockedDistanceFix");
+
                         UFL.AddCatPosition(-curRight * (gridBreadth - tempFloat));
                     }
 

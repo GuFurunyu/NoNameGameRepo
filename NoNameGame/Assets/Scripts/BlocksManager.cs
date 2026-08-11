@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 
 [DefaultExecutionOrder((int)ScriptsExecutionOrder.ExecutionOrder.blocksManager)]
@@ -1086,6 +1085,8 @@ public class BlocksManager : MonoBehaviour
                                         //Debug.Log("tempFloat:" + tempFloat);
                                         //Debug.Log("move:" + tempVector * (2 - tempFloat));
 
+                                        Debug.Log("catMovedByRail");
+
                                         //Debug.Log("catPosition1:" + catTransform.position);
                                         UFL.AddCatPosition(tempVector * (2 - tempFloat + 0.001f));
                                         //Debug.Log("catPosition2:" + catTransform.position);
@@ -1093,6 +1094,8 @@ public class BlocksManager : MonoBehaviour
                                     else if (VARS.IsOnOrToARailBlock &&
                                         curBlock == VARS.curOnOrToRailBlock)
                                     {
+                                        Debug.Log("catMovedByRail");
+
                                         UFL.AddCatPosition(tempVector);
                                     }
                                     VARS.curCatMovedByRailBlockVector = tempVector;
