@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 [DefaultExecutionOrder((int)ScriptsExecutionOrder.ExecutionOrder.constants)]
@@ -176,6 +177,7 @@ public class Constants : MonoBehaviour
     //triggerThreshold
     public float intoMinimapDownJumpKeyDownThreshold;
     public float backCenterDoubleUpKeyDownThreshold;
+    public float rotateInLiquidHorKeyUpThreshold;
     #endregion
 
     #region CatCollision
@@ -239,6 +241,9 @@ public class Constants : MonoBehaviour
     //dash
     public float dashIniSpeed;
     public float dashTime;
+
+    //dashPreInput
+    //public float dashPreInputThres;
 
     //acceBonus
     public float acceBonus;
@@ -367,6 +372,21 @@ public class Constants : MonoBehaviour
 
     //storedBlocks
     public GameObject storedActivatedSavePointBlockEmpty;
+
+    //collectingTexts
+    public GameObject oneColorFragmentCollectingTextRight;
+    public GameObject allColorsFragmentCollectingTextRight;
+    public GameObject keysAndLocksCollectingTextRight;
+    public GameObject TB1;
+    public GameObject TB2;
+    public GameObject TB3;
+    public GameObject TB4;
+    public GameObject TB5;
+    public GameObject TB6;
+    public GameObject TB7;
+    public GameObject TB8;
+    public GameObject TB9;
+    public GameObject TB0;
     #endregion
 
     #region CatAppearance

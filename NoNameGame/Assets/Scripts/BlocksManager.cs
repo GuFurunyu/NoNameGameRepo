@@ -61,6 +61,11 @@ public class BlocksManager : MonoBehaviour
     GameObject curElectricMistCenterBlock;
     Vector3 curElectricMistCenterBlockCoordVector;
     float[] curElectricMistBlockDistances = new float[4];
+    bool isCurElectricMistBlockUpChecked;
+    bool isCurElectricMistBlockDownChecked;
+    bool isCurElectricMistBlockLeftChecked;
+    bool isCurElectricMistBlockRightChecked;
+    //bool isCurElectricMistBlockGoingDirDetermined;
     int curElectricMistBlockGoingDirIndex;
 
     //isCurMistBlockMoved
@@ -951,7 +956,8 @@ public class BlocksManager : MonoBehaviour
                 if (curBlockTileData.blockTypeIndex == 6103)
                 {
                     curElectricMistCenterBlock = curBlock;
-                    curElectricMistCenterBlockCoordVector = curElectricMistCenterBlock.transform.localPosition;
+                    //curElectricMistCenterBlockCoordVector = curElectricMistCenterBlock.transform.localPosition;
+                    curElectricMistCenterBlockCoordVector = curElectricMistCenterBlock.transform.position - VARS.curPlaneEmpty.transform.position;
                 }
             }
             #endregion
@@ -976,6 +982,19 @@ public class BlocksManager : MonoBehaviour
                 curBlockTileData = curBlockTileDatas[i];
                 //curBlockStateOfMatterIndex = curBlockStateOfMatterIndexes[i];
                 curBlockLastUpdateTime = curBlockLastUpdateTimes[i];
+
+                //fragmentsSpreadingLight
+                if (curBlockTileData.fragmentIndex > 0)
+                {
+                    for(int j=0;j<curBlock.transform.childCount; j++)
+                    {
+                        curBlock.transform.GetChild(j).localScale += Vector3.one * 0.35f * Time.deltaTime;
+                        if (curBlock.transform.GetChild(j).localScale.x >= 1.1f)
+                        {
+                            curBlock.transform.GetChild(j).localScale = Vector3.one * 0.4f;
+                        }
+                    }
+                }
 
                 #region BlocksMove
                 #region Solid
@@ -1387,10 +1406,10 @@ public class BlocksManager : MonoBehaviour
                             curLeftBlockTypeIndex == 0 ||
                             curRightBlockTypeIndex == 0)
                         {
-                            curElectricMistBlockDistances[0] = Vector3.Dot(curCoordVector - curElectricMistCenterBlockCoordVector, -VARS.curUp) - 1;
-                            curElectricMistBlockDistances[1] = Vector3.Dot(curCoordVector - curElectricMistCenterBlockCoordVector, VARS.curUp) + 1;
-                            curElectricMistBlockDistances[2] = Vector3.Dot(curCoordVector - curElectricMistCenterBlockCoordVector, VARS.curRight);
-                            curElectricMistBlockDistances[3] = Vector3.Dot(curCoordVector - curElectricMistCenterBlockCoordVector, -VARS.curRight);
+                            curElectricMistBlockDistances[0] = Vector3.Dot(curCoordVector - curElectricMistCenterBlockCoordVector, -VARS.curUp) /*- 1*/ - 2 * randomValues[curRandomValueByteIndex++];
+                            curElectricMistBlockDistances[1] = Vector3.Dot(curCoordVector - curElectricMistCenterBlockCoordVector, VARS.curUp) /*+ 1*/ + 2 * randomValues[curRandomValueByteIndex++];
+                            curElectricMistBlockDistances[2] = Vector3.Dot(curCoordVector - curElectricMistCenterBlockCoordVector, VARS.curRight) + randomValues[curRandomValueByteIndex++];
+                            curElectricMistBlockDistances[3] = Vector3.Dot(curCoordVector - curElectricMistCenterBlockCoordVector, -VARS.curRight) + randomValues[curRandomValueByteIndex++];
 
                             isCurMistBlockMoved = false;
 
@@ -1408,7 +1427,73 @@ public class BlocksManager : MonoBehaviour
                                     }
                                 }
 
+                                isCurElectricMistBlockUpChecked = false;
+                                isCurElectricMistBlockDownChecked = false;
+                                isCurElectricMistBlockLeftChecked = false;
+                                isCurElectricMistBlockRightChecked = false;
+
                                 //getCurElectricMistBlockGoingIndex
+                                //while (!(isCurElectricMistBlockUpChecked && isCurElectricMistBlockDownChecked && isCurElectricMistBlockLeftChecked && isCurElectricMistBlockRightChecked))
+                                //{
+                                //    tempFloat1 = randomValues[curRandomValueByteIndex++];
+
+                                //    //up
+                                //    if (tempFloat1 < 0.25f && !isCurElectricMistBlockUpChecked)
+                                //    {
+                                //        if(tempFloat==curElectricMistBlockDistances[0])
+                                //        {
+                                //            curElectricMistBlockGoingDirIndex = 1;
+
+                                //            curElectricMistBlockDistances[0] = -999;
+
+                                //            break;
+                                //        }
+
+                                //        isCurElectricMistBlockUpChecked = true;
+                                //    }
+                                //    //down
+                                //    else if (tempFloat1 >= 0.25f && tempFloat1 < 0.5f && !isCurElectricMistBlockDownChecked)
+                                //    {
+                                //        if (tempFloat == curElectricMistBlockDistances[1])
+                                //        {
+                                //            curElectricMistBlockGoingDirIndex = 2;
+
+                                //            curElectricMistBlockDistances[1] = -999;
+
+                                //            break;
+                                //        }
+
+                                //        isCurElectricMistBlockDownChecked = true;
+                                //    }
+                                //    //left
+                                //    if (tempFloat1 >= 0.5f && tempFloat1 < 0.75f && !isCurElectricMistBlockLeftChecked)
+                                //    {
+                                //        if (tempFloat == curElectricMistBlockDistances[2])
+                                //        {
+                                //            curElectricMistBlockGoingDirIndex = 3;
+
+                                //            curElectricMistBlockDistances[2] = -999;
+
+                                //            break;
+                                //        }
+
+                                //        isCurElectricMistBlockLeftChecked = true;
+                                //    }
+                                //    //right
+                                //    if (tempFloat1 >= 0.75f && !isCurElectricMistBlockRightChecked)
+                                //    {
+                                //        if (tempFloat == curElectricMistBlockDistances[3])
+                                //        {
+                                //            curElectricMistBlockGoingDirIndex = 4;
+
+                                //            curElectricMistBlockDistances[3] = -999;
+
+                                //            break;
+                                //        }
+
+                                //        isCurElectricMistBlockRightChecked = true;
+                                //    }
+                                //}
                                 if (tempFloat == curElectricMistBlockDistances[0])
                                 {
                                     curElectricMistBlockGoingDirIndex = 1;
@@ -1546,7 +1631,7 @@ public class BlocksManager : MonoBehaviour
                     //spawnTheSameBlocksInTheMovedOutPositionsToMakeTheEffectMoreContinuous
                     for (int i = 0; i < curMovedBlockCoordVectors.Count; i++)
                     {
-                        SpawnBlockByTypeIndex(curMovedBlockTypeIndexes[i], curMovedBlockCoordVectors[i]);
+                        SpawnStoredBlockByTypeIndex(curMovedBlockTypeIndexes[i], curMovedBlockCoordVectors[i]);
                     }
                     //clearTheListsOfTheCurMovedBlocks
                     //curMovedBlockIndexes.Clear();
@@ -1767,6 +1852,7 @@ public class BlocksManager : MonoBehaviour
         return 0;
     }
 
+    //dirIndex: 1-up, 2-down, 3-left, 4-right
     void CurBlockMove(int curBlockIndex, int dirIndex, bool isFluid = true, bool isStableDir = false, bool isRail = false)
     {
         Vector3 upVector;
@@ -1829,20 +1915,20 @@ public class BlocksManager : MonoBehaviour
         curBlock.transform.position += movingVector;
         curCoordVectors[curBlockIndex] += movingVector;
 
-        //catCarriedByFluid
-        if (((curBlock == VARS.curLiquidTile && dirIndex == 2) ||
-            (curBlock == VARS.curGasTile && dirIndex == 1) /*||
-            curBlock == VARS.curMistTile*/) &&
-            ((dirIndex == 2 && !VARS.IsOnGround) ||
-            (dirIndex == 1 && !VARS.IsToCeiling) ||
-            (dirIndex == 3 && !VARS.IsLeftBlocked) ||
-            (dirIndex == 4 && !VARS.IsRightBlocked)) &&
-            Time.time - VARS.lastCatCarriedByFluidTime > catCarriedByFluidGapTime)
-        {
-            UFL.AddCatPosition(movingVector);
+        ////catCarriedByFluid
+        //if (((curBlock == VARS.curLiquidTile && dirIndex == 2) ||
+        //    (curBlock == VARS.curGasTile && dirIndex == 1) /*||
+        //    curBlock == VARS.curMistTile*/) &&
+        //    ((dirIndex == 2 && !VARS.IsOnGround) ||
+        //    (dirIndex == 1 && !VARS.IsToCeiling) ||
+        //    (dirIndex == 3 && !VARS.IsLeftBlocked) ||
+        //    (dirIndex == 4 && !VARS.IsRightBlocked)) &&
+        //    Time.time - VARS.lastCatCarriedByFluidTime > catCarriedByFluidGapTime)
+        //{
+        //    UFL.AddCatPosition(movingVector);
 
-            VARS.lastCatCarriedByFluidTime = Time.time;
-        }
+        //    VARS.lastCatCarriedByFluidTime = Time.time;
+        //}
 
         if (curBlockTileData.continuousHorMovingTimes > continuousHorMovingMaxTime)
         {
@@ -1892,7 +1978,7 @@ public class BlocksManager : MonoBehaviour
         }
     }
 
-    void SpawnBlockByTypeIndex(int blockTypeIndex, Vector3 curCoordVector)
+    void SpawnStoredBlockByTypeIndex(int blockTypeIndex, Vector3 curCoordVector)
     {
         switch (blockTypeIndex)
         {
@@ -1927,6 +2013,9 @@ public class BlocksManager : MonoBehaviour
         tempVector = curCoordVector + VARS.roomCenters[VARS.curRoomIndex];
 
         tempGameObject.transform.position = tempVector;
+
+        //adjustEuleranglesToShowCorrectOutlines
+        tempGameObject.transform.eulerAngles = curBlock.transform.eulerAngles;
 
         tempGameObject.SetActive(true);
 

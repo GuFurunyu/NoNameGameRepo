@@ -35,6 +35,8 @@ public class CatRotate : MonoBehaviour
 
     Transform camTransform;
 
+    float rotateInLiquidHorKeyUpThreshold;
+
     GameObject cat;
     Transform catTransform;
 
@@ -99,6 +101,7 @@ public class CatRotate : MonoBehaviour
         gridBreadth = CONS.gridBreadth;
         roomCoordBreadth = CONS.roomCoordBreadth;
         camTransform = CONS.camTransform;
+        rotateInLiquidHorKeyUpThreshold = CONS.rotateInLiquidHorKeyUpThreshold;
         cat = CONS.cat;
         catTransform = CONS.catTransform;
         leftRotationVector = CONS.leftRotationVector;
@@ -225,13 +228,21 @@ public class CatRotate : MonoBehaviour
                 if (VARS.IsRotateEnabled &&
                     rotationRestNum > 0 &&
                     !VARS.IsInCenter &&
-                    !VARS.isCenterFulfilled[VARS.curFaceIndex - 1])
+                    !VARS.isCenterFulfilled[VARS.curRoomIndex / 9] &&
+                    !VARS.IsInLiquid && !VARS.IsInGas && !VARS.IsInMist)
                 {
                     if (VARS.curEnergy > rotationEnergyCost/*true*/)
                     {
-                        if (VARS.IsInputtingDownKey)
+                        if (VARS.IsInputtingDownKey/* &&
+                            ((!VARS.IsInLiquid && (VARS.IsInputtingLeftKey || VARS.IsInputtingRightKey)) ||
+                            (VARS.IsInLiquid && (
+                            VARS.lastLeftKeyUpTime - VARS.lastLeftKeyDownTime < rotateInLiquidHorKeyUpThreshold || 
+                            VARS.lastRightKeyUpTime - VARS.lastRightKeyDownTime < rotateInLiquidHorKeyUpThreshold)))*/)
                         {
-                            if (VARS.IsInputtingLeftKey)
+                            ////ifInLiquidRequiringHorKeyToBeUpInThreshold
+                            if (/*(!VARS.IsInLiquid && VARS.IsInputtingLeftKey) ||
+                                (VARS.IsInLiquid && VARS.IsLeftKeyUp && Time.time - VARS.lastLeftKeyDownTime < rotateInLiquidHorKeyUpThreshold)*/
+                                VARS.IsInputtingLeftKey)
                             {
                                 //startEulerangles = camTransform.eulerAngles;
                                 targetDegree = 90;
@@ -253,7 +264,10 @@ public class CatRotate : MonoBehaviour
                                 //UFL.AddCurTargetEnergy(-rotationEnergyCost);
                                 VARS.curTargetEnergy += -rotationEnergyCost;
                             }
-                            else if (VARS.IsInputtingRightKey)
+                            ////ifInLiquidRequiringHorKeyToBeUpInThreshold
+                            else if (/*(!VARS.IsInLiquid && VARS.IsInputtingRightKey) ||
+                                (VARS.IsInLiquid && VARS.IsRightKeyUp && Time.time - VARS.lastRightKeyDownTime < rotateInLiquidHorKeyUpThreshold)*/
+                                VARS.IsInputtingRightKey)
                             {
                                 //startEulerangles = camTransform.eulerAngles;
                                 targetDegree = 90;

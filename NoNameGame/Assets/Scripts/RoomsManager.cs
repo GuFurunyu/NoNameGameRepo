@@ -319,9 +319,9 @@ public class RoomsManager : MonoBehaviour
             //control
             if (!VARS.IsTwisting)
             {
-                if ((VARS.IsInCenter && UFL.IsInRoom(VARS.curRoomIndex, VARS.curLatestCenterSavePointPosition)) ||
-                    VARS.isCenterFulfilled[VARS.curRoomIndex / 9]
-                    /*true*/)
+                if (((VARS.IsInCenter && UFL.IsInRoom(VARS.curRoomIndex, VARS.curLatestCenterSavePointPosition)) ||
+                    VARS.isCenterFulfilled[VARS.curRoomIndex / 9]) &&
+                    !VARS.IsInLiquid && !VARS.IsInGas && !VARS.IsInMist)
                 {
                     if (VARS.IsInputtingDownKey)
                     {

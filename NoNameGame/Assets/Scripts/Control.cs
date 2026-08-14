@@ -153,6 +153,14 @@ public class Control : MonoBehaviour
             {
                 VARS.lastRightKeyDownTime = Time.time;
             }
+            if (VARS.IsJumpKeyDown)
+            {
+                VARS.lastJumpKeyDownTime = Time.time;
+            }
+            if (VARS.IsDashKeyDown)
+            {
+                VARS.lastDashKeyDownTime = Time.time;
+            }
 
             ////intoMinimapTrigger
             //if (VARS.IsJumpKeyDown)
@@ -171,6 +179,32 @@ public class Control : MonoBehaviour
             //    //    VARS.IsJustOutOfMinimap = false;
             //    //}
             //}
+
+            //keyUpTimes
+            if (VARS.IsUpKeyUp)
+            {
+                VARS.lastUpKeyUpTime = Time.time;
+            }
+            if (VARS.IsDownKeyUp)
+            {
+                VARS.lastDownKeyUpTime = Time.time;
+            }
+            if (VARS.IsLeftKeyUp)
+            {
+                VARS.lastLeftKeyUpTime = Time.time;
+            }
+            if (VARS.IsRightKeyUp)
+            {
+                VARS.lastRightKeyUpTime = Time.time;
+            }
+            if (VARS.IsJumpKeyUp)
+            {
+                VARS.lastJumpKeyUpTime = Time.time;
+            }
+            if (VARS.IsDashKeyUp)
+            {
+                VARS.lastDashKeyUpTime = Time.time;
+            }
 
             //specificKeys
             VARS.IsSpaceDown = Input.GetKeyDown(KeyCode.Space);

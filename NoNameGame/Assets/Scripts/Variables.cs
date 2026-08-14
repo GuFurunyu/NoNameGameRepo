@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 //using ECB = Variables.ExecutionControlBool;
 
@@ -589,6 +590,16 @@ public class Variables : MonoBehaviour
     public float lastDownKeyDownTime = -1;
     public float lastLeftKeyDownTime = -1;
     public float lastRightKeyDownTime = -1;
+    public float lastJumpKeyDownTime = -1;
+    public float lastDashKeyDownTime = -1;
+
+    //keyUpTimes
+    public float lastUpKeyUpTime = -1;
+    public float lastDownKeyUpTime = -1;
+    public float lastLeftKeyUpTime = -1;
+    public float lastRightKeyUpTime = -1;
+    public float lastJumpKeyUpTime = -1;
+    public float lastDashKeyUpTime = -1;
     #endregion
 
     #region CatCollision
@@ -838,6 +849,21 @@ public class Variables : MonoBehaviour
     public bool IsHighJumping { get { return _isHighJumping; } set { _isHighJumping = value; } }
 
     [SerializeField] private bool _isDashing;
+
+    //horSpeed
+    public float horCurAcce;
+    public float horCurReverseAcce;
+    public float horCurMaxSpeed;
+    public float horCurWallJumpBonusSpeed;
+
+    //verSpeed
+    public float verCurIniSpeed;
+    public float verCurAcce;
+    public float curGravityAcce;
+    public float curClimbSpeed;
+    public float verCurMaxSpeed;
+    public float curHighJumpingMaxSpeed;
+
     public bool IsDashing
     {
         get
@@ -871,6 +897,7 @@ public class Variables : MonoBehaviour
     //dash
     public Vector3 curDashVector;
     public float curDashHorSpeed;
+    public float curAccumulatedDashDistance;
 
     //isStill
     [SerializeField] private bool _isCatStill;
@@ -904,6 +931,23 @@ public class Variables : MonoBehaviour
     public bool IsHorMovingAfterToCeiling { get { return _isHorMovingAfterToCeiling; } set { _isHorMovingAfterToCeiling = value; } }
 
     public float horMovingAfterToCeilingStartTime;
+
+    [SerializeField] private bool _isToBeUpSlowedByBreakableBlocks;
+    public bool IsToBeUpSlowedByBreakableBlocks { get { return _isToBeUpSlowedByBreakableBlocks; } set { _isToBeUpSlowedByBreakableBlocks = value; } }
+
+    [SerializeField] private bool _isToBeDownSlowedByBreakableBlocks;
+    public bool IsToBeDownSlowedByBreakableBlocks { get { return _isToBeDownSlowedByBreakableBlocks; } set { _isToBeDownSlowedByBreakableBlocks = value; } }
+
+    [SerializeField] private bool _isToBeLeftSlowedByBreakableBlocks;
+    public bool IsToBeLeftSlowedByBreakableBlocks { get { return _isToBeLeftSlowedByBreakableBlocks; } set { _isToBeLeftSlowedByBreakableBlocks = value; } }
+
+    [SerializeField] private bool _isToBeRightSlowedByBreakableBlocks;
+    public bool IsToBeRightSlowedByBreakableBlocks { get { return _isToBeRightSlowedByBreakableBlocks; } set { _isToBeRightSlowedByBreakableBlocks = value; } }
+
+    public TileData curUpSlowingBreakableBlockTileData;
+    public TileData curDownSlowingBreakableBlockTileData;
+    public TileData curLeftSlowingBreakableBlockTileData;
+    public TileData curRightSlowingBreakableBlockTileData;
 
     #endregion
 

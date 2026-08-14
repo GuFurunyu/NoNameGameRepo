@@ -208,7 +208,7 @@ MonoBehaviour:
   isNotToBeDetected: 0
   fragmentIndex: 0
   offsetThres: 0.2
-  _stateOfMatterIndex: 0
+  _stateOfMatterIndex: 1
   isMovable: 0
   iniLocalPosition: {x: 0, y: 0, z: 0}
   continuousHorMovingTimes: 0

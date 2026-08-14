@@ -12,18 +12,8 @@ public class CatMove : MonoBehaviour
     GameObject gameManager;
 
     //horSpeed
-    float horCurAcce;
-    float horCurReverseAcce;
-    float horCurMaxSpeed;
-    float horCurWallJumpBonusSpeed;
 
     //verSpeed
-    float verCurIniSpeed;
-    float verCurAcce;
-    float curGravityAcce;
-    float curClimbSpeed;
-    float verCurMaxSpeed;
-    float curHighJumpingMaxSpeed;
 
     //jumpPreInput
     bool isJumpPreInputed;
@@ -40,6 +30,10 @@ public class CatMove : MonoBehaviour
     //dash
     //Vector3 VARS.curDashVector;
     float dashStartTime;
+
+    //dashPreInput
+    bool isDashPreInputed;
+    //float dashPreInputStartTime;
 
     //acce
     float curAcceBonus = 1;
@@ -88,6 +82,9 @@ public class CatMove : MonoBehaviour
     float dashIniSpeed;
     float dashTime;
 
+    //dashPreInput
+    //float dashPreInputThres;
+
     //acceBonus
     float acceBonus;
 
@@ -116,9 +113,6 @@ public class CatMove : MonoBehaviour
     TileData curMistTileData;
 
     float buoyancyDistanceFixFloat;
-
-    //float horCurSpeed;
-    //float verCurSpeed;
 
     //float curEnergy;
 
@@ -261,36 +255,36 @@ public class CatMove : MonoBehaviour
             {
                 if (isOnGround)
                 {
-                    horCurAcce = horAcce * curDownTileData.friction * curAcceBonus;
-                    horCurReverseAcce = horReverseAcce * curDownTileData.friction * curAcceBonus;
-                    horCurMaxSpeed = (horMaxSpeed - curDownTileData.tackiness) * curAcceBonus;
+                    VARS.horCurAcce = horAcce * curDownTileData.friction * curAcceBonus;
+                    VARS.horCurReverseAcce = horReverseAcce * curDownTileData.friction * curAcceBonus;
+                    VARS.horCurMaxSpeed = (horMaxSpeed - curDownTileData.tackiness) * curAcceBonus;
                 }
                 else
                 {
-                    horCurAcce = horAcce * curAcceBonus;
-                    horCurReverseAcce = horReverseAcce * curAcceBonus;
-                    horCurMaxSpeed = horMaxSpeed * curAcceBonus;
+                    VARS.horCurAcce = horAcce * curAcceBonus;
+                    VARS.horCurReverseAcce = horReverseAcce * curAcceBonus;
+                    VARS.horCurMaxSpeed = horMaxSpeed * curAcceBonus;
                 }
             }
             else
             {
                 if (isInLiquid)
                 {
-                    horCurAcce = (horAcce / curLiquidTileData.fluidDrag) * curAcceBonus;
-                    horCurReverseAcce = (horReverseAcce / curLiquidTileData.fluidDrag) * curAcceBonus;
-                    horCurMaxSpeed = (horMaxSpeed / curLiquidTileData.fluidDrag) * curAcceBonus;
+                    VARS.horCurAcce = (horAcce / curLiquidTileData.fluidDrag) * curAcceBonus;
+                    VARS.horCurReverseAcce = (horReverseAcce / curLiquidTileData.fluidDrag) * curAcceBonus;
+                    VARS.horCurMaxSpeed = (horMaxSpeed / curLiquidTileData.fluidDrag) * curAcceBonus;
                 }
                 else if (isInGas)
                 {
-                    horCurAcce = (horAcce / curGasTileData.fluidDrag) * curAcceBonus;
-                    horCurReverseAcce = (horReverseAcce / curGasTileData.fluidDrag) * curAcceBonus;
-                    horCurMaxSpeed = (horMaxSpeed / curGasTileData.fluidDrag) * curAcceBonus;
+                    VARS.horCurAcce = (horAcce / curGasTileData.fluidDrag) * curAcceBonus;
+                    VARS.horCurReverseAcce = (horReverseAcce / curGasTileData.fluidDrag) * curAcceBonus;
+                    VARS.horCurMaxSpeed = (horMaxSpeed / curGasTileData.fluidDrag) * curAcceBonus;
                 }
                 else if (isInMist)
                 {
-                    horCurAcce = (horAcce / curMistTileData.fluidDrag) * curAcceBonus;
-                    horCurReverseAcce = (horReverseAcce / curMistTileData.fluidDrag) * curAcceBonus;
-                    horCurMaxSpeed = (horMaxSpeed / curMistTileData.fluidDrag) * curAcceBonus;
+                    VARS.horCurAcce = (horAcce / curMistTileData.fluidDrag) * curAcceBonus;
+                    VARS.horCurReverseAcce = (horReverseAcce / curMistTileData.fluidDrag) * curAcceBonus;
+                    VARS.horCurMaxSpeed = (horMaxSpeed / curMistTileData.fluidDrag) * curAcceBonus;
                 }
             }
 
@@ -311,13 +305,10 @@ public class CatMove : MonoBehaviour
                     VARS.curFacingDirectionIndex = 1;
                     VARS.curDashingDirectionIndex = 1;
 
-                    if (VARS.horCurSpeed >= -horCurMaxSpeed &&
+                    if (VARS.horCurSpeed >= -VARS.horCurMaxSpeed &&
                         !VARS.IsLeftBlocked)
                     {
-                        //drag
-                        //horCurSpeed -= horCurAcce * Time.deltaTime;
-                        //UFL.AddHorCurSpeed(-horCurAcce * Time.deltaTime);
-                        VARS.horCurSpeed += -horCurAcce * Time.deltaTime;
+                        VARS.horCurSpeed += -VARS.horCurAcce * Time.deltaTime;
                     }
 
                     VARS.IsHorInputting = true;
@@ -329,13 +320,10 @@ public class CatMove : MonoBehaviour
                     VARS.curFacingDirectionIndex = 2;
                     VARS.curDashingDirectionIndex= 2;
 
-                    if (VARS.horCurSpeed <= horCurMaxSpeed &&
+                    if (VARS.horCurSpeed <= VARS.horCurMaxSpeed &&
                         !VARS.IsRightBlocked)
                     {
-                        //drag
-                        //horCurSpeed += horCurAcce * Time.deltaTime;
-                        //UFL.AddHorCurSpeed(horCurAcce * Time.deltaTime);
-                        VARS.horCurSpeed += horCurAcce * Time.deltaTime;
+                        VARS.horCurSpeed += VARS.horCurAcce * Time.deltaTime;
                     }
 
                     VARS.IsHorInputting = true;
@@ -350,11 +338,6 @@ public class CatMove : MonoBehaviour
             if (isLeftBlocked &&
                 VARS.curFacingDirectionIndex == 1)
             {
-                //if (horCurSpeed < 0)
-                //{
-                //    horCurSpeed = 0;
-                //}
-
                 //attachWall
                 //if (!isOnGround)
                 //{
@@ -392,11 +375,6 @@ public class CatMove : MonoBehaviour
             else if (isRightBlocked &&
                 VARS.curFacingDirectionIndex == 2)
             {
-                //if (horCurSpeed > 0)
-                //{
-                //    horCurSpeed = 0;
-                //}
-
                 //attachWall
                 //if (!isOnGround)
                 //{
@@ -458,36 +436,26 @@ public class CatMove : MonoBehaviour
                 {
                     if (isOnGround)
                     {
-                        //horCurSpeed += horCurReverseAcce * Time.deltaTime;
-                        //UFL.AddHorCurSpeed(horCurReverseAcce * Time.deltaTime);
-                        VARS.horCurSpeed += horCurReverseAcce * Time.deltaTime;
+                        VARS.horCurSpeed += VARS.horCurReverseAcce * Time.deltaTime;
                     }
                     else
                     {
-                        //horCurSpeed += horCurReverseAcce / 2 * Time.deltaTime;
-                        //UFL.AddHorCurSpeed(horCurReverseAcce / 2 * Time.deltaTime);
-                        VARS.horCurSpeed += horCurReverseAcce / 2 * Time.deltaTime;
+                        VARS.horCurSpeed += VARS.horCurReverseAcce / 2 * Time.deltaTime;
                     }
                 }
                 else if (VARS.horCurSpeed > horStopThres)
                 {
                     if (isOnGround)
                     {
-                        //horCurSpeed -= horCurReverseAcce * Time.deltaTime;
-                        //UFL.AddHorCurSpeed(-horCurReverseAcce * Time.deltaTime);
-                        VARS.horCurSpeed += -horCurReverseAcce * Time.deltaTime;
+                        VARS.horCurSpeed += -VARS.horCurReverseAcce * Time.deltaTime;
                     }
                     else
                     {
-                        //horCurSpeed -= horCurReverseAcce / 2 * Time.deltaTime;
-                        //UFL.AddHorCurSpeed(-horCurReverseAcce / 2 * Time.deltaTime);
-                        VARS.horCurSpeed += -horCurReverseAcce / 2 * Time.deltaTime;
+                        VARS.horCurSpeed += -VARS.horCurReverseAcce / 2 * Time.deltaTime;
                     }
                 }
                 else
                 {
-                    //horCurSpeed = 0;
-                    //UFL.SetHorCurSpeed(0);
                     VARS.horCurSpeed = 0;
                 }
             }
@@ -503,9 +471,6 @@ public class CatMove : MonoBehaviour
                 VARS.IsMovingInAttachingCeiling = false;
             }
 
-            ////debug
-            //VARS.horCurSpeed = 0;
-
             //horSpeedSum
             if (VARS.horCurSpeed != 0)
             {
@@ -515,7 +480,6 @@ public class CatMove : MonoBehaviour
                     VARS.horCurSpeed = VARS.curDashHorSpeed;
                 }
 
-                //catTransform.position += curRight * VARS.horCurSpeed * Time.deltaTime;
                 UFL.AddCatPosition(curRight * VARS.horCurSpeed * Time.deltaTime);
             }
             #endregion
@@ -526,74 +490,74 @@ public class CatMove : MonoBehaviour
             {
                 if (isOnGround)
                 {
-                    verCurIniSpeed = verIniSpeed;
-                    curGravityAcce = gravityAcce * curGravityAcceBonus;
-                    verCurMaxSpeed = verMaxSpeed - curDownTileData.tackiness;
+                    VARS.verCurIniSpeed = verIniSpeed;
+                    VARS.curGravityAcce = gravityAcce * curGravityAcceBonus;
+                    VARS.verCurMaxSpeed = verMaxSpeed - curDownTileData.tackiness;
                 }
                 //HR: ~fluid
                 else
                 {
-                    verCurIniSpeed = verIniSpeed;
-                    curGravityAcce = gravityAcce * curGravityAcceBonus;
-                    verCurMaxSpeed = verMaxSpeed;
+                    VARS.verCurIniSpeed = verIniSpeed;
+                    VARS.curGravityAcce = gravityAcce * curGravityAcceBonus;
+                    VARS.verCurMaxSpeed = verMaxSpeed;
                 }
             }
             else
             {
                 if (isInLiquid)
                 {
-                    verCurIniSpeed = verIniSpeed / curLiquidTileData.fluidDrag;
+                    VARS.verCurIniSpeed = verIniSpeed / curLiquidTileData.fluidDrag;
                     if (VARS.IsInputtingUpKey)
                     {
-                        curGravityAcce = (gravityAcce - gravityAcce * curLiquidTileData.mass * (1 - buoyancyDistanceFixFloat) /** 3*/ /** 2*/ /** 1.5f*/ * 2) * curGravityAcceBonus;
+                        VARS.curGravityAcce = (gravityAcce - gravityAcce * curLiquidTileData.mass * (1 - buoyancyDistanceFixFloat) /** 3*/ /** 2*/ /** 1.5f*/ * 2) * curGravityAcceBonus;
                     }
                     else if (VARS.IsInputtingDownKey)
                     {
-                        curGravityAcce = (gravityAcce - gravityAcce * curLiquidTileData.mass * (1 - buoyancyDistanceFixFloat) /** 3*/ /** 2*/ /** 1.5f*/ * 0.9f) * curGravityAcceBonus;
+                        VARS.curGravityAcce = (gravityAcce - gravityAcce * curLiquidTileData.mass * (1 - buoyancyDistanceFixFloat) /** 3*/ /** 2*/ /** 1.5f*/ * 0.9f) * curGravityAcceBonus;
                     }
                     else
                     {
-                        curGravityAcce = (gravityAcce - gravityAcce * curLiquidTileData.mass * (1 - buoyancyDistanceFixFloat) /** 3*/ /** 2*/ * 1.5f) * curGravityAcceBonus;
+                        VARS.curGravityAcce = (gravityAcce - gravityAcce * curLiquidTileData.mass * (1 - buoyancyDistanceFixFloat) /** 3*/ /** 2*/ * 1.5f) * curGravityAcceBonus;
                     }
-                    verCurMaxSpeed = verMaxSpeed / curLiquidTileData.fluidDrag;
+                    VARS.verCurMaxSpeed = verMaxSpeed / curLiquidTileData.fluidDrag;
 
                     VARS.IsJustInLiquid = true;
                 }
                 else if (isInGas)
                 {
-                    verCurIniSpeed = verIniSpeed / curGasTileData.fluidDrag;
+                    VARS.verCurIniSpeed = verIniSpeed / curGasTileData.fluidDrag;
                     //curGravityAcce = (gravityAcce - gravityAcce * curGasTileData.mass * 0.5f /*/ 2*/) * curGravityAcceBonus;
                     if (VARS.IsInputtingUpKey)
                     {
-                        curGravityAcce = (gravityAcce - gravityAcce * curGasTileData.mass * 0.75f) * curGravityAcceBonus;
+                        VARS.curGravityAcce = (gravityAcce - gravityAcce * curGasTileData.mass * 0.75f) * curGravityAcceBonus;
                     }
                     else if (VARS.IsInputtingDownKey)
                     {
-                        curGravityAcce = (gravityAcce - gravityAcce * curGasTileData.mass * 0.5f) * curGravityAcceBonus;
+                        VARS.curGravityAcce = (gravityAcce - gravityAcce * curGasTileData.mass * 0.5f) * curGravityAcceBonus;
                     }
                     else
                     {
-                        curGravityAcce = (gravityAcce - gravityAcce * curGasTileData.mass * 0.25f) * curGravityAcceBonus;
+                        VARS.curGravityAcce = (gravityAcce - gravityAcce * curGasTileData.mass * 0.25f) * curGravityAcceBonus;
                     }
-                    verCurMaxSpeed = verMaxSpeed / curGasTileData.fluidDrag;
+                    VARS.verCurMaxSpeed = verMaxSpeed / curGasTileData.fluidDrag;
                 }
                 else if (isInMist)
                 {
-                    verCurIniSpeed = verIniSpeed / curMistTileData.fluidDrag;
+                    VARS.verCurIniSpeed = verIniSpeed / curMistTileData.fluidDrag;
                     //curGravityAcce = (gravityAcce - gravityAcce * curMistTileData.mass * 0.5f /*/ 2*/) * curGravityAcceBonus;
                     if (VARS.IsInputtingUpKey)
                     {
-                        curGravityAcce = (gravityAcce - gravityAcce * curMistTileData.mass * 0.75f) * curGravityAcceBonus;
+                        VARS.curGravityAcce = (gravityAcce - gravityAcce * curMistTileData.mass * 0.75f) * curGravityAcceBonus;
                     }
                     else if (VARS.IsInputtingDownKey)
                     {
-                        curGravityAcce = (gravityAcce - gravityAcce * curMistTileData.mass * 0.5f) * curGravityAcceBonus;
+                        VARS.curGravityAcce = (gravityAcce - gravityAcce * curMistTileData.mass * 0.5f) * curGravityAcceBonus;
                     }
                     else
                     {
-                        curGravityAcce = (gravityAcce - gravityAcce * curMistTileData.mass * 0.25f) * curGravityAcceBonus;
+                        VARS.curGravityAcce = (gravityAcce - gravityAcce * curMistTileData.mass * 0.25f) * curGravityAcceBonus;
                     }
-                    verCurMaxSpeed = verMaxSpeed / curMistTileData.fluidDrag;
+                    VARS.verCurMaxSpeed = verMaxSpeed / curMistTileData.fluidDrag;
                 }
             }
 
@@ -606,14 +570,14 @@ public class CatMove : MonoBehaviour
             {
                 if (VARS.IsInputtingLeftKey)
                 {
-                    curClimbSpeed = climbSpeed * curLeftTileData.friction * curClimbingAcceBonus;
+                    VARS.curClimbSpeed = climbSpeed * curLeftTileData.friction * curClimbingAcceBonus;
                 }
             }
             if (isRightBlocked)
             {
                 if (VARS.IsInputtingRightKey)
                 {
-                    curClimbSpeed = climbSpeed * curRightTileData.friction * curClimbingAcceBonus;
+                    VARS.curClimbSpeed = climbSpeed * curRightTileData.friction * curClimbingAcceBonus;
                 }
             }
 
@@ -660,7 +624,7 @@ public class CatMove : MonoBehaviour
                     {
                         //verCurSpeed -= curGravityAcce * curRoomGravity * Time.deltaTime;
                         //UFL.AddVerCurSpeed(-curGravityAcce * curRoomGravity * Time.deltaTime);
-                        VARS.verCurSpeed += -curGravityAcce * curRoomGravity * Time.deltaTime;
+                        VARS.verCurSpeed += -VARS.curGravityAcce * curRoomGravity * Time.deltaTime;
                     }
 
                     //highJump
@@ -669,7 +633,7 @@ public class CatMove : MonoBehaviour
                         if (VARS.IsHighJumping)
                         {
                             if (VARS.verCurSpeed > 0 &&
-                                VARS.verCurSpeed <= /*verCurMaxSpeed*/ curHighJumpingMaxSpeed)
+                                VARS.verCurSpeed <= /*verCurMaxSpeed*/ VARS.curHighJumpingMaxSpeed)
                             {
                                 //verCurSpeed += verAcce * Time.deltaTime;
                                 //UFL.AddVerCurSpeed(verAcce * Time.deltaTime);
@@ -712,7 +676,13 @@ public class CatMove : MonoBehaviour
                 {
                     //verCurSpeed -= curGravityAcce * curRoomGravity * Time.deltaTime;
                     //UFL.AddVerCurSpeed(-curGravityAcce * curRoomGravity * Time.deltaTime);
-                    VARS.verCurSpeed += -curGravityAcce * curRoomGravity * Time.deltaTime;
+                    VARS.verCurSpeed += -VARS.curGravityAcce * curRoomGravity * Time.deltaTime;
+
+                    //fallQuicklier
+                    //if (VARS.verCurSpeed < 0/* && VARS.IsIniRotation*/)
+                    //{
+                    //    VARS.verCurSpeed += -curGravityAcce * curRoomGravity * 0.5f /*0.2f*/ * Time.deltaTime;
+                    //}
                 }
 
                 //highJump
@@ -721,7 +691,7 @@ public class CatMove : MonoBehaviour
                     if (VARS.IsHighJumping)
                     {
                         if (VARS.verCurSpeed > 0 &&
-                            VARS.verCurSpeed <= /*verCurMaxSpeed*/ curHighJumpingMaxSpeed)
+                            VARS.verCurSpeed <= /*verCurMaxSpeed*/ VARS.curHighJumpingMaxSpeed)
                         {
                             //verCurSpeed += verAcce * Time.deltaTime;
                             //UFL.AddVerCurSpeed(verAcce * Time.deltaTime);
@@ -759,16 +729,12 @@ public class CatMove : MonoBehaviour
                     {
                         if (isPostWallJumpToRight)
                         {
-                            //horCurSpeed = horMaxSpeed + horWallJumpBonusSpeed - curLeftTileData.tackiness;
-                            //UFL.SetHorCurSpeed(horMaxSpeed + horWallJumpBonusSpeed - curLeftTileData.tackiness);
                             VARS.horCurSpeed = horMaxSpeed + horWallJumpBonusSpeed - curLeftTileData.tackiness;
 
                             Jump();
                         }
                         else
                         {
-                            //horCurSpeed = -horMaxSpeed - horWallJumpBonusSpeed + curRightTileData.tackiness;
-                            //UFL.SetHorCurSpeed(-horMaxSpeed - horWallJumpBonusSpeed + curRightTileData.tackiness);
                             VARS.horCurSpeed = -horMaxSpeed - horWallJumpBonusSpeed + curRightTileData.tackiness;
 
                             Jump();
@@ -790,16 +756,12 @@ public class CatMove : MonoBehaviour
                         //wallJump
                         if (isLeftBlocked)
                         {
-                            //horCurSpeed = horMaxSpeed + horWallJumpBonusSpeed - curLeftTileData.tackiness;
-                            //UFL.SetHorCurSpeed(horMaxSpeed + horWallJumpBonusSpeed - curLeftTileData.tackiness);
                             VARS.horCurSpeed = horMaxSpeed + horWallJumpBonusSpeed - curLeftTileData.tackiness;
 
                             Jump();
                         }
                         else if (isRightBlocked)
                         {
-                            //horCurSpeed = -horMaxSpeed - horWallJumpBonusSpeed + curRightTileData.tackiness;
-                            //UFL.SetHorCurSpeed(-horMaxSpeed - horWallJumpBonusSpeed + curRightTileData.tackiness);
                             VARS.horCurSpeed = -horMaxSpeed - horWallJumpBonusSpeed + curRightTileData.tackiness;
 
                             Jump();
@@ -829,7 +791,7 @@ public class CatMove : MonoBehaviour
                         {
                             //verCurSpeed = curClimbSpeed;
                             //UFL.SetVerCurSpeed(curClimbSpeed);
-                            VARS.verCurSpeed = curClimbSpeed;
+                            VARS.verCurSpeed = VARS.curClimbSpeed;
 
                             //curEnergy -= climbEnergyDecreaseSpeed * Time.deltaTime;
                             //UFL.AddCurTargetEnergy(-climbEnergyDecreaseSpeed * Time.deltaTime);
@@ -848,7 +810,7 @@ public class CatMove : MonoBehaviour
                         //down
                         else if (VARS.IsInputtingDownKey)
                         {
-                            VARS.verCurSpeed = -curClimbSpeed;
+                            VARS.verCurSpeed = -VARS.curClimbSpeed;
                             VARS.curTargetEnergy += -climbEnergyDecreaseSpeed * 0.75f * Time.deltaTime;
 
                             VARS.IsClimbing = true;
@@ -986,101 +948,109 @@ public class CatMove : MonoBehaviour
             #region Dash
             if (VARS.IsDashEnabled)
             {
-                if (dashStartTime == 0)
+                if (/*dashStartTime == 0*/
+                    !VARS.IsDashing)
                 {
-                    if (VARS.curEnergy > dashEnergyCost/*true*/)
+                    if (VARS.curEnergy > dashEnergyCost &&
+                        (VARS.IsDashKeyDown || isDashPreInputed))
                     {
-                        if (!VARS.IsDashing &&
-                            /*((VARS.IsOnGround && VARS.IsInputtingDashKey) ||
-                            (!VARS.IsOnGround && VARS.IsDashKeyDown))*/
-                            VARS.IsInputtingDashKey)
+                        //dashPreInput
+                        if (!VARS.IsDashKeyDown && isDashPreInputed)
                         {
-                            //dir
-                            if (VARS.IsInputtingLeftKey)
+                            Debug.Log("dashPreInput");
+                        }
+                        isDashPreInputed = false;
+
+                        //if (/*!VARS.IsDashing &&*/
+                        //    /*((VARS.IsOnGround && VARS.IsInputtingDashKey) ||
+                        //    (!VARS.IsOnGround && VARS.IsDashKeyDown))*/
+                        //    /*VARS.IsInputtingDashKey*/
+                        //    VARS.IsDashKeyDown)
+                        //{
+                        //dir
+                        if (VARS.IsInputtingLeftKey)
+                        {
+                            VARS.curDashVector = -curRight;
+                        }
+                        else if (VARS.IsInputtingRightKey)
+                        {
+                            VARS.curDashVector = curRight;
+                        }
+                        else
+                        {
+                            if (/*lastHorDirectionInput == leftKeyCode*/
+                                VARS.curDashingDirectionIndex == 1)
                             {
                                 VARS.curDashVector = -curRight;
                             }
-                            else if (VARS.IsInputtingRightKey)
+                            else if (/*lastHorDirectionInput == rightKeyCode*/
+                                VARS.curDashingDirectionIndex == 2 ||
+                                VARS.curDashingDirectionIndex == 0)
                             {
                                 VARS.curDashVector = curRight;
                             }
-                            else
-                            {
-                                if (/*lastHorDirectionInput == leftKeyCode*/
-                                    VARS.curDashingDirectionIndex == 1)
-                                {
-                                    VARS.curDashVector = -curRight;
-                                }
-                                else if (/*lastHorDirectionInput == rightKeyCode*/
-                                    VARS.curDashingDirectionIndex == 2 ||
-                                    VARS.curDashingDirectionIndex == 0)
-                                {
-                                    VARS.curDashVector = curRight;
-                                }
-                            }
-
-                            //blockedReverse
-                            if (VARS.curDashVector == -curRight)
-                            {
-                                if (isLeftBlocked)
-                                {
-                                    VARS.curDashVector = curRight;
-                                }
-                            }
-                            else if (VARS.curDashVector == curRight)
-                            {
-                                if (isRightBlocked)
-                                {
-                                    VARS.curDashVector = -curRight;
-                                }
-                            }
-
-                            //horCurSpeed += Vector3.Dot(VARS.curDashVector, curRight) * dashIniSpeed;
-                            //UFL.AddHorCurSpeed(Vector3.Dot(VARS.curDashVector, curRight) * dashIniSpeed);
-                            //VARS.horCurSpeed += Vector3.Dot(VARS.curDashVector, curRight) * dashIniSpeed;
-                            VARS.curDashHorSpeed = Vector3.Dot(VARS.curDashVector, curRight) * dashIniSpeed;
-                            VARS.horCurSpeed = VARS.curDashHorSpeed;
-
-                            //dashMaxSpeed
-                            if (VARS.horCurSpeed > dashIniSpeed)
-                            {
-                                //horCurSpeed = dashIniSpeed;
-                                //UFL.SetHorCurSpeed(dashIniSpeed);
-                                VARS.horCurSpeed = dashIniSpeed;
-                            }
-                            else if (VARS.horCurSpeed < -dashIniSpeed)
-                            {
-                                //horCurSpeed = -dashIniSpeed;
-                                //UFL.SetHorCurSpeed(-dashIniSpeed);
-                                VARS.horCurSpeed = -dashIniSpeed;
-                            }
-
-                            //verCurSpeed = 0;
-                            //UFL.SetVerCurSpeed(0);
-                            VARS.verCurSpeed = 0;
-
-                            dashStartTime = Time.time;
-
-                            //curEnergy -= dashEnergyCost;
-                            //UFL.AddCurTargetEnergy(-dashEnergyCost);
-                            VARS.curTargetEnergy += -dashEnergyCost;
-
-                            VARS.IsDashing = true;
                         }
+
+                        ////blockedReverse
+                        //if (VARS.curDashVector == -curRight)
+                        //{
+                        //    if (isLeftBlocked)
+                        //    {
+                        //        VARS.curDashVector = curRight;
+                        //    }
+                        //}
+                        //else if (VARS.curDashVector == curRight)
+                        //{
+                        //    if (isRightBlocked)
+                        //    {
+                        //        VARS.curDashVector = -curRight;
+                        //    }
+                        //}
+
+                        VARS.curDashHorSpeed = Vector3.Dot(VARS.curDashVector, curRight) * dashIniSpeed;
+                        VARS.horCurSpeed = VARS.curDashHorSpeed;
+
+                        //dashMaxSpeed
+                        if (VARS.horCurSpeed > dashIniSpeed)
+                        {
+                            VARS.horCurSpeed = dashIniSpeed;
+                        }
+                        else if (VARS.horCurSpeed < -dashIniSpeed)
+                        {
+                            VARS.horCurSpeed = -dashIniSpeed;
+                        }
+
+                        VARS.verCurSpeed = 0;
+
+                        dashStartTime = Time.time;
+
+                        VARS.curAccumulatedDashDistance = 0;
+
+                        VARS.curTargetEnergy += -dashEnergyCost;
+
+                        VARS.IsDashing = true;
+                        //}
                     }
                 }
                 else
                 {
-                    if (Time.time - dashStartTime > dashTime)
+                    //dashPreInput
+                    if (VARS.IsDashKeyDown)
+                    {
+                        //dashPreInputStartTime = Time.time;
+
+                        isDashPreInputed = true;
+                    }
+
+                    VARS.curAccumulatedDashDistance += Mathf.Abs(VARS.curDashHorSpeed) * Time.deltaTime;
+
+                    if (Time.time - dashStartTime > dashTime ||
+                        VARS.curAccumulatedDashDistance >= Mathf.Abs(VARS.curDashHorSpeed) * dashTime - 0.1f)
                     {
                         //horCurSpeed -= Vector3.Dot(VARS.curDashVector, curRight) * dashIniSpeed * 0.6f;
                         //verCurSpeed -= Vector3.Dot(VARS.curDashVector, curUp) * dashIniSpeed * 0.6f;
 
-                        //horCurSpeed = 0;
-                        //UFL.SetHorCurSpeed(0);
                         VARS.horCurSpeed = 0;
-                        //verCurSpeed = 0;
-                        //UFL.SetVerCurSpeed(0);
                         VARS.verCurSpeed = 0;
 
                         dashStartTime = 0;
@@ -1158,8 +1128,8 @@ public class CatMove : MonoBehaviour
             #endregion
 
             #region IfIsStill
-            if (VARS.horCurSpeed == 0 &&
-                VARS.verCurSpeed == 0)
+            if (Mathf.Abs(VARS.horCurSpeed) < 1e-6f &&
+                Mathf.Abs(VARS.verCurSpeed) < 1e-6f)
             {
                 VARS.IsCatStill = true;
             }
@@ -1219,13 +1189,13 @@ public class CatMove : MonoBehaviour
 
             //verCurSpeed = verCurIniSpeed;
             //UFL.SetVerCurSpeed(verCurIniSpeed);
-            VARS.verCurSpeed = verCurIniSpeed;
+            VARS.verCurSpeed = VARS.verCurIniSpeed;
 
-            curHighJumpingMaxSpeed = verCurMaxSpeed;
+            VARS.curHighJumpingMaxSpeed = VARS.verCurMaxSpeed;
 
             if (VARS.IsInLiquid)
             {
-                curHighJumpingMaxSpeed += VARS.curLiquidTileData.mass;
+                VARS.curHighJumpingMaxSpeed += VARS.curLiquidTileData.mass;
             }
 
             VARS.IsHighJumping = true;
