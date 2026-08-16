@@ -5,8 +5,12 @@ using UnityEngine;
 [DefaultExecutionOrder((int)ScriptsExecutionOrder.ExecutionOrder.constants)]
 public class Constants : MonoBehaviour
 {
-    [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
-        "\n- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
+    [Header("////////////////////////////////////////////////////////////////////////////////////////////////" +
+        "\n////////////////////////////////////////////////////////////////////////////////////////////////" +
+        "\n////////////////////////////////////////////////////////////////////////////////////////////////" +
+        "\n////////////////////////////////////////////////////////////////////////////////////////////////" +
+        "\n////////////////////////////////////////////////////////////////////////////////////////////////" +
+        "\n////////////////////////////////////////////////////////////////////////////////////////////////" +
         "  \nCONSTANTS\n --- " +
         "\n- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n")]
 
@@ -372,21 +376,6 @@ public class Constants : MonoBehaviour
 
     //storedBlocks
     public GameObject storedActivatedSavePointBlockEmpty;
-
-    //collectingTexts
-    public GameObject oneColorFragmentCollectingTextRight;
-    public GameObject allColorsFragmentCollectingTextRight;
-    public GameObject keysAndLocksCollectingTextRight;
-    public GameObject TB1;
-    public GameObject TB2;
-    public GameObject TB3;
-    public GameObject TB4;
-    public GameObject TB5;
-    public GameObject TB6;
-    public GameObject TB7;
-    public GameObject TB8;
-    public GameObject TB9;
-    public GameObject TB0;
     #endregion
 
     #region CatAppearance
@@ -580,9 +569,7 @@ public class Constants : MonoBehaviour
     //keyCodes
     public List<KeyCode> keyCodes = new List<KeyCode>();
 
-    //keySprites
-    public List<Sprite> keySprites = new List<Sprite>();
-    public List<Sprite> keyChosenSprites = new List<Sprite>();
+    //keyIndexes
     public enum keyIndexes
     {
         keySpace,
@@ -618,8 +605,15 @@ public class Constants : MonoBehaviour
     #region GuideManager
     [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
         "  \nGUIDEMANAGER\n --- ")]
+    //keysGuideMask
+    public GameObject keysGuideMask;
+    #endregion
+
+    #region TextManaget
+    [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
+        "  \nTEXTMANAGER\n --- ")]
     //guideTexts    
-    public GameObject keysGuideEmpty;
+    public GameObject keysGuideTextEmpty;
     //public List<GameObject> keysGuideTexts = new List<GameObject>();
     public GameObject jumpGuideText;
     public GameObject dashGuideText;
@@ -628,9 +622,43 @@ public class Constants : MonoBehaviour
     public GameObject twistGuideText;
     public GameObject rotateGuideText;
     public GameObject backCenterGuideText;
+    public GameObject outOfCenterTwistGuideText;
+    public GameObject betweenCentersTransportGuideText;
 
-    //keysGuideMask
-    public GameObject keysGuideMask;
+    //collectingTexts
+    public GameObject oneColorFragmentCollectingTextEmpty;
+    public GameObject allColorsFragmentCollectingTextEmpty;
+    public GameObject keysAndLocksCollectingTextEmpty;
+    public GameObject oneColorFragmentCollectingTextLeft;
+    public GameObject allColorsFragmentCollectingTextLeft1;
+    public GameObject allColorsFragmentCollectingTextLeft2;
+    public GameObject keysAndLocksCollectingTextLeft1;
+    public GameObject keysAndLocksCollectingTextLeft2;
+    public GameObject oneColorFragmentCollectingTextRight;
+    public GameObject allColorsFragmentCollectingTextRight;
+    public GameObject keysAndLocksCollectingTextRight;
+
+    //numberTexts
+
+    //letterTexts
+
+    //guideSprites
+
+    //collectingSprites
+
+    //numberSprites
+    public Sprite[] TBNumberSprites = new Sprite[10];
+
+    //letterSprites
+
+    //keySprites
+    public List<Sprite> keySprites = new List<Sprite>();
+    public List<Sprite> keyChosenSprites = new List<Sprite>();
+
+    //collectingTextsActivatedTimes
+    public float oneColorFragmentCollectingTextActivatedTime;
+    public float allColorsFragmentCollectingTextActivatedTime;
+    public float keysAndLocksCollectingTextActivatedTime;
     #endregion
 
     #region AudioManager

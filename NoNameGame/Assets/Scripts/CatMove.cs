@@ -343,8 +343,8 @@ public class CatMove : MonoBehaviour
                 //{
                 if (VARS.IsAttachWallEnabled)
                 {
-                    if (VARS.IsInputtingLeftKey &&
-                        VARS.IsInputtingGrabKey)
+                    if (VARS.IsInputtingLeftKey/* &&
+                        VARS.IsInputtingGrabKey*/)
                     {
                         //lastHorDirectionInput = rightKeyCode;
                         //VARS.curFacingDirectionIndex = 1;
@@ -380,8 +380,8 @@ public class CatMove : MonoBehaviour
                 //{
                 if (VARS.IsAttachWallEnabled)
                 {
-                    if (VARS.IsInputtingRightKey &&
-                        VARS.IsInputtingGrabKey)
+                    if (VARS.IsInputtingRightKey/* &&
+                        VARS.IsInputtingGrabKey*/)
                     {
                         //lastHorDirectionInput = rightKeyCode;
                         //VARS.curFacingDirectionIndex = 2;
@@ -1069,15 +1069,15 @@ public class CatMove : MonoBehaviour
             #region Acce
             if (VARS.IsAcceEnabled)
             {
-                //acceControl
-                if (VARS.IsInputtingAcceKey)
-                {
-                    VARS.IsInAcce = true;
-                }
-                else
-                {
-                    VARS.IsInAcce = false;
-                }
+                ////acceControl
+                //if (VARS.IsInputtingAcceKey)
+                //{
+                //    VARS.IsInAcce = true;
+                //}
+                //else
+                //{
+                //    VARS.IsInAcce = false;
+                //}
 
                 //curAcceBonus
                 if (VARS.IsInAcce)
@@ -1107,9 +1107,31 @@ public class CatMove : MonoBehaviour
             }
             #endregion
 
-            #region BackCenter
+            #region BackCenterAndBetweenCentersTransport
             if (VARS.IsBackCenterTriggered)
             {
+                //betweenCentersTransport
+                if (VARS.IsInCenter &&
+                    VARS.curAccessedCenterSavePointPositions.Count > 1)
+                {
+                    tempVector = VARS.curAccessedCenterSavePointPositions[VARS.curBackToAccessedCenterSavePointPositionIndex];
+                    VARS.curBackToAccessedCenterSavePointPositionIndex = (VARS.curBackToAccessedCenterSavePointPositionIndex + 1) % VARS.curAccessedCenterSavePointPositions.Count;
+
+                    if (tempVector == VARS.curLatestCenterSavePointPosition)
+                    {
+                        tempVector = VARS.curAccessedCenterSavePointPositions[VARS.curBackToAccessedCenterSavePointPositionIndex];
+                        VARS.curBackToAccessedCenterSavePointPositionIndex = (VARS.curBackToAccessedCenterSavePointPositionIndex + 1) % VARS.curAccessedCenterSavePointPositions.Count;
+                    }
+
+                    if (tempVector != VARS.curLatestCenterSavePointPosition)
+                    {
+                        VARS.lastActivatedSavePointTime = -1;
+                    }
+
+                    VARS.curLatestCenterSavePointPosition = tempVector;
+                }
+
+                //backCenter
                 if (Vector3.Magnitude(VARS.curLatestCenterSavePointPosition) > 1)
                 {
                     if (VARS.IsCarryingFragments)

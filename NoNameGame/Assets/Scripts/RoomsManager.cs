@@ -512,35 +512,35 @@ public class RoomsManager : MonoBehaviour
                 //twist
                 if (twistingAccumulatedDegree < 90)
                 {
-                    if (Input.GetKey(VARS.acceKeyCode))
-                    {
-                        twistingAccumulatedDegree += twistSpeed * 1.5f * Time.deltaTime;
-                    }
-                    else
-                    {
+                    //if (Input.GetKey(VARS.acceKeyCode))
+                    //{
+                    //    twistingAccumulatedDegree += twistSpeed * 1.5f * Time.deltaTime;
+                    //}
+                    //else
+                    //{
                         twistingAccumulatedDegree += twistSpeed * Time.deltaTime;
-                    }
+                    //}
                     if (VARS.IsClockwiseTwisting)
                     {
-                        if (Input.GetKey(VARS.acceKeyCode))
-                        {
-                            curTwistingCenter.transform.Rotate(curFaceStableForward * twistSpeed * 1.5f * Time.deltaTime);
-                        }
-                        else
-                        {
+                        //if (Input.GetKey(VARS.acceKeyCode))
+                        //{
+                        //    curTwistingCenter.transform.Rotate(curFaceStableForward * twistSpeed * 1.5f * Time.deltaTime);
+                        //}
+                        //else
+                        //{
                             curTwistingCenter.transform.Rotate(curFaceStableForward * twistSpeed * Time.deltaTime);
-                        }
+                        //}
                     }
                     else
                     {
-                        if (Input.GetKey(VARS.acceKeyCode))
-                        {
-                            curTwistingCenter.transform.Rotate(-curFaceStableForward * twistSpeed * 1.5f * Time.deltaTime);
-                        }
-                        else
-                        {
+                        //if (Input.GetKey(VARS.acceKeyCode))
+                        //{
+                        //    curTwistingCenter.transform.Rotate(-curFaceStableForward * twistSpeed * 1.5f * Time.deltaTime);
+                        //}
+                        //else
+                        //{
                             curTwistingCenter.transform.Rotate(-curFaceStableForward * twistSpeed * Time.deltaTime);
-                        }
+                        //}
                     }
 
                     //cameraPosition

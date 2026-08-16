@@ -53,6 +53,7 @@ public class ScriptsExecutionOrder : MonoBehaviour
         optionsManager,
         guideManager,
         screenPostProcessor,
+        textManager,
         audioManager,
         test
     }

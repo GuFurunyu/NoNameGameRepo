@@ -534,6 +534,8 @@ public class UniversalFunctionsLibrary : MonoBehaviour
 
     public void IntoMinimap()
     {
+        UnityEngine.Debug.Log("IntoMinimap");
+
         roomPlanes[VARS.curRoomIndex].SetActive(false);
 
         //minimapRoomPlanes
@@ -548,9 +550,10 @@ public class UniversalFunctionsLibrary : MonoBehaviour
             {
                 //VARS.curMinimapRoomPlaneColor = minimapRoomPlanes[i].GetComponent<MeshRenderer>().material.GetColor("_MainColor");
                 //minimapRoomPlanes[i].GetComponent<MeshRenderer>().material.SetColor("_MainColor", Color.white);
+                //minimapRoomPlanes[i].transform.GetChild(2).gameObject.SetActive(true);
+                //minimapRoomPlanes[i].transform.GetChild(3).gameObject.SetActive(true);
+                //minimapRoomPlanes[i].transform.GetChild(4).gameObject.SetActive(true);
                 minimapRoomPlanes[i].transform.GetChild(2).gameObject.SetActive(true);
-                minimapRoomPlanes[i].transform.GetChild(3).gameObject.SetActive(true);
-                minimapRoomPlanes[i].transform.GetChild(4).gameObject.SetActive(true);
                 minimapRoomPlanes[i].GetComponent<MeshRenderer>().material.SetFloat("_OutlineWidth", 0.5f);
 
                 if ((i - 4) % 9 == 0)
@@ -569,7 +572,7 @@ public class UniversalFunctionsLibrary : MonoBehaviour
             //activateStableDirectionMarkingEdgeLines
             for (int j = 0; j < 4; j++)
             {
-                minimapRoomPlanes[i].transform.GetChild(5 + j).gameObject.SetActive(VARS.isMinimapRoomPlaneExploredStableDirectionMarkingEdgeLinesActivated[i * 4 + j]);
+                minimapRoomPlanes[i].transform.GetChild(/*5*/ 3 + j).gameObject.SetActive(VARS.isMinimapRoomPlaneExploredStableDirectionMarkingEdgeLinesActivated[i * 4 + j]);
             }
 
             //roomPlanes[i].SetActive(false);
@@ -671,6 +674,8 @@ public class UniversalFunctionsLibrary : MonoBehaviour
 
     public void OutOfMinimap()
     {
+        UnityEngine.Debug.Log("OutOfMinimap");
+
         roomPlanes[VARS.curRoomIndex].SetActive(true);
 
         //minimapRoomPlanes
@@ -682,9 +687,10 @@ public class UniversalFunctionsLibrary : MonoBehaviour
             if (i == VARS.curRoomIndex)
             {
                 //minimapRoomPlanes[i].GetComponent<MeshRenderer>().material.SetColor("_MainColor", VARS.curMinimapRoomPlaneColor);
+                //minimapRoomPlanes[i].transform.GetChild(2).gameObject.SetActive(false);
+                //minimapRoomPlanes[i].transform.GetChild(3).gameObject.SetActive(false);
+                //minimapRoomPlanes[i].transform.GetChild(4).gameObject.SetActive(false);
                 minimapRoomPlanes[i].transform.GetChild(2).gameObject.SetActive(false);
-                minimapRoomPlanes[i].transform.GetChild(3).gameObject.SetActive(false);
-                minimapRoomPlanes[i].transform.GetChild(4).gameObject.SetActive(false);
                 minimapRoomPlanes[i].GetComponent<MeshRenderer>().material.SetFloat("_OutlineWidth", 0.01f);
 
                 if ((i - 4) % 9 == 0)

@@ -29,6 +29,8 @@ public class CurRoomManager : MonoBehaviour
 
     Transform catTransform;
 
+    float maxEnergy;
+
     GameObject[] minimapRoomPlanes = new GameObject[54];
     #endregion
 
@@ -50,6 +52,7 @@ public class CurRoomManager : MonoBehaviour
         roomCoordBreadth = CONS.roomCoordBreadth;
         faces = CONS.faces;
         catTransform = CONS.catTransform;
+        maxEnergy = CONS.maxEnergy;
         minimapRoomPlanes = CONS.minimapRoomPlanes;
         #endregion
 
@@ -71,7 +74,8 @@ public class CurRoomManager : MonoBehaviour
         {
             CurRoomInitialize();
 
-            if (storedFaceIndex != VARS.curFaceIndex)
+            if (storedFaceIndex != VARS.curFaceIndex &&
+                (VARS.curRoomIndex - 4) % 9 != 0)
             {
                 VARS.horCurSpeed = 0;
                 VARS.verCurSpeed = 0;
@@ -90,6 +94,13 @@ public class CurRoomManager : MonoBehaviour
                 {
                     VARS.IsInDownEdgeGate = true;
                 }
+
+                //enterNewFaceCurEnergyToMax
+                VARS.curTargetEnergy = maxEnergy;
+                VARS.curEnergy = maxEnergy;
+
+                //endDashing
+                VARS.IsDashing = false;
 
                 VARS.IsJustEnterNewFace = true;
             }
@@ -124,7 +135,7 @@ public class CurRoomManager : MonoBehaviour
             for (int i = 0; i < 4; i++)
             {
                 //determineTheUpStableDirectionMarkingEdgeLine
-                if (Vector3.Dot(minimapRoomPlanes[curRoomIndex].transform.GetChild(5 + i).position - minimapRoomPlanes[curRoomIndex].transform.position, VARS.curRoomStableUp) > 2)
+                if (Vector3.Dot(minimapRoomPlanes[curRoomIndex].transform.GetChild(3 + i).position - minimapRoomPlanes[curRoomIndex].transform.position, VARS.curRoomStableUp) > 2)
                 {
                     if (VARS.isMinimapRoomPlaneExploredStableDirectionMarkingEdgeLinesActivated[curRoomIndex * 4 + i] == false)
                     {

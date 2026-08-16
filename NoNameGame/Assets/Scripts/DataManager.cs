@@ -26,6 +26,13 @@ public class DataManager : MonoBehaviour
         public bool hasClimbed;
         public bool hasTwisted;
         public bool hasBackCentered;
+        public bool hasOutOfCenterTwisted;
+        public bool hasBetweenCentersTransported;
+
+        //collectedNumbers
+        public int[] curOneColorFragmentCollectedNumbers = new int[6];
+        public int curAllColorsFragmentCollectedNumber;
+        public int curKeysAndLocksCollectedNumber;
     }
 
     ProgressData curProgressData = new ProgressData();
@@ -105,6 +112,9 @@ public class DataManager : MonoBehaviour
         //curLatestCenterSavePointPosition
         public Vector3 curLatestCenterSavePointPosition;
 
+        //curAccessedCenterSavePointPositions
+        public List<Vector3> curAccessedCenterSavePointPositions = new List<Vector3>();
+
         //isMinimapRoomPlaneExploredStableDirectionMarkingEdgeLinesActivated
         public bool[] isMinimapRoomPlaneExploredStableDirectionMarkingEdgeLinesActivated = new bool[216];
 
@@ -121,9 +131,9 @@ public class DataManager : MonoBehaviour
         public KeyCode leftKeyCode;
         public KeyCode rightKeyCode;
         public KeyCode jumpKeyCode;
-        public KeyCode grabKeyCode;
-        //public KeyCode dashKeyCode;
-        public KeyCode acceKeyCode;
+        //public KeyCode acceKeyCode;
+        //public KeyCode grabKeyCode;
+        public KeyCode dashKeyCode;
         public KeyCode minimapKeyCode;
         public KeyCode backKeyCode;
     }
@@ -341,7 +351,8 @@ public class DataManager : MonoBehaviour
         {
             tempJsonString = File.ReadAllText(tempPath);
             curProgressData = JsonUtility.FromJson<ProgressData>(tempJsonString);
-
+            
+            //guide
             VARS.HasFinishedKeysGuide = curProgressData.hasFinishedKeysGuide;
             VARS.HasJumped = curProgressData.hasJumped;
             VARS.HasDashed = curProgressData.hasDashed;
@@ -351,6 +362,13 @@ public class DataManager : MonoBehaviour
             VARS.HasClimbed = curProgressData.hasClimbed;
             VARS.HasTwisted = curProgressData.hasTwisted;
             VARS.HasBackCentered = curProgressData.hasBackCentered;
+            VARS.HasOutOfCenterTwisted = curProgressData.hasOutOfCenterTwisted;
+            VARS.HasBetweenCentersTransported = curProgressData.hasBetweenCentersTransported;
+
+            //collectedNumbers
+            VARS.curOneColorFragmentCollectedNumbers = curProgressData.curOneColorFragmentCollectedNumbers;
+            VARS.curAllColorsFragmentCollectedNumber = curProgressData.curAllColorsFragmentCollectedNumber;
+            VARS.curKeysAndLocksCollectedNumber = curProgressData.curKeysAndLocksCollectedNumber;
         }
 
     }
@@ -362,6 +380,7 @@ public class DataManager : MonoBehaviour
         else
             tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "InitialProgressData.txt");
 
+        //guide
         curProgressData.hasFinishedKeysGuide = VARS.HasFinishedKeysGuide;
         curProgressData.hasJumped = VARS.HasJumped;
         curProgressData.hasDashed = VARS.HasDashed;
@@ -371,6 +390,13 @@ public class DataManager : MonoBehaviour
         curProgressData.hasClimbed = VARS.HasClimbed;
         curProgressData.hasTwisted = VARS.HasTwisted;
         curProgressData.hasBackCentered = VARS.HasBackCentered;
+        curProgressData.hasOutOfCenterTwisted = VARS.HasOutOfCenterTwisted;
+        curProgressData.hasBetweenCentersTransported = VARS.HasBetweenCentersTransported;
+
+        //collectedNumbers
+        curProgressData.curOneColorFragmentCollectedNumbers = VARS.curOneColorFragmentCollectedNumbers;
+        curProgressData.curAllColorsFragmentCollectedNumber = VARS.curAllColorsFragmentCollectedNumber;
+        curProgressData.curKeysAndLocksCollectedNumber = VARS.curKeysAndLocksCollectedNumber;
 
         tempJsonString = JsonUtility.ToJson(curProgressData);
 
@@ -577,7 +603,7 @@ public class DataManager : MonoBehaviour
                 if (VARS.isRedFragmentsEmbeded[redFragments[i].GetComponent<TileData>().fragmentIndex - 1])
                 {
                     redFragments[i].transform.position = curCatWorldData.redEmbededFragmentPositions[redFragments[i].GetComponent<TileData>().fragmentIndex - 1];
-                    for (int j = 0; j < 9; j++)
+                    for (int j = 0; j < redFragments[i].transform.childCount; j++)
                     {
                         redFragments[i].transform.GetChild(j).gameObject.SetActive(j > 2);
                     }
@@ -589,7 +615,7 @@ public class DataManager : MonoBehaviour
                 if (VARS.isYellowFragmentsEmbeded[yellowFragments[i].GetComponent<TileData>().fragmentIndex - 1])
                 {
                     yellowFragments[i].transform.position = curCatWorldData.yellowEmbededFragmentPositions[yellowFragments[i].GetComponent<TileData>().fragmentIndex - 1];
-                    for (int j = 0; j < 9; j++)
+                    for (int j = 0; j < yellowFragments[i].transform.childCount; j++)
                     {
                         yellowFragments[i].transform.GetChild(j).gameObject.SetActive(j > 2);
                     }
@@ -601,7 +627,7 @@ public class DataManager : MonoBehaviour
                 if (VARS.isBlueFragmentsEmbeded[blueFragments[i].GetComponent<TileData>().fragmentIndex - 1])
                 {
                     blueFragments[i].transform.position = curCatWorldData.blueEmbededFragmentPositions[blueFragments[i].GetComponent<TileData>().fragmentIndex - 1];
-                    for (int j = 0; j < 9; j++)
+                    for (int j = 0; j < blueFragments[i].transform.childCount; j++)
                     {
                         blueFragments[i].transform.GetChild(j).gameObject.SetActive(j > 2);
                     }
@@ -613,7 +639,7 @@ public class DataManager : MonoBehaviour
                 if (VARS.isOrangeFragmentsEmbeded[orangeFragments[i].GetComponent<TileData>().fragmentIndex - 1])
                 {
                     orangeFragments[i].transform.position = curCatWorldData.orangeEmbededFragmentPositions[orangeFragments[i].GetComponent<TileData>().fragmentIndex - 1];
-                    for (int j = 0; j < 9; j++)
+                    for (int j = 0; j < orangeFragments[i].transform.childCount; j++)
                     {
                         orangeFragments[i].transform.GetChild(j).gameObject.SetActive(j > 2);
                     }
@@ -625,7 +651,7 @@ public class DataManager : MonoBehaviour
                 if (VARS.isGreenFragmentsEmbeded[greenFragments[i].GetComponent<TileData>().fragmentIndex - 1])
                 {
                     greenFragments[i].transform.position = curCatWorldData.greenEmbededFragmentPositions[greenFragments[i].GetComponent<TileData>().fragmentIndex - 1];
-                    for (int j = 0; j < 9; j++)
+                    for (int j = 0; j < greenFragments[i].transform.childCount; j++)
                     {
                         greenFragments[i].transform.GetChild(j).gameObject.SetActive(j > 2);
                     }
@@ -637,7 +663,7 @@ public class DataManager : MonoBehaviour
                 if (VARS.isPurpleFragmentsEmbeded[purpleFragments[i].GetComponent<TileData>().fragmentIndex - 1])
                 {
                     purpleFragments[i].transform.position = curCatWorldData.purpleEmbededFragmentPositions[purpleFragments[i].GetComponent<TileData>().fragmentIndex - 1];
-                    for (int j = 0; j < 9; j++)
+                    for (int j = 0; j < purpleFragments[i].transform.childCount; j++)
                     {
                         purpleFragments[i].transform.GetChild(j).gameObject.SetActive(j > 2);
                     }
@@ -703,6 +729,9 @@ public class DataManager : MonoBehaviour
 
             //curLatestCenterSavePointPosition
             VARS.curLatestCenterSavePointPosition = curCatWorldData.curLatestCenterSavePointPosition;
+
+            //curAccessedCenterSavePointPositions
+            VARS.curAccessedCenterSavePointPositions = curCatWorldData.curAccessedCenterSavePointPositions;
 
             //isMinimapRoomPlaneExploredStableDirectionMarkingEdgeLinesActivated
             VARS.isMinimapRoomPlaneExploredStableDirectionMarkingEdgeLinesActivated = curCatWorldData.isMinimapRoomPlaneExploredStableDirectionMarkingEdgeLinesActivated;
@@ -820,6 +849,9 @@ public class DataManager : MonoBehaviour
         //curLatestCenterSavePointPosition
         curCatWorldData.curLatestCenterSavePointPosition = VARS.curLatestCenterSavePointPosition;
 
+        //curAccessedCenterSavePointPositions
+        curCatWorldData.curAccessedCenterSavePointPositions = VARS.curAccessedCenterSavePointPositions;
+
         //minimapKeysAndLocks
         curCatWorldData.deactivatedMinimapKeyIndexes = VARS.deactivatedMinimapKeyIndexes;
         curCatWorldData.deactivatedMinimapLockIndexes = VARS.deactivatedMinimapLockIndexes;
@@ -854,9 +886,9 @@ public class DataManager : MonoBehaviour
             VARS.leftKeyCode = curKeyCodesData.leftKeyCode;
             VARS.rightKeyCode = curKeyCodesData.rightKeyCode;
             VARS.jumpKeyCode = curKeyCodesData.jumpKeyCode;
-            VARS.acceKeyCode = curKeyCodesData.acceKeyCode;
-            VARS.grabKeyCode = curKeyCodesData.grabKeyCode;
-            //VARS.dashKeyCode = curKeyCodesData.dashKeyCode;
+            //VARS.acceKeyCode = curKeyCodesData.acceKeyCode;
+            //VARS.grabKeyCode = curKeyCodesData.grabKeyCode;
+            VARS.dashKeyCode = curKeyCodesData.dashKeyCode;
             VARS.minimapKeyCode = curKeyCodesData.minimapKeyCode;
             //VARS.backKeyCode = curKeyCodesData.backKeyCode;
 
@@ -867,8 +899,8 @@ public class DataManager : MonoBehaviour
             VARS.curKeyCodes.Add(VARS.leftKeyCode);
             VARS.curKeyCodes.Add(VARS.rightKeyCode);
             VARS.curKeyCodes.Add(VARS.jumpKeyCode);
-            VARS.curKeyCodes.Add(VARS.acceKeyCode);
-            VARS.curKeyCodes.Add(VARS.grabKeyCode);
+            //VARS.curKeyCodes.Add(VARS.acceKeyCode);
+            //VARS.curKeyCodes.Add(VARS.grabKeyCode);
             //VARS.curKeyCodes.Add(VARS.dashKeyCode);
             VARS.curKeyCodes.Add(VARS.minimapKeyCode);
             //VARS.curKeyCodes.Add(VARS.backKeyCode);
@@ -891,9 +923,9 @@ public class DataManager : MonoBehaviour
         curKeyCodesData.leftKeyCode = VARS.leftKeyCode;
         curKeyCodesData.rightKeyCode = VARS.rightKeyCode;
         curKeyCodesData.jumpKeyCode = VARS.jumpKeyCode;
-        curKeyCodesData.acceKeyCode = VARS.acceKeyCode;
-        curKeyCodesData.grabKeyCode = VARS.grabKeyCode;
-        //curKeyCodesData.dashKeyCode = VARS.dashKeyCode;
+        //curKeyCodesData.acceKeyCode = VARS.acceKeyCode;
+        //curKeyCodesData.grabKeyCode = VARS.grabKeyCode;
+        curKeyCodesData.dashKeyCode = VARS.dashKeyCode;
         curKeyCodesData.minimapKeyCode = VARS.minimapKeyCode;
         //curKeyCodesData.backKeyCode = VARS.backKeyCode;
 
@@ -933,11 +965,28 @@ public class DataManager : MonoBehaviour
     {
         tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "ProgressData.txt");
 
+        //guide
         curProgressData.hasFinishedKeysGuide = false;
+        curProgressData.hasJumped = false;
+        curProgressData.hasDashed = false;
         curProgressData.hasBeenIntoMinimap = false;
+        curProgressData.hasCollectedFragment = false;
+        curProgressData.hasRotated = false;
         curProgressData.hasClimbed = false;
         curProgressData.hasTwisted = false;
         curProgressData.hasBackCentered = false;
+        curProgressData.hasOutOfCenterTwisted = false;
+        curProgressData.hasBetweenCentersTransported = false;
+
+        //collectedNumbers
+        curProgressData.curOneColorFragmentCollectedNumbers[0] = 0;
+        curProgressData.curOneColorFragmentCollectedNumbers[1] = 0;
+        curProgressData.curOneColorFragmentCollectedNumbers[2] = 0;
+        curProgressData.curOneColorFragmentCollectedNumbers[3] = 0;
+        curProgressData.curOneColorFragmentCollectedNumbers[4] = 0;
+        curProgressData.curOneColorFragmentCollectedNumbers[5] = 0;
+        curProgressData.curAllColorsFragmentCollectedNumber = 0;
+        curProgressData.curKeysAndLocksCollectedNumber = 0;
 
         tempJsonString = JsonUtility.ToJson(curProgressData);
 
@@ -1068,6 +1117,9 @@ public class DataManager : MonoBehaviour
         //curLatestCenterSavePointPosition
         curCatWorldData.curLatestCenterSavePointPosition = VARS.curLatestCenterSavePointPosition;
 
+        //curAccessedCenterSavePointPositions
+        curCatWorldData.curAccessedCenterSavePointPositions = VARS.curAccessedCenterSavePointPositions;
+
         //minimapKeysAndLocks
         curCatWorldData.deactivatedMinimapKeyIndexes = VARS.deactivatedMinimapKeyIndexes;
         curCatWorldData.deactivatedMinimapLockIndexes = VARS.deactivatedMinimapLockIndexes;
@@ -1089,9 +1141,9 @@ public class DataManager : MonoBehaviour
         curKeyCodesData.leftKeyCode = VARS.leftKeyCode;
         curKeyCodesData.rightKeyCode = VARS.rightKeyCode;
         curKeyCodesData.jumpKeyCode = VARS.jumpKeyCode;
-        curKeyCodesData.acceKeyCode = VARS.acceKeyCode;
-        curKeyCodesData.grabKeyCode = VARS.grabKeyCode;
-        //curKeyCodesData.dashKeyCode = VARS.dashKeyCode;
+        //curKeyCodesData.acceKeyCode = VARS.acceKeyCode;
+        //curKeyCodesData.grabKeyCode = VARS.grabKeyCode;
+        curKeyCodesData.dashKeyCode = VARS.dashKeyCode;
         curKeyCodesData.minimapKeyCode = VARS.minimapKeyCode;
         //curKeyCodesData.backKeyCode = VARS.backKeyCode;
 

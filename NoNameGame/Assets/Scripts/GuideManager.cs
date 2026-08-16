@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Video;
 
 [DefaultExecutionOrder((int)ScriptsExecutionOrder.ExecutionOrder.guideManager)]
 public class GuideManager : MonoBehaviour
@@ -23,7 +24,7 @@ public class GuideManager : MonoBehaviour
     List<Sprite> keySprites = new List<Sprite>();
     List<Sprite> keyChosenSprites = new List<Sprite>();
 
-    GameObject keysGuideEmpty;
+    GameObject keysGuideTextEmpty;
     //public List<GameObject> keysGuideTexts = new List<GameObject>();
     GameObject jumpGuideText;
     GameObject dashGuideText;
@@ -32,6 +33,8 @@ public class GuideManager : MonoBehaviour
     GameObject twistGuideText;
     GameObject rotateGuideText;
     GameObject backCenterGuideText;
+    GameObject outOfCenterTwistGuideText;
+    GameObject betweenCentersTransportGuideText;
 
     GameObject keysGuideMask;
     #endregion
@@ -55,7 +58,7 @@ public class GuideManager : MonoBehaviour
         keyCodes = CONS.keyCodes;
         keySprites = CONS.keySprites;
         keyChosenSprites = CONS.keyChosenSprites;
-        keysGuideEmpty = CONS.keysGuideEmpty;
+        keysGuideTextEmpty = CONS.keysGuideTextEmpty;
         jumpGuideText = CONS.jumpGuideText;
         dashGuideText = CONS.dashGuideText;
         intoMinimapGuideText = CONS.intoMinimapGuideText;
@@ -63,6 +66,8 @@ public class GuideManager : MonoBehaviour
         twistGuideText = CONS.twistGuideText;
         rotateGuideText = CONS.rotateGuideText;
         backCenterGuideText = CONS.backCenterGuideText;
+        outOfCenterTwistGuideText = CONS.outOfCenterTwistGuideText;
+        betweenCentersTransportGuideText = CONS.betweenCentersTransportGuideText;
         keysGuideMask = CONS.keysGuideMask;
         #endregion
 
@@ -100,6 +105,23 @@ public class GuideManager : MonoBehaviour
 
                 VARS.IsInTwistGuide = false;
             }
+            //outOfCenterTwistGuideTemporarilyOut
+            if (!VARS.HasOutOfCenterTwisted &&
+                (!VARS.isCenterFulfilled[VARS.curRoomIndex / 9] ||
+                VARS.IsInCenter))
+            {
+                outOfCenterTwistGuideText.SetActive(false);
+
+                VARS.IsInOutOfCenterTwistGuide = false;
+            }
+            //betweenCentersTransportGuideTemporarilyOut
+            if (!VARS.HasBetweenCentersTransported &&
+                !VARS.IsInCenter)
+            {
+                betweenCentersTransportGuideText.SetActive(false);
+
+                VARS.IsInBetweenCentersTransportGuide = false;
+            }
 
             if (!VARS.IsInGuide &&
                 !VARS.IsInMinimap)
@@ -108,7 +130,7 @@ public class GuideManager : MonoBehaviour
                 if (!VARS.HasFinishedKeysGuide &&
                     !VARS.IsInKeysGuide)
                 {
-                    keysGuideEmpty.SetActive(true);
+                    keysGuideTextEmpty.SetActive(true);
 
                     VARS.IsInKeysGuide = true;
                 }
@@ -195,33 +217,6 @@ public class GuideManager : MonoBehaviour
                     VARS.IsInRotateGuide = true;
                 }
                 ////climb
-                //if (!VARS.HasClimbed &&
-                //    !VARS.IsInClimbGuide &&
-                //    VARS.IsRightBlocked &&
-                //    !VARS.IsOnGround &&
-                //    VARS.curRoomIndex > 2)
-                //{
-
-                //    for (int i = 0; i < keyCodes.Count; i++)
-                //    {
-                //        if (keyCodes[i] == VARS.rightKeyCode)
-                //        {
-                //            climbGuideText.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = keyChosenSprites[i];
-                //        }
-                //        else if (keyCodes[i] == VARS.grabKeyCode)
-                //        {
-                //            climbGuideText.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = keyChosenSprites[i];
-                //        }
-                //        else if (keyCodes[i] == VARS.upKeyCode)
-                //        {
-                //            climbGuideText.transform.GetChild(2).GetComponent<SpriteRenderer>().sprite = keyChosenSprites[i];
-                //        }
-                //    }
-
-                //    climbGuideText.SetActive(true);
-
-                //    VARS.IsInClimbGuide = true;
-                //}
                 //twist
                 if (!VARS.HasTwisted &&
                     !VARS.IsInTwistGuide &&
@@ -270,6 +265,48 @@ public class GuideManager : MonoBehaviour
 
                     VARS.IsInBackCenterGuide = true;
                 }
+                //outOfCenterTwist
+                if (!VARS.HasOutOfCenterTwisted &&
+                    !VARS.IsInOutOfCenterTwistGuide &&
+                    VARS.isCenterFulfilled[VARS.curRoomIndex / 9] &&
+                    !VARS.IsInCenter)
+                {
+                    for (int i = 0; i < keyCodes.Count; i++)
+                    {
+                        if (keyCodes[i] == VARS.downKeyCode)
+                        {
+                            outOfCenterTwistGuideText.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = keyChosenSprites[i];
+                        }
+                        else if (keyCodes[i] == VARS.rightKeyCode)
+                        {
+                            outOfCenterTwistGuideText.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = keyChosenSprites[i];
+                        }
+                    }
+
+                    outOfCenterTwistGuideText.SetActive(true);
+
+                    VARS.IsInOutOfCenterTwistGuide = true;
+                }
+                //betweenCentersTransport
+                if (!VARS.HasBetweenCentersTransported &&
+                    !VARS.IsInBetweenCentersTransportGuide &&
+                    VARS.curAccessedCenterSavePointPositions.Count > 1 &&
+                    VARS.IsInCenter)
+                {
+                    for (int i = 0; i < keyCodes.Count; i++)
+                    {
+                        if (keyCodes[i] == VARS.upKeyCode)
+                        {
+                            betweenCentersTransportGuideText.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = keyChosenSprites[i];
+                            betweenCentersTransportGuideText.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = keyChosenSprites[i];
+                            break;
+                        }
+                    }
+
+                    betweenCentersTransportGuideText.SetActive(true);
+
+                    VARS.IsInBetweenCentersTransportGuide = true;
+                }
             }
             #endregion
 
@@ -282,15 +319,15 @@ public class GuideManager : MonoBehaviour
                 {
                     if (VARS.IsLeftKeyDown)
                     {
-                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(0).gameObject.SetActive(true);
-                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(1).gameObject.SetActive(false);
-                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(2).gameObject.SetActive(false);
+                        keysGuideTextEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(0).gameObject.SetActive(true);
+                        keysGuideTextEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(1).gameObject.SetActive(false);
+                        keysGuideTextEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(2).gameObject.SetActive(false);
 
                         VARS.curKeysGuideIndex++;
 
-                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(0).gameObject.SetActive(false);
-                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(1).gameObject.SetActive(true);
-                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(2).gameObject.SetActive(true);
+                        keysGuideTextEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(0).gameObject.SetActive(false);
+                        keysGuideTextEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(1).gameObject.SetActive(true);
+                        keysGuideTextEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(2).gameObject.SetActive(true);
                     }
                 }
                 //right
@@ -298,35 +335,35 @@ public class GuideManager : MonoBehaviour
                 {
                     if (VARS.IsRightKeyDown)
                     {
-                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(0).gameObject.SetActive(true);
-                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(1).gameObject.SetActive(false);
-                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(2).gameObject.SetActive(false);
+                        keysGuideTextEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(0).gameObject.SetActive(true);
+                        keysGuideTextEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(1).gameObject.SetActive(false);
+                        keysGuideTextEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(2).gameObject.SetActive(false);
 
                         VARS.curKeysGuideIndex++;
 
-                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(0).gameObject.SetActive(false);
-                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(1).gameObject.SetActive(true);
-                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(2).gameObject.SetActive(true);
+                        keysGuideTextEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(0).gameObject.SetActive(false);
+                        keysGuideTextEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(1).gameObject.SetActive(true);
+                        keysGuideTextEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(2).gameObject.SetActive(true);
                     }
                 }
                 //up
                 else if (VARS.curKeysGuideIndex == 2)
                 {
-                    keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(0).gameObject.SetActive(false);
-                    keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(1).gameObject.SetActive(true);
-                    keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(2).gameObject.SetActive(true);
+                    keysGuideTextEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(0).gameObject.SetActive(false);
+                    keysGuideTextEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(1).gameObject.SetActive(true);
+                    keysGuideTextEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(2).gameObject.SetActive(true);
 
                     if (VARS.IsUpKeyDown)
                     {
-                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(0).gameObject.SetActive(true);
-                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(1).gameObject.SetActive(false);
-                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(2).gameObject.SetActive(false);
+                        keysGuideTextEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(0).gameObject.SetActive(true);
+                        keysGuideTextEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(1).gameObject.SetActive(false);
+                        keysGuideTextEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(2).gameObject.SetActive(false);
 
                         VARS.curKeysGuideIndex++;
 
-                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(0).gameObject.SetActive(false);
-                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(1).gameObject.SetActive(true);
-                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(2).gameObject.SetActive(true);
+                        keysGuideTextEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(0).gameObject.SetActive(false);
+                        keysGuideTextEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(1).gameObject.SetActive(true);
+                        keysGuideTextEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(2).gameObject.SetActive(true);
                     }
                 }
                 //down
@@ -334,15 +371,15 @@ public class GuideManager : MonoBehaviour
                 {
                     if (VARS.IsDownKeyDown)
                     {
-                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(0).gameObject.SetActive(true);
-                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(1).gameObject.SetActive(false);
-                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(2).gameObject.SetActive(false);
+                        keysGuideTextEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(0).gameObject.SetActive(true);
+                        keysGuideTextEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(1).gameObject.SetActive(false);
+                        keysGuideTextEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(2).gameObject.SetActive(false);
 
                         VARS.curKeysGuideIndex++;
 
-                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(0).gameObject.SetActive(false);
-                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(1).gameObject.SetActive(true);
-                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(2).gameObject.SetActive(true);
+                        keysGuideTextEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(0).gameObject.SetActive(false);
+                        keysGuideTextEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(1).gameObject.SetActive(true);
+                        keysGuideTextEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(2).gameObject.SetActive(true);
                     }
                 }
                 //jump
@@ -350,31 +387,31 @@ public class GuideManager : MonoBehaviour
                 {
                     if (VARS.IsJumpKeyDown)
                     {
-                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(0).gameObject.SetActive(true);
-                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(1).gameObject.SetActive(false);
-                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(2).gameObject.SetActive(false);
+                        keysGuideTextEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(0).gameObject.SetActive(true);
+                        keysGuideTextEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(1).gameObject.SetActive(false);
+                        keysGuideTextEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(2).gameObject.SetActive(false);
 
                         VARS.curKeysGuideIndex++;
 
-                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(0).gameObject.SetActive(false);
-                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(1).gameObject.SetActive(true);
-                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(2).gameObject.SetActive(true);
+                        keysGuideTextEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(0).gameObject.SetActive(false);
+                        keysGuideTextEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(1).gameObject.SetActive(true);
+                        keysGuideTextEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(2).gameObject.SetActive(true);
                     }
                 }
-                //acce
+                //dash
                 else if (VARS.curKeysGuideIndex == 5)
                 {
-                    if (VARS.IsAcceKeyDown)
+                    if (VARS.IsDashKeyDown)
                     {
-                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(0).gameObject.SetActive(true);
-                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(1).gameObject.SetActive(false);
-                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(2).gameObject.SetActive(false);
+                        keysGuideTextEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(0).gameObject.SetActive(true);
+                        keysGuideTextEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(1).gameObject.SetActive(false);
+                        keysGuideTextEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(2).gameObject.SetActive(false);
 
                         VARS.curKeysGuideIndex++;
 
-                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(0).gameObject.SetActive(false);
-                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(1).gameObject.SetActive(true);
-                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(2).gameObject.SetActive(true);
+                        keysGuideTextEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(0).gameObject.SetActive(false);
+                        keysGuideTextEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(1).gameObject.SetActive(true);
+                        keysGuideTextEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(2).gameObject.SetActive(true);
                     }
                 }
                 //Minimap
@@ -384,13 +421,13 @@ public class GuideManager : MonoBehaviour
                     {
                         Debug.Log("keysGuideOver");
 
-                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(0).gameObject.SetActive(true);
-                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(1).gameObject.SetActive(false);
-                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(2).gameObject.SetActive(false);
+                        keysGuideTextEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(0).gameObject.SetActive(true);
+                        keysGuideTextEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(1).gameObject.SetActive(false);
+                        keysGuideTextEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(2).gameObject.SetActive(false);
 
                         VARS.curKeysGuideIndex = 0;
 
-                        keysGuideEmpty.SetActive(false);
+                        keysGuideTextEmpty.SetActive(false);
 
                         VARS.curTargetEnergy = 0.1f;
                         VARS.curEnergy = 0.1f;
@@ -402,22 +439,22 @@ public class GuideManager : MonoBehaviour
                         VARS.IsInKeysGuide = false;
                     }
                 }
-                //grab
-                else if (VARS.curKeysGuideIndex == 7)
-                {
-                    if (VARS.IsGrabKeyDown)
-                    {
-                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(0).gameObject.SetActive(true);
-                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(1).gameObject.SetActive(false);
-                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(2).gameObject.SetActive(false);
+                ////grab
+                //else if (VARS.curKeysGuideIndex == 7)
+                //{
+                //    if (VARS.IsGrabKeyDown)
+                //    {
+                //        keysGuideTextEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(0).gameObject.SetActive(true);
+                //        keysGuideTextEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(1).gameObject.SetActive(false);
+                //        keysGuideTextEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(2).gameObject.SetActive(false);
 
-                        VARS.curKeysGuideIndex++;
+                //        VARS.curKeysGuideIndex++;
 
-                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(0).gameObject.SetActive(false);
-                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(1).gameObject.SetActive(true);
-                        keysGuideEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(2).gameObject.SetActive(true);
-                    }
-                }
+                //        keysGuideTextEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(0).gameObject.SetActive(false);
+                //        keysGuideTextEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(1).gameObject.SetActive(true);
+                //        keysGuideTextEmpty.transform.GetChild(1).GetChild(VARS.curKeysGuideIndex).GetChild(2).gameObject.SetActive(true);
+                //    }
+                //}
             }
             //jump
             if (VARS.IsInJumpGuide &&
@@ -477,21 +514,6 @@ public class GuideManager : MonoBehaviour
                 VARS.IsInRotateGuide = false;
             }
             ////climb
-            //if (VARS.IsInClimbGuide &&
-            //    VARS.IsInputtingRightKey &&
-            //    VARS.IsInputtingGrabKey &&
-            //    VARS.IsInputtingUpKey)
-            //{
-            //    Debug.Log("climbGuideOver");
-
-            //    climbGuideText.SetActive(false);
-
-            //    VARS.HasClimbed = true;
-
-            //    VARS.IsToWriteProgressData = true;
-
-            //    VARS.IsInClimbGuide = false;
-            //}
             //twist
             if (VARS.IsInTwistGuide &&
                 VARS.IsInputtingDownKey &&
@@ -520,6 +542,35 @@ public class GuideManager : MonoBehaviour
                 VARS.IsToWriteProgressData = true;
 
                 VARS.IsInBackCenterGuide = false;
+            }
+            //outOfCenterTwist
+            if (VARS.IsInOutOfCenterTwistGuide &&
+                VARS.IsInputtingDownKey &&
+                (VARS.IsInputtingLeftKey || VARS.IsInputtingRightKey))
+            {
+                Debug.Log("outOfCenterTwistGuideOver");
+
+                outOfCenterTwistGuideText.SetActive(false);
+
+                VARS.HasOutOfCenterTwisted = true;
+
+                VARS.IsToWriteProgressData = true;
+
+                VARS.IsInOutOfCenterTwistGuide = false;
+            }
+            //betweenCentersTransport
+            if (VARS.IsInBetweenCentersTransportGuide &&
+                VARS.IsBackCenterTriggered)
+            {
+                Debug.Log("betweenCentersTransportGuideOver");
+
+                betweenCentersTransportGuideText.SetActive(false);
+
+                VARS.HasBetweenCentersTransported = true;
+
+                VARS.IsToWriteProgressData = true;
+
+                VARS.IsInBetweenCentersTransportGuide = false;
             }
             #endregion
         }

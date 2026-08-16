@@ -418,34 +418,34 @@ public class BlocksManager : MonoBehaviour
             }
 
             //resetBreakableBlockStates
-            for (int i = 0; i < VARS.curPlaneEmpty.transform.childCount; i++)
-            {
-                tempTransform = VARS.curPlaneEmpty.transform.GetChild(i);
-                tempTileData = tempTransform.GetComponent<TileData>();
+            //for (int i = 0; i < VARS.curPlaneEmpty.transform.childCount; i++)
+            //{
+            //    tempTransform = VARS.curPlaneEmpty.transform.GetChild(i);
+            //    tempTileData = tempTransform.GetComponent<TileData>();
 
-                if (tempTileData != null &&
-                    tempTileData.toughness != 999)
-                {
-                    if (!tempTransform.gameObject.activeSelf)
-                    {
-                        tempTransform.gameObject.SetActive(true);
-                    }
-                }
-            }
+            //    if (tempTileData != null &&
+            //        tempTileData.toughness != 999)
+            //    {
+            //        if (!tempTransform.gameObject.activeSelf)
+            //        {
+            //            tempTransform.gameObject.SetActive(true);
+            //        }
+            //    }
+            //}
 
             //activateAllFluidBlocks
-            for (int i = 0; i < VARS.curPlaneEmpty.transform.childCount; i++)
-            {
-                tempTransform = VARS.curPlaneEmpty.transform.GetChild(i);
-                tempTileData = tempTransform.GetComponent<TileData>();
+            //for (int i = 0; i < VARS.curPlaneEmpty.transform.childCount; i++)
+            //{
+            //    tempTransform = VARS.curPlaneEmpty.transform.GetChild(i);
+            //    tempTileData = tempTransform.GetComponent<TileData>();
 
-                if (tempTileData != null &&
-                    tempTileData.stateOfMatterIndex > 1)
-                {
-                    tempTransform.gameObject.SetActive(true);
-                    tempTileData.continuousHorMovingTimes = 0;
-                }
-            }
+            //    if (tempTileData != null &&
+            //        tempTileData.stateOfMatterIndex > 1)
+            //    {
+            //        tempTransform.gameObject.SetActive(true);
+            //        tempTileData.continuousHorMovingTimes = 0;
+            //    }
+            //}
 
             curBlocks.Clear();
             curBlockTileDatas.Clear();
@@ -502,48 +502,84 @@ public class BlocksManager : MonoBehaviour
             ////blockInfoMatrix
             //blockInfoMatrixList.Clear();
 
-            //formListsOfBlocks
+            //inNewRoomTraverse
             for (int i = 0; i < VARS.curPlaneEmpty.transform.childCount; i++)
             {
                 tempTransform = VARS.curPlaneEmpty.transform.GetChild(i);
 
-                if (tempTransform.GetComponent<TileData>() != null &&
-                    (tempTransform.gameObject.activeSelf || tempTransform.GetComponent<TileData>().blockTypeIndex == 4103 || tempTransform.GetComponent<TileData>().blockTypeIndex == 6002))
+                if (tempTransform.GetComponent<TileData>() != null)
                 {
                     tempTileData = tempTransform.GetComponent<TileData>();
 
-                    //notCountEdgeGateTriggers
-                    //notCountNotToBeInCurBlocksTiles
-                    if (tempTileData.blockTypeIndex != 7003 &&
-                        !tempTileData.isNotToBeInCurBlocks)
+                    //resetBreakableBlockStates
+                    if (tempTileData.toughness != 999)
                     {
-                        curBlocks.Add(tempTransform.gameObject);
-                        curBlockTileDatas.Add(tempTileData);
-                        //curBlockStateOfMatterIndexes.Add(tempTransform.GetComponent<TileData>().stateOfMatterIndex);
-
-                        curBlockLastUpdateTimes.Add(Time.time);
-                        VARS.railBlocksLastUpdateTime = Time.time;
-
-                        //curCoordVector = tempTransform.localPosition;
-                        curCoordVector = tempTransform.position - VARS.curPlaneEmpty.transform.position;
-                        //curCoordVector=tempTransform.localPosition;
-                        curCoordVectors.Add(curCoordVector);
-
-                        //getCurRoomBlockStateOfMatterIndexesAndTypeIndexes
-                        if (!curRoomBlockStateOfMatterIndexes.Contains(tempTileData.stateOfMatterIndex))
+                        if (!tempTransform.gameObject.activeSelf)
                         {
-                            curRoomBlockStateOfMatterIndexes.Add(tempTileData.stateOfMatterIndex);
+                            tempTransform.gameObject.SetActive(true);
                         }
-                        if (!curRoomBlockTypeIndexes.Contains(tempTileData.blockTypeIndex))
-                        {
-                            curRoomBlockTypeIndexes.Add(tempTileData.blockTypeIndex);
-                        }
+                    }
 
-                        //getRailBlocks
-                        if (tempTileData.railBlockIndex > 0)
+                    //activateAllFluidBlocks
+                    if (tempTileData.stateOfMatterIndex > 1)
+                    {
+                        tempTransform.gameObject.SetActive(true);
+                        tempTileData.continuousHorMovingTimes = 0;
+                    }
+
+                    //fragmentsSpreadingLight
+                    if (tempTileData.fragmentIndex > 0)
+                    {
+                        for (int j = 0; j < tempTransform.childCount; j++)
                         {
-                            curRailBlocks.Add(tempTransform.gameObject);
-                            curRailBlockInitialPositions.Add(tempTransform.position);
+                            if (j < 9)
+                            {
+                                tempTransform.GetChild(j).localScale = Vector3.one * (0.18f /*- 0.01f * randomValues[curRandomValueByteIndex++]*/);
+                            }
+                            else
+                            {
+                                tempTransform.GetChild(j).localScale = Vector3.one * (0.09f /*- 0.01f * randomValues[curRandomValueByteIndex++]*/);
+                            }
+                            tempTransform.GetChild(j).GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 1);
+                        }
+                    }
+
+                    //formListsOfBlocks
+                    if ((tempTransform.gameObject.activeSelf || tempTransform.GetComponent<TileData>().blockTypeIndex == 4103 || tempTransform.GetComponent<TileData>().blockTypeIndex == 6002))
+                    {
+                        //notCountEdgeGateTriggers
+                        //notCountNotToBeInCurBlocksTiles
+                        if (tempTileData.blockTypeIndex != 7003 &&
+                            !tempTileData.isNotToBeInCurBlocks)
+                        {
+                            curBlocks.Add(tempTransform.gameObject);
+                            curBlockTileDatas.Add(tempTileData);
+                            //curBlockStateOfMatterIndexes.Add(tempTransform.GetComponent<TileData>().stateOfMatterIndex);
+
+                            curBlockLastUpdateTimes.Add(Time.time);
+                            VARS.railBlocksLastUpdateTime = Time.time;
+
+                            //curCoordVector = tempTransform.localPosition;
+                            curCoordVector = tempTransform.position - VARS.curPlaneEmpty.transform.position;
+                            //curCoordVector=tempTransform.localPosition;
+                            curCoordVectors.Add(curCoordVector);
+
+                            //getCurRoomBlockStateOfMatterIndexesAndTypeIndexes
+                            if (!curRoomBlockStateOfMatterIndexes.Contains(tempTileData.stateOfMatterIndex))
+                            {
+                                curRoomBlockStateOfMatterIndexes.Add(tempTileData.stateOfMatterIndex);
+                            }
+                            if (!curRoomBlockTypeIndexes.Contains(tempTileData.blockTypeIndex))
+                            {
+                                curRoomBlockTypeIndexes.Add(tempTileData.blockTypeIndex);
+                            }
+
+                            //getRailBlocks
+                            if (tempTileData.railBlockIndex > 0)
+                            {
+                                curRailBlocks.Add(tempTransform.gameObject);
+                                curRailBlockInitialPositions.Add(tempTransform.position);
+                            }
                         }
                     }
                 }
@@ -988,10 +1024,19 @@ public class BlocksManager : MonoBehaviour
                 {
                     for(int j=0;j<curBlock.transform.childCount; j++)
                     {
-                        curBlock.transform.GetChild(j).localScale += Vector3.one * 0.35f * Time.deltaTime;
-                        if (curBlock.transform.GetChild(j).localScale.x >= 1.1f)
+                        curBlock.transform.GetChild(j).localScale += Vector3.one * 0.06f * (1 + (float)(VARS.curOneColorFragmentCollectedNumbers[VARS.curRoomIndex / 9] % 8) / 8) * Time.deltaTime;
+                        if (curBlock.transform.GetChild(j).localScale.x >= 0.18f)
                         {
-                            curBlock.transform.GetChild(j).localScale = Vector3.one * 0.4f;
+                            curBlock.transform.GetChild(j).localScale = Vector3.one * 0.07f;
+                        }
+
+                        if (j < 3)
+                        {
+                            curBlock.transform.GetChild(j).GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, (0.4f - curBlock.transform.GetChild(j).localScale.x) * 3);
+                        }
+                        else
+                        {
+                            curBlock.transform.GetChild(j).GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, (0.4f - curBlock.transform.GetChild(j).localScale.x) * 1.5f);
                         }
                     }
                 }

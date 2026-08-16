@@ -301,12 +301,9 @@ public class OptionsManager : MonoBehaviour
                                         VARS.jumpKeyCode = tempKeyCode;
                                         break;
                                     case 5:
-                                        VARS.acceKeyCode = tempKeyCode;
+                                        VARS.dashKeyCode = tempKeyCode;
                                         break;
                                     case 6:
-                                        VARS.grabKeyCode = tempKeyCode;
-                                        break;
-                                    case 7:
                                         VARS.minimapKeyCode = tempKeyCode;
                                         break;
                                 }

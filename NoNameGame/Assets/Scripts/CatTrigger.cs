@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
+using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 
 [DefaultExecutionOrder((int)ScriptsExecutionOrder.ExecutionOrder.catTrigger)]
@@ -124,6 +126,20 @@ public class CatTrigger : MonoBehaviour
     List<GameObject> minimapLocks = new List<GameObject>();
 
     Material minimapCollectibleCollectedColor;
+
+    GameObject oneColorFragmentCollectingTextEmpty;
+    GameObject allColorsFragmentCollectingTextEmpty;
+    GameObject keysAndLocksCollectingTextEmpty;
+    GameObject oneColorFragmentCollectingTextLeft;
+    GameObject allColorsFragmentCollectingTextLeft1;
+    GameObject allColorsFragmentCollectingTextLeft2;
+    GameObject keysAndLocksCollectingTextLeft1;
+    GameObject keysAndLocksCollectingTextLeft2;
+    GameObject oneColorFragmentCollectingTextRight;
+    GameObject allColorsFragmentCollectingTextRight;
+    GameObject keysAndLocksCollectingTextRight;
+
+    Sprite[] TBNumberSprites = new Sprite[10];
     #endregion
 
     #region VariablesUsed
@@ -224,6 +240,18 @@ public class CatTrigger : MonoBehaviour
         minimapKeys = CONS.minimapKeys;
         minimapLocks = CONS.minimapLocks;
         minimapCollectibleCollectedColor = CONS.minimapCollectibleCollectedColor;
+        oneColorFragmentCollectingTextEmpty = CONS.oneColorFragmentCollectingTextEmpty;
+        allColorsFragmentCollectingTextEmpty = CONS.allColorsFragmentCollectingTextEmpty;
+        keysAndLocksCollectingTextEmpty = CONS.keysAndLocksCollectingTextEmpty;
+        oneColorFragmentCollectingTextLeft = CONS.oneColorFragmentCollectingTextLeft;
+        allColorsFragmentCollectingTextLeft1 = CONS.allColorsFragmentCollectingTextLeft1;
+        allColorsFragmentCollectingTextLeft2 = CONS.allColorsFragmentCollectingTextLeft2;
+        keysAndLocksCollectingTextLeft1 = CONS.keysAndLocksCollectingTextLeft1;
+        keysAndLocksCollectingTextLeft2 = CONS.keysAndLocksCollectingTextLeft2;
+        oneColorFragmentCollectingTextRight = CONS.oneColorFragmentCollectingTextRight;
+        allColorsFragmentCollectingTextRight = CONS.allColorsFragmentCollectingTextRight;
+        keysAndLocksCollectingTextRight = CONS.keysAndLocksCollectingTextRight;
+        TBNumberSprites = CONS.TBNumberSprites;
         #endregion
 
         #region ImportReferenceVariables
@@ -398,7 +426,7 @@ public class CatTrigger : MonoBehaviour
                 //curActivatedSavePointRoomIndex
                 VARS.curActivatedSavePointRoomIndex = VARS.curRoomIndex;
 
-                if((VARS.curRoomIndex-4) % 9 == 0)
+                if((VARS.curRoomIndex - 4) % 9 == 0)
                 {
                     VARS.IsActivatingACenterSavePoint = true;
                 }
@@ -444,9 +472,15 @@ public class CatTrigger : MonoBehaviour
                 //{
                 //    VARS.curLatestCenterSavePointPosition = catIniPositionPoint.transform.position;
                 //}
-                if (VARS.IsActivatingACenterSavePoint)
+                if (VARS.IsActivatingACenterSavePoint && 
+                    Vector3.Magnitude(catIniPositionPoint.transform.position) > 1)
                 {
                     VARS.curLatestCenterSavePointPosition = catIniPositionPoint.transform.position;
+
+                    if (!VARS.curAccessedCenterSavePointPositions.Contains(VARS.curLatestCenterSavePointPosition))
+                    {
+                        VARS.curAccessedCenterSavePointPositions.Add(VARS.curLatestCenterSavePointPosition);
+                    }
 
                     VARS.IsActivatingACenterSavePoint = false;
                 }
@@ -571,6 +605,9 @@ public class CatTrigger : MonoBehaviour
                         }              
                     }
 
+                    //curCollectedPosition
+                    VARS.curCollectedPosition = tempGameObject.transform.position;
+
                     //deactivate
                     for (int i = 0; i < keys.Count; i++)
                     {
@@ -620,11 +657,29 @@ public class CatTrigger : MonoBehaviour
                         }
                     }
                     deactivatedMinimapLockIndexes.Add(curNearestMinimapLockIndex);
+                    
+                    //keysAndLocksCollectingText
+                    //getCurCollectedNumber
+                    VARS.curKeysAndLocksCollectedNumber = deactivatedKeyIndexes.Count;
+                    //setTextLeftSprite
+                    keysAndLocksCollectingTextLeft1.GetComponent<SpriteRenderer>().sprite = TBNumberSprites[VARS.curKeysAndLocksCollectedNumber / 10];
+                    keysAndLocksCollectingTextLeft2.GetComponent<SpriteRenderer>().sprite = TBNumberSprites[VARS.curKeysAndLocksCollectedNumber % 10];
+                    //showText
+                    keysAndLocksCollectingTextEmpty.transform.position = VARS.curCollectedPosition + VARS.curUp * 0.5f - VARS.curRoomStableForward * 1;
+                    keysAndLocksCollectingTextLeft1.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0);
+                    keysAndLocksCollectingTextLeft2.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0);
+                    keysAndLocksCollectingTextRight.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0);
+                    keysAndLocksCollectingTextEmpty.SetActive(true);
+                    VARS.keysAndLocksCollectingTextActivatedStartTime = Time.time;
+                    //tempChildToCurPlane
+                    keysAndLocksCollectingTextEmpty.transform.SetParent(VARS.curPlaneEmpty.transform, true);
+
 
                     VARS.IsToDetermineGatePassabilities = true;
 
                     VARS.IsUnlocking = false;
 
+                    VARS.IsToWriteProgressData = true;
                     VARS.IsToWriteCatWorldData = true;
                 }
             }
@@ -639,7 +694,7 @@ public class CatTrigger : MonoBehaviour
             if (!isCenterFulfilled[4] && !isGreenFragmentsEmbeded.Contains(false)) isCenterFulfilled[4] = true;
             if (!isCenterFulfilled[5] && !isRedFragmentsEmbeded.Contains(false)) isCenterFulfilled[5] = true;
 
-            //toCarry
+            //toCarry(outVersion)
             if (VARS.IsToCarryAFragment)
             {
                 //Debug.Log("enter");
@@ -682,7 +737,7 @@ public class CatTrigger : MonoBehaviour
                 VARS.IsToCarryAFragment = false;
                 VARS.IsCarryingFragments = true;
             }
-            //carrying
+            //carrying(outVersion)
             if (VARS.IsCarryingFragments)
             {
                 //followAndCondense
@@ -744,7 +799,7 @@ public class CatTrigger : MonoBehaviour
                     }
                 }
             }
-            //embedding
+            //embedding(outVersion)
             if (VARS.IsEmbeddingFragments)
             {
                 if (VARS.IsDeterminingToBeEmbededFragmentPositions)
@@ -811,7 +866,7 @@ public class CatTrigger : MonoBehaviour
                             case 6: isRedFragmentsEmbeded[curCarriedFragmentIndexes[curToBeEmbededFragmentIndexes[i]] - 1] = true; break;
                         }
 
-                        for (int j = 0; j < 9; j++)
+                        for (int j = 0; j < curCarriedFragments[curToBeEmbededFragmentIndexes[i]].transform.childCount; j++)
                         {
                             curCarriedFragments[curToBeEmbededFragmentIndexes[i]].transform.GetChild(j).gameObject.SetActive(j > 2);
                         }
@@ -866,7 +921,7 @@ public class CatTrigger : MonoBehaviour
 
                 VARS.IsToWriteCatWorldData = true;
             }
-            //centerFulfilled
+            //centerFulfilled(outVersion)
             if (VARS.IsCenterFulfilled)
             {
                 Debug.Log("centerFulfilled");
@@ -880,7 +935,7 @@ public class CatTrigger : MonoBehaviour
 
                 VARS.IsCenterFulfilled = false;
             }
-            //absorbingAnEnergyFragment
+            //absorbingAnEnergyFragment(outVersion)
             if (VARS.IsAbsorbingAnEnergyFragment)
             {
                 if (Time.time - VARS.absorbingEnergyFragmentWaitingStartTime > absorbingEnergyFragmentWaitingTime)
@@ -930,9 +985,12 @@ public class CatTrigger : MonoBehaviour
             //collect(directlyWhenTouched)
             if (VARS.IsCollectingAFragment)
             {
+                //curCollectedPosition
+                VARS.curCollectedPosition = VARS.curToBeCarriedFragment.transform.position;
+
                 //determinePosition
                 tempVector1 = faceStableUps[VARS.curToBeCarriedFragmentFaceIndex - 1];
-                    tempVector2 = faceStableRights[VARS.curToBeCarriedFragmentFaceIndex - 1];
+                tempVector2 = faceStableRights[VARS.curToBeCarriedFragmentFaceIndex - 1];
                     switch (VARS.curToBeCarriedFragmentIndex)
                     {
                         case 1: tempVector = -tempVector1 - tempVector2; break;
@@ -962,7 +1020,7 @@ public class CatTrigger : MonoBehaviour
                     case 5: isGreenFragmentsEmbeded[VARS.curToBeCarriedFragmentIndex - 1] = true; break;
                     case 6: isRedFragmentsEmbeded[VARS.curToBeCarriedFragmentIndex - 1] = true; break;
                 }
-                for (int j = 0; j < 9; j++)
+                for (int j = 0; j < VARS.curToBeCarriedFragment.transform.childCount; j++)
                 {
                     VARS.curToBeCarriedFragment.transform.GetChild(j).gameObject.SetActive(j > 2);
                 }
@@ -1008,10 +1066,50 @@ public class CatTrigger : MonoBehaviour
                     VARS.HasCollectedFragment = true;
                 }
 
-                VARS.IsToWriteProgressData = true;
-                VARS.IsToWriteCatWorldData = true;
+                //oneColorFragmentCollectingText
+                //getCurCollectedNumber
+                VARS.curOneColorFragmentCollectedNumbers[VARS.curRoomIndex / 9] = 0;
+                for (int i = (VARS.curRoomIndex / 9) * 9; i < (VARS.curRoomIndex / 9 + 1) * 9; i++)
+                {
+                    VARS.curOneColorFragmentCollectedNumbers[VARS.curRoomIndex / 9] += Convert.ToInt32(VARS.IsRoomFragmentCollected[i]);
+                }
+                VARS.curOneColorFragmentCollectedNumbers[VARS.curRoomIndex / 9]--;
+                //setTextLeftSprite
+                oneColorFragmentCollectingTextLeft.GetComponent<SpriteRenderer>().sprite = TBNumberSprites[VARS.curOneColorFragmentCollectedNumbers[VARS.curRoomIndex / 9]];
+                //showText
+                oneColorFragmentCollectingTextEmpty.transform.position = VARS.curCollectedPosition + VARS.curUp * 0.5f - VARS.curRoomStableForward * 1;
+                oneColorFragmentCollectingTextLeft.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0);
+                oneColorFragmentCollectingTextRight.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0);
+                oneColorFragmentCollectingTextEmpty.SetActive(true);
+                VARS.oneColorFragmentCollectingTextActivatedStartTime = Time.time;
+                //tempChildToCurPlane
+                oneColorFragmentCollectingTextEmpty.transform.SetParent(VARS.curPlaneEmpty.transform, true);
+
+                //allColorFragmentCollectingText
+                //getCurCollectedNumber
+                VARS.curAllColorsFragmentCollectedNumber = 0;
+                for (int i = 0; i < 54; i++)
+                {
+                    VARS.curAllColorsFragmentCollectedNumber += Convert.ToInt32(VARS.IsRoomFragmentCollected[i]);
+                }
+                VARS.curAllColorsFragmentCollectedNumber -= 6;
+                //setTextLeftSprite
+                allColorsFragmentCollectingTextLeft1.GetComponent<SpriteRenderer>().sprite = TBNumberSprites[VARS.curAllColorsFragmentCollectedNumber / 10];
+                allColorsFragmentCollectingTextLeft2.GetComponent<SpriteRenderer>().sprite = TBNumberSprites[VARS.curAllColorsFragmentCollectedNumber % 10];
+                //showText
+                allColorsFragmentCollectingTextEmpty.transform.position = VARS.curCollectedPosition + VARS.curUp * 0.5f - VARS.curRoomStableForward * 1;
+                allColorsFragmentCollectingTextLeft1.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0);
+                allColorsFragmentCollectingTextLeft2.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0);
+                allColorsFragmentCollectingTextRight.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0);
+                allColorsFragmentCollectingTextEmpty.SetActive(true);
+                VARS.allColorsFragmentCollectingTextActivatedStartTime = Time.time;
+                //tempChildToCurPlane
+                allColorsFragmentCollectingTextEmpty.transform.SetParent(VARS.curPlaneEmpty.transform, true);
 
                 VARS.IsCollectingAFragment = false;
+
+                VARS.IsToWriteProgressData = true;
+                VARS.IsToWriteCatWorldData = true;
             }
             #endregion
 

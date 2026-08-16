@@ -6,8 +6,12 @@ using UnityEngine;
 [DefaultExecutionOrder((int)ScriptsExecutionOrder.ExecutionOrder.variables)]
 public class Variables : MonoBehaviour
 {
-    [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
-        "\n- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
+    [Header("////////////////////////////////////////////////////////////////////////////////////////////////" +
+        "\n////////////////////////////////////////////////////////////////////////////////////////////////" +
+        "\n////////////////////////////////////////////////////////////////////////////////////////////////" +
+        "\n////////////////////////////////////////////////////////////////////////////////////////////////" +
+        "\n////////////////////////////////////////////////////////////////////////////////////////////////" +
+        "\n////////////////////////////////////////////////////////////////////////////////////////////////" +
         "  \nVARIABLES\n --- " +
         "\n- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n")]
 
@@ -129,6 +133,12 @@ public class Variables : MonoBehaviour
 
     [SerializeField] private bool _hasBackCentered;
     public bool HasBackCentered { get { return _hasBackCentered; } set { _hasBackCentered = value; } }
+
+    [SerializeField] private bool _hasOutOfCenterTwisted;
+    public bool HasOutOfCenterTwisted { get { return _hasOutOfCenterTwisted; } set { _hasOutOfCenterTwisted = value; } }
+
+    [SerializeField] private bool _hasBetweenCentersTransported;
+    public bool HasBetweenCentersTransported { get { return _hasBetweenCentersTransported; } set { _hasBetweenCentersTransported = value; } }
 
     #endregion
 
@@ -255,6 +265,8 @@ public class Variables : MonoBehaviour
 
     //curLatestCenterSavePointPosition
     public Vector3 curLatestCenterSavePointPosition;
+    public List<Vector3> curAccessedCenterSavePointPositions = new List<Vector3>();
+    public int curBackToAccessedCenterSavePointPositionIndex;
 
     [SerializeField] private bool _isActivatingACenterSavePoint;
     public bool IsActivatingACenterSavePoint { get { return _isActivatingACenterSavePoint; } set { _isActivatingACenterSavePoint = value; } }
@@ -453,15 +465,15 @@ public class Variables : MonoBehaviour
     [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
         "  \nCONTROL\n --- ")]
     //keyCodes
-    public KeyCode upKeyCode = KeyCode.UpArrow;
-    public KeyCode downKeyCode = KeyCode.DownArrow;
-    public KeyCode leftKeyCode = KeyCode.LeftArrow;
-    public KeyCode rightKeyCode = KeyCode.RightArrow;
-    public KeyCode jumpKeyCode = KeyCode.Z;
+    public KeyCode upKeyCode = KeyCode.W;
+    public KeyCode downKeyCode = KeyCode.S;
+    public KeyCode leftKeyCode = KeyCode.A;
+    public KeyCode rightKeyCode = KeyCode.D;
+    public KeyCode jumpKeyCode = KeyCode.K;
     public KeyCode dashKeyCode = KeyCode.L;
-    public KeyCode acceKeyCode = KeyCode.X;
-    public KeyCode grabKeyCode = KeyCode.C;
-    public KeyCode minimapKeyCode = KeyCode.V;
+    //public KeyCode acceKeyCode = KeyCode.L;
+    //public KeyCode grabKeyCode = KeyCode.J;
+    public KeyCode minimapKeyCode = KeyCode.M;
     public KeyCode backKeyCode = KeyCode.Escape;
 
     [SerializeField] private bool _isKeyCodeChanged = true;
@@ -487,11 +499,11 @@ public class Variables : MonoBehaviour
     [SerializeField] private bool _isInputtingDashKey;
     public bool IsInputtingDashKey { get { return _isInputtingDashKey; } set { _isInputtingDashKey = value; } }
 
-    [SerializeField] private bool _isInputtingAcceKey;
-    public bool IsInputtingAcceKey { get { return _isInputtingAcceKey; } set { _isInputtingAcceKey = value; } }
+    //[SerializeField] private bool _isInputtingAcceKey;
+    //public bool IsInputtingAcceKey { get { return _isInputtingAcceKey; } set { _isInputtingAcceKey = value; } }
 
-    [SerializeField] private bool _isInputtingGrabKey;
-    public bool IsInputtingGrabKey { get { return _isInputtingGrabKey; } set { _isInputtingGrabKey = value; } }
+    //[SerializeField] private bool _isInputtingGrabKey;
+    //public bool IsInputtingGrabKey { get { return _isInputtingGrabKey; } set { _isInputtingGrabKey = value; } }
 
     [SerializeField] private bool _isInputtingMinimapKey;
     public bool IsInputtingMinimapKey { get { return _isInputtingMinimapKey; } set { _isInputtingMinimapKey = value; } }
@@ -519,11 +531,11 @@ public class Variables : MonoBehaviour
     [SerializeField] private bool _isDashKeyDown;
     public bool IsDashKeyDown { get { return _isDashKeyDown; } set { _isDashKeyDown = value; } }
 
-    [SerializeField] private bool _isAcceKeyDown;
-    public bool IsAcceKeyDown { get { return _isAcceKeyDown; } set { _isAcceKeyDown = value; } }
+    //[SerializeField] private bool _isAcceKeyDown;
+    //public bool IsAcceKeyDown { get { return _isAcceKeyDown; } set { _isAcceKeyDown = value; } }
 
-    [SerializeField] private bool _isGrabKeyDown;
-    public bool IsGrabKeyDown { get { return _isGrabKeyDown; } set { _isGrabKeyDown = value; } }
+    //[SerializeField] private bool _isGrabKeyDown;
+    //public bool IsGrabKeyDown { get { return _isGrabKeyDown; } set { _isGrabKeyDown = value; } }
 
     [SerializeField] private bool _isMinimapKeyDown;
     public bool IsMinimapKeyDown { get { return _isMinimapKeyDown; } set { _isMinimapKeyDown = value; } }
@@ -550,11 +562,11 @@ public class Variables : MonoBehaviour
     [SerializeField] private bool _isDashKeyUp;
     public bool IsDashKeyUp { get { return _isDashKeyUp; } set { _isDashKeyUp = value; } }
 
-    [SerializeField] private bool _isAcceKeyUp;
-    public bool IsAcceKeyUp { get { return _isAcceKeyUp; } set { _isAcceKeyUp = value; } }
+    //[SerializeField] private bool _isAcceKeyUp;
+    //public bool IsAcceKeyUp { get { return _isAcceKeyUp; } set { _isAcceKeyUp = value; } }
 
-    [SerializeField] private bool _isGrabKeyUp;
-    public bool IsGrabKeyUp { get { return _isGrabKeyUp; } set { _isGrabKeyUp = value; } }
+    //[SerializeField] private bool _isGrabKeyUp;
+    //public bool IsGrabKeyUp { get { return _isGrabKeyUp; } set { _isGrabKeyUp = value; } }
 
     [SerializeField] private bool _isMinimapKeyUp;
     public bool IsMinimapKeyUp { get { return _isMinimapKeyUp; } set { _isMinimapKeyUp = value; } }
@@ -1221,10 +1233,15 @@ public class Variables : MonoBehaviour
     //strawberry
     public List<GameObject> carriedStrawberries = new List<GameObject>();
 
-
     //energyCrystal
     [SerializeField] private bool _isGettingAnEnergyCrystal;
     public bool IsGettingAnEnergyCrystal { get { return _isGettingAnEnergyCrystal; } set { _isGettingAnEnergyCrystal = value; } }
+
+    //collecting
+    public int[] curOneColorFragmentCollectedNumbers = new int[6];
+    public int curAllColorsFragmentCollectedNumber;
+    public int curKeysAndLocksCollectedNumber;
+    public Vector3 curCollectedPosition;
     #endregion
 
     #region CatAppearance
@@ -1481,7 +1498,9 @@ public class Variables : MonoBehaviour
                 IsInRotateGuide ||
                 IsInClimbGuide ||
                 IsInTwistGuide ||
-                IsInBackCenterGuide;
+                IsInBackCenterGuide ||
+                IsInOutOfCenterTwistGuide ||
+                IsInBetweenCentersTransportGuide;
 
             return _isInGuide;
         }
@@ -1534,8 +1553,29 @@ public class Variables : MonoBehaviour
     [SerializeField] private bool _isInBackCenterGuide;
     public bool IsInBackCenterGuide { get { return _isInBackCenterGuide; } set { _isInBackCenterGuide = value; } }
 
+    [SerializeField] private bool _isInOutOfCenterTwistGuide;
+    public bool IsInOutOfCenterTwistGuide { get { return _isInOutOfCenterTwistGuide; } set { _isInOutOfCenterTwistGuide = value; } }
+
+    [SerializeField] private bool _isInBetweenCentersTransportGuide;
+    public bool IsInBetweenCentersTransportGuide { get { return _isInBetweenCentersTransportGuide; } set { _isInBetweenCentersTransportGuide = value; } }
+
     public int curKeysGuideIndex;
 
+    #endregion
+
+    #region TextManaget
+    [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
+        "  \nTEXTMANAGER\n --- ")]
+    [SerializeField] private bool _isOneColorFragmentCollectingTextActivated;
+    public bool IsOneColorFragmentCollectingTextActivated;
+    [SerializeField] private bool _isAllColorsFragmentCollectingTextActivated;
+    public bool IsAllColorsFragmentCollectingTextActivated;
+    [SerializeField] private bool _isKeysAndLocksCollectingTextActivated;
+    public bool IsKeysAndLocksCollectingTextActivated;
+
+    public float oneColorFragmentCollectingTextActivatedStartTime;
+    public float allColorsFragmentCollectingTextActivatedStartTime;
+    public float keysAndLocksCollectingTextActivatedStartTime;
     #endregion
 
     #region AudioManager
