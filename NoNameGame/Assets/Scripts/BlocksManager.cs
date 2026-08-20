@@ -1137,11 +1137,11 @@ public class BlocksManager : MonoBehaviour
                                 if (!VARS.IsCatMovedByRailBlock &&
                                     ((VARS.IsOnOrToARailBlock &&
                                     curBlock == VARS.curOnOrToRailBlock) ||
-                                    (Mathf.Abs(Vector3.Dot(tempVector2, tempVector1)) < gridBreadth &&
+                                    (Mathf.Abs(Vector3.Dot(tempVector2, tempVector1)) < gridBreadth * 0.95f &&
                                     tempFloat < gridBreadth * 1.5 &&
                                     tempFloat > gridBreadth * -0.2f)))
                                 {
-                                    if (Mathf.Abs(Vector3.Dot(tempVector2, tempVector1)) < gridBreadth &&
+                                    if (Mathf.Abs(Vector3.Dot(tempVector2, tempVector1)) < gridBreadth * 0.95f &&
                                     tempFloat < gridBreadth * 1.5 &&
                                     tempFloat > gridBreadth * -0.2f)
                                     {

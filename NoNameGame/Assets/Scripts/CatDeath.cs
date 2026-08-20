@@ -137,6 +137,12 @@ public class CatDeath : MonoBehaviour
         #region ImportValueVariables
         #endregion
 
+        ////outOfMapDie
+        //if(Vector3.Dot(VARS.curRoomCenter - catTransform.position, VARS.curUp) > 15)
+        //{
+        //    VARS.IsToDie = true;
+        //}
+
         if (VARS.IsToDie)
         {
             //VARS.lastJustDiedTime = Time.time;

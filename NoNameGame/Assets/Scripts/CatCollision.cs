@@ -493,7 +493,7 @@ public class CatCollision : MonoBehaviour
                 if (tempFloat < gridBreadth /*- 0.01f*/ )
                 {
                     if (Mathf.Abs(tempFloat1) < gridBreadth * 0.975f &&
-                        VARS.curDownTile != VARS.curDivedBlock)
+                        !(VARS.curDownTile == VARS.curDivedBlock/* && VARS.curDownTileVerDistance > -0.2f*/))
                     {
                         Debug.Log("onGroundDistanceFix");
 
@@ -519,7 +519,7 @@ public class CatCollision : MonoBehaviour
                 {
                     //if (Mathf.Abs(tempFloat1) < gridBreadth * 0.95f)
                     if (Mathf.Abs(tempFloat1) < gridBreadth * 0.975f &&
-                        VARS.curUpTile != VARS.curDivedBlock)
+                        !(VARS.curUpTile == VARS.curDivedBlock/* && VARS.curUpTileVerDistance < 0.2f*/))
                     {
                         Debug.Log("toCeilingDistanceFix");
 
@@ -546,14 +546,21 @@ public class CatCollision : MonoBehaviour
                 if (tempFloat < gridBreadth)
                 {
                     if (Mathf.Abs(tempFloat1) < gridBreadth * 0.95f &&
-                        VARS.curLeftTile != VARS.curDivedBlock)
+                        !(VARS.curLeftTile == VARS.curDivedBlock/* && VARS.curLeftTileHorDistance > 0.2f*/))
                     {
                         Debug.Log("leftBlockedDistanceFix");
 
                         UFL.AddCatPosition(curRight * (gridBreadth - tempFloat));
                     }
 
-                    VARS.horCurSpeed = -VARS.horCurSpeed * VARS.curLeftTileData.elasticity;
+                    if (!(VARS.horCurSpeed > -5 && VARS.curLeftTileData.elasticity > 1e-6f))
+                    {
+                        VARS.horCurSpeed = -VARS.horCurSpeed * VARS.curLeftTileData.elasticity;
+                    }
+                    else
+                    {
+                        VARS.horCurSpeed = 0;
+                    }
 
                     if (VARS.curDashHorSpeed < 0 &&
                         VARS.curLeftTileData.elasticity > 1e-6f)
@@ -574,14 +581,21 @@ public class CatCollision : MonoBehaviour
                 if (tempFloat < gridBreadth)
                 {
                     if (Mathf.Abs(tempFloat1) < gridBreadth * 0.95f &&
-                        VARS.curRightTile != VARS.curDivedBlock)
+                        !(VARS.curRightTile == VARS.curDivedBlock/* && VARS.curRightTileHorDistance < 0.2f*/))
                     {
                         Debug.Log("rightBlockedDistanceFix");
 
                         UFL.AddCatPosition(-curRight * (gridBreadth - tempFloat));
                     }
 
-                    VARS.horCurSpeed = -VARS.horCurSpeed * VARS.curRightTileData.elasticity;
+                    if (!(VARS.horCurSpeed < 5 && VARS.curRightTileData.elasticity > 1e-6f))
+                    {
+                        VARS.horCurSpeed = -VARS.horCurSpeed * VARS.curRightTileData.elasticity;
+                    }
+                    else
+                    {
+                        VARS.horCurSpeed = 0;
+                    }
 
                     if (VARS.curDashHorSpeed > 0 &&
                         VARS.curRightTileData.elasticity > 1e-6f)

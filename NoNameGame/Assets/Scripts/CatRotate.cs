@@ -229,7 +229,7 @@ public class CatRotate : MonoBehaviour
                     rotationRestNum > 0 &&
                     !VARS.IsInCenter &&
                     !VARS.isCenterFulfilled[VARS.curRoomIndex / 9] &&
-                    !VARS.IsInLiquid && !VARS.IsInGas && !VARS.IsInMist)
+                    !VARS.IsInLiquid /*&& !VARS.IsInGas && !VARS.IsInMist*/)
                 {
                     if (VARS.curEnergy > rotationEnergyCost/*true*/)
                     {

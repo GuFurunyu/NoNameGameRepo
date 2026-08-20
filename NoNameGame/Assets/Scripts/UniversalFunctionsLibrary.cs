@@ -1199,7 +1199,8 @@ public class UniversalFunctionsLibrary : MonoBehaviour
                     if (Mathf.Abs(Vector3.Dot(tempVector, VARS.curUp)) < gridBreadth / 8 &&
                             Mathf.Abs(Vector3.Dot(tempVector, VARS.curRight)) < gridBreadth / 8)
                     {
-                        if (curBlockTileDatas[i].blockTypeIndex != 2103)
+                        if (curBlockTileDatas[i].blockTypeIndex != 2103 &&
+                            !VARS.IsCatMovedByRailBlock)
                         {
                             if (Mathf.Abs(VARS.stuckStartTime - 0) < 1e-6)
                             {
@@ -1216,7 +1217,7 @@ public class UniversalFunctionsLibrary : MonoBehaviour
                                 break;
                             }
                         }
-                        else
+                        else if(curBlockTileDatas[i].blockTypeIndex == 2103)
                         {
                             if (!VARS.IsJustByGate)
                             {
@@ -1235,6 +1236,12 @@ public class UniversalFunctionsLibrary : MonoBehaviour
                                     break;
                                 }
                             }
+                        }
+                        else if (VARS.IsCatMovedByRailBlock)
+                        {
+                            UnityEngine.Debug.Log("stuckDie");
+
+                            VARS.IsToDie = true;
                         }
                     }
                 }
@@ -1886,6 +1893,8 @@ public class UniversalFunctionsLibrary : MonoBehaviour
         {
             VARS.curUpTile = VARS.curUpLeftTile;
             VARS.curUpTileData = VARS.curUpLeftTileData;
+            VARS.curUpTileVerDistance = VARS.curUpLeftTileVerDistance;
+            VARS.curUpTileHorDistance = VARS.curUpLeftTileHorDistance;
 
             if (VARS.curUpLeftTileVerDistance > -VARS.curUpLeftTileHorDistance &&
                 VARS.verCurSpeed <= VARS.curUpTileData.toughness)
@@ -1902,6 +1911,8 @@ public class UniversalFunctionsLibrary : MonoBehaviour
         {
             VARS.curUpTile = VARS.curUpRightTile;
             VARS.curUpTileData = VARS.curUpRightTileData;
+            VARS.curUpTileVerDistance = VARS.curUpRightTileVerDistance;
+            VARS.curUpTileHorDistance = VARS.curUpRightTileHorDistance;
 
             if (VARS.curUpRightTileVerDistance > VARS.curUpRightTileHorDistance &&
                 VARS.verCurSpeed <= VARS.curUpTileData.toughness)
@@ -1937,6 +1948,9 @@ public class UniversalFunctionsLibrary : MonoBehaviour
         {
             VARS.curDownTile = VARS.curDownLeftTile;
             VARS.curDownTileData = VARS.curDownLeftTileData;
+            VARS.curDownTileVerDistance = VARS.curDownLeftTileVerDistance;
+            VARS.curDownTileHorDistance = VARS.curDownLeftTileHorDistance;
+            
 
             if (-VARS.curDownLeftTileVerDistance > -VARS.curDownLeftTileHorDistance &&
                 -VARS.verCurSpeed <= VARS.curDownTileData.toughness)
@@ -1951,6 +1965,8 @@ public class UniversalFunctionsLibrary : MonoBehaviour
         {
             VARS.curDownTile = VARS.curDownRightTile;
             VARS.curDownTileData = VARS.curDownRightTileData;
+            VARS.curDownTileVerDistance = VARS.curDownRightTileVerDistance;
+            VARS.curDownTileHorDistance = VARS.curDownRightTileHorDistance;
 
             if (-VARS.curDownRightTileVerDistance > VARS.curDownRightTileHorDistance &&
                 -VARS.verCurSpeed <= VARS.curDownTileData.toughness)
@@ -1968,11 +1984,11 @@ public class UniversalFunctionsLibrary : MonoBehaviour
             !VARS.IsClimbing &&
             Mathf.Abs(VARS.verCurSpeed) < 9)
         {
-            if ((VARS.curLeftUpTileVerDistance < 1.2f || VARS.IsToCeiling) && 
-                (VARS.curLeftDownTileVerDistance > -1.2f ||VARS.IsOnGround) && 
+            if ((VARS.curLeftUpTileVerDistance < 1.2f || VARS.curRightUpTileVerDistance < 1.2f || VARS.IsToCeiling) && 
+                (VARS.curLeftDownTileVerDistance > -1.2f || VARS.curRightDownTileVerDistance > -1.2f || VARS.IsOnGround) && 
                 (VARS.IsInputtingLeftKey ||
                 VARS.IsInputtingDashKey))
-                VARS.curLeftOneGridTunnelEntryEasingFloat = (0.05f - (Mathf.Abs(VARS.verCurSpeed) / verMaxSpeed) / 100) * 8 /** 4*/ /** 2*/ /** 1*/ /** 0.75f*/ /** 0.5f*/ /** 0.25f*/;
+                VARS.curLeftOneGridTunnelEntryEasingFloat = (0.05f - (Mathf.Abs(VARS.verCurSpeed) / verMaxSpeed) / 100) * (1 + Convert.ToInt32(VARS.IsDashing) * 2) * 8  /** 4*/ /** 2*/ /** 1*/ /** 0.75f*/ /** 0.5f*/ /** 0.25f*/;
             else
                 VARS.curLeftOneGridTunnelEntryEasingFloat = 0;
         }
@@ -1988,6 +2004,8 @@ public class UniversalFunctionsLibrary : MonoBehaviour
         {
             VARS.curLeftTile = VARS.curLeftUpTile;
             VARS.curLeftTileData = VARS.curLeftUpTileData;
+            VARS.curLeftTileHorDistance = VARS.curLeftUpTileHorDistance;
+            VARS.curLeftTileVerDistance = VARS.curLeftUpTileVerDistance;
 
             if (-VARS.curLeftUpTileHorDistance > VARS.curLeftUpTileVerDistance &&
                 -VARS.horCurSpeed <= VARS.curLeftTileData.toughness)
@@ -2002,6 +2020,8 @@ public class UniversalFunctionsLibrary : MonoBehaviour
         {
             VARS.curLeftTile = VARS.curLeftDownTile;
             VARS.curLeftTileData = VARS.curLeftDownTileData;
+            VARS.curLeftTileHorDistance = VARS.curLeftDownTileHorDistance;
+            VARS.curLeftTileVerDistance = VARS.curLeftDownTileVerDistance;
 
             if (-VARS.curLeftDownTileHorDistance > -VARS.curLeftDownTileVerDistance &&
                 -VARS.horCurSpeed <= VARS.curLeftTileData.toughness)
@@ -2019,11 +2039,11 @@ public class UniversalFunctionsLibrary : MonoBehaviour
             !VARS.IsClimbing &&
             Mathf.Abs(VARS.verCurSpeed) < 9)
         {
-            if ((VARS.curRightUpTileVerDistance < 1.2f || VARS.IsToCeiling) && 
-                (VARS.curRightDownTileVerDistance > -1.2f || VARS.IsOnGround) && 
+            if ((VARS.curRightUpTileVerDistance < 1.2f || VARS.curLeftUpTileVerDistance < 1.2f || VARS.IsToCeiling) && 
+                (VARS.curRightDownTileVerDistance > -1.2f || VARS.curLeftDownTileVerDistance > -1.2f || VARS.IsOnGround) && 
                 (VARS.IsInputtingRightKey ||
                 VARS.IsInputtingDashKey))
-                VARS.curRightOneGridTunnelEntryEasingFloat = (0.05f - (Mathf.Abs(VARS.verCurSpeed) / verMaxSpeed) / 100) * 8 /** 4*/ /** 2*/ /** 1*/ /** 0.75f*/ /** 0.5f*/ /** 0.25f*/;
+                VARS.curRightOneGridTunnelEntryEasingFloat = (0.05f - (Mathf.Abs(VARS.verCurSpeed) / verMaxSpeed) / 100) * (1 + Convert.ToInt32(VARS.IsDashing) * 2) * 8 /** 4*/ /** 2*/ /** 1*/ /** 0.75f*/ /** 0.5f*/ /** 0.25f*/;
             else
                 VARS.curRightOneGridTunnelEntryEasingFloat = 0;
         }
@@ -2039,6 +2059,8 @@ public class UniversalFunctionsLibrary : MonoBehaviour
         {
             VARS.curRightTile = VARS.curRightUpTile;
             VARS.curRightTileData = VARS.curRightUpTileData;
+            VARS.curRightTileHorDistance = VARS.curRightUpTileHorDistance;
+            VARS.curRightTileVerDistance = VARS.curRightUpTileVerDistance;
 
             if (VARS.curRightUpTileHorDistance > VARS.curRightUpTileVerDistance &&
                 VARS.horCurSpeed <= VARS.curRightTileData.toughness)
@@ -2053,6 +2075,8 @@ public class UniversalFunctionsLibrary : MonoBehaviour
         {
             VARS.curRightTile = VARS.curRightDownTile;
             VARS.curRightTileData = VARS.curRightDownTileData;
+            VARS.curRightTileHorDistance = VARS.curRightDownTileHorDistance;
+            VARS.curRightTileVerDistance = VARS.curRightDownTileVerDistance;
 
             if (VARS.curRightDownTileHorDistance > -VARS.curRightDownTileVerDistance &&
                 VARS.horCurSpeed <= VARS.curRightTileData.toughness)
@@ -2584,8 +2608,9 @@ public class UniversalFunctionsLibrary : MonoBehaviour
         #region divable
         //down
         if (VARS.curDownTile != null &&
-            VARS.curDownTileData.isDivable &&
-            (VARS.verCurSpeed < -10 ||
+            VARS.curDownTileData.isDivable && 
+            MathF.Abs(VARS.curDownTileHorDistance) < 0.95f && 
+            ((VARS.verCurSpeed < -10 && VARS.curEnergy > divingMoveEnergyCost) ||
             (VARS.IsInputtingDownKey && Time.time - VARS.lastDownKeyDownTime > divingMoveInputThreshold && Time.time - VARS.lastDivingMoveTime > divingMoveGapTime)) &&
             Mathf.Abs(VARS.horCurSpeed) < 0.1f)
         {
@@ -2605,10 +2630,11 @@ public class UniversalFunctionsLibrary : MonoBehaviour
         //left
         if (VARS.curLeftTileData != null &&
             VARS.curLeftTileData.isDivable &&
+            MathF.Abs(VARS.curLeftTileVerDistance) < 0.95f &&
             ((VARS.IsDashing && !VARS.IsJustDashDived) ||
             (VARS.IsInputtingLeftKey && Time.time - VARS.lastLeftKeyDownTime > divingMoveInputThreshold && Time.time - VARS.lastDivingMoveTime > divingMoveGapTime)) &&
-            Mathf.Abs(VARS.verCurSpeed) < 0.1f /*&&
-                                        (VARS.IsOnGround || VARS.IsToCeiling)*/)
+            ((Mathf.Abs(VARS.verCurSpeed) < 0.1f && VARS.curEnergy > divingMoveEnergyCost) ||
+            VARS.IsOnGround))
         {
             VARS.curDivedBlock = VARS.curLeftTile;
 
@@ -2628,10 +2654,11 @@ public class UniversalFunctionsLibrary : MonoBehaviour
         //right
         if (VARS.curRightTileData != null &&
             VARS.curRightTileData.isDivable &&
+            MathF.Abs(VARS.curRightTileVerDistance) < 0.95f &&
             ((VARS.IsDashing && !VARS.IsJustDashDived) ||
             (VARS.IsInputtingRightKey && Time.time - VARS.lastRightKeyDownTime > divingMoveInputThreshold && Time.time - VARS.lastDivingMoveTime > divingMoveGapTime)) &&
-            Mathf.Abs(VARS.verCurSpeed) < 0.1f /*&&
-                                        (VARS.IsOnGround || VARS.IsToCeiling)*/)
+            ((Mathf.Abs(VARS.verCurSpeed) < 0.1f && VARS.curEnergy > divingMoveEnergyCost) ||
+            VARS.IsOnGround))
         {
             VARS.curDivedBlock = VARS.curRightTile;
 
@@ -2833,6 +2860,22 @@ public class UniversalFunctionsLibrary : MonoBehaviour
             VARS.curRightDownTileVerDistance > -0.975f)
         {
             BreakCurFragileTile(VARS.curRightDownTile, curToBeBrokenFragileRustBlocks, curFragileRustBlockToBeBrokenStartTimes);
+        }
+        #endregion
+
+        #region rail
+        //down
+        if (VARS.curDownTileData.railBlockIndex > 1e-6f)
+        {
+            VARS.curOnOrToRailBlock = VARS.curDownTile;
+
+            VARS.IsOnOrToARailBlock = true;
+        }
+        else
+        {
+            VARS.curOnOrToRailBlock = null;
+
+            VARS.IsOnOrToARailBlock = false;
         }
         #endregion
 
@@ -3196,7 +3239,8 @@ public class UniversalFunctionsLibrary : MonoBehaviour
                         tempFloat1 = Mathf.Abs(Vector3.Dot(tempVector, VARS.curUp));
                         tempFloat2 = Mathf.Abs(Vector3.Dot(tempVector, VARS.curRight));
 
-                        if (tempFloat1 < 0.9f && tempFloat2 < 0.9f)
+                        if ((tempFloat1 < 0.9f && tempFloat2 < 0.9f) ||
+                            tempFloat1 < 0.2f && tempFloat2 < 1)
                         {
                             VARS.curTargetEnergy -= intoVoidEnergyLost;
 

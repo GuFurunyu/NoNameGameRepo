@@ -255,7 +255,14 @@ public class CatAppearance : MonoBehaviour
         else
         {
             //position
-            catEnergyMask.transform.localPosition = -curRoomStableForward * /*0.01f*/ 0.1f + curUp * (1 - (maxEnergy + VARS.maxEnergyBonus - VARS.curEnergy) / (maxEnergy + VARS.maxEnergyBonus)) / 2;
+            if (!VARS.IsDiving)
+            {
+                catEnergyMask.transform.localPosition = -curRoomStableForward * 0.08f + curUp * (1 - (maxEnergy + VARS.maxEnergyBonus - VARS.curEnergy) / (maxEnergy + VARS.maxEnergyBonus)) / 2;
+            }
+            else
+            {
+                catEnergyMask.transform.localPosition = -curRoomStableForward * 0.32f + curUp * (1 - (maxEnergy + VARS.maxEnergyBonus - VARS.curEnergy) / (maxEnergy + VARS.maxEnergyBonus)) / 2;
+            }
 
             //localScale
             //catEnergyMask.transform.localScale = Vector3.one + curUp * ((maxEnergy + VARS.maxEnergyBonus - curEnergy) / maxEnergy + VARS.maxEnergyBonus - 1);
@@ -285,6 +292,17 @@ public class CatAppearance : MonoBehaviour
         #endregion
 
         #region Eyes
+        if (!VARS.IsDiving)
+        {
+            catLeftEyeTransform.localPosition = -curRoomStableForward * 0.07f;
+            catRightEyeTransform.localPosition = -curRoomStableForward * 0.07f;
+        }
+        else
+        {
+            catLeftEyeTransform.localPosition = -curRoomStableForward * 0.31f;
+            catRightEyeTransform.localPosition = -curRoomStableForward * 0.31f;
+        }
+
         if (VARS.curFacingDirectionIndex == 0)
         {
             //still
@@ -292,8 +310,8 @@ public class CatAppearance : MonoBehaviour
                 !VARS.IsInputtingDownKey)
             {
                 //position
-                catLeftEyeTransform.localPosition = -curRoomStableForward * 0.05f - curUp * 0.25f - curRight * 0.175f;
-                catRightEyeTransform.localPosition = -curRoomStableForward * 0.05f - curUp * 0.25f + curRight * 0.175f;
+                catLeftEyeTransform.localPosition += - curUp * 0.25f - curRight * 0.175f;
+                catRightEyeTransform.localPosition += - curUp * 0.25f + curRight * 0.175f;
 
                 //localScale
                 catLeftEyeTransform.localScale = UFL.Vector3Abs(curRoomStableForward) + UFL.Vector3Abs(curUp) * 0.2f + UFL.Vector3Abs(curRight) * 0.15f;
@@ -302,8 +320,8 @@ public class CatAppearance : MonoBehaviour
             //up
             else if (VARS.IsInputtingUpKey)
             {
-                catLeftEyeTransform.localPosition = -curRoomStableForward * 0.05f - curUp * 0.2f - curRight * 0.175f;
-                catRightEyeTransform.localPosition = -curRoomStableForward * 0.05f - curUp * 0.2f + curRight * 0.175f;
+                catLeftEyeTransform.localPosition += -curUp * 0.2f - curRight * 0.175f;
+                catRightEyeTransform.localPosition += -curUp * 0.2f + curRight * 0.175f;
 
                 catLeftEyeTransform.localScale = UFL.Vector3Abs(curRoomStableForward) + UFL.Vector3Abs(curUp) * 0.2f + UFL.Vector3Abs(curRight) * 0.15f;
                 catRightEyeTransform.localScale = UFL.Vector3Abs(curRoomStableForward) + UFL.Vector3Abs(curUp) * 0.2f + UFL.Vector3Abs(curRight) * 0.15f;
@@ -311,8 +329,8 @@ public class CatAppearance : MonoBehaviour
             //down
             else if (VARS.IsInputtingDownKey)
             {
-                catLeftEyeTransform.localPosition = -curRoomStableForward * 0.05f - curUp * 0.3f - curRight * 0.175f;
-                catRightEyeTransform.localPosition = -curRoomStableForward * 0.05f - curUp * 0.3f + curRight * 0.175f;
+                catLeftEyeTransform.localPosition += -curUp * 0.3f - curRight * 0.175f;
+                catRightEyeTransform.localPosition += -curUp * 0.3f + curRight * 0.175f;
 
                 catLeftEyeTransform.localScale = UFL.Vector3Abs(curRoomStableForward) + UFL.Vector3Abs(curUp) * 0.2f + UFL.Vector3Abs(curRight) * 0.15f;
                 catRightEyeTransform.localScale = UFL.Vector3Abs(curRoomStableForward) + UFL.Vector3Abs(curUp) * 0.2f + UFL.Vector3Abs(curRight) * 0.15f;
@@ -321,8 +339,8 @@ public class CatAppearance : MonoBehaviour
         //left
         else if (VARS.curFacingDirectionIndex == 1)
         {
-            catLeftEyeTransform.localPosition = -curRoomStableForward * 0.05f - curUp * 0.25f - curRight * 0.25f;
-            catRightEyeTransform.localPosition = -curRoomStableForward * 0.05f - curUp * 0.25f + curRight * 0.025f;
+            catLeftEyeTransform.localPosition += -curUp * 0.25f - curRight * 0.25f;
+            catRightEyeTransform.localPosition += -curUp * 0.25f + curRight * 0.025f;
 
             catLeftEyeTransform.localScale = UFL.Vector3Abs(curRoomStableForward) + UFL.Vector3Abs(curUp) * 0.2f + UFL.Vector3Abs(curRight) * 0.1f;
             catRightEyeTransform.localScale = UFL.Vector3Abs(curRoomStableForward) + UFL.Vector3Abs(curUp) * 0.2f + UFL.Vector3Abs(curRight) * 0.15f;
@@ -330,8 +348,8 @@ public class CatAppearance : MonoBehaviour
         //right
         else if (VARS.curFacingDirectionIndex == 2)
         {
-            catLeftEyeTransform.localPosition = -curRoomStableForward * 0.05f - curUp * 0.25f - curRight * 0.025f;
-            catRightEyeTransform.localPosition = -curRoomStableForward * 0.05f - curUp * 0.25f + curRight * 0.25f;
+            catLeftEyeTransform.localPosition += -curUp * 0.25f - curRight * 0.025f;
+            catRightEyeTransform.localPosition += -curUp * 0.25f + curRight * 0.25f;
 
             catLeftEyeTransform.localScale = UFL.Vector3Abs(curRoomStableForward) + UFL.Vector3Abs(curUp) * 0.2f + UFL.Vector3Abs(curRight) * 0.15f;
             catRightEyeTransform.localScale = UFL.Vector3Abs(curRoomStableForward) + UFL.Vector3Abs(curUp) * 0.2f + UFL.Vector3Abs(curRight) * 0.1f;

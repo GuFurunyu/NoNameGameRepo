@@ -268,7 +268,7 @@ public class DataManager : MonoBehaviour
         WriteCatWorldData(true);
         WriteKeyCodesData(true);
 
-        tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "Version_0.6.2.txt");
+        tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "Version_0.7.2.txt");
 
         if (File.Exists(tempPath))
         {

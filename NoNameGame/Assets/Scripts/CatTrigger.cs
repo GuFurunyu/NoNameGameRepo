@@ -371,7 +371,7 @@ public class CatTrigger : MonoBehaviour
                             }
                         }
 
-                        catTransform.position = curToEdgeGate.transform.position - roomStableForwards[curToEdgeGate.GetComponent<TileData>().inRoomIndex] * 0.1f;
+                        catTransform.position = curToEdgeGate.transform.position - roomStableForwards[curToEdgeGate.GetComponent<TileData>().inRoomIndex] * /*0.1f*/ 0.2f;
 
                         curEdgeGatesCommonLineVector = Vector3.Cross(roomStableForwards[curTriggerTileData.inRoomIndex], roomStableForwards[curToEdgeGate.GetComponent<TileData>().inRoomIndex]);
                         curEdgeGatesAngle = Vector3.Angle(roomStableForwards[curTriggerTileData.inRoomIndex], roomStableForwards[curToEdgeGate.GetComponent<TileData>().inRoomIndex]);
@@ -466,7 +466,7 @@ public class CatTrigger : MonoBehaviour
                 //setCatIniPosition
                 //VARS.catIniPosition = VARS.curActivatedSavePoint.transform.position - curRoomStableForward * 0.1f;
                 //VARS.catIniPosition = VARS.curActivatedSavePointPosition - curRoomStableForward * 0.1f;
-                catIniPositionPoint.transform.position = VARS.curActivatedSavePointPosition - curRoomStableForward * 0.1f;
+                catIniPositionPoint.transform.position = VARS.curActivatedSavePointPosition - curRoomStableForward * /*0.1f*/0.2f;
 
                 //if ((VARS.curRoomIndex - 4) % 9 == 0)
                 //{
@@ -1003,7 +1003,7 @@ public class CatTrigger : MonoBehaviour
                         case 8: tempVector = tempVector1 + tempVector2; break;
                     }
                 VARS.curToBeCarriedFragment.transform.SetParent(roomPlanes[4 + 9 * (VARS.curToBeCarriedFragmentFaceIndex - 1)].transform.GetChild(0), true);
-                VARS.curToBeCarriedFragment.transform.localPosition = (tempVector - VARS.curRoomStableForward * 0.9f);
+                VARS.curToBeCarriedFragment.transform.localPosition = (tempVector - /*VARS.curRoomStableForward*/roomStableForwards[4 + 9 * (VARS.curToBeCarriedFragmentFaceIndex - 1)] * 0.9f);
 
                 //outlineScale
                 VARS.curToBeCarriedFragment.transform.GetChild(0).localScale = Vector3.one * 0.45f;

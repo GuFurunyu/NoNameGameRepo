@@ -78,6 +78,9 @@ public class AudioManager : MonoBehaviour
                 audioSource.loop = true;
 
                 hasStartedMainBoardBGM = true;
+
+                //mainBoardNoBGM
+                audioSource.volume = 0;
             }
         }
         else

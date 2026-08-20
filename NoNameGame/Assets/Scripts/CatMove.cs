@@ -526,7 +526,6 @@ public class CatMove : MonoBehaviour
                 else if (isInGas)
                 {
                     VARS.verCurIniSpeed = verIniSpeed / curGasTileData.fluidDrag;
-                    //curGravityAcce = (gravityAcce - gravityAcce * curGasTileData.mass * 0.5f /*/ 2*/) * curGravityAcceBonus;
                     if (VARS.IsInputtingUpKey)
                     {
                         VARS.curGravityAcce = (gravityAcce - gravityAcce * curGasTileData.mass * 0.75f) * curGravityAcceBonus;
@@ -544,7 +543,6 @@ public class CatMove : MonoBehaviour
                 else if (isInMist)
                 {
                     VARS.verCurIniSpeed = verIniSpeed / curMistTileData.fluidDrag;
-                    //curGravityAcce = (gravityAcce - gravityAcce * curMistTileData.mass * 0.5f /*/ 2*/) * curGravityAcceBonus;
                     if (VARS.IsInputtingUpKey)
                     {
                         VARS.curGravityAcce = (gravityAcce - gravityAcce * curMistTileData.mass * 0.75f) * curGravityAcceBonus;
@@ -585,7 +583,8 @@ public class CatMove : MonoBehaviour
             if (!isInLiquid &&
                 VARS.IsJustInLiquid &&
                 VARS.verCurSpeed > 0 &&
-                !VARS.IsHighJumping)
+                !VARS.IsHighJumping &&
+                !VARS.IsInputtingJumpKey)
             {
                 VARS.verCurSpeed /= 2;
 
