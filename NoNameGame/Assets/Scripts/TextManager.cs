@@ -93,7 +93,7 @@ public class TextManager : MonoBehaviour
             }
             //disappear
             if (Time.time-VARS.oneColorFragmentCollectingTextActivatedStartTime> oneColorFragmentCollectingTextActivatedTime ||
-                //VARS.IsRotating ||
+                VARS.IsRotating ||
                 VARS.IsInNewRoom ||
                 VARS.IsOptionPanelActivated ||
                 VARS.IsInMinimap)
@@ -128,7 +128,7 @@ public class TextManager : MonoBehaviour
             }
             //disappear
             if (Time.time - VARS.allColorsFragmentCollectingTextActivatedStartTime > oneColorFragmentCollectingTextActivatedTime - 0.1f + allColorsFragmentCollectingTextActivatedTime ||
-                //VARS.IsRotating ||
+                VARS.IsRotating ||
                 VARS.IsInNewRoom ||
                 VARS.IsOptionPanelActivated ||
                 VARS.IsInMinimap)
@@ -162,7 +162,7 @@ public class TextManager : MonoBehaviour
             }
             //disappear
             if (Time.time - VARS.keysAndLocksCollectingTextActivatedStartTime > keysAndLocksCollectingTextActivatedTime ||
-                //VARS.IsRotating ||
+                VARS.IsRotating ||
                 VARS.IsInNewRoom ||
                 VARS.IsOptionPanelActivated ||
                 VARS.IsInMinimap)

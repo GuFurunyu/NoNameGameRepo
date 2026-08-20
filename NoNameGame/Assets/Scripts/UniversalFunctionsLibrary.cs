@@ -1968,8 +1968,10 @@ public class UniversalFunctionsLibrary : MonoBehaviour
             !VARS.IsClimbing &&
             Mathf.Abs(VARS.verCurSpeed) < 9)
         {
-            if (VARS.IsInputtingLeftKey ||
-                VARS.IsInputtingDashKey)
+            if ((VARS.curLeftUpTileVerDistance < 1.2f || VARS.IsToCeiling) && 
+                (VARS.curLeftDownTileVerDistance > -1.2f ||VARS.IsOnGround) && 
+                (VARS.IsInputtingLeftKey ||
+                VARS.IsInputtingDashKey))
                 VARS.curLeftOneGridTunnelEntryEasingFloat = (0.05f - (Mathf.Abs(VARS.verCurSpeed) / verMaxSpeed) / 100) * 8 /** 4*/ /** 2*/ /** 1*/ /** 0.75f*/ /** 0.5f*/ /** 0.25f*/;
             else
                 VARS.curLeftOneGridTunnelEntryEasingFloat = 0;
@@ -2017,8 +2019,10 @@ public class UniversalFunctionsLibrary : MonoBehaviour
             !VARS.IsClimbing &&
             Mathf.Abs(VARS.verCurSpeed) < 9)
         {
-            if (VARS.IsInputtingRightKey ||
-                VARS.IsInputtingDashKey)
+            if ((VARS.curRightUpTileVerDistance < 1.2f || VARS.IsToCeiling) && 
+                (VARS.curRightDownTileVerDistance > -1.2f || VARS.IsOnGround) && 
+                (VARS.IsInputtingRightKey ||
+                VARS.IsInputtingDashKey))
                 VARS.curRightOneGridTunnelEntryEasingFloat = (0.05f - (Mathf.Abs(VARS.verCurSpeed) / verMaxSpeed) / 100) * 8 /** 4*/ /** 2*/ /** 1*/ /** 0.75f*/ /** 0.5f*/ /** 0.25f*/;
             else
                 VARS.curRightOneGridTunnelEntryEasingFloat = 0;
@@ -2208,7 +2212,7 @@ public class UniversalFunctionsLibrary : MonoBehaviour
         //leftUp
         if (VARS.curLeftUpTileData != null &&
             VARS.curLeftUpTileData.isPushable &&
-            VARS.curLeftUpTileVerDistance < 1)
+            VARS.curLeftUpTileVerDistance < 0.95f)
         {
             if (VARS.IsDashing &&
                 !VARS.IsUpPushing)
@@ -2300,7 +2304,7 @@ public class UniversalFunctionsLibrary : MonoBehaviour
         //leftDown
         if (VARS.curLeftDownTileData != null &&
             VARS.curLeftDownTileData.isPushable &&
-            VARS.curLeftDownTileVerDistance > -1)
+            VARS.curLeftDownTileVerDistance > -0.95f)
         {
             if (VARS.IsDashing &&
                 !VARS.IsDownPushing)
@@ -2395,7 +2399,7 @@ public class UniversalFunctionsLibrary : MonoBehaviour
         //rightUp
         if (VARS.curRightUpTileData != null &&
             VARS.curRightUpTileData.isPushable &&
-            VARS.curRightUpTileVerDistance < 1)
+            VARS.curRightUpTileVerDistance < 0.95f)
         {
             if (VARS.IsDashing &&
                 !VARS.IsUpPushing)
@@ -2486,7 +2490,7 @@ public class UniversalFunctionsLibrary : MonoBehaviour
         //rightDown
         if (VARS.curRightDownTileData != null &&
             VARS.curRightDownTileData.isPushable &&
-            VARS.curRightDownTileVerDistance > -1)
+            VARS.curRightDownTileVerDistance > -0.95f)
         {
             if (VARS.IsDashing &&
                 !VARS.IsDownPushing)
@@ -2654,7 +2658,8 @@ public class UniversalFunctionsLibrary : MonoBehaviour
 
         //upLeft
         if (VARS.curUpLeftTileData != null &&
-            VARS.verCurSpeed > VARS.curUpLeftTileData.toughness)
+            VARS.verCurSpeed > VARS.curUpLeftTileData.toughness &&
+            VARS.curUpLeftTileHorDistance > -1)
         {
             VARS.curUpLeftTile.SetActive(false);
 
@@ -2663,7 +2668,8 @@ public class UniversalFunctionsLibrary : MonoBehaviour
         }
         //upRight
         if (VARS.curUpRightTileData != null &&
-            VARS.verCurSpeed > VARS.curUpRightTileData.toughness)
+            VARS.verCurSpeed > VARS.curUpRightTileData.toughness &&
+            VARS.curUpRightTileHorDistance < 1)
         {
             VARS.curUpRightTile.SetActive(false);
 
@@ -2672,7 +2678,8 @@ public class UniversalFunctionsLibrary : MonoBehaviour
         }
         //downLeft
         if (VARS.curDownLeftTileData != null &&
-            -VARS.verCurSpeed > VARS.curDownLeftTileData.toughness)
+            -VARS.verCurSpeed > VARS.curDownLeftTileData.toughness &&
+            VARS.curDownLeftTileHorDistance > -1)
         {
             VARS.curDownLeftTile.SetActive(false);
 
@@ -2681,7 +2688,8 @@ public class UniversalFunctionsLibrary : MonoBehaviour
         }
         //downRight
         if (VARS.curDownRightTileData != null &&
-            -VARS.verCurSpeed > VARS.curDownRightTileData.toughness)
+            -VARS.verCurSpeed > VARS.curDownRightTileData.toughness &&
+            VARS.curDownRightTileHorDistance < 1)
         {
             VARS.curDownRightTile.SetActive(false);
 
@@ -2690,7 +2698,8 @@ public class UniversalFunctionsLibrary : MonoBehaviour
         }
         //leftUp
         if (VARS.curLeftUpTileData != null &&
-            -VARS.horCurSpeed > VARS.curLeftUpTileData.toughness)
+            -VARS.horCurSpeed > VARS.curLeftUpTileData.toughness &&
+            VARS.curLeftUpTileVerDistance < 1)
         {
             VARS.curLeftUpTile.SetActive(false);
 
@@ -2699,7 +2708,8 @@ public class UniversalFunctionsLibrary : MonoBehaviour
         }
         //leftDown
         if (VARS.curLeftDownTileData != null &&
-            -VARS.horCurSpeed > VARS.curLeftDownTileData.toughness)
+            -VARS.horCurSpeed > VARS.curLeftDownTileData.toughness &&
+            VARS.curLeftDownTileVerDistance > -1)
         {
             VARS.curLeftDownTile.SetActive(false);
 
@@ -2708,7 +2718,8 @@ public class UniversalFunctionsLibrary : MonoBehaviour
         }
         //rightUp
         if (VARS.curRightUpTileData != null &&
-            VARS.horCurSpeed > VARS.curRightUpTileData.toughness)
+            VARS.horCurSpeed > VARS.curRightUpTileData.toughness &&
+            VARS.curRightUpTileVerDistance < 1)
         {
             VARS.curRightUpTile.SetActive(false);
 
@@ -2717,7 +2728,8 @@ public class UniversalFunctionsLibrary : MonoBehaviour
         }
         //rightDown
         if (VARS.curRightDownTileData != null &&
-            VARS.horCurSpeed > VARS.curRightDownTileData.toughness)
+            VARS.horCurSpeed > VARS.curRightDownTileData.toughness &&
+            VARS.curRightDownTileVerDistance > -1)
         {
             VARS.curRightDownTile.SetActive(false);
 

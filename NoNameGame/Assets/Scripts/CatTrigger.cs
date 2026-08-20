@@ -671,8 +671,8 @@ public class CatTrigger : MonoBehaviour
                     keysAndLocksCollectingTextRight.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0);
                     keysAndLocksCollectingTextEmpty.SetActive(true);
                     VARS.keysAndLocksCollectingTextActivatedStartTime = Time.time;
-                    //tempChildToCurPlane
-                    keysAndLocksCollectingTextEmpty.transform.SetParent(VARS.curPlaneEmpty.transform, true);
+                    ////tempChildToCurPlane
+                    //keysAndLocksCollectingTextEmpty.transform.SetParent(VARS.curPlaneEmpty.transform, true);
 
 
                     VARS.IsToDetermineGatePassabilities = true;
@@ -1082,8 +1082,8 @@ public class CatTrigger : MonoBehaviour
                 oneColorFragmentCollectingTextRight.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0);
                 oneColorFragmentCollectingTextEmpty.SetActive(true);
                 VARS.oneColorFragmentCollectingTextActivatedStartTime = Time.time;
-                //tempChildToCurPlane
-                oneColorFragmentCollectingTextEmpty.transform.SetParent(VARS.curPlaneEmpty.transform, true);
+                ////tempChildToCurPlane
+                //oneColorFragmentCollectingTextEmpty.transform.SetParent(VARS.curPlaneEmpty.transform, true);
 
                 //allColorFragmentCollectingText
                 //getCurCollectedNumber
@@ -1103,8 +1103,8 @@ public class CatTrigger : MonoBehaviour
                 allColorsFragmentCollectingTextRight.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0);
                 allColorsFragmentCollectingTextEmpty.SetActive(true);
                 VARS.allColorsFragmentCollectingTextActivatedStartTime = Time.time;
-                //tempChildToCurPlane
-                allColorsFragmentCollectingTextEmpty.transform.SetParent(VARS.curPlaneEmpty.transform, true);
+                ////tempChildToCurPlane
+                //allColorsFragmentCollectingTextEmpty.transform.SetParent(VARS.curPlaneEmpty.transform, true);
 
                 VARS.IsCollectingAFragment = false;
 
