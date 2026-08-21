@@ -434,7 +434,8 @@ public class GuideManager : MonoBehaviour
 
                         VARS.HasFinishedKeysGuide = true;
 
-                        VARS.IsToWriteProgressData = true;
+                        //VARS.IsToWriteProgressData = true;
+                        VARS.IsToWriteGuideData = true;
 
                         VARS.IsInKeysGuide = false;
                     }
@@ -466,7 +467,8 @@ public class GuideManager : MonoBehaviour
 
                 VARS.HasJumped = true;
 
-                VARS.IsToWriteProgressData = true;
+                //VARS.IsToWriteProgressData = true;
+                VARS.IsToWriteGuideData = true;
 
                 VARS.IsInJumpGuide = false;
             }
@@ -480,7 +482,8 @@ public class GuideManager : MonoBehaviour
 
                 VARS.HasDashed = true;
 
-                VARS.IsToWriteProgressData = true;
+                //VARS.IsToWriteProgressData = true;
+                VARS.IsToWriteGuideData = true;
 
                 VARS.IsInDashGuide = false;
             }
@@ -494,7 +497,8 @@ public class GuideManager : MonoBehaviour
 
                 VARS.HasBeenIntoMinimap = true;
 
-                VARS.IsToWriteProgressData = true;
+                //VARS.IsToWriteProgressData = true;
+                VARS.IsToWriteGuideData = true;
 
                 VARS.IsInIntoMinimapGuide = false;
             }
@@ -509,7 +513,8 @@ public class GuideManager : MonoBehaviour
 
                 VARS.HasRotated = true;
 
-                VARS.IsToWriteProgressData= true;
+                //VARS.IsToWriteProgressData= true;
+                VARS.IsToWriteGuideData = true;
 
                 VARS.IsInRotateGuide = false;
             }
@@ -525,7 +530,8 @@ public class GuideManager : MonoBehaviour
 
                 VARS.HasTwisted = true;
 
-                VARS.IsToWriteProgressData = true;
+                //VARS.IsToWriteProgressData = true;
+                VARS.IsToWriteGuideData = true;
 
                 VARS.IsInTwistGuide = false;
             }
@@ -539,7 +545,8 @@ public class GuideManager : MonoBehaviour
 
                 VARS.HasBackCentered = true;
 
-                VARS.IsToWriteProgressData = true;
+                //VARS.IsToWriteProgressData = true;
+                VARS.IsToWriteGuideData = true;
 
                 VARS.IsInBackCenterGuide = false;
             }
@@ -554,7 +561,8 @@ public class GuideManager : MonoBehaviour
 
                 VARS.HasOutOfCenterTwisted = true;
 
-                VARS.IsToWriteProgressData = true;
+                //VARS.IsToWriteProgressData = true;
+                VARS.IsToWriteGuideData = true;
 
                 VARS.IsInOutOfCenterTwistGuide = false;
             }
@@ -568,7 +576,8 @@ public class GuideManager : MonoBehaviour
 
                 VARS.HasBetweenCentersTransported = true;
 
-                VARS.IsToWriteProgressData = true;
+                //VARS.IsToWriteProgressData = true;
+                VARS.IsToWriteGuideData = true;
 
                 VARS.IsInBetweenCentersTransportGuide = false;
             }

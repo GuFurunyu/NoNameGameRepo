@@ -371,7 +371,17 @@ public class CatTrigger : MonoBehaviour
                             }
                         }
 
-                        catTransform.position = curToEdgeGate.transform.position - roomStableForwards[curToEdgeGate.GetComponent<TileData>().inRoomIndex] * /*0.1f*/ 0.2f;
+                        for(int i = 0; i < roomPlanes.Length; i++)
+                        {
+                            if (roomPlanes[i] == curToEdgeGate.transform.parent.parent.gameObject)
+                            {
+                                tempInt = i;
+
+                                break;
+                            }
+                        }
+
+                        catTransform.position = curToEdgeGate.transform.position - roomStableForwards[tempInt] * /*0.1f*/ 0.2f;
 
                         curEdgeGatesCommonLineVector = Vector3.Cross(roomStableForwards[curTriggerTileData.inRoomIndex], roomStableForwards[curToEdgeGate.GetComponent<TileData>().inRoomIndex]);
                         curEdgeGatesAngle = Vector3.Angle(roomStableForwards[curTriggerTileData.inRoomIndex], roomStableForwards[curToEdgeGate.GetComponent<TileData>().inRoomIndex]);
@@ -499,7 +509,9 @@ public class CatTrigger : MonoBehaviour
 
                 VARS.IsToActivateCurSavePoint = false;
 
-                VARS.IsToWriteCatWorldData = true;
+                //VARS.IsToWriteCatWorldData = true;
+                VARS.IsToWriteCatData = true;
+                VARS.IsToWriteSavePointsData = true;
             }
             #endregion
 
@@ -561,7 +573,8 @@ public class CatTrigger : MonoBehaviour
 
                 VARS.IsToCarryAKey = false;
 
-                VARS.IsToWriteCatWorldData = true;
+                //VARS.IsToWriteCatWorldData = true;
+                VARS.IsToWriteKeysAndLocksData = true;
             }
             if (VARS.IsCarryingAKey)
             {
@@ -674,13 +687,14 @@ public class CatTrigger : MonoBehaviour
                     ////tempChildToCurPlane
                     //keysAndLocksCollectingTextEmpty.transform.SetParent(VARS.curPlaneEmpty.transform, true);
 
-
                     VARS.IsToDetermineGatePassabilities = true;
+                    VARS.IsToChangeGatePassabilitiesAfterUnlocking = true;
 
                     VARS.IsUnlocking = false;
 
-                    VARS.IsToWriteProgressData = true;
-                    VARS.IsToWriteCatWorldData = true;
+                    //VARS.IsToWriteProgressData = true;
+                    //VARS.IsToWriteCatWorldData = true;
+                    VARS.IsToWriteKeysAndLocksData = true;
                 }
             }
             #endregion
@@ -919,7 +933,8 @@ public class CatTrigger : MonoBehaviour
                     //}                    
                 }
 
-                VARS.IsToWriteCatWorldData = true;
+                //VARS.IsToWriteCatWorldData = true;
+                VARS.IsToWriteFragmentsData = true;
             }
             //centerFulfilled(outVersion)
             if (VARS.IsCenterFulfilled)
@@ -1108,12 +1123,13 @@ public class CatTrigger : MonoBehaviour
 
                 VARS.IsCollectingAFragment = false;
 
-                VARS.IsToWriteProgressData = true;
-                VARS.IsToWriteCatWorldData = true;
+                //VARS.IsToWriteProgressData = true;
+                //VARS.IsToWriteCatWorldData = true;
+                VARS.IsToWriteFragmentsData = true;
             }
             #endregion
 
-            #region Strawberry
+            #region Strawberry(outVersion)
             //lose
             if (VARS.IsToLoseCarriedStrawberries)
             {

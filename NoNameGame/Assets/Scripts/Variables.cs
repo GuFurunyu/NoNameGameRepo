@@ -35,23 +35,45 @@ public class Variables : MonoBehaviour
     #region DataManager
     [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
         "  \nDATAMANAGER\n --- ")]
-    //progressData
-    [SerializeField] private bool _isToWriteProgressData;
-    public bool IsToWriteProgressData { get { return _isToWriteProgressData; } set { _isToWriteProgressData = value; } }
+    ////progressData
+    //[SerializeField] private bool _isToWriteProgressData;
+    //public bool IsToWriteProgressData { get { return _isToWriteProgressData; } set { _isToWriteProgressData = value; } }
 
-    //keyCodesData
-    [SerializeField] private bool _isToWriteKeyCodesData;
-    public bool IsToWriteKeyCodesData { get { return _isToWriteKeyCodesData; } set { _isToWriteKeyCodesData = value; } }
-
+    ////catWorldData
+    //[SerializeField] private bool _isToWriteCatWorldData;
+    //public bool IsToWriteCatWorldData { get { return _isToWriteCatWorldData; } set { _isToWriteCatWorldData = value; } }
 
     //worldData
     [SerializeField] private bool _isToWriteWorldData;
     public bool IsToWriteWorldData { get { return _isToWriteWorldData; } set { _isToWriteWorldData = value; } }
 
+    //exploration
+    [SerializeField] private bool _isToWriteExplorationData;
+    public bool IsToWriteExplorationData { get { return _isToWriteExplorationData; } set { _isToWriteExplorationData = value; } }
 
-    //catWorldData
-    [SerializeField] private bool _isToWriteCatWorldData;
-    public bool IsToWriteCatWorldData { get { return _isToWriteCatWorldData; } set { _isToWriteCatWorldData = value; } }
+    //cat
+    [SerializeField] private bool _isToWriteCatData;
+    public bool IsToWriteCatData { get { return _isToWriteCatData; } set { _isToWriteCatData = value; } }
+
+    //savePoints
+    [SerializeField] private bool _isToWriteSavePointsData;
+    public bool IsToWriteSavePointsData { get { return _isToWriteSavePointsData; } set { _isToWriteSavePointsData = value; } }
+
+    //fragments
+    [SerializeField] private bool _isToWriteFragmentsData;
+    public bool IsToWriteFragmentsData { get { return _isToWriteFragmentsData; } set { _isToWriteFragmentsData = value; } }
+
+    //keysAndLocks
+    [SerializeField] private bool _isToWriteKeysAndLocksData;
+    public bool IsToWriteKeysAndLocksData { get { return _isToWriteKeysAndLocksData; } set { _isToWriteKeysAndLocksData = value; } }
+
+    //guide
+    [SerializeField] private bool _isToWriteGuideData;
+    public bool IsToWriteGuideData { get { return _isToWriteGuideData; } set { _isToWriteGuideData = value; } }
+
+    //keyCodesData
+    [SerializeField] private bool _isToWriteKeyCodesData;
+    public bool IsToWriteKeyCodesData { get { return _isToWriteKeyCodesData; } set { _isToWriteKeyCodesData = value; } }
 
 
     //isToWriteAllData
@@ -66,9 +88,15 @@ public class Variables : MonoBehaviour
         {
             if (value == true)
             {
-                IsToWriteProgressData = true;
+                //IsToWriteProgressData = true;
+                //IsToWriteCatWorldData = true;
                 IsToWriteWorldData = true;
-                IsToWriteCatWorldData = true;
+                IsToWriteExplorationData = true;
+                IsToWriteCatData = true;
+                IsToWriteSavePointsData = true;
+                IsToWriteFragmentsData = true;
+                IsToWriteKeysAndLocksData = true;
+                IsToWriteGuideData = true;
                 IsToWriteKeyCodesData = true;
             }
 
@@ -299,6 +327,12 @@ public class Variables : MonoBehaviour
 
     [SerializeField] private bool _isToDetermineGatePassabilities = true;
     public bool IsToDetermineGatePassabilities { get { return _isToDetermineGatePassabilities; } set { _isToDetermineGatePassabilities = value; } }
+
+    [SerializeField] private bool _isToChangeGatePassabilitiesAfterUnlocking = false;
+    public bool IsToChangeGatePassabilitiesAfterUnlocking { get { return _isToChangeGatePassabilitiesAfterUnlocking; } set { _isToChangeGatePassabilitiesAfterUnlocking = value; } }
+
+    [SerializeField] private bool _isToChangeGatePassabilitiesAfterTwisting = false;
+    public bool IsToChangeGatePassabilitiesAfterTwisting { get { return _isToChangeGatePassabilitiesAfterTwisting; } set { _isToChangeGatePassabilitiesAfterTwisting = value; } }
 
     //edgeGatesLinkedToIndexes
     public List<int> edgeGateLinkedToIndexes = new List<int>();

@@ -399,8 +399,8 @@ public class UniversalFunctionsLibrary : MonoBehaviour
         if (Mathf.Abs(Vector3.Dot(tempVector, roomStableForwards[roomIndex])) <= inRoomMaxForwardDistance)
         {
             //ifIsInsideTheBoundary
-            if (Mathf.Abs(Vector3.Dot(tempVector, roomStableUps[roomIndex])) <= (roomCoordBreadth / 2 + 1) * gridBreadth &&
-                Mathf.Abs(Vector3.Dot(tempVector, roomStableRights[roomIndex])) <= (roomCoordBreadth / 2 + 1) * gridBreadth)
+            if (Mathf.Abs(Vector3.Dot(tempVector, roomStableUps[roomIndex])) <= (roomCoordBreadth / 2 + /*1*/ 0.5f) * gridBreadth &&
+                Mathf.Abs(Vector3.Dot(tempVector, roomStableRights[roomIndex])) <= (roomCoordBreadth / 2 + /*1*/ 0.5f) * gridBreadth)
             {
                 return true;
             }
@@ -2865,7 +2865,8 @@ public class UniversalFunctionsLibrary : MonoBehaviour
 
         #region rail
         //down
-        if (VARS.curDownTileData.railBlockIndex > 1e-6f)
+        if (VARS.curDownTile != null &&
+            VARS.curDownTileData.railBlockIndex > 1e-6f)
         {
             VARS.curOnOrToRailBlock = VARS.curDownTile;
 

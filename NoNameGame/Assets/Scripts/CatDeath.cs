@@ -412,6 +412,7 @@ public class CatDeath : MonoBehaviour
         VARS.IsInNewRoomCameraManagerResetOver = false;
         VARS.IsInNewRoomCatRotateResetOver = false;
 
-        VARS.IsToWriteCatWorldData = true;
+        //VARS.IsToWriteCatWorldData = true;
+        VARS.IsToWriteCatData = true;
     }
 }

@@ -14,28 +14,30 @@ public class DataManager : MonoBehaviour
 
     GameObject gameManager;
 
-    public class ProgressData
-    {
-        //guide
-        public bool hasFinishedKeysGuide;
-        public bool hasJumped;
-        public bool hasDashed;
-        public bool hasBeenIntoMinimap;
-        public bool hasCollectedFragment;
-        public bool hasRotated;
-        public bool hasClimbed;
-        public bool hasTwisted;
-        public bool hasBackCentered;
-        public bool hasOutOfCenterTwisted;
-        public bool hasBetweenCentersTransported;
+    #region OutVersion
+    //public class ProgressData
+    //{
+    //    //guide
+    //    public bool hasFinishedKeysGuide;
+    //    public bool hasJumped;
+    //    public bool hasDashed;
+    //    public bool hasBeenIntoMinimap;
+    //    public bool hasCollectedFragment;
+    //    public bool hasRotated;
+    //    public bool hasClimbed;
+    //    public bool hasTwisted;
+    //    public bool hasBackCentered;
+    //    public bool hasOutOfCenterTwisted;
+    //    public bool hasBetweenCentersTransported;
 
-        //collectedNumbers
-        public int[] curOneColorFragmentCollectedNumbers = new int[6];
-        public int curAllColorsFragmentCollectedNumber;
-        public int curKeysAndLocksCollectedNumber;
-    }
+    //    ////collectedNumbers
+    //    //public int[] curOneColorFragmentCollectedNumbers = new int[6];
+    //    //public int curAllColorsFragmentCollectedNumber;
+    //    //public int curKeysAndLocksCollectedNumber;
+    //}
 
-    ProgressData curProgressData = new ProgressData();
+    //ProgressData curProgressData = new ProgressData();
+    #endregion
 
     public class WorldData
     {
@@ -57,37 +59,51 @@ public class DataManager : MonoBehaviour
 
     WorldData curWorldData = new WorldData();
 
-    public class CatWorldData
+    public class ExplorationData
     {
-        //curRoom
-        public int curRoomIndex;
-
-        //curPosition
-        public Vector3 curCatIniPosition;
-
-        //savePoints
-        public int curActivatedSavePointIndex;
-        public Vector3 curActivatedSavePointPosition;
-        public int curActivatedSavePointRoomIndex;
-
         //exploredFaces
         public bool[] isFaceExplored = new bool[6];
 
         //exploredRooms
         public bool[] isRoomExplored = new bool[54];
 
+        //isMinimapRoomPlaneExploredStableDirectionMarkingEdgeLinesActivated
+        public bool[] isMinimapRoomPlaneExploredStableDirectionMarkingEdgeLinesActivated = new bool[216];
+    }
+
+    ExplorationData curExplorationData = new ExplorationData();
+
+    public class CatData
+    {
+        //curRoom
+        public int curRoomIndex;
+
+        //curPosition
+        public Vector3 curCatIniPosition;
+    }
+
+    CatData curCatData = new CatData();
+
+    public class SavePointsData
+    {
+        //savePoints
+        public int curActivatedSavePointIndex;
+        public Vector3 curActivatedSavePointPosition;
+        public int curActivatedSavePointRoomIndex;
+
+        //curLatestCenterSavePointPosition
+        public Vector3 curLatestCenterSavePointPosition;
+
+        //curAccessedCenterSavePointPositions
+        public List<Vector3> curAccessedCenterSavePointPositions = new List<Vector3>();
+    }
+
+    SavePointsData curSavePointsData = new SavePointsData();
+
+    public class FragmentsData
+    {
         //collectedFragmentRooms
         public bool[] isRoomFragmentCollected = new bool[54];
-
-        //keysAndLocks
-        public List<int> deactivatedKeyIndexes = new List<int>();
-        public List<int> deactivatedLockIndexes = new List<int>();
-        //public bool isCarryingAKey;
-        //public int curCarriedKeyIndex;
-        //public int curCarriedKeyIniRoomIndex;
-        //public Vector3 curCarriedKeyIniLocalPosition;
-        public List<int> deactivatedMinimapKeyIndexes = new List<int>();
-        public List<int> deactivatedMinimapLockIndexes = new List<int>();
 
         //fragments
         public bool[] isRedFragmentsEmbeded = new bool[8];
@@ -105,24 +121,114 @@ public class DataManager : MonoBehaviour
 
         //isCenterFulfilled
         public bool[] isCenterFulfilled = new bool[6];
+    }
 
-        //maxEnergyBonus
-        public float maxEnergyBonus;
+    FragmentsData curFragmentsData = new FragmentsData();
 
-        //curLatestCenterSavePointPosition
-        public Vector3 curLatestCenterSavePointPosition;
+    public class KeysAndLocksData
+    {
+        //keysAndLocks
+        public List<int> deactivatedKeyIndexes = new List<int>();
+        public List<int> deactivatedLockIndexes = new List<int>();
+        //public bool isCarryingAKey;
+        //public int curCarriedKeyIndex;
+        //public int curCarriedKeyIniRoomIndex;
+        //public Vector3 curCarriedKeyIniLocalPosition;
+        public List<int> deactivatedMinimapKeyIndexes = new List<int>();
+        public List<int> deactivatedMinimapLockIndexes = new List<int>();
+    }
 
-        //curAccessedCenterSavePointPositions
-        public List<Vector3> curAccessedCenterSavePointPositions = new List<Vector3>();
+    KeysAndLocksData curKeysAndLocksData = new KeysAndLocksData();
 
-        //isMinimapRoomPlaneExploredStableDirectionMarkingEdgeLinesActivated
-        public bool[] isMinimapRoomPlaneExploredStableDirectionMarkingEdgeLinesActivated = new bool[216];
+    public class GuideData
+    {
+        //guide
+        public bool hasFinishedKeysGuide;
+        public bool hasJumped;
+        public bool hasDashed;
+        public bool hasBeenIntoMinimap;
+        public bool hasCollectedFragment;
+        public bool hasRotated;
+        public bool hasClimbed;
+        public bool hasTwisted;
+        public bool hasBackCentered;
+        public bool hasOutOfCenterTwisted;
+        public bool hasBetweenCentersTransported;
 
         //isMinimapActivated
         public bool isMinimapActivated;
     }
 
-    CatWorldData curCatWorldData = new CatWorldData();
+    GuideData curGuideData = new GuideData();
+
+    #region OutVersion
+    //public class CatWorldData
+    //{
+    //    //curRoom
+    //    public int curRoomIndex;
+
+    //    //curPosition
+    //    public Vector3 curCatIniPosition;
+
+    //    //savePoints
+    //    public int curActivatedSavePointIndex;
+    //    public Vector3 curActivatedSavePointPosition;
+    //    public int curActivatedSavePointRoomIndex;
+
+    //    //exploredFaces
+    //    public bool[] isFaceExplored = new bool[6];
+
+    //    //exploredRooms
+    //    public bool[] isRoomExplored = new bool[54];
+
+    //    //collectedFragmentRooms
+    //    public bool[] isRoomFragmentCollected = new bool[54];
+
+    //    //keysAndLocks
+    //    public List<int> deactivatedKeyIndexes = new List<int>();
+    //    public List<int> deactivatedLockIndexes = new List<int>();
+    //    //public bool isCarryingAKey;
+    //    //public int curCarriedKeyIndex;
+    //    //public int curCarriedKeyIniRoomIndex;
+    //    //public Vector3 curCarriedKeyIniLocalPosition;
+    //    public List<int> deactivatedMinimapKeyIndexes = new List<int>();
+    //    public List<int> deactivatedMinimapLockIndexes = new List<int>();
+
+    //    //fragments
+    //    public bool[] isRedFragmentsEmbeded = new bool[8];
+    //    public bool[] isYellowFragmentsEmbeded = new bool[8];
+    //    public bool[] isBlueFragmentsEmbeded = new bool[8];
+    //    public bool[] isOrangeFragmentsEmbeded = new bool[8];
+    //    public bool[] isGreenFragmentsEmbeded = new bool[8];
+    //    public bool[] isPurpleFragmentsEmbeded = new bool[8];
+    //    public Vector3[] redEmbededFragmentPositions = new Vector3[8];
+    //    public Vector3[] yellowEmbededFragmentPositions = new Vector3[8];
+    //    public Vector3[] blueEmbededFragmentPositions = new Vector3[8];
+    //    public Vector3[] orangeEmbededFragmentPositions = new Vector3[8];
+    //    public Vector3[] greenEmbededFragmentPositions = new Vector3[8];
+    //    public Vector3[] purpleEmbededFragmentPositions = new Vector3[8];
+
+    //    //isCenterFulfilled
+    //    public bool[] isCenterFulfilled = new bool[6];
+
+    //    ////maxEnergyBonus
+    //    //public float maxEnergyBonus;
+
+    //    //curLatestCenterSavePointPosition
+    //    public Vector3 curLatestCenterSavePointPosition;
+
+    //    //curAccessedCenterSavePointPositions
+    //    public List<Vector3> curAccessedCenterSavePointPositions = new List<Vector3>();
+
+    //    //isMinimapRoomPlaneExploredStableDirectionMarkingEdgeLinesActivated
+    //    public bool[] isMinimapRoomPlaneExploredStableDirectionMarkingEdgeLinesActivated = new bool[216];
+
+    //    //isMinimapActivated
+    //    public bool isMinimapActivated;
+    //}
+
+    //CatWorldData curCatWorldData = new CatWorldData();
+    #endregion
 
     public class KeyCodesData
     {
@@ -263,23 +369,28 @@ public class DataManager : MonoBehaviour
         roomStableRights = VARS.roomStableRights;
         #endregion
 
-        WriteProgressData(true);
         WriteWorldData(true);
-        WriteCatWorldData(true);
+        WriteExplorationData(true);
+        WriteCatData(true);
+        WriteSavePointsData(true);
+        WriteFragmentsData(true);
+        WriteKeysAndLocksData(true);
+        WriteGuideData(true);
         WriteKeyCodesData(true);
 
         tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "Version_0.7.2.txt");
 
         if (File.Exists(tempPath))
         {
-            ReadProgressData();
+            Debug.Log("readData");
 
             ReadWorldData();
-
-            //WriteCatWorldData();
-
-            ReadCatWorldData();
-
+            ReadExplorationData();
+            ReadCatData();
+            ReadSavePointsData();
+            ReadFragmentsData();
+            ReadKeysAndLocksData();
+            ReadGuideData();
             ReadKeyCodesData();
         }
         else
@@ -293,13 +404,6 @@ public class DataManager : MonoBehaviour
         #region ImportValueVariables
         #endregion
 
-        if (VARS.IsToWriteProgressData)
-        {
-            WriteProgressData();
-
-            VARS.IsToWriteProgressData = false;
-        }
-
         if (VARS.IsToWriteWorldData)
         {
             WriteWorldData();
@@ -307,11 +411,46 @@ public class DataManager : MonoBehaviour
             VARS.IsToWriteWorldData = false;
         }
 
-        if (VARS.IsToWriteCatWorldData)
+        if (VARS.IsToWriteExplorationData)
         {
-            WriteCatWorldData();
+            WriteExplorationData();
 
-            VARS.IsToWriteCatWorldData = false;
+            VARS.IsToWriteExplorationData = false;
+        }
+
+        if (VARS.IsToWriteCatData)
+        {
+            WriteCatData();
+
+            VARS.IsToWriteCatData = false;
+        }
+
+        if (VARS.IsToWriteSavePointsData)
+        {
+            WriteSavePointsData();
+
+            VARS.IsToWriteSavePointsData = false;
+        }
+
+        if (VARS.IsToWriteFragmentsData)
+        {
+            WriteFragmentsData();
+
+            VARS.IsToWriteFragmentsData = false;
+        }
+
+        if (VARS.IsToWriteKeysAndLocksData)
+        {
+            WriteKeysAndLocksData();
+
+            VARS.IsToWriteKeysAndLocksData = false;
+        }
+
+        if (VARS.IsToWriteGuideData)
+        {
+            WriteGuideData();
+
+            VARS.IsToWriteGuideData = false;
         }
 
         if (VARS.IsToWriteKeyCodesData)
@@ -327,8 +466,6 @@ public class DataManager : MonoBehaviour
         {
             Debug.Log("startNewGame");
 
-            SetNewGameData();
-
             VARS.IsToStartNewGame = false;
 
             #if UNITY_EDITOR
@@ -339,70 +476,6 @@ public class DataManager : MonoBehaviour
         }
     }
 
-    #region ProgressData
-    void ReadProgressData(bool isInitial = false)
-    {
-        if (!isInitial)
-            tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "ProgressData.txt");
-        else
-            tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "InitialProgressData.txt");
-
-        if (File.Exists(tempPath))
-        {
-            tempJsonString = File.ReadAllText(tempPath);
-            curProgressData = JsonUtility.FromJson<ProgressData>(tempJsonString);
-            
-            //guide
-            VARS.HasFinishedKeysGuide = curProgressData.hasFinishedKeysGuide;
-            VARS.HasJumped = curProgressData.hasJumped;
-            VARS.HasDashed = curProgressData.hasDashed;
-            VARS.HasBeenIntoMinimap = curProgressData.hasBeenIntoMinimap;
-            VARS.HasCollectedFragment = curProgressData.hasCollectedFragment;
-            VARS.HasRotated = curProgressData.hasRotated;
-            VARS.HasClimbed = curProgressData.hasClimbed;
-            VARS.HasTwisted = curProgressData.hasTwisted;
-            VARS.HasBackCentered = curProgressData.hasBackCentered;
-            VARS.HasOutOfCenterTwisted = curProgressData.hasOutOfCenterTwisted;
-            VARS.HasBetweenCentersTransported = curProgressData.hasBetweenCentersTransported;
-
-            //collectedNumbers
-            VARS.curOneColorFragmentCollectedNumbers = curProgressData.curOneColorFragmentCollectedNumbers;
-            VARS.curAllColorsFragmentCollectedNumber = curProgressData.curAllColorsFragmentCollectedNumber;
-            VARS.curKeysAndLocksCollectedNumber = curProgressData.curKeysAndLocksCollectedNumber;
-        }
-
-    }
-
-    void WriteProgressData(bool isInitial = false)
-    {
-        if (!isInitial)
-            tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "ProgressData.txt");
-        else
-            tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "InitialProgressData.txt");
-
-        //guide
-        curProgressData.hasFinishedKeysGuide = VARS.HasFinishedKeysGuide;
-        curProgressData.hasJumped = VARS.HasJumped;
-        curProgressData.hasDashed = VARS.HasDashed;
-        curProgressData.hasBeenIntoMinimap = VARS.HasBeenIntoMinimap;
-        curProgressData.hasCollectedFragment = VARS.HasCollectedFragment;
-        curProgressData.hasRotated = VARS.HasRotated;
-        curProgressData.hasClimbed = VARS.HasClimbed;
-        curProgressData.hasTwisted = VARS.HasTwisted;
-        curProgressData.hasBackCentered = VARS.HasBackCentered;
-        curProgressData.hasOutOfCenterTwisted = VARS.HasOutOfCenterTwisted;
-        curProgressData.hasBetweenCentersTransported = VARS.HasBetweenCentersTransported;
-
-        //collectedNumbers
-        curProgressData.curOneColorFragmentCollectedNumbers = VARS.curOneColorFragmentCollectedNumbers;
-        curProgressData.curAllColorsFragmentCollectedNumber = VARS.curAllColorsFragmentCollectedNumber;
-        curProgressData.curKeysAndLocksCollectedNumber = VARS.curKeysAndLocksCollectedNumber;
-
-        tempJsonString = JsonUtility.ToJson(curProgressData);
-
-        File.WriteAllText(tempPath, tempJsonString);
-    }
-    #endregion
 
     #region WorldData
     void ReadWorldData(bool isInitial = false)
@@ -512,97 +585,169 @@ public class DataManager : MonoBehaviour
     }
     #endregion
 
-    #region CatWorldData
-    void ReadCatWorldData(bool isInitial = false)
+    #region ExplorationData
+    void ReadExplorationData(bool isInitial = false)
     {
         if (!isInitial)
-            tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "CatWorldData.txt");
+            tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "ExplorationData.txt");
         else
-            tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "InitialCatWorldData.txt");
+            tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "InitialExplorationData.txt");
 
         if (File.Exists(tempPath))
         {
             tempJsonString = File.ReadAllText(tempPath);
-            curCatWorldData = JsonUtility.FromJson<CatWorldData>(tempJsonString);
-
-            //curRoom
-            VARS.curRoomIndex = curCatWorldData.curRoomIndex;
-
-            //curPosition
-            catIniPositionPoint.transform.position = curCatWorldData.curCatIniPosition;
-            catTransform.position = curCatWorldData.curCatIniPosition;
-
-            //savePoint
-            VARS.curActivatedSavePointIndex = curCatWorldData.curActivatedSavePointIndex;
-            VARS.curActivatedSavePointPosition = curCatWorldData.curActivatedSavePointPosition;
-            VARS.curActivatedSavePointRoomIndex = curCatWorldData.curActivatedSavePointRoomIndex;
+            curExplorationData = JsonUtility.FromJson<ExplorationData>(tempJsonString);
 
             //isFaceExplored
-            VARS.IsFaceExplored = curCatWorldData.isFaceExplored;
+            VARS.IsFaceExplored = curExplorationData.isFaceExplored;
 
             //isRoomExplored
-            VARS.IsRoomExplored = curCatWorldData.isRoomExplored;
+            VARS.IsRoomExplored = curExplorationData.isRoomExplored;
+
+            //isMinimapRoomPlaneExploredStableDirectionMarkingEdgeLinesActivated
+            VARS.isMinimapRoomPlaneExploredStableDirectionMarkingEdgeLinesActivated = curExplorationData.isMinimapRoomPlaneExploredStableDirectionMarkingEdgeLinesActivated;
+        }
+    }
+    void WriteExplorationData(bool isInitial = false)
+    {
+        if (!isInitial)
+            tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "ExplorationData.txt");
+        else
+            tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "InitialExplorationData.txt");
+
+        //isFaceExplored
+        curExplorationData.isFaceExplored = VARS.IsFaceExplored;
+
+        //isRoomExplored
+        curExplorationData.isRoomExplored = VARS.IsRoomExplored;
+
+        //isMinimapRoomPlaneExploredStableDirectionMarkingEdgeLinesActivated
+        curExplorationData.isMinimapRoomPlaneExploredStableDirectionMarkingEdgeLinesActivated = VARS.isMinimapRoomPlaneExploredStableDirectionMarkingEdgeLinesActivated;
+
+        tempJsonString = JsonUtility.ToJson(curExplorationData);
+
+        File.WriteAllText(tempPath, tempJsonString);
+    }
+    #endregion
+
+    #region CatData
+    void ReadCatData(bool isInitial = false)
+    {
+        if (!isInitial)
+            tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "CatData.txt");
+        else
+            tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "InitialCatData.txt");
+
+        if (File.Exists(tempPath))
+        {
+            tempJsonString = File.ReadAllText(tempPath);
+            curCatData = JsonUtility.FromJson<CatData>(tempJsonString);
+
+            //curRoomIndex
+            VARS.curRoomIndex = curCatData.curRoomIndex;
+
+            //curPosition
+            catIniPositionPoint.transform.position = curCatData.curCatIniPosition;
+            catTransform.position = curCatData.curCatIniPosition;
+        }
+    }
+    void WriteCatData(bool isInitial = false)
+    {
+        if (!isInitial)
+            tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "CatData.txt");
+        else
+            tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "InitialCatData.txt");
+
+        //curRoom
+        curCatData.curRoomIndex = VARS.curRoomIndex;
+
+        //curPosition
+        curCatData.curCatIniPosition = catIniPositionPoint.transform.position;
+
+        tempJsonString = JsonUtility.ToJson(curCatData);
+
+        File.WriteAllText(tempPath, tempJsonString);
+    }
+    #endregion
+
+    #region SavePointsData
+    void ReadSavePointsData(bool isInitial = false)
+    {
+        if (!isInitial)
+            tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "SavePointsData.txt");
+        else
+            tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "InitialSavePointsData.txt");
+
+        if (File.Exists(tempPath))
+        {
+            tempJsonString = File.ReadAllText(tempPath);
+            curSavePointsData = JsonUtility.FromJson<SavePointsData>(tempJsonString);
+
+            //curActivatedSavePoint
+            VARS.curActivatedSavePointIndex = curSavePointsData.curActivatedSavePointIndex;
+            VARS.curActivatedSavePointPosition = curSavePointsData.curActivatedSavePointPosition;
+            VARS.curActivatedSavePointRoomIndex = curSavePointsData.curActivatedSavePointRoomIndex;
+
+            //curLatestCenterSavePointPosition
+            VARS.curLatestCenterSavePointPosition = curSavePointsData.curLatestCenterSavePointPosition;
+
+            //curAccessedCenterSavePointPositions
+            VARS.curAccessedCenterSavePointPositions = curSavePointsData.curAccessedCenterSavePointPositions;
+        }
+    }
+    void WriteSavePointsData(bool isInitial = false)
+    {
+        if (!isInitial)
+            tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "SavePointsData.txt");
+        else
+            tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "InitialSavePointsData.txt");
+
+        //curActivatedSavePoint
+        curSavePointsData.curActivatedSavePointIndex = VARS.curActivatedSavePointIndex;
+        curSavePointsData.curActivatedSavePointPosition = VARS.curActivatedSavePointPosition;
+        storedActivatedSavePointBlock.transform.position = curSavePointsData.curActivatedSavePointPosition;
+        curSavePointsData.curActivatedSavePointRoomIndex = VARS.curActivatedSavePointRoomIndex;
+
+        //curLatestCenterSavePointPosition
+        curSavePointsData.curLatestCenterSavePointPosition = VARS.curLatestCenterSavePointPosition;
+
+        //curAccessedCenterSavePointPositions
+        curSavePointsData.curAccessedCenterSavePointPositions = VARS.curAccessedCenterSavePointPositions;
+
+        tempJsonString = JsonUtility.ToJson(curSavePointsData);
+
+        File.WriteAllText(tempPath, tempJsonString);
+    }
+    #endregion
+
+    #region FragmentsData
+    void ReadFragmentsData(bool isInitial = false)
+    {
+        if (!isInitial)
+            tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "FragmentsData.txt");
+        else
+            tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "InitialFragmentsData.txt");
+
+        if (File.Exists(tempPath))
+        {
+            tempJsonString = File.ReadAllText(tempPath);
+            curFragmentsData = JsonUtility.FromJson<FragmentsData>(tempJsonString);
 
             //isRoomFragmentCollected
-            VARS.IsRoomFragmentCollected = curCatWorldData.isRoomFragmentCollected;
+            VARS.IsRoomFragmentCollected = curFragmentsData.isRoomFragmentCollected;
 
-            //keysAndLocks
-            VARS.deactivatedKeyIndexes = curCatWorldData.deactivatedKeyIndexes;
-            VARS.deactivatedLockIndexes = curCatWorldData.deactivatedLockIndexes;
-            //VARS.IsCarryingAKey = curCatWorldData.isCarryingAKey;
-            //VARS.curCarriedKey = keys[curCatWorldData.curCarriedKeyIndex];
-            //VARS.curCarriedKeyIniRoomIndex = curCatWorldData.curCarriedKeyIniRoomIndex;
-            //VARS.curCarriedKeyIniParent = roomPlanes[curCatWorldData.curCarriedKeyIniRoomIndex].transform.GetChild(0).gameObject;
-            //VARS.curCarriedKeyIniLocalPosition = curCatWorldData.curCarriedKeyIniLocalPosition;
-            for (int i = 0; i < keys.Count; i++)
-            {
-                if (curCatWorldData.deactivatedKeyIndexes.Contains(i))
-                {
-                    keys[i].SetActive(false);
-                }
-            }
-            for (int i = 0; i < locks.Count; i++)
-            {
-                if (curCatWorldData.deactivatedLockIndexes.Contains(i))
-                {
-                    locks[i].SetActive(false);
-                }
-            }
-
-            //minimapKeysAndLocks
-            VARS.deactivatedMinimapKeyIndexes = curCatWorldData.deactivatedMinimapKeyIndexes;
-            VARS.deactivatedMinimapLockIndexes = curCatWorldData.deactivatedMinimapLockIndexes;
-            for (int i = 0; i < minimapKeys.Count; i++)
-            {
-                if (curCatWorldData.deactivatedMinimapKeyIndexes.Contains(i))
-                {
-                    //minimapKeys[i].SetActive(false);
-                    minimapKeys[i].GetComponent<MeshRenderer>().material = minimapCollectibleCollectedColor;
-                }
-            }
-            for (int i = 0; i < minimapLocks.Count; i++)
-            {
-                if (curCatWorldData.deactivatedMinimapLockIndexes.Contains(i))
-                {
-                    //minimapLocks[i].GetComponent<MeshRenderer>().material = connectedGateColor;
-                    minimapLocks[i].SetActive(false);
-                }
-            }
-
-            VARS.IsToActivateCurSavePoint = true;
-
-            //fragments
-            VARS.isRedFragmentsEmbeded = curCatWorldData.isRedFragmentsEmbeded;
-            VARS.isYellowFragmentsEmbeded = curCatWorldData.isYellowFragmentsEmbeded;
-            VARS.isBlueFragmentsEmbeded = curCatWorldData.isBlueFragmentsEmbeded;
-            VARS.isOrangeFragmentsEmbeded = curCatWorldData.isOrangeFragmentsEmbeded;
-            VARS.isGreenFragmentsEmbeded = curCatWorldData.isGreenFragmentsEmbeded;
-            VARS.isPurpleFragmentsEmbeded = curCatWorldData.isPurpleFragmentsEmbeded;
+            //isEmbeddedAndPosition
+            VARS.isRedFragmentsEmbeded = curFragmentsData.isRedFragmentsEmbeded;
+            VARS.isYellowFragmentsEmbeded = curFragmentsData.isYellowFragmentsEmbeded;
+            VARS.isBlueFragmentsEmbeded = curFragmentsData.isBlueFragmentsEmbeded;
+            VARS.isOrangeFragmentsEmbeded = curFragmentsData.isOrangeFragmentsEmbeded;
+            VARS.isGreenFragmentsEmbeded = curFragmentsData.isGreenFragmentsEmbeded;
+            VARS.isPurpleFragmentsEmbeded = curFragmentsData.isPurpleFragmentsEmbeded;
             for (int i = 0; i < redFragments.Count; i++)
             {
                 if (VARS.isRedFragmentsEmbeded[redFragments[i].GetComponent<TileData>().fragmentIndex - 1])
                 {
-                    redFragments[i].transform.position = curCatWorldData.redEmbededFragmentPositions[redFragments[i].GetComponent<TileData>().fragmentIndex - 1];
+                    redFragments[i].transform.position = curFragmentsData.redEmbededFragmentPositions[redFragments[i].GetComponent<TileData>().fragmentIndex - 1];
                     for (int j = 0; j < redFragments[i].transform.childCount; j++)
                     {
                         redFragments[i].transform.GetChild(j).gameObject.SetActive(j > 2);
@@ -614,7 +759,7 @@ public class DataManager : MonoBehaviour
             {
                 if (VARS.isYellowFragmentsEmbeded[yellowFragments[i].GetComponent<TileData>().fragmentIndex - 1])
                 {
-                    yellowFragments[i].transform.position = curCatWorldData.yellowEmbededFragmentPositions[yellowFragments[i].GetComponent<TileData>().fragmentIndex - 1];
+                    yellowFragments[i].transform.position = curFragmentsData.yellowEmbededFragmentPositions[yellowFragments[i].GetComponent<TileData>().fragmentIndex - 1];
                     for (int j = 0; j < yellowFragments[i].transform.childCount; j++)
                     {
                         yellowFragments[i].transform.GetChild(j).gameObject.SetActive(j > 2);
@@ -626,7 +771,7 @@ public class DataManager : MonoBehaviour
             {
                 if (VARS.isBlueFragmentsEmbeded[blueFragments[i].GetComponent<TileData>().fragmentIndex - 1])
                 {
-                    blueFragments[i].transform.position = curCatWorldData.blueEmbededFragmentPositions[blueFragments[i].GetComponent<TileData>().fragmentIndex - 1];
+                    blueFragments[i].transform.position = curFragmentsData.blueEmbededFragmentPositions[blueFragments[i].GetComponent<TileData>().fragmentIndex - 1];
                     for (int j = 0; j < blueFragments[i].transform.childCount; j++)
                     {
                         blueFragments[i].transform.GetChild(j).gameObject.SetActive(j > 2);
@@ -638,7 +783,7 @@ public class DataManager : MonoBehaviour
             {
                 if (VARS.isOrangeFragmentsEmbeded[orangeFragments[i].GetComponent<TileData>().fragmentIndex - 1])
                 {
-                    orangeFragments[i].transform.position = curCatWorldData.orangeEmbededFragmentPositions[orangeFragments[i].GetComponent<TileData>().fragmentIndex - 1];
+                    orangeFragments[i].transform.position = curFragmentsData.orangeEmbededFragmentPositions[orangeFragments[i].GetComponent<TileData>().fragmentIndex - 1];
                     for (int j = 0; j < orangeFragments[i].transform.childCount; j++)
                     {
                         orangeFragments[i].transform.GetChild(j).gameObject.SetActive(j > 2);
@@ -650,7 +795,7 @@ public class DataManager : MonoBehaviour
             {
                 if (VARS.isGreenFragmentsEmbeded[greenFragments[i].GetComponent<TileData>().fragmentIndex - 1])
                 {
-                    greenFragments[i].transform.position = curCatWorldData.greenEmbededFragmentPositions[greenFragments[i].GetComponent<TileData>().fragmentIndex - 1];
+                    greenFragments[i].transform.position = curFragmentsData.greenEmbededFragmentPositions[greenFragments[i].GetComponent<TileData>().fragmentIndex - 1];
                     for (int j = 0; j < greenFragments[i].transform.childCount; j++)
                     {
                         greenFragments[i].transform.GetChild(j).gameObject.SetActive(j > 2);
@@ -662,7 +807,7 @@ public class DataManager : MonoBehaviour
             {
                 if (VARS.isPurpleFragmentsEmbeded[purpleFragments[i].GetComponent<TileData>().fragmentIndex - 1])
                 {
-                    purpleFragments[i].transform.position = curCatWorldData.purpleEmbededFragmentPositions[purpleFragments[i].GetComponent<TileData>().fragmentIndex - 1];
+                    purpleFragments[i].transform.position = curFragmentsData.purpleEmbededFragmentPositions[purpleFragments[i].GetComponent<TileData>().fragmentIndex - 1];
                     for (int j = 0; j < purpleFragments[i].transform.childCount; j++)
                     {
                         purpleFragments[i].transform.GetChild(j).gameObject.SetActive(j > 2);
@@ -714,89 +859,32 @@ public class DataManager : MonoBehaviour
             }
 
             //isCenterFulfilled
-            VARS.isCenterFulfilled = curCatWorldData.isCenterFulfilled;
-            //for (int i = 0; i < 6; i++)
-            //{
-            //    if (isCenterFulfilled[i])
-            //    {
-            //        tempInt = i * 9 + 4;
-            //        holeBlocks[i].transform.position = roomCenters[tempInt] - roomStableForwards[tempInt] * 0.9f;
-            //    }
-            //}
-            
-            //maxEneryBonus
-            VARS.maxEnergyBonus = curCatWorldData.maxEnergyBonus;
-
-            //curLatestCenterSavePointPosition
-            VARS.curLatestCenterSavePointPosition = curCatWorldData.curLatestCenterSavePointPosition;
-
-            //curAccessedCenterSavePointPositions
-            VARS.curAccessedCenterSavePointPositions = curCatWorldData.curAccessedCenterSavePointPositions;
-
-            //isMinimapRoomPlaneExploredStableDirectionMarkingEdgeLinesActivated
-            VARS.isMinimapRoomPlaneExploredStableDirectionMarkingEdgeLinesActivated = curCatWorldData.isMinimapRoomPlaneExploredStableDirectionMarkingEdgeLinesActivated;
-
-            //isMinimapActivated
-            VARS.IsMinimapActivated = curCatWorldData.isMinimapActivated;
+            VARS.isCenterFulfilled = curFragmentsData.isCenterFulfilled;
         }
     }
-
-    void WriteCatWorldData(bool isInitial = false)
+    void WriteFragmentsData(bool isInitial = false)
     {
         if (!isInitial)
-            tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "CatWorldData.txt");
+            tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "FragmentsData.txt");
         else
-            tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "InitialCatWorldData.txt");
-
-        //curRoom
-        curCatWorldData.curRoomIndex = VARS.curRoomIndex;
-
-        //curPosition
-        curCatWorldData.curCatIniPosition = catIniPositionPoint.transform.position;
-
-        //savePoint
-        curCatWorldData.curActivatedSavePointIndex = VARS.curActivatedSavePointIndex;
-        curCatWorldData.curActivatedSavePointPosition = VARS.curActivatedSavePointPosition;
-        storedActivatedSavePointBlock.transform.position = curCatWorldData.curActivatedSavePointPosition;
-        curCatWorldData.curActivatedSavePointRoomIndex = VARS.curActivatedSavePointRoomIndex;
-
-        //isFaceExplored
-        curCatWorldData.isFaceExplored = VARS.IsFaceExplored;
-
-        //isRoomExplored
-        curCatWorldData.isRoomExplored = VARS.IsRoomExplored;
+            tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "InitialFragmentsData.txt");
 
         //isRoomFragmentCollected
-        curCatWorldData.isRoomFragmentCollected = VARS.IsRoomFragmentCollected;
+        curFragmentsData.isRoomFragmentCollected = VARS.IsRoomFragmentCollected;
 
-        //keysAndLocks
-        curCatWorldData.deactivatedKeyIndexes = VARS.deactivatedKeyIndexes;
-        curCatWorldData.deactivatedLockIndexes = VARS.deactivatedLockIndexes;
-        //curCatWorldData.isCarryingAKey = VARS.IsCarryingAKey;
-        //curCatWorldData.curCarriedKeyIniRoomIndex = VARS.curCarriedKeyIniRoomIndex;
-        //curCatWorldData.curCarriedKeyIniLocalPosition = VARS.curCarriedKeyIniLocalPosition;
-        //for (int i = 0; i < keys.Count; i++)
-        //{
-        //    if (keys[i] == VARS.curCarriedKey)
-        //    {
-        //        curCatWorldData.curCarriedKeyIndex = i;
-        //        break;
-        //    }
-        //}
-
-        //fragments
-        curCatWorldData.isRedFragmentsEmbeded = VARS.isRedFragmentsEmbeded;
-        curCatWorldData.isYellowFragmentsEmbeded = VARS.isYellowFragmentsEmbeded;
-        curCatWorldData.isBlueFragmentsEmbeded = VARS.isBlueFragmentsEmbeded;
-        curCatWorldData.isOrangeFragmentsEmbeded = VARS.isOrangeFragmentsEmbeded;
-        curCatWorldData.isGreenFragmentsEmbeded = VARS.isGreenFragmentsEmbeded;
-        curCatWorldData.isPurpleFragmentsEmbeded = VARS.isPurpleFragmentsEmbeded;
+        //isEmbeddedAndPosition
+        curFragmentsData.isRedFragmentsEmbeded = VARS.isRedFragmentsEmbeded;
+        curFragmentsData.isYellowFragmentsEmbeded = VARS.isYellowFragmentsEmbeded;
+        curFragmentsData.isBlueFragmentsEmbeded = VARS.isBlueFragmentsEmbeded;
+        curFragmentsData.isOrangeFragmentsEmbeded = VARS.isOrangeFragmentsEmbeded;
+        curFragmentsData.isGreenFragmentsEmbeded = VARS.isGreenFragmentsEmbeded;
+        curFragmentsData.isPurpleFragmentsEmbeded = VARS.isPurpleFragmentsEmbeded;
         for (int i = 0; i < redFragments.Count; i++)
         {
             tempInt = redFragments[i].GetComponent<TileData>().fragmentIndex - 1;
             if (VARS.isRedFragmentsEmbeded[tempInt])
             {
-                curCatWorldData.redEmbededFragmentPositions[tempInt] = redFragments[i].transform.position;
+                curFragmentsData.redEmbededFragmentPositions[tempInt] = redFragments[i].transform.position;
             }
         }
         for (int i = 0; i < yellowFragments.Count; i++)
@@ -804,7 +892,7 @@ public class DataManager : MonoBehaviour
             tempInt = yellowFragments[i].GetComponent<TileData>().fragmentIndex - 1;
             if (VARS.isYellowFragmentsEmbeded[tempInt])
             {
-                curCatWorldData.yellowEmbededFragmentPositions[tempInt] = yellowFragments[i].transform.position;
+                curFragmentsData.yellowEmbededFragmentPositions[tempInt] = yellowFragments[i].transform.position;
             }
         }
         for (int i = 0; i < blueFragments.Count; i++)
@@ -812,7 +900,7 @@ public class DataManager : MonoBehaviour
             tempInt = blueFragments[i].GetComponent<TileData>().fragmentIndex - 1;
             if (VARS.isBlueFragmentsEmbeded[tempInt])
             {
-                curCatWorldData.blueEmbededFragmentPositions[tempInt] = blueFragments[i].transform.position;
+                curFragmentsData.blueEmbededFragmentPositions[tempInt] = blueFragments[i].transform.position;
             }
         }
         for (int i = 0; i < orangeFragments.Count; i++)
@@ -820,7 +908,7 @@ public class DataManager : MonoBehaviour
             tempInt = orangeFragments[i].GetComponent<TileData>().fragmentIndex - 1;
             if (VARS.isOrangeFragmentsEmbeded[tempInt])
             {
-                curCatWorldData.orangeEmbededFragmentPositions[tempInt] = orangeFragments[i].transform.position;
+                curFragmentsData.orangeEmbededFragmentPositions[tempInt] = orangeFragments[i].transform.position;
             }
         }
         for (int i = 0; i < greenFragments.Count; i++)
@@ -828,7 +916,7 @@ public class DataManager : MonoBehaviour
             tempInt = greenFragments[i].GetComponent<TileData>().fragmentIndex - 1;
             if (VARS.isGreenFragmentsEmbeded[tempInt])
             {
-                curCatWorldData.greenEmbededFragmentPositions[tempInt] = greenFragments[i].transform.position;
+                curFragmentsData.greenEmbededFragmentPositions[tempInt] = greenFragments[i].transform.position;
             }
         }
         for (int i = 0; i < purpleFragments.Count; i++)
@@ -836,33 +924,165 @@ public class DataManager : MonoBehaviour
             tempInt = purpleFragments[i].GetComponent<TileData>().fragmentIndex - 1;
             if (VARS.isPurpleFragmentsEmbeded[tempInt])
             {
-                curCatWorldData.purpleEmbededFragmentPositions[tempInt] = purpleFragments[i].transform.position;
+                curFragmentsData.purpleEmbededFragmentPositions[tempInt] = purpleFragments[i].transform.position;
             }
         }
 
         //isCenterFulfilled
-        curCatWorldData.isCenterFulfilled = VARS.isCenterFulfilled;
+        curFragmentsData.isCenterFulfilled = VARS.isCenterFulfilled;
 
-        //maxEnergyBonus
-        curCatWorldData.maxEnergyBonus = VARS.maxEnergyBonus;
+        tempJsonString = JsonUtility.ToJson(curFragmentsData);
 
-        //curLatestCenterSavePointPosition
-        curCatWorldData.curLatestCenterSavePointPosition = VARS.curLatestCenterSavePointPosition;
+        File.WriteAllText(tempPath, tempJsonString);
+    }
+    #endregion
 
-        //curAccessedCenterSavePointPositions
-        curCatWorldData.curAccessedCenterSavePointPositions = VARS.curAccessedCenterSavePointPositions;
+    #region KeysAndLocksData
+    void ReadKeysAndLocksData(bool isInitial = false)
+    {
+        if (!isInitial)
+            tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "KeysAndLocksData.txt");
+        else
+            tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "InitialKeysAndLocksData.txt");
+
+        if (File.Exists(tempPath))
+        {
+            tempJsonString = File.ReadAllText(tempPath);
+            curKeysAndLocksData = JsonUtility.FromJson<KeysAndLocksData>(tempJsonString);
+
+            //keysAndLocks
+            VARS.deactivatedKeyIndexes = curKeysAndLocksData.deactivatedKeyIndexes;
+            VARS.deactivatedLockIndexes = curKeysAndLocksData.deactivatedLockIndexes;
+            //VARS.IsCarryingAKey = curKeysAndLocksData.isCarryingAKey;
+            //VARS.curCarriedKey = keys[curKeysAndLocksData.curCarriedKeyIndex];
+            //VARS.curCarriedKeyIniRoomIndex = curKeysAndLocksData.curCarriedKeyIniRoomIndex;
+            //VARS.curCarriedKeyIniParent = roomPlanes[curKeysAndLocksData.curCarriedKeyIniRoomIndex].transform.GetChild(0).gameObject;
+            //VARS.curCarriedKeyIniLocalPosition = curKeysAndLocksData.curCarriedKeyIniLocalPosition;
+            for (int i = 0; i < keys.Count; i++)
+            {
+                if (curKeysAndLocksData.deactivatedKeyIndexes.Contains(i))
+                {
+                    keys[i].SetActive(false);
+                }
+            }
+            for (int i = 0; i < locks.Count; i++)
+            {
+                if (curKeysAndLocksData.deactivatedLockIndexes.Contains(i))
+                {
+                    locks[i].SetActive(false);
+                }
+            }
+
+            //minimapKeysAndLocks
+            VARS.deactivatedMinimapKeyIndexes = curKeysAndLocksData.deactivatedMinimapKeyIndexes;
+            VARS.deactivatedMinimapLockIndexes = curKeysAndLocksData.deactivatedMinimapLockIndexes;
+            for (int i = 0; i < minimapKeys.Count; i++)
+            {
+                if (curKeysAndLocksData.deactivatedMinimapKeyIndexes.Contains(i))
+                {
+                    //minimapKeys[i].SetActive(false);
+                    minimapKeys[i].GetComponent<MeshRenderer>().material = minimapCollectibleCollectedColor;
+                }
+            }
+            for (int i = 0; i < minimapLocks.Count; i++)
+            {
+                if (curKeysAndLocksData.deactivatedMinimapLockIndexes.Contains(i))
+                {
+                    //minimapLocks[i].GetComponent<MeshRenderer>().material = connectedGateColor;
+                    minimapLocks[i].SetActive(false);
+                }
+            }
+
+            //~?
+            VARS.IsToActivateCurSavePoint = true;
+        }
+    }
+    void WriteKeysAndLocksData(bool isInitial = false)
+    {
+        if (!isInitial)
+            tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "KeysAndLocksData.txt");
+        else
+            tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "InitialKeysAndLocksData.txt");
+
+        //keysAndLocks
+        curKeysAndLocksData.deactivatedKeyIndexes = VARS.deactivatedKeyIndexes;
+        curKeysAndLocksData.deactivatedLockIndexes = VARS.deactivatedLockIndexes;
+        //curKeysAndLocksData.isCarryingAKey = VARS.IsCarryingAKey;
+        //curKeysAndLocksData.curCarriedKeyIniRoomIndex = VARS.curCarriedKeyIniRoomIndex;
+        //curKeysAndLocksData.curCarriedKeyIniLocalPosition = VARS.curCarriedKeyIniLocalPosition;
+        //for (int i = 0; i < keys.Count; i++)
+        //{
+        //    if (keys[i] == VARS.curCarriedKey)
+        //    {
+        //        curKeysAndLocksData.curCarriedKeyIndex = i;
+        //        break;
+        //    }
+        //}
 
         //minimapKeysAndLocks
-        curCatWorldData.deactivatedMinimapKeyIndexes = VARS.deactivatedMinimapKeyIndexes;
-        curCatWorldData.deactivatedMinimapLockIndexes = VARS.deactivatedMinimapLockIndexes;
+        curKeysAndLocksData.deactivatedMinimapKeyIndexes = VARS.deactivatedMinimapKeyIndexes;
+        curKeysAndLocksData.deactivatedMinimapLockIndexes = VARS.deactivatedMinimapLockIndexes;
 
-        //isMinimapRoomPlaneExploredStableDirectionMarkingEdgeLinesActivated
-        curCatWorldData.isMinimapRoomPlaneExploredStableDirectionMarkingEdgeLinesActivated = VARS.isMinimapRoomPlaneExploredStableDirectionMarkingEdgeLinesActivated;
+        tempJsonString = JsonUtility.ToJson(curKeysAndLocksData);
+
+        File.WriteAllText(tempPath, tempJsonString);
+    }
+    #endregion
+
+    #region GuideData
+    void ReadGuideData(bool isInitial = false)
+    {
+        if (!isInitial)
+            tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "GuideData.txt");
+        else
+            tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "InitialGuideData.txt");
+
+        if (File.Exists(tempPath))
+        {
+            tempJsonString = File.ReadAllText(tempPath);
+            curGuideData = JsonUtility.FromJson<GuideData>(tempJsonString);
+
+            //guide
+            VARS.HasFinishedKeysGuide = curGuideData.hasFinishedKeysGuide;
+            VARS.HasJumped = curGuideData.hasJumped;
+            VARS.HasDashed = curGuideData.hasDashed;
+            VARS.HasBeenIntoMinimap = curGuideData.hasBeenIntoMinimap;
+            VARS.HasCollectedFragment = curGuideData.hasCollectedFragment;
+            VARS.HasRotated = curGuideData.hasRotated;
+            VARS.HasClimbed = curGuideData.hasClimbed;
+            VARS.HasTwisted = curGuideData.hasTwisted;
+            VARS.HasBackCentered = curGuideData.hasBackCentered;
+            VARS.HasOutOfCenterTwisted = curGuideData.hasOutOfCenterTwisted;
+            VARS.HasBetweenCentersTransported = curGuideData.hasBetweenCentersTransported;
+
+            //isMinimapActivated
+            VARS.IsMinimapActivated = curGuideData.isMinimapActivated;
+        }
+    }
+    void WriteGuideData(bool isInitial = false)
+    {
+        if (!isInitial)
+            tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "GuideData.txt");
+        else
+            tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "InitialGuideData.txt");
+
+        //guide
+        curGuideData.hasFinishedKeysGuide = VARS.HasFinishedKeysGuide;
+        curGuideData.hasJumped = VARS.HasJumped;
+        curGuideData.hasDashed = VARS.HasDashed;
+        curGuideData.hasBeenIntoMinimap = VARS.HasBeenIntoMinimap;
+        curGuideData.hasCollectedFragment = VARS.HasCollectedFragment;
+        curGuideData.hasRotated = VARS.HasRotated;
+        curGuideData.hasClimbed = VARS.HasClimbed;
+        curGuideData.hasTwisted = VARS.HasTwisted;
+        curGuideData.hasBackCentered = VARS.HasBackCentered;
+        curGuideData.hasOutOfCenterTwisted = VARS.HasOutOfCenterTwisted;
+        curGuideData.hasBetweenCentersTransported = VARS.HasBetweenCentersTransported;
 
         //isMinimapActivated
-        curCatWorldData.isMinimapActivated = VARS.IsMinimapActivated;
+        curGuideData.isMinimapActivated = VARS.IsMinimapActivated;
 
-        tempJsonString = JsonUtility.ToJson(curCatWorldData);
+        tempJsonString = JsonUtility.ToJson(curGuideData);
 
         File.WriteAllText(tempPath, tempJsonString);
     }
@@ -935,221 +1155,643 @@ public class DataManager : MonoBehaviour
     }
     #endregion
 
+    #region CatWorldData
+    //void ReadCatWorldData(bool isInitial = false)
+    //{
+    //    if (!isInitial)
+    //        tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "CatWorldData.txt");
+    //    else
+    //        tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "InitialCatWorldData.txt");
+
+    //    if (File.Exists(tempPath))
+    //    {
+    //        tempJsonString = File.ReadAllText(tempPath);
+    //        curCatWorldData = JsonUtility.FromJson<CatWorldData>(tempJsonString);
+
+    //        //curRoom
+    //        VARS.curRoomIndex = curCatWorldData.curRoomIndex;
+
+    //        //curPosition
+    //        catIniPositionPoint.transform.position = curCatWorldData.curCatIniPosition;
+    //        catTransform.position = curCatWorldData.curCatIniPosition;
+
+    //        //savePoint
+    //        VARS.curActivatedSavePointIndex = curCatWorldData.curActivatedSavePointIndex;
+    //        VARS.curActivatedSavePointPosition = curCatWorldData.curActivatedSavePointPosition;
+    //        VARS.curActivatedSavePointRoomIndex = curCatWorldData.curActivatedSavePointRoomIndex;
+
+    //        //isFaceExplored
+    //        VARS.IsFaceExplored = curCatWorldData.isFaceExplored;
+
+    //        //isRoomExplored
+    //        VARS.IsRoomExplored = curCatWorldData.isRoomExplored;
+
+    //        //isRoomFragmentCollected
+    //        VARS.IsRoomFragmentCollected = curCatWorldData.isRoomFragmentCollected;
+
+    //        //keysAndLocks
+    //        VARS.deactivatedKeyIndexes = curCatWorldData.deactivatedKeyIndexes;
+    //        VARS.deactivatedLockIndexes = curCatWorldData.deactivatedLockIndexes;
+    //        //VARS.IsCarryingAKey = curCatWorldData.isCarryingAKey;
+    //        //VARS.curCarriedKey = keys[curCatWorldData.curCarriedKeyIndex];
+    //        //VARS.curCarriedKeyIniRoomIndex = curCatWorldData.curCarriedKeyIniRoomIndex;
+    //        //VARS.curCarriedKeyIniParent = roomPlanes[curCatWorldData.curCarriedKeyIniRoomIndex].transform.GetChild(0).gameObject;
+    //        //VARS.curCarriedKeyIniLocalPosition = curCatWorldData.curCarriedKeyIniLocalPosition;
+    //        for (int i = 0; i < keys.Count; i++)
+    //        {
+    //            if (curCatWorldData.deactivatedKeyIndexes.Contains(i))
+    //            {
+    //                keys[i].SetActive(false);
+    //            }
+    //        }
+    //        for (int i = 0; i < locks.Count; i++)
+    //        {
+    //            if (curCatWorldData.deactivatedLockIndexes.Contains(i))
+    //            {
+    //                locks[i].SetActive(false);
+    //            }
+    //        }
+
+    //        //minimapKeysAndLocks
+    //        VARS.deactivatedMinimapKeyIndexes = curCatWorldData.deactivatedMinimapKeyIndexes;
+    //        VARS.deactivatedMinimapLockIndexes = curCatWorldData.deactivatedMinimapLockIndexes;
+    //        for (int i = 0; i < minimapKeys.Count; i++)
+    //        {
+    //            if (curCatWorldData.deactivatedMinimapKeyIndexes.Contains(i))
+    //            {
+    //                //minimapKeys[i].SetActive(false);
+    //                minimapKeys[i].GetComponent<MeshRenderer>().material = minimapCollectibleCollectedColor;
+    //            }
+    //        }
+    //        for (int i = 0; i < minimapLocks.Count; i++)
+    //        {
+    //            if (curCatWorldData.deactivatedMinimapLockIndexes.Contains(i))
+    //            {
+    //                //minimapLocks[i].GetComponent<MeshRenderer>().material = connectedGateColor;
+    //                minimapLocks[i].SetActive(false);
+    //            }
+    //        }
+
+    //        VARS.IsToActivateCurSavePoint = true;
+
+    //        //fragments
+    //        VARS.isRedFragmentsEmbeded = curCatWorldData.isRedFragmentsEmbeded;
+    //        VARS.isYellowFragmentsEmbeded = curCatWorldData.isYellowFragmentsEmbeded;
+    //        VARS.isBlueFragmentsEmbeded = curCatWorldData.isBlueFragmentsEmbeded;
+    //        VARS.isOrangeFragmentsEmbeded = curCatWorldData.isOrangeFragmentsEmbeded;
+    //        VARS.isGreenFragmentsEmbeded = curCatWorldData.isGreenFragmentsEmbeded;
+    //        VARS.isPurpleFragmentsEmbeded = curCatWorldData.isPurpleFragmentsEmbeded;
+    //        for (int i = 0; i < redFragments.Count; i++)
+    //        {
+    //            if (VARS.isRedFragmentsEmbeded[redFragments[i].GetComponent<TileData>().fragmentIndex - 1])
+    //            {
+    //                redFragments[i].transform.position = curCatWorldData.redEmbededFragmentPositions[redFragments[i].GetComponent<TileData>().fragmentIndex - 1];
+    //                for (int j = 0; j < redFragments[i].transform.childCount; j++)
+    //                {
+    //                    redFragments[i].transform.GetChild(j).gameObject.SetActive(j > 2);
+    //                }
+    //                redFragments[i].transform.SetParent(roomPlanes[49].transform.GetChild(0), true);
+    //            }
+    //        }
+    //        for (int i = 0; i < yellowFragments.Count; i++)
+    //        {
+    //            if (VARS.isYellowFragmentsEmbeded[yellowFragments[i].GetComponent<TileData>().fragmentIndex - 1])
+    //            {
+    //                yellowFragments[i].transform.position = curCatWorldData.yellowEmbededFragmentPositions[yellowFragments[i].GetComponent<TileData>().fragmentIndex - 1];
+    //                for (int j = 0; j < yellowFragments[i].transform.childCount; j++)
+    //                {
+    //                    yellowFragments[i].transform.GetChild(j).gameObject.SetActive(j > 2);
+    //                }
+    //                yellowFragments[i].transform.SetParent(roomPlanes[4].transform.GetChild(0), true);
+    //            }
+    //        }
+    //        for (int i = 0; i < blueFragments.Count; i++)
+    //        {
+    //            if (VARS.isBlueFragmentsEmbeded[blueFragments[i].GetComponent<TileData>().fragmentIndex - 1])
+    //            {
+    //                blueFragments[i].transform.position = curCatWorldData.blueEmbededFragmentPositions[blueFragments[i].GetComponent<TileData>().fragmentIndex - 1];
+    //                for (int j = 0; j < blueFragments[i].transform.childCount; j++)
+    //                {
+    //                    blueFragments[i].transform.GetChild(j).gameObject.SetActive(j > 2);
+    //                }
+    //                blueFragments[i].transform.SetParent(roomPlanes[31].transform.GetChild(0), true);
+    //            }
+    //        }
+    //        for (int i = 0; i < orangeFragments.Count; i++)
+    //        {
+    //            if (VARS.isOrangeFragmentsEmbeded[orangeFragments[i].GetComponent<TileData>().fragmentIndex - 1])
+    //            {
+    //                orangeFragments[i].transform.position = curCatWorldData.orangeEmbededFragmentPositions[orangeFragments[i].GetComponent<TileData>().fragmentIndex - 1];
+    //                for (int j = 0; j < orangeFragments[i].transform.childCount; j++)
+    //                {
+    //                    orangeFragments[i].transform.GetChild(j).gameObject.SetActive(j > 2);
+    //                }
+    //                orangeFragments[i].transform.SetParent(roomPlanes[22].transform.GetChild(0), true);
+    //            }
+    //        }
+    //        for (int i = 0; i < greenFragments.Count; i++)
+    //        {
+    //            if (VARS.isGreenFragmentsEmbeded[greenFragments[i].GetComponent<TileData>().fragmentIndex - 1])
+    //            {
+    //                greenFragments[i].transform.position = curCatWorldData.greenEmbededFragmentPositions[greenFragments[i].GetComponent<TileData>().fragmentIndex - 1];
+    //                for (int j = 0; j < greenFragments[i].transform.childCount; j++)
+    //                {
+    //                    greenFragments[i].transform.GetChild(j).gameObject.SetActive(j > 2);
+    //                }
+    //                greenFragments[i].transform.SetParent(roomPlanes[40].transform.GetChild(0), true);
+    //            }
+    //        }
+    //        for (int i = 0; i < purpleFragments.Count; i++)
+    //        {
+    //            if (VARS.isPurpleFragmentsEmbeded[purpleFragments[i].GetComponent<TileData>().fragmentIndex - 1])
+    //            {
+    //                purpleFragments[i].transform.position = curCatWorldData.purpleEmbededFragmentPositions[purpleFragments[i].GetComponent<TileData>().fragmentIndex - 1];
+    //                for (int j = 0; j < purpleFragments[i].transform.childCount; j++)
+    //                {
+    //                    purpleFragments[i].transform.GetChild(j).gameObject.SetActive(j > 2);
+    //                }
+    //                purpleFragments[i].transform.SetParent(roomPlanes[13].transform.GetChild(0), true);
+    //            }
+    //        }
+    //        for (int i = 0; i < minimapRedFragments.Count; i++)
+    //        {
+    //            if (VARS.isRedFragmentsEmbeded[i])
+    //            {
+    //                minimapRedFragments[i].GetComponent<MeshRenderer>().material = minimapCollectibleCollectedColor;
+    //            }
+    //        }
+    //        for (int i = 0; i < minimapYellowFragments.Count; i++)
+    //        {
+    //            if (VARS.isYellowFragmentsEmbeded[i])
+    //            {
+    //                minimapYellowFragments[i].GetComponent<MeshRenderer>().material = minimapCollectibleCollectedColor;
+    //            }
+    //        }
+    //        for (int i = 0; i < minimapBlueFragments.Count; i++)
+    //        {
+    //            if (VARS.isBlueFragmentsEmbeded[i])
+    //            {
+    //                minimapBlueFragments[i].GetComponent<MeshRenderer>().material = minimapCollectibleCollectedColor;
+    //            }
+    //        }
+    //        for (int i = 0; i < minimapOrangeFragments.Count; i++)
+    //        {
+    //            if (VARS.isOrangeFragmentsEmbeded[i])
+    //            {
+    //                minimapOrangeFragments[i].GetComponent<MeshRenderer>().material = minimapCollectibleCollectedColor;
+    //            }
+    //        }
+    //        for (int i = 0; i < minimapGreenFragments.Count; i++)
+    //        {
+    //            if (VARS.isGreenFragmentsEmbeded[i])
+    //            {
+    //                minimapGreenFragments[i].GetComponent<MeshRenderer>().material = minimapCollectibleCollectedColor;
+    //            }
+    //        }
+    //        for (int i = 0; i < minimapPurpleFragments.Count; i++)
+    //        {
+    //            if (VARS.isPurpleFragmentsEmbeded[i])
+    //            {
+    //                minimapPurpleFragments[i].GetComponent<MeshRenderer>().material = minimapCollectibleCollectedColor;
+    //            }
+    //        }
+
+    //        //isCenterFulfilled
+    //        VARS.isCenterFulfilled = curCatWorldData.isCenterFulfilled;
+    //        //for (int i = 0; i < 6; i++)
+    //        //{
+    //        //    if (isCenterFulfilled[i])
+    //        //    {
+    //        //        tempInt = i * 9 + 4;
+    //        //        holeBlocks[i].transform.position = roomCenters[tempInt] - roomStableForwards[tempInt] * 0.9f;
+    //        //    }
+    //        //}
+            
+    //        ////maxEneryBonus
+    //        //VARS.maxEnergyBonus = curCatWorldData.maxEnergyBonus;
+
+    //        //curLatestCenterSavePointPosition
+    //        VARS.curLatestCenterSavePointPosition = curCatWorldData.curLatestCenterSavePointPosition;
+
+    //        //curAccessedCenterSavePointPositions
+    //        VARS.curAccessedCenterSavePointPositions = curCatWorldData.curAccessedCenterSavePointPositions;
+
+    //        //isMinimapRoomPlaneExploredStableDirectionMarkingEdgeLinesActivated
+    //        VARS.isMinimapRoomPlaneExploredStableDirectionMarkingEdgeLinesActivated = curCatWorldData.isMinimapRoomPlaneExploredStableDirectionMarkingEdgeLinesActivated;
+
+    //        //isMinimapActivated
+    //        VARS.IsMinimapActivated = curCatWorldData.isMinimapActivated;
+    //    }
+    //}
+
+    //void WriteCatWorldData(bool isInitial = false)
+    //{
+    //    if (!isInitial)
+    //        tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "CatWorldData.txt");
+    //    else
+    //        tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "InitialCatWorldData.txt");
+
+    //    //curRoom
+    //    curCatWorldData.curRoomIndex = VARS.curRoomIndex;
+
+    //    //curPosition
+    //    curCatWorldData.curCatIniPosition = catIniPositionPoint.transform.position;
+
+    //    //savePoint
+    //    curCatWorldData.curActivatedSavePointIndex = VARS.curActivatedSavePointIndex;
+    //    curCatWorldData.curActivatedSavePointPosition = VARS.curActivatedSavePointPosition;
+    //    storedActivatedSavePointBlock.transform.position = curCatWorldData.curActivatedSavePointPosition;
+    //    curCatWorldData.curActivatedSavePointRoomIndex = VARS.curActivatedSavePointRoomIndex;
+
+    //    //isFaceExplored
+    //    curCatWorldData.isFaceExplored = VARS.IsFaceExplored;
+
+    //    //isRoomExplored
+    //    curCatWorldData.isRoomExplored = VARS.IsRoomExplored;
+
+    //    //isRoomFragmentCollected
+    //    curCatWorldData.isRoomFragmentCollected = VARS.IsRoomFragmentCollected;
+
+    //    //keysAndLocks
+    //    curCatWorldData.deactivatedKeyIndexes = VARS.deactivatedKeyIndexes;
+    //    curCatWorldData.deactivatedLockIndexes = VARS.deactivatedLockIndexes;
+    //    //curCatWorldData.isCarryingAKey = VARS.IsCarryingAKey;
+    //    //curCatWorldData.curCarriedKeyIniRoomIndex = VARS.curCarriedKeyIniRoomIndex;
+    //    //curCatWorldData.curCarriedKeyIniLocalPosition = VARS.curCarriedKeyIniLocalPosition;
+    //    //for (int i = 0; i < keys.Count; i++)
+    //    //{
+    //    //    if (keys[i] == VARS.curCarriedKey)
+    //    //    {
+    //    //        curCatWorldData.curCarriedKeyIndex = i;
+    //    //        break;
+    //    //    }
+    //    //}
+
+    //    //fragments
+    //    curCatWorldData.isRedFragmentsEmbeded = VARS.isRedFragmentsEmbeded;
+    //    curCatWorldData.isYellowFragmentsEmbeded = VARS.isYellowFragmentsEmbeded;
+    //    curCatWorldData.isBlueFragmentsEmbeded = VARS.isBlueFragmentsEmbeded;
+    //    curCatWorldData.isOrangeFragmentsEmbeded = VARS.isOrangeFragmentsEmbeded;
+    //    curCatWorldData.isGreenFragmentsEmbeded = VARS.isGreenFragmentsEmbeded;
+    //    curCatWorldData.isPurpleFragmentsEmbeded = VARS.isPurpleFragmentsEmbeded;
+    //    for (int i = 0; i < redFragments.Count; i++)
+    //    {
+    //        tempInt = redFragments[i].GetComponent<TileData>().fragmentIndex - 1;
+    //        if (VARS.isRedFragmentsEmbeded[tempInt])
+    //        {
+    //            curCatWorldData.redEmbededFragmentPositions[tempInt] = redFragments[i].transform.position;
+    //        }
+    //    }
+    //    for (int i = 0; i < yellowFragments.Count; i++)
+    //    {
+    //        tempInt = yellowFragments[i].GetComponent<TileData>().fragmentIndex - 1;
+    //        if (VARS.isYellowFragmentsEmbeded[tempInt])
+    //        {
+    //            curCatWorldData.yellowEmbededFragmentPositions[tempInt] = yellowFragments[i].transform.position;
+    //        }
+    //    }
+    //    for (int i = 0; i < blueFragments.Count; i++)
+    //    {
+    //        tempInt = blueFragments[i].GetComponent<TileData>().fragmentIndex - 1;
+    //        if (VARS.isBlueFragmentsEmbeded[tempInt])
+    //        {
+    //            curCatWorldData.blueEmbededFragmentPositions[tempInt] = blueFragments[i].transform.position;
+    //        }
+    //    }
+    //    for (int i = 0; i < orangeFragments.Count; i++)
+    //    {
+    //        tempInt = orangeFragments[i].GetComponent<TileData>().fragmentIndex - 1;
+    //        if (VARS.isOrangeFragmentsEmbeded[tempInt])
+    //        {
+    //            curCatWorldData.orangeEmbededFragmentPositions[tempInt] = orangeFragments[i].transform.position;
+    //        }
+    //    }
+    //    for (int i = 0; i < greenFragments.Count; i++)
+    //    {
+    //        tempInt = greenFragments[i].GetComponent<TileData>().fragmentIndex - 1;
+    //        if (VARS.isGreenFragmentsEmbeded[tempInt])
+    //        {
+    //            curCatWorldData.greenEmbededFragmentPositions[tempInt] = greenFragments[i].transform.position;
+    //        }
+    //    }
+    //    for (int i = 0; i < purpleFragments.Count; i++)
+    //    {
+    //        tempInt = purpleFragments[i].GetComponent<TileData>().fragmentIndex - 1;
+    //        if (VARS.isPurpleFragmentsEmbeded[tempInt])
+    //        {
+    //            curCatWorldData.purpleEmbededFragmentPositions[tempInt] = purpleFragments[i].transform.position;
+    //        }
+    //    }
+
+    //    //isCenterFulfilled
+    //    curCatWorldData.isCenterFulfilled = VARS.isCenterFulfilled;
+
+    //    ////maxEnergyBonus
+    //    //curCatWorldData.maxEnergyBonus = VARS.maxEnergyBonus;
+
+    //    //curLatestCenterSavePointPosition
+    //    curCatWorldData.curLatestCenterSavePointPosition = VARS.curLatestCenterSavePointPosition;
+
+    //    //curAccessedCenterSavePointPositions
+    //    curCatWorldData.curAccessedCenterSavePointPositions = VARS.curAccessedCenterSavePointPositions;
+
+    //    //minimapKeysAndLocks
+    //    curCatWorldData.deactivatedMinimapKeyIndexes = VARS.deactivatedMinimapKeyIndexes;
+    //    curCatWorldData.deactivatedMinimapLockIndexes = VARS.deactivatedMinimapLockIndexes;
+
+    //    //isMinimapRoomPlaneExploredStableDirectionMarkingEdgeLinesActivated
+    //    curCatWorldData.isMinimapRoomPlaneExploredStableDirectionMarkingEdgeLinesActivated = VARS.isMinimapRoomPlaneExploredStableDirectionMarkingEdgeLinesActivated;
+
+    //    //isMinimapActivated
+    //    curCatWorldData.isMinimapActivated = VARS.IsMinimapActivated;
+
+    //    tempJsonString = JsonUtility.ToJson(curCatWorldData);
+
+    //    File.WriteAllText(tempPath, tempJsonString);
+    //}
+    #endregion
+
+    #region ProgressData
+    //void ReadProgressData(bool isInitial = false)
+    //{
+    //    if (!isInitial)
+    //        tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "ProgressData.txt");
+    //    else
+    //        tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "InitialProgressData.txt");
+
+    //    if (File.Exists(tempPath))
+    //    {
+    //        tempJsonString = File.ReadAllText(tempPath);
+    //        curProgressData = JsonUtility.FromJson<ProgressData>(tempJsonString);
+
+    //        //guide
+    //        VARS.HasFinishedKeysGuide = curProgressData.hasFinishedKeysGuide;
+    //        VARS.HasJumped = curProgressData.hasJumped;
+    //        VARS.HasDashed = curProgressData.hasDashed;
+    //        VARS.HasBeenIntoMinimap = curProgressData.hasBeenIntoMinimap;
+    //        VARS.HasCollectedFragment = curProgressData.hasCollectedFragment;
+    //        VARS.HasRotated = curProgressData.hasRotated;
+    //        VARS.HasClimbed = curProgressData.hasClimbed;
+    //        VARS.HasTwisted = curProgressData.hasTwisted;
+    //        VARS.HasBackCentered = curProgressData.hasBackCentered;
+    //        VARS.HasOutOfCenterTwisted = curProgressData.hasOutOfCenterTwisted;
+    //        VARS.HasBetweenCentersTransported = curProgressData.hasBetweenCentersTransported;
+
+    //        ////collectedNumbers
+    //        //VARS.curOneColorFragmentCollectedNumbers = curProgressData.curOneColorFragmentCollectedNumbers;
+    //        //VARS.curAllColorsFragmentCollectedNumber = curProgressData.curAllColorsFragmentCollectedNumber;
+    //        //VARS.curKeysAndLocksCollectedNumber = curProgressData.curKeysAndLocksCollectedNumber;
+    //    }
+
+    //}
+
+    //void WriteProgressData(bool isInitial = false)
+    //{
+    //    if (!isInitial)
+    //        tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "ProgressData.txt");
+    //    else
+    //        tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "InitialProgressData.txt");
+
+    //    //guide
+    //    curProgressData.hasFinishedKeysGuide = VARS.HasFinishedKeysGuide;
+    //    curProgressData.hasJumped = VARS.HasJumped;
+    //    curProgressData.hasDashed = VARS.HasDashed;
+    //    curProgressData.hasBeenIntoMinimap = VARS.HasBeenIntoMinimap;
+    //    curProgressData.hasCollectedFragment = VARS.HasCollectedFragment;
+    //    curProgressData.hasRotated = VARS.HasRotated;
+    //    curProgressData.hasClimbed = VARS.HasClimbed;
+    //    curProgressData.hasTwisted = VARS.HasTwisted;
+    //    curProgressData.hasBackCentered = VARS.HasBackCentered;
+    //    curProgressData.hasOutOfCenterTwisted = VARS.HasOutOfCenterTwisted;
+    //    curProgressData.hasBetweenCentersTransported = VARS.HasBetweenCentersTransported;
+
+    //    ////collectedNumbers
+    //    //curProgressData.curOneColorFragmentCollectedNumbers = VARS.curOneColorFragmentCollectedNumbers;
+    //    //curProgressData.curAllColorsFragmentCollectedNumber = VARS.curAllColorsFragmentCollectedNumber;
+    //    //curProgressData.curKeysAndLocksCollectedNumber = VARS.curKeysAndLocksCollectedNumber;
+
+    //    tempJsonString = JsonUtility.ToJson(curProgressData);
+
+    //    File.WriteAllText(tempPath, tempJsonString);
+    //}
+    #endregion
+
+
     #region StartNewGame(CurrentlyNotUsable)
-    void SetNewGameData()
-    {
-        //SetNewGameProgressData();
-        //SetNewGameWorldData();
-        //SetNewGameCatWorldData();
-        //SetNewGameKeyCodesData();
+    //void SetNewGameData()
+    //{
+    //    //SetNewGameProgressData();
+    //    //SetNewGameWorldData();
+    //    //SetNewGameCatWorldData();
+    //    //SetNewGameKeyCodesData();
 
-        //ReadProgressData();
-        //ReadWorldData();
-        //ReadCatWorldData();
-        //ReadKeyCodesData();
+    //    //ReadProgressData();
+    //    //ReadWorldData();
+    //    //ReadCatWorldData();
+    //    //ReadKeyCodesData();
 
-        ReadProgressData(true);
-        ReadWorldData(true);
-        ReadCatWorldData(true);
-        ReadKeyCodesData(true);
+    //    ReadProgressData(true);
+    //    ReadWorldData(true);
+    //    ReadCatWorldData(true);
+    //    ReadKeyCodesData(true);
 
-        WriteProgressData();
-        WriteWorldData();
-        WriteCatWorldData();
-        WriteKeyCodesData();
+    //    WriteProgressData();
+    //    WriteWorldData();
+    //    WriteCatWorldData();
+    //    WriteKeyCodesData();
 
-        Debug.Log("AllDataReset");
-    }
+    //    Debug.Log("AllDataReset");
+    //}
 
-    void SetNewGameProgressData()
-    {
-        tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "ProgressData.txt");
+    //void SetNewGameProgressData()
+    //{
+    //    tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "ProgressData.txt");
 
-        //guide
-        curProgressData.hasFinishedKeysGuide = false;
-        curProgressData.hasJumped = false;
-        curProgressData.hasDashed = false;
-        curProgressData.hasBeenIntoMinimap = false;
-        curProgressData.hasCollectedFragment = false;
-        curProgressData.hasRotated = false;
-        curProgressData.hasClimbed = false;
-        curProgressData.hasTwisted = false;
-        curProgressData.hasBackCentered = false;
-        curProgressData.hasOutOfCenterTwisted = false;
-        curProgressData.hasBetweenCentersTransported = false;
+    //    //guide
+    //    curProgressData.hasFinishedKeysGuide = false;
+    //    curProgressData.hasJumped = false;
+    //    curProgressData.hasDashed = false;
+    //    curProgressData.hasBeenIntoMinimap = false;
+    //    curProgressData.hasCollectedFragment = false;
+    //    curProgressData.hasRotated = false;
+    //    curProgressData.hasClimbed = false;
+    //    curProgressData.hasTwisted = false;
+    //    curProgressData.hasBackCentered = false;
+    //    curProgressData.hasOutOfCenterTwisted = false;
+    //    curProgressData.hasBetweenCentersTransported = false;
 
-        //collectedNumbers
-        curProgressData.curOneColorFragmentCollectedNumbers[0] = 0;
-        curProgressData.curOneColorFragmentCollectedNumbers[1] = 0;
-        curProgressData.curOneColorFragmentCollectedNumbers[2] = 0;
-        curProgressData.curOneColorFragmentCollectedNumbers[3] = 0;
-        curProgressData.curOneColorFragmentCollectedNumbers[4] = 0;
-        curProgressData.curOneColorFragmentCollectedNumbers[5] = 0;
-        curProgressData.curAllColorsFragmentCollectedNumber = 0;
-        curProgressData.curKeysAndLocksCollectedNumber = 0;
+    //    ////collectedNumbers
+    //    //curProgressData.curOneColorFragmentCollectedNumbers[0] = 0;
+    //    //curProgressData.curOneColorFragmentCollectedNumbers[1] = 0;
+    //    //curProgressData.curOneColorFragmentCollectedNumbers[2] = 0;
+    //    //curProgressData.curOneColorFragmentCollectedNumbers[3] = 0;
+    //    //curProgressData.curOneColorFragmentCollectedNumbers[4] = 0;
+    //    //curProgressData.curOneColorFragmentCollectedNumbers[5] = 0;
+    //    //curProgressData.curAllColorsFragmentCollectedNumber = 0;
+    //    //curProgressData.curKeysAndLocksCollectedNumber = 0;
 
-        tempJsonString = JsonUtility.ToJson(curProgressData);
+    //    tempJsonString = JsonUtility.ToJson(curProgressData);
 
-        File.WriteAllText(tempPath, tempJsonString);
-    }
+    //    File.WriteAllText(tempPath, tempJsonString);
+    //}
 
-    void SetNewGameWorldData()
-    {
-        tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "WorldData.txt");
+    //void SetNewGameWorldData()
+    //{
+    //    tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "WorldData.txt");
 
-        for (int i = 0; i < 54; i++)
-        {
-            //rooms
-            tempTransform = roomPlanes[i].transform;
+    //    for (int i = 0; i < 54; i++)
+    //    {
+    //        //rooms
+    //        tempTransform = roomPlanes[i].transform;
 
-            curWorldData.roomPlanePositions[i] = UFL.Vector3RoundToInt(tempTransform.position);
-            curWorldData.roomPlaneEulerangles[i] = UFL.Vector3RoundToInt(tempTransform.eulerAngles);
-            curWorldData.roomCenters[i] = roomCenters[i];
-            curWorldData.roomStableForwards[i] = roomStableForwards[i];
-            curWorldData.roomStableUps[i] = roomStableUps[i];
-            curWorldData.roomStableRights[i] = roomStableRights[i];
+    //        curWorldData.roomPlanePositions[i] = UFL.Vector3RoundToInt(tempTransform.position);
+    //        curWorldData.roomPlaneEulerangles[i] = UFL.Vector3RoundToInt(tempTransform.eulerAngles);
+    //        curWorldData.roomCenters[i] = roomCenters[i];
+    //        curWorldData.roomStableForwards[i] = roomStableForwards[i];
+    //        curWorldData.roomStableUps[i] = roomStableUps[i];
+    //        curWorldData.roomStableRights[i] = roomStableRights[i];
 
-            //minimapRooms
-            tempTransform = minimapRoomPlanes[i].transform;
+    //        //minimapRooms
+    //        tempTransform = minimapRoomPlanes[i].transform;
 
-            curWorldData.minimapRoomPlanePositions[i] = UFL.Vector3RoundToInt(tempTransform.position);
-            curWorldData.minimapRoomPlaneEulerangles[i] = UFL.Vector3RoundToInt(tempTransform.eulerAngles);
-        }
+    //        curWorldData.minimapRoomPlanePositions[i] = UFL.Vector3RoundToInt(tempTransform.position);
+    //        curWorldData.minimapRoomPlaneEulerangles[i] = UFL.Vector3RoundToInt(tempTransform.eulerAngles);
+    //    }
 
-        tempJsonString = JsonUtility.ToJson(curWorldData);
+    //    tempJsonString = JsonUtility.ToJson(curWorldData);
 
-        File.WriteAllText(tempPath, tempJsonString);
-    }
+    //    File.WriteAllText(tempPath, tempJsonString);
+    //}
 
-    void SetNewGameCatWorldData()
-    {
-        tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "CatWorldData.txt");
+    //void SetNewGameCatWorldData()
+    //{
+    //    tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "CatWorldData.txt");
 
-        //curRoom
-        curCatWorldData.curRoomIndex = VARS.curRoomIndex;
+    //    //curRoom
+    //    curCatWorldData.curRoomIndex = VARS.curRoomIndex;
 
-        //curPosition
-        curCatWorldData.curCatIniPosition = catIniPositionPoint.transform.position;
+    //    //curPosition
+    //    curCatWorldData.curCatIniPosition = catIniPositionPoint.transform.position;
 
-        //savePoint
-        curCatWorldData.curActivatedSavePointIndex = VARS.curActivatedSavePointIndex;
-        curCatWorldData.curActivatedSavePointPosition = VARS.curActivatedSavePointPosition;
-        storedActivatedSavePointBlock.transform.position = curCatWorldData.curActivatedSavePointPosition;
-        curCatWorldData.curActivatedSavePointRoomIndex = VARS.curActivatedSavePointRoomIndex;
+    //    //savePoint
+    //    curCatWorldData.curActivatedSavePointIndex = VARS.curActivatedSavePointIndex;
+    //    curCatWorldData.curActivatedSavePointPosition = VARS.curActivatedSavePointPosition;
+    //    storedActivatedSavePointBlock.transform.position = curCatWorldData.curActivatedSavePointPosition;
+    //    curCatWorldData.curActivatedSavePointRoomIndex = VARS.curActivatedSavePointRoomIndex;
 
-        //isRoomExplored
-        curCatWorldData.isRoomExplored = VARS.IsRoomExplored;
+    //    //isRoomExplored
+    //    curCatWorldData.isRoomExplored = VARS.IsRoomExplored;
 
-        //keysAndLocks
-        curCatWorldData.deactivatedKeyIndexes = VARS.deactivatedKeyIndexes;
-        curCatWorldData.deactivatedLockIndexes = VARS.deactivatedLockIndexes;
-        //curCatWorldData.isCarryingAKey = VARS.IsCarryingAKey;
-        //curCatWorldData.curCarriedKeyIniRoomIndex = VARS.curCarriedKeyIniRoomIndex;
-        //curCatWorldData.curCarriedKeyIniLocalPosition = VARS.curCarriedKeyIniLocalPosition;
-        //for (int i = 0; i < keys.Count; i++)
-        //{
-        //    if (keys[i] == VARS.curCarriedKey)
-        //    {
-        //        curCatWorldData.curCarriedKeyIndex = i;
-        //        break;
-        //    }
-        //}
+    //    //keysAndLocks
+    //    curCatWorldData.deactivatedKeyIndexes = VARS.deactivatedKeyIndexes;
+    //    curCatWorldData.deactivatedLockIndexes = VARS.deactivatedLockIndexes;
+    //    //curCatWorldData.isCarryingAKey = VARS.IsCarryingAKey;
+    //    //curCatWorldData.curCarriedKeyIniRoomIndex = VARS.curCarriedKeyIniRoomIndex;
+    //    //curCatWorldData.curCarriedKeyIniLocalPosition = VARS.curCarriedKeyIniLocalPosition;
+    //    //for (int i = 0; i < keys.Count; i++)
+    //    //{
+    //    //    if (keys[i] == VARS.curCarriedKey)
+    //    //    {
+    //    //        curCatWorldData.curCarriedKeyIndex = i;
+    //    //        break;
+    //    //    }
+    //    //}
 
-        //fragments
-        curCatWorldData.isRedFragmentsEmbeded = VARS.isRedFragmentsEmbeded;
-        curCatWorldData.isYellowFragmentsEmbeded = VARS.isYellowFragmentsEmbeded;
-        curCatWorldData.isBlueFragmentsEmbeded = VARS.isBlueFragmentsEmbeded;
-        curCatWorldData.isOrangeFragmentsEmbeded = VARS.isOrangeFragmentsEmbeded;
-        curCatWorldData.isGreenFragmentsEmbeded = VARS.isGreenFragmentsEmbeded;
-        curCatWorldData.isPurpleFragmentsEmbeded = VARS.isPurpleFragmentsEmbeded;
-        for (int i = 0; i < redFragments.Count; i++)
-        {
-            tempInt = redFragments[i].GetComponent<TileData>().fragmentIndex - 1;
-            if (VARS.isRedFragmentsEmbeded[tempInt])
-            {
-                curCatWorldData.redEmbededFragmentPositions[tempInt] = redFragments[i].transform.position;
-            }
-        }
-        for (int i = 0; i < yellowFragments.Count; i++)
-        {
-            tempInt = yellowFragments[i].GetComponent<TileData>().fragmentIndex - 1;
-            if (VARS.isYellowFragmentsEmbeded[tempInt])
-            {
-                curCatWorldData.yellowEmbededFragmentPositions[tempInt] = yellowFragments[i].transform.position;
-            }
-        }
-        for (int i = 0; i < blueFragments.Count; i++)
-        {
-            tempInt = blueFragments[i].GetComponent<TileData>().fragmentIndex - 1;
-            if (VARS.isBlueFragmentsEmbeded[tempInt])
-            {
-                curCatWorldData.blueEmbededFragmentPositions[tempInt] = blueFragments[i].transform.position;
-            }
-        }
-        for (int i = 0; i < orangeFragments.Count; i++)
-        {
-            tempInt = orangeFragments[i].GetComponent<TileData>().fragmentIndex - 1;
-            if (VARS.isOrangeFragmentsEmbeded[tempInt])
-            {
-                curCatWorldData.orangeEmbededFragmentPositions[tempInt] = orangeFragments[i].transform.position;
-            }
-        }
-        for (int i = 0; i < greenFragments.Count; i++)
-        {
-            tempInt = greenFragments[i].GetComponent<TileData>().fragmentIndex - 1;
-            if (VARS.isGreenFragmentsEmbeded[tempInt])
-            {
-                curCatWorldData.greenEmbededFragmentPositions[tempInt] = greenFragments[i].transform.position;
-            }
-        }
-        for (int i = 0; i < purpleFragments.Count; i++)
-        {
-            tempInt = purpleFragments[i].GetComponent<TileData>().fragmentIndex - 1;
-            if (VARS.isPurpleFragmentsEmbeded[tempInt])
-            {
-                curCatWorldData.purpleEmbededFragmentPositions[tempInt] = purpleFragments[i].transform.position;
-            }
-        }
+    //    //fragments
+    //    curCatWorldData.isRedFragmentsEmbeded = VARS.isRedFragmentsEmbeded;
+    //    curCatWorldData.isYellowFragmentsEmbeded = VARS.isYellowFragmentsEmbeded;
+    //    curCatWorldData.isBlueFragmentsEmbeded = VARS.isBlueFragmentsEmbeded;
+    //    curCatWorldData.isOrangeFragmentsEmbeded = VARS.isOrangeFragmentsEmbeded;
+    //    curCatWorldData.isGreenFragmentsEmbeded = VARS.isGreenFragmentsEmbeded;
+    //    curCatWorldData.isPurpleFragmentsEmbeded = VARS.isPurpleFragmentsEmbeded;
+    //    for (int i = 0; i < redFragments.Count; i++)
+    //    {
+    //        tempInt = redFragments[i].GetComponent<TileData>().fragmentIndex - 1;
+    //        if (VARS.isRedFragmentsEmbeded[tempInt])
+    //        {
+    //            curCatWorldData.redEmbededFragmentPositions[tempInt] = redFragments[i].transform.position;
+    //        }
+    //    }
+    //    for (int i = 0; i < yellowFragments.Count; i++)
+    //    {
+    //        tempInt = yellowFragments[i].GetComponent<TileData>().fragmentIndex - 1;
+    //        if (VARS.isYellowFragmentsEmbeded[tempInt])
+    //        {
+    //            curCatWorldData.yellowEmbededFragmentPositions[tempInt] = yellowFragments[i].transform.position;
+    //        }
+    //    }
+    //    for (int i = 0; i < blueFragments.Count; i++)
+    //    {
+    //        tempInt = blueFragments[i].GetComponent<TileData>().fragmentIndex - 1;
+    //        if (VARS.isBlueFragmentsEmbeded[tempInt])
+    //        {
+    //            curCatWorldData.blueEmbededFragmentPositions[tempInt] = blueFragments[i].transform.position;
+    //        }
+    //    }
+    //    for (int i = 0; i < orangeFragments.Count; i++)
+    //    {
+    //        tempInt = orangeFragments[i].GetComponent<TileData>().fragmentIndex - 1;
+    //        if (VARS.isOrangeFragmentsEmbeded[tempInt])
+    //        {
+    //            curCatWorldData.orangeEmbededFragmentPositions[tempInt] = orangeFragments[i].transform.position;
+    //        }
+    //    }
+    //    for (int i = 0; i < greenFragments.Count; i++)
+    //    {
+    //        tempInt = greenFragments[i].GetComponent<TileData>().fragmentIndex - 1;
+    //        if (VARS.isGreenFragmentsEmbeded[tempInt])
+    //        {
+    //            curCatWorldData.greenEmbededFragmentPositions[tempInt] = greenFragments[i].transform.position;
+    //        }
+    //    }
+    //    for (int i = 0; i < purpleFragments.Count; i++)
+    //    {
+    //        tempInt = purpleFragments[i].GetComponent<TileData>().fragmentIndex - 1;
+    //        if (VARS.isPurpleFragmentsEmbeded[tempInt])
+    //        {
+    //            curCatWorldData.purpleEmbededFragmentPositions[tempInt] = purpleFragments[i].transform.position;
+    //        }
+    //    }
 
-        //isCenterFulfilled
-        curCatWorldData.isCenterFulfilled = VARS.isCenterFulfilled;
+    //    //isCenterFulfilled
+    //    curCatWorldData.isCenterFulfilled = VARS.isCenterFulfilled;
 
-        //curLatestCenterSavePointPosition
-        curCatWorldData.curLatestCenterSavePointPosition = VARS.curLatestCenterSavePointPosition;
+    //    //curLatestCenterSavePointPosition
+    //    curCatWorldData.curLatestCenterSavePointPosition = VARS.curLatestCenterSavePointPosition;
 
-        //curAccessedCenterSavePointPositions
-        curCatWorldData.curAccessedCenterSavePointPositions = VARS.curAccessedCenterSavePointPositions;
+    //    //curAccessedCenterSavePointPositions
+    //    curCatWorldData.curAccessedCenterSavePointPositions = VARS.curAccessedCenterSavePointPositions;
 
-        //minimapKeysAndLocks
-        curCatWorldData.deactivatedMinimapKeyIndexes = VARS.deactivatedMinimapKeyIndexes;
-        curCatWorldData.deactivatedMinimapLockIndexes = VARS.deactivatedMinimapLockIndexes;
+    //    //minimapKeysAndLocks
+    //    curCatWorldData.deactivatedMinimapKeyIndexes = VARS.deactivatedMinimapKeyIndexes;
+    //    curCatWorldData.deactivatedMinimapLockIndexes = VARS.deactivatedMinimapLockIndexes;
 
-        //isMinimapActivated
-        curCatWorldData.isMinimapActivated = VARS.IsMinimapActivated;
+    //    //isMinimapActivated
+    //    curCatWorldData.isMinimapActivated = VARS.IsMinimapActivated;
 
-        tempJsonString = JsonUtility.ToJson(curCatWorldData);
+    //    tempJsonString = JsonUtility.ToJson(curCatWorldData);
 
-        File.WriteAllText(tempPath, tempJsonString);
-    }
+    //    File.WriteAllText(tempPath, tempJsonString);
+    //}
 
-    void SetNewGameKeyCodesData()
-    {
-        tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "KeyCodesData.txt");
+    //void SetNewGameKeyCodesData()
+    //{
+    //    tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "KeyCodesData.txt");
 
-        curKeyCodesData.upKeyCode = VARS.upKeyCode;
-        curKeyCodesData.downKeyCode = VARS.downKeyCode;
-        curKeyCodesData.leftKeyCode = VARS.leftKeyCode;
-        curKeyCodesData.rightKeyCode = VARS.rightKeyCode;
-        curKeyCodesData.jumpKeyCode = VARS.jumpKeyCode;
-        //curKeyCodesData.acceKeyCode = VARS.acceKeyCode;
-        //curKeyCodesData.grabKeyCode = VARS.grabKeyCode;
-        curKeyCodesData.dashKeyCode = VARS.dashKeyCode;
-        curKeyCodesData.minimapKeyCode = VARS.minimapKeyCode;
-        //curKeyCodesData.backKeyCode = VARS.backKeyCode;
+    //    curKeyCodesData.upKeyCode = VARS.upKeyCode;
+    //    curKeyCodesData.downKeyCode = VARS.downKeyCode;
+    //    curKeyCodesData.leftKeyCode = VARS.leftKeyCode;
+    //    curKeyCodesData.rightKeyCode = VARS.rightKeyCode;
+    //    curKeyCodesData.jumpKeyCode = VARS.jumpKeyCode;
+    //    //curKeyCodesData.acceKeyCode = VARS.acceKeyCode;
+    //    //curKeyCodesData.grabKeyCode = VARS.grabKeyCode;
+    //    curKeyCodesData.dashKeyCode = VARS.dashKeyCode;
+    //    curKeyCodesData.minimapKeyCode = VARS.minimapKeyCode;
+    //    //curKeyCodesData.backKeyCode = VARS.backKeyCode;
 
-        tempJsonString = JsonUtility.ToJson(curKeyCodesData);
+    //    tempJsonString = JsonUtility.ToJson(curKeyCodesData);
 
-        File.WriteAllText(tempPath, tempJsonString);
-    }
+    //    File.WriteAllText(tempPath, tempJsonString);
+    //}
     #endregion
 }

@@ -152,7 +152,7 @@ public class TileData : MonoBehaviour
     public int blockTypeIndex { get { return _blockTypeIndex; } set { _blockTypeIndex = value; } }
 
     #region ConstantsUsed
-
+    GameObject[] roomPlanes = new GameObject[54];
     #endregion
 
     #region VariablesUsed
@@ -177,6 +177,7 @@ public class TileData : MonoBehaviour
         thisTransform = this.transform;
 
         #region ImportConstants
+        roomPlanes = CONS.roomPlanes;
         #endregion
 
         #region ImportReferenceVariables
@@ -184,7 +185,8 @@ public class TileData : MonoBehaviour
 
         for (int i = 0; i < VARS.roomCenters.Length; i++)
         {
-            if (UFL.IsInRoom(i, thisTransform.position))
+            if (UFL.IsInRoom(i, thisTransform.position) || 
+                thisTransform.parent.parent == roomPlanes[i])
             {
                 inRoomIndex = i;
 

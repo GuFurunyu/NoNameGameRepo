@@ -111,14 +111,16 @@ public class CurRoomManager : MonoBehaviour
             {
                 VARS.IsRoomExplored[curRoomIndex] = true;
 
-                VARS.IsToWriteCatWorldData = true;
+                //VARS.IsToWriteCatWorldData = true;
+                VARS.IsToWriteExplorationData = true;
             }
             //ifCurFaceNotExploredMarkItExplored
             if (!VARS.IsFaceExplored[VARS.curFaceIndex - 1])
             {
                 VARS.IsFaceExplored[VARS.curFaceIndex - 1] = true;
 
-                VARS.IsToWriteCatWorldData = true;
+                //VARS.IsToWriteCatWorldData = true;
+                VARS.IsToWriteExplorationData = true;
             }
 
             ////directions
@@ -141,7 +143,8 @@ public class CurRoomManager : MonoBehaviour
                     {
                         VARS.isMinimapRoomPlaneExploredStableDirectionMarkingEdgeLinesActivated[curRoomIndex * 4 + i] = true;
 
-                        VARS.IsToWriteCatWorldData = true;
+                        //VARS.IsToWriteCatWorldData = true;
+                        VARS.IsToWriteExplorationData = true;
                     }
 
                     break;
