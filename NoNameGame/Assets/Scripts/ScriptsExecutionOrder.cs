@@ -55,6 +55,7 @@ public class ScriptsExecutionOrder : MonoBehaviour
         screenPostProcessor,
         textManager,
         audioManager,
+        achievementManager,
         test
     }
 

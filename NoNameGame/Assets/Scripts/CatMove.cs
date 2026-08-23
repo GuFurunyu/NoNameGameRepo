@@ -1107,6 +1107,8 @@ public class CatMove : MonoBehaviour
             #endregion
 
             #region BackCenterAndBetweenCentersTransport
+            VARS.IsJustTransported = false;
+
             if (VARS.IsBackCenterTriggered)
             {
                 //betweenCentersTransport
@@ -1125,6 +1127,8 @@ public class CatMove : MonoBehaviour
                     if (tempVector != VARS.curLatestCenterSavePointPosition)
                     {
                         VARS.lastActivatedSavePointTime = -1;
+
+                        VARS.IsJustTransported = true;
                     }
 
                     VARS.curLatestCenterSavePointPosition = tempVector;

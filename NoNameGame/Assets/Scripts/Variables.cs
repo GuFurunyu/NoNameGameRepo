@@ -75,6 +75,10 @@ public class Variables : MonoBehaviour
     [SerializeField] private bool _isToWriteKeyCodesData;
     public bool IsToWriteKeyCodesData { get { return _isToWriteKeyCodesData; } set { _isToWriteKeyCodesData = value; } }
 
+    //achievementData
+    [SerializeField] private bool _isToWriteAchievementData;
+    public bool IsToWriteAchievementData { get { return _isToWriteAchievementData; } set { _isToWriteAchievementData = value; } }
+
 
     //isToWriteAllData
     [SerializeField] private bool _isWritingAllData;
@@ -98,6 +102,7 @@ public class Variables : MonoBehaviour
                 IsToWriteKeysAndLocksData = true;
                 IsToWriteGuideData = true;
                 IsToWriteKeyCodesData = true;
+                IsToWriteAchievementData = true;
             }
 
             _isWritingAllData = value;
@@ -621,6 +626,9 @@ public class Variables : MonoBehaviour
     [SerializeField] private bool _isBackCenterTriggered;
     public bool IsBackCenterTriggered { get { return _isBackCenterTriggered; } set { _isBackCenterTriggered = value; } }
 
+    [SerializeField] private bool _isJustTransported;
+    public bool IsJustTransported { get { return _isJustTransported; } set { _isJustTransported = value; } }
+
 
     //specificKeys
     [SerializeField] private bool _isSpaceDown;
@@ -762,6 +770,20 @@ public class Variables : MonoBehaviour
     public GameObject curGasTile;
     public GameObject curMistTile;
 
+    //allStateTile
+    public GameObject curUpLeftAllStateTile;
+    public GameObject curUpRightAllStateTile;
+    public GameObject curDownLeftAllStateTile;
+    public GameObject curDownRightAllStateTile;
+    public GameObject curLeftUpAllStateTile;
+    public GameObject curLeftDownAllStateTile;
+    public GameObject curRightUpAllStateTile;
+    public GameObject curRightDownAllStateTile;
+    public GameObject curFarUpAllStateTile;
+    public GameObject curFarDownAllStateTile;
+    public GameObject curFarLeftAllStateTile;
+    public GameObject curFarRightAllStateTile;
+
     //solidTileData
     public TileData curUpLeftTileData;
     public TileData curUpRightTileData;
@@ -784,6 +806,20 @@ public class Variables : MonoBehaviour
     public TileData curLiquidTileData;
     public TileData curGasTileData;
     public TileData curMistTileData;
+
+    //allStateTileData
+    public TileData curUpLeftAllStateTileData;
+    public TileData curUpRightAllStateTileData;
+    public TileData curDownLeftAllStateTileData;
+    public TileData curDownRightAllStateTileData;
+    public TileData curLeftUpAllStateTileData;
+    public TileData curLeftDownAllStateTileData;
+    public TileData curRightUpAllStateTileData;
+    public TileData curRightDownAllStateTileData;
+    public TileData curFarUpAllStateTileData;
+    public TileData curFarDownAllStateTileData;
+    public TileData curFarLeftAllStateTileData;
+    public TileData curFarRightAllStateTileData;
 
     //solidTileDistances
     public float curUpLeftTileVerDistance;
@@ -1272,6 +1308,7 @@ public class Variables : MonoBehaviour
     public bool IsGettingAnEnergyCrystal { get { return _isGettingAnEnergyCrystal; } set { _isGettingAnEnergyCrystal = value; } }
 
     //collecting
+    //yellow, purple, orange, blue, green ,red
     public int[] curOneColorFragmentCollectedNumbers = new int[6];
     public int curAllColorsFragmentCollectedNumber;
     public int curKeysAndLocksCollectedNumber;
@@ -1396,6 +1433,9 @@ public class Variables : MonoBehaviour
     public int curStoredGasBlockIndex;
     public int curStoredElectricMistBlockIndex;
     public int curStoredLightElectricMistBlockIndex;
+
+    //curSpawnedBlocks
+    public List<GameObject> curSpawnedBlocks = new List<GameObject>();
 
     //catCarriedByFluid
     public float lastCatCarriedByFluidTime;
@@ -1632,6 +1672,26 @@ public class Variables : MonoBehaviour
 
     [SerializeField] private bool _isChangingPitch;
     public bool IsChangingPitch { get { return _isChangingPitch; } set { _isChangingPitch = value; } }
+    #endregion
+
+    #region AchievementManager
+    [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
+        "  \nACHIEVEMENTMANAGER\n --- ")]
+    public bool isAchievementRotateUnlocked;
+    public bool isAchievementTwistUnlocked;
+    public bool isAchievementGearsOfDestinyUnlocked;
+    public bool isAchievementPortalUnlocked;
+    public bool isAchievementPivotUnlocked;
+    public bool isAchievementFullAppearanceUnlocked;
+    public bool isAchievementRedUnlocked;
+    public bool isAchievementYellowUnlocked;
+    public bool isAchievementBlueUnlocked;
+    public bool isAchievementOrangeUnlocked;
+    public bool isAchievementGreenUnlocked;
+    public bool isAchievementPurpleUnlocked;
+    public bool isAchievementCUBE_Unlocked;
+    public bool isAchievementConnectedUnlocked;
+    public bool isAchievementSolvedUnlocked;
     #endregion
 
     void Start()

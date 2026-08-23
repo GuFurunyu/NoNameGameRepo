@@ -502,7 +502,14 @@ public class CatCollision : MonoBehaviour
                         //Debug.Log("distanceFix2:" + catTransform.position);
                     }
 
-                    VARS.verCurSpeed = -VARS.verCurSpeed * VARS.curDownTileData.elasticity;                    
+                    if (!(VARS.verCurSpeed > -3 && VARS.curDownTileData.elasticity > 1e-6f))
+                    {
+                        VARS.verCurSpeed = -VARS.verCurSpeed * VARS.curDownTileData.elasticity;
+                    }
+                    else
+                    {
+                        VARS.verCurSpeed = 0;
+                    }
                 }
             }
             if (VARS.IsToCeiling)
@@ -527,7 +534,14 @@ public class CatCollision : MonoBehaviour
                         //UFL.AddCatPosition(-curUp * (gridBreadth - tempFloat + 0.0075f));
                     }
 
-                    VARS.verCurSpeed = -VARS.verCurSpeed * VARS.curUpTileData.elasticity;
+                    if (!(VARS.verCurSpeed < 3 && VARS.curUpTileData.elasticity > 1e-6f))
+                    {
+                        VARS.verCurSpeed = -VARS.verCurSpeed * VARS.curUpTileData.elasticity;
+                    }
+                    else
+                    {
+                        VARS.verCurSpeed = 0;
+                    }
 
                     //UFL.DebugLog(VARS.verCurSpeed.ToString());
                 }

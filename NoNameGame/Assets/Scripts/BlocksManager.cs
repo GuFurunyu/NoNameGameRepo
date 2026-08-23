@@ -54,7 +54,6 @@ public class BlocksManager : MonoBehaviour
     //public List<int> curMovedBlockIndexes = new List<int>();
     List<Vector3> curMovedBlockCoordVectors = new List<Vector3>();
     List<int> curMovedBlockTypeIndexes = new List<int>();
-    List<GameObject> curSpawnedBlocks = new List<GameObject>();
     bool isOccupied;
 
     //electricMistCenter
@@ -235,6 +234,8 @@ public class BlocksManager : MonoBehaviour
     GameObject[] storedElectricMistBlocks = new GameObject[512];
     GameObject[] storedLightElectricMistBlocks = new GameObject[512];
 
+    List<GameObject> curSpawnedBlocks = new List<GameObject>();
+
     List<GameObject> curToBeBrokenFragileRustBlocks = new List<GameObject>();
     List<float> curFragileRustBlockToBeBrokenStartTimes = new List<float>();
     List<GameObject> curBrokenFragileRustBlocks = new List<GameObject>();
@@ -310,6 +311,7 @@ public class BlocksManager : MonoBehaviour
         storedGasBlocks = VARS.storedGasBlocks;
         storedElectricMistBlocks = VARS.storedElectricMistBlocks;
         storedLightElectricMistBlocks = VARS.storedLightElectricMistBlocks;
+        curSpawnedBlocks = VARS.curSpawnedBlocks;
         curToBeBrokenFragileRustBlocks = VARS.curToBeBrokenFragileRustBlocks;
         curFragileRustBlockToBeBrokenStartTimes = VARS.curFragileRustBlockToBeBrokenStartTimes;
         curBrokenFragileRustBlocks = VARS.curBrokenFragileRustBlocks;

@@ -64,6 +64,9 @@ public class AudioManager : MonoBehaviour
         #endregion
 
         //noAudioSet
+        #if UNITY_EDITOR
+        audioSource.volume = 0;
+        #endif
         //audioSource.volume = 0;
 
         //mainBoard

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 [DefaultExecutionOrder((int)ScriptsExecutionOrder.ExecutionOrder.minimapManager)]
@@ -22,16 +23,34 @@ public class MinimapManager : MonoBehaviour
 
     float accumulatedMinimapRotationDegree;
 
+    float tempH;
+    float tempS;
+    float tempV;
+
     #region ConstantsUsed
     Transform camTransform;
 
     float minimapRotationMovingSpeed;
 
+    List<GameObject> minimapRedFragments = new List<GameObject>();
+    List<GameObject> minimapYellowFragments = new List<GameObject>();
+    List<GameObject> minimapBlueFragments = new List<GameObject>();
+    List<GameObject> minimapOrangeFragments = new List<GameObject>();
+    List<GameObject> minimapGreenFragments = new List<GameObject>();
+    List<GameObject> minimapPurpleFragments = new List<GameObject>();
+
     GameObject starDustsEmpty;
     #endregion
 
     #region VariablesUsed
+    List<GameObject> curSpawnedBlocks = new List<GameObject>();
 
+    bool[] isRedFragmentsEmbeded = new bool[8];
+    bool[] isYellowFragmentsEmbeded = new bool[8];
+    bool[] isBlueFragmentsEmbeded = new bool[8];
+    bool[] isOrangeFragmentsEmbeded = new bool[8];
+    bool[] isGreenFragmentsEmbeded = new bool[8];
+    bool[] isPurpleFragmentsEmbeded = new bool[8];
     #endregion
 
     void Start()
@@ -46,10 +65,23 @@ public class MinimapManager : MonoBehaviour
         #region ImportConstants
         camTransform = CONS.camTransform;
         minimapRotationMovingSpeed = CONS.minimapRotationMovingSpeed;
+        minimapRedFragments = CONS.minimapRedFragments;
+        minimapYellowFragments = CONS.minimapYellowFragments;
+        minimapBlueFragments = CONS.minimapBlueFragments;
+        minimapOrangeFragments = CONS.minimapOrangeFragments;
+        minimapGreenFragments = CONS.minimapGreenFragments;
+        minimapPurpleFragments = CONS.minimapPurpleFragments;
         starDustsEmpty = CONS.starDustsEmpty;
         #endregion
 
         #region ImportReferenceVariables
+        curSpawnedBlocks = VARS.curSpawnedBlocks;
+        isRedFragmentsEmbeded = VARS.isRedFragmentsEmbeded;
+        isYellowFragmentsEmbeded = VARS.isYellowFragmentsEmbeded;
+        isBlueFragmentsEmbeded = VARS.isBlueFragmentsEmbeded;
+        isOrangeFragmentsEmbeded = VARS.isOrangeFragmentsEmbeded;
+        isGreenFragmentsEmbeded = VARS.isGreenFragmentsEmbeded;
+        isPurpleFragmentsEmbeded = VARS.isPurpleFragmentsEmbeded;
         #endregion
     }
 
@@ -129,7 +161,8 @@ public class MinimapManager : MonoBehaviour
                     }
 
                     //outOfMinimap
-                    if (VARS.IsMinimapKeyDown)
+                    if (VARS.IsMinimapKeyDown ||
+                        VARS.IsBackKeyDown)
                     //if (VARS.IsJumpKeyDown)
                     {
                         UFL.OutOfMinimap();
@@ -164,6 +197,56 @@ public class MinimapManager : MonoBehaviour
 
                         VARS.IsMinimapRotating = false;
                     }
+                }
+            }
+        }
+
+        //inMinimapFragmentChangingColorEffect
+        if (VARS.IsInMinimap)
+        {
+            for (int i = 0; i < 8; i++)
+            {
+                if (!isRedFragmentsEmbeded[i])
+                {
+                    Color.RGBToHSV(minimapRedFragments[i].GetComponent<MeshRenderer>().material.color, out tempH, out tempS, out tempV);
+                    tempS += 1 * (1.2f - tempS) * (1 + VARS.curOneColorFragmentCollectedNumbers[5] * 0.25f) * Time.deltaTime;
+                    if (tempS >= 1) tempS = 0.01f;
+                    minimapRedFragments[i].GetComponent<MeshRenderer>().material.color = Color.HSVToRGB(tempH, tempS, tempV);
+                }
+                if (!isBlueFragmentsEmbeded[i])
+                {
+                    Color.RGBToHSV(minimapBlueFragments[i].GetComponent<MeshRenderer>().material.color, out tempH, out tempS, out tempV);
+                    tempS += 1 * (1.2f - tempS) * (1 + VARS.curOneColorFragmentCollectedNumbers[3] * 0.25f) * Time.deltaTime;
+                    if (tempS >= 1) tempS = 0.01f;
+                    minimapBlueFragments[i].GetComponent<MeshRenderer>().material.color = Color.HSVToRGB(tempH, tempS, tempV);
+                }
+                if (!isYellowFragmentsEmbeded[i])
+                {
+                    Color.RGBToHSV(minimapYellowFragments[i].GetComponent<MeshRenderer>().material.color, out tempH, out tempS, out tempV);
+                    tempS += 1 * (1.2f - tempS) * (1 + VARS.curOneColorFragmentCollectedNumbers[0] * 0.25f) * Time.deltaTime;
+                    if (tempS >= 1) tempS = 0.01f;
+                    minimapYellowFragments[i].GetComponent<MeshRenderer>().material.color = Color.HSVToRGB(tempH, tempS, tempV);
+                }
+                if (!isOrangeFragmentsEmbeded[i])
+                {
+                    Color.RGBToHSV(minimapOrangeFragments[i].GetComponent<MeshRenderer>().material.color, out tempH, out tempS, out tempV);
+                    tempS += 1 * (1.2f - tempS) * (1 + VARS.curOneColorFragmentCollectedNumbers[2] * 0.25f) * Time.deltaTime;
+                    if (tempS >= 1) tempS = 0.01f;
+                    minimapOrangeFragments[i].GetComponent<MeshRenderer>().material.color = Color.HSVToRGB(tempH, tempS, tempV);
+                }
+                if (!isGreenFragmentsEmbeded[i])
+                {
+                    Color.RGBToHSV(minimapGreenFragments[i].GetComponent<MeshRenderer>().material.color, out tempH, out tempS, out tempV);
+                    tempS += 1 * (1.2f - tempS) * (1 + VARS.curOneColorFragmentCollectedNumbers[4] * 0.25f) * Time.deltaTime;
+                    if (tempS >= 1) tempS = 0.01f;
+                    minimapGreenFragments[i].GetComponent<MeshRenderer>().material.color = Color.HSVToRGB(tempH, tempS, tempV);
+                }
+                if (!isPurpleFragmentsEmbeded[i])
+                {
+                    Color.RGBToHSV(minimapPurpleFragments[i].GetComponent<MeshRenderer>().material.color, out tempH, out tempS, out tempV);
+                    tempS += 1 * (1.2f - tempS) * (1 + VARS.curOneColorFragmentCollectedNumbers[1] * 0.25f) * Time.deltaTime;
+                    if (tempS >= 1) tempS = 0.01f;
+                    minimapPurpleFragments[i].GetComponent<MeshRenderer>().material.color = Color.HSVToRGB(tempH, tempS, tempV);
                 }
             }
         }

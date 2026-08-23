@@ -680,6 +680,12 @@ public class Constants : MonoBehaviour
     public float pitchChangingSpeed;
     #endregion
 
+    #region AchievementManager
+    //[Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
+    //    "  \nACHIEVEMENTMANAGER\n --- ")]
+
+    #endregion
+
     void Start()
     {
         //H:~presetable?

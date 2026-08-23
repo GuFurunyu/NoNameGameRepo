@@ -115,6 +115,14 @@ public class UniversalFunctionsLibrary : MonoBehaviour
     float divingMoveInputThreshold;
     float divingMoveGapTime;
 
+    GameObject storedSandBlocksEmpty;
+    GameObject storedWaterBlocksEmpty;
+    GameObject storedAcidBlocksEmpty;
+    GameObject storedSmogBlocksEmpty;
+    GameObject storedGasBlocksEmpty;
+    GameObject storedElectricMistBlocksEmpty;
+    GameObject storedLightElectricMistBlocksEmpty;
+
     GameObject[] minimapFaces = new GameObject[6];
     GameObject[] minimapRoomPlanes = new GameObject[54];
     GameObject[] minimapTwistingCenters = new GameObject[6];
@@ -148,14 +156,16 @@ public class UniversalFunctionsLibrary : MonoBehaviour
     List<TileData> curBlockTileDatas = new List<TileData>();
     List<Vector3> curCoordVectors = new List<Vector3>();
 
-    //storedBlocks
-    GameObject[] storedSandBlocks = new GameObject[512];
-    GameObject[] storedWaterBlocks = new GameObject[512];
-    GameObject[] storedAcidBlocks = new GameObject[512];
-    GameObject[] storedSmogBlocks = new GameObject[512];
-    GameObject[] storedGasBlocks = new GameObject[512];
-    GameObject[] storedElectricMistBlocks = new GameObject[512];
-    GameObject[] storedLightElectricMistBlocks = new GameObject[512];
+    ////storedBlocks
+    //GameObject[] storedSandBlocks = new GameObject[512];
+    //GameObject[] storedWaterBlocks = new GameObject[512];
+    //GameObject[] storedAcidBlocks = new GameObject[512];
+    //GameObject[] storedSmogBlocks = new GameObject[512];
+    //GameObject[] storedGasBlocks = new GameObject[512];
+    //GameObject[] storedElectricMistBlocks = new GameObject[512];
+    //GameObject[] storedLightElectricMistBlocks = new GameObject[512];
+
+    List<GameObject> curSpawnedBlocks = new List<GameObject>();
 
     List<GameObject> curToBeBrokenFragileRustBlocks = new List<GameObject>();
     List<float> curFragileRustBlockToBeBrokenStartTimes = new List<float>();
@@ -204,6 +214,13 @@ public class UniversalFunctionsLibrary : MonoBehaviour
         activateSavePointGapTime = CONS.activateSavePointGapTime;
         divingMoveInputThreshold = CONS.divingMoveInputThreshold;
         divingMoveGapTime = CONS.divingMoveGapTime;
+        storedSandBlocksEmpty = CONS.storedSandBlocksEmpty;
+        storedWaterBlocksEmpty = CONS.storedWaterBlocksEmpty;
+        storedAcidBlocksEmpty = CONS.storedAcidBlocksEmpty;
+        storedSmogBlocksEmpty = CONS.storedSmogBlocksEmpty;
+        storedGasBlocksEmpty = CONS.storedGasBlocksEmpty;
+        storedElectricMistBlocksEmpty = CONS.storedElectricMistBlocksEmpty;
+        storedLightElectricMistBlocksEmpty = CONS.storedLightElectricMistBlocksEmpty;
         minimapFaces = CONS.minimapFaces;
         minimapRoomPlanes = CONS.minimapRoomPlanes;
         minimapTwistingCenters = CONS.minimapTwistingCenters;
@@ -226,13 +243,7 @@ public class UniversalFunctionsLibrary : MonoBehaviour
         curBlocks = VARS.curBlocks;
         curBlockTileDatas = VARS.curBlockTileDatas;
         curCoordVectors = VARS.curCoordVectors;
-        storedSandBlocks = VARS.storedSandBlocks;
-        storedWaterBlocks = VARS.storedWaterBlocks;
-        storedAcidBlocks = VARS.storedAcidBlocks;
-        storedSmogBlocks = VARS.storedSmogBlocks;
-        storedGasBlocks = VARS.storedGasBlocks;
-        storedElectricMistBlocks = VARS.storedElectricMistBlocks;
-        storedLightElectricMistBlocks = VARS.storedLightElectricMistBlocks;
+        curSpawnedBlocks = VARS.curSpawnedBlocks;
         curToBeBrokenFragileRustBlocks = VARS.curToBeBrokenFragileRustBlocks;
         curFragileRustBlockToBeBrokenStartTimes = VARS.curFragileRustBlockToBeBrokenStartTimes;
         #endregion
@@ -605,61 +616,15 @@ public class UniversalFunctionsLibrary : MonoBehaviour
         }
 
         //deactivateCurStoredBlocks
-        if (VARS.curStoredSandBlockIndex > 0)
+        if (curSpawnedBlocks.Count > 0)
         {
-            for (int i = 0; i < VARS.curStoredSandBlockIndex + 1; i++)
-            {
-                storedSandBlocks[i].SetActive(false);
-            }
-            VARS.curStoredSandBlockIndex = 0;
-        }
-        if (VARS.curStoredWaterBlockIndex > 0)
-        {
-            for (int i = 0; i < VARS.curStoredWaterBlockIndex + 1; i++)
-            {
-                storedWaterBlocks[i].SetActive(false);
-            }
-            VARS.curStoredWaterBlockIndex = 0;
-        }
-        if (VARS.curStoredAcidBlockIndex > 0)
-        {
-            for (int i = 0; i < VARS.curStoredAcidBlockIndex + 1; i++)
-            {
-                storedAcidBlocks[i].SetActive(false);
-            }
-            VARS.curStoredAcidBlockIndex = 0;
-        }
-        if (VARS.curStoredSmogBlockIndex > 0)
-        {
-            for (int i = 0; i < VARS.curStoredSmogBlockIndex + 1; i++)
-            {
-                storedSmogBlocks[i].SetActive(false);
-            }
-            VARS.curStoredSmogBlockIndex = 0;
-        }
-        if (VARS.curStoredGasBlockIndex > 0)
-        {
-            for (int i = 0; i < VARS.curStoredGasBlockIndex + 1; i++)
-            {
-                storedGasBlocks[i].SetActive(false);
-            }
-            VARS.curStoredGasBlockIndex = 0;
-        }
-        if (VARS.curStoredElectricMistBlockIndex > 0)
-        {
-            for (int i = 0; i < VARS.curStoredElectricMistBlockIndex + 1; i++)
-            {
-                storedElectricMistBlocks[i].SetActive(false);
-            }
-            VARS.curStoredElectricMistBlockIndex = 0;
-        }
-        if (VARS.curStoredLightElectricMistBlockIndex > 0)
-        {
-            for (int i = 0; i < VARS.curStoredLightElectricMistBlockIndex + 1; i++)
-            {
-                storedLightElectricMistBlocks[i].SetActive(false);
-            }
-            VARS.curStoredLightElectricMistBlockIndex = 0;
+            storedSandBlocksEmpty.SetActive(false);
+            storedWaterBlocksEmpty.SetActive(false);
+            storedAcidBlocksEmpty.SetActive(false);
+            storedSmogBlocksEmpty.SetActive(false);
+            storedGasBlocksEmpty.SetActive(false);
+            storedElectricMistBlocksEmpty.SetActive(false);
+            storedLightElectricMistBlocksEmpty.SetActive(false);
         }
 
         //camPosition
@@ -731,61 +696,15 @@ public class UniversalFunctionsLibrary : MonoBehaviour
         }
 
         //reactivateCurStoredBlocks
-        if (VARS.curStoredSandBlockIndex > 0)
+        if (curSpawnedBlocks.Count > 0)
         {
-            for (int i = 0; i < VARS.curStoredSandBlockIndex + 1; i++)
-            {
-                storedSandBlocks[i].SetActive(true);
-            }
-            VARS.curStoredSandBlockIndex = 0;
-        }
-        if (VARS.curStoredWaterBlockIndex > 0)
-        {
-            for (int i = 0; i < VARS.curStoredWaterBlockIndex + 1; i++)
-            {
-                storedWaterBlocks[i].SetActive(true);
-            }
-            VARS.curStoredWaterBlockIndex = 0;
-        }
-        if (VARS.curStoredAcidBlockIndex > 0)
-        {
-            for (int i = 0; i < VARS.curStoredAcidBlockIndex + 1; i++)
-            {
-                storedAcidBlocks[i].SetActive(true);
-            }
-            VARS.curStoredAcidBlockIndex = 0;
-        }
-        if (VARS.curStoredSmogBlockIndex > 0)
-        {
-            for (int i = 0; i < VARS.curStoredSmogBlockIndex + 1; i++)
-            {
-                storedSmogBlocks[i].SetActive(true);
-            }
-            VARS.curStoredSmogBlockIndex = 0;
-        }
-        if (VARS.curStoredGasBlockIndex > 0)
-        {
-            for (int i = 0; i < VARS.curStoredGasBlockIndex + 1; i++)
-            {
-                storedGasBlocks[i].SetActive(true);
-            }
-            VARS.curStoredGasBlockIndex = 0;
-        }
-        if (VARS.curStoredElectricMistBlockIndex > 0)
-        {
-            for (int i = 0; i < VARS.curStoredElectricMistBlockIndex + 1; i++)
-            {
-                storedElectricMistBlocks[i].SetActive(true);
-            }
-            VARS.curStoredElectricMistBlockIndex = 0;
-        }
-        if (VARS.curStoredLightElectricMistBlockIndex > 0)
-        {
-            for (int i = 0; i < VARS.curStoredLightElectricMistBlockIndex + 1; i++)
-            {
-                storedLightElectricMistBlocks[i].SetActive(true);
-            }
-            VARS.curStoredLightElectricMistBlockIndex = 0;
+            storedSandBlocksEmpty.SetActive(true);
+            storedWaterBlocksEmpty.SetActive(true);
+            storedAcidBlocksEmpty.SetActive(true);
+            storedSmogBlocksEmpty.SetActive(true);
+            storedGasBlocksEmpty.SetActive(true);
+            storedElectricMistBlocksEmpty.SetActive(true);
+            storedLightElectricMistBlocksEmpty.SetActive(true);
         }
 
         //camPosition
@@ -1075,6 +994,18 @@ public class UniversalFunctionsLibrary : MonoBehaviour
         VARS.curLiquidTile = null;
         VARS.curGasTile = null;
         VARS.curMistTile = null;
+        VARS.curUpLeftAllStateTile = null;
+        VARS.curUpRightAllStateTile = null;
+        VARS.curDownLeftAllStateTile = null;
+        VARS.curDownRightAllStateTile = null;
+        VARS.curLeftUpAllStateTile = null;
+        VARS.curLeftDownAllStateTile = null;
+        VARS.curRightUpAllStateTile = null;
+        VARS.curRightDownAllStateTile = null;
+        VARS.curFarUpAllStateTile = null;
+        VARS.curFarDownAllStateTile = null;
+        VARS.curFarLeftAllStateTile = null;
+        VARS.curFarRightAllStateTile = null;
 
         VARS.curUpLeftTileData = null;
         VARS.curUpRightTileData = null;
@@ -1091,6 +1022,18 @@ public class UniversalFunctionsLibrary : MonoBehaviour
         VARS.curLiquidTileData = null;
         VARS.curGasTileData = null;
         VARS.curMistTileData = null;
+        VARS.curUpLeftAllStateTileData = null;
+        VARS.curUpRightAllStateTileData = null;
+        VARS.curDownLeftAllStateTileData = null;
+        VARS.curDownRightAllStateTileData = null;
+        VARS.curLeftUpAllStateTileData = null;
+        VARS.curLeftDownAllStateTileData = null;
+        VARS.curRightUpAllStateTileData = null;
+        VARS.curRightDownAllStateTileData = null;
+        VARS.curFarUpAllStateTileData = null;
+        VARS.curFarDownAllStateTileData = null;
+        VARS.curFarLeftAllStateTileData = null;
+        VARS.curFarRightAllStateTileData = null;
 
         VARS.curUpLeftTileVerDistance = 999;
         VARS.curUpLeftTileHorDistance = -999;
@@ -1156,6 +1099,7 @@ public class UniversalFunctionsLibrary : MonoBehaviour
             VARS.IsDiving = false;
         }
 
+        //curBlocksTraverse
         for (int i = 0; i < curBlocks.Count; i++)
         {
             if (curBlocks[i].activeSelf == false ||
@@ -1165,7 +1109,107 @@ public class UniversalFunctionsLibrary : MonoBehaviour
 
             tempVector = catTransform.position - curBlocks[i].transform.position;
 
-            //trigger
+            #region AllState
+            //blockTypeRestriction: voidBlock...
+            if (curBlockTileDatas[i].blockTypeIndex == 7010)
+            {
+                //verDistance
+                tempFloat1 = Vector3.Dot(-tempVector, VARS.curUp);
+                //horDistance
+                tempFloat2 = Vector3.Dot(-tempVector, VARS.curRight);
+
+                //up
+                if (tempFloat1 > 0.5f)
+                {
+                    //upLeft
+                    if (tempFloat1 < 1.2f && tempFloat2 <= -0.5f && tempFloat2 > -1.2f)
+                    {
+                        VARS.curUpLeftAllStateTile = curBlocks[i];
+                        VARS.curUpLeftAllStateTileData = curBlockTileDatas[i];
+                    }
+                    //upRight
+                    else if (tempFloat1 < 1.2f && tempFloat2 > 0.5f && tempFloat2 < 1.2f)
+                    {
+                        VARS.curUpRightAllStateTile = curBlocks[i];
+                        VARS.curUpRightAllStateTileData = curBlockTileDatas[i];
+                    }
+                    //farUp
+                    if (tempFloat1 < 1.9f && tempFloat2 > -0.95f && tempFloat2 < 0.95f)
+                    {
+                        VARS.curFarUpAllStateTile = curBlocks[i];
+                        VARS.curFarUpAllStateTileData = curBlockTileDatas[i];
+                    }
+                }
+                //farDown
+                if (tempFloat1 < -0.5f)
+                {
+                    //downLeft
+                    if (tempFloat1 > -1.2f && tempFloat2 <= -0.5f && tempFloat2 > -1.2f)
+                    {
+                        VARS.curDownLeftAllStateTile = curBlocks[i];
+                        VARS.curDownLeftAllStateTileData = curBlockTileDatas[i];
+                    }
+                    //downRight
+                    else if (tempFloat1 < 1.2f && tempFloat2 > 0.5f && tempFloat2 < 1.2f)
+                    {
+                        VARS.curDownRightAllStateTile = curBlocks[i];
+                        VARS.curDownRightAllStateTileData = curBlockTileDatas[i];
+                    }
+                    //farDown
+                    if (tempFloat1 > -1.9f && tempFloat2 > -0.95f && tempFloat2 < 0.95f)
+                    {
+                        VARS.curFarDownAllStateTile = curBlocks[i];
+                        VARS.curFarDownAllStateTileData = curBlockTileDatas[i];
+                    }
+                }
+                //farLeft
+                if (tempFloat2 < -0.5f)
+                {
+                    //leftUp
+                    if (tempFloat2 > -1.2f && tempFloat1 > 0.5f && tempFloat1 < 1.2f)
+                    {
+                        VARS.curLeftUpAllStateTile = curBlocks[i];
+                        VARS.curLeftUpAllStateTileData = curBlockTileDatas[i];
+                    }
+                    //leftDown
+                    else if (tempFloat2 > 1.025 && tempFloat1 < -0.5f && tempFloat1 > -1.2f)
+                    {
+                        VARS.curLeftDownAllStateTile = curBlocks[i];
+                        VARS.curLeftDownAllStateTileData = curBlockTileDatas[i];
+                    }
+                    //farLeft
+                    if (tempFloat2 > -1.9f && tempFloat1 > -0.95f && tempFloat1 < 0.95f)
+                    {
+                        VARS.curFarLeftAllStateTile = curBlocks[i];
+                        VARS.curFarLeftAllStateTileData = curBlockTileDatas[i];
+                    }
+                }
+                //farRight
+                if (tempFloat2 > 0.5f)
+                {
+                    //rightUp
+                    if (tempFloat2 < 1.2f && tempFloat1 > 0.5f && tempFloat1 < 1.2f)
+                    {
+                        VARS.curRightUpAllStateTile = curBlocks[i];
+                        VARS.curRightUpAllStateTileData = curBlockTileDatas[i];
+                    }
+                    //rightDown
+                    else if (tempFloat2 > -1.2f && tempFloat1 < -0.5f && tempFloat1 > -1.2f)
+                    {
+                        VARS.curRightDownAllStateTile = curBlocks[i];
+                        VARS.curRightDownAllStateTileData = curBlockTileDatas[i];
+                    }
+                    //farRight
+                    if (tempFloat2 < 1.9f && tempFloat1 > -0.95f && tempFloat1 < 0.95f)
+                    {
+                        VARS.curFarRightAllStateTile = curBlocks[i];
+                        VARS.curFarRightAllStateTileData = curBlockTileDatas[i];
+                    }
+                }
+            }
+            #endregion
+
+            #region Trigger
             if (curBlockTileDatas[i].stateOfMatterIndex == 0)
             {
                 if (!hasGotCurTriggerBlock)
@@ -1186,8 +1230,9 @@ public class UniversalFunctionsLibrary : MonoBehaviour
                     }
                 }
             }
+            #endregion
 
-            //solid
+            #region Solid
             if (curBlockTileDatas[i].stateOfMatterIndex == 1)
             {
                 //ifStuckDie
@@ -1217,7 +1262,7 @@ public class UniversalFunctionsLibrary : MonoBehaviour
                                 break;
                             }
                         }
-                        else if(curBlockTileDatas[i].blockTypeIndex == 2103)
+                        else if (curBlockTileDatas[i].blockTypeIndex == 2103)
                         {
                             if (!VARS.IsJustByGate)
                             {
@@ -1259,7 +1304,7 @@ public class UniversalFunctionsLibrary : MonoBehaviour
                     tempFloat1 = Vector3.Dot(-tempVector, VARS.curRight);
 
                     //verDistanceDetect
-                    if (tempFloat > 0.5f && tempFloat < 1.025f /*&& Mathf.Abs(tempFloat) > Mathf.Abs(tempFloat1)*/)
+                    if (tempFloat > 0.5f && tempFloat < 1.025f /*1.25f*/ /*&& Mathf.Abs(tempFloat) > Mathf.Abs(tempFloat1)*/)
                     {
                         //horDistanceDetect
                         //upLeft
@@ -1278,14 +1323,6 @@ public class UniversalFunctionsLibrary : MonoBehaviour
                             VARS.curUpRightTileVerDistance = tempFloat;
                             VARS.curUpRightTileHorDistance = tempFloat1;
                         }
-                        ////up
-                        //else if (tempFloat1 >= -0.5f && tempFloat1 < 0.5f)
-                        //{
-                        //    VARS.curUpTile = curBlocks[i];
-                        //    VARS.curUpTileData = curBlockTileDatas[i];
-                        //    VARS.curUpTileVerDistance = tempFloat;
-                        //    VARS.curUpTileHorDistance = tempFloat1;
-                        //}
                     }
 
                     #region outVersion
@@ -1360,7 +1397,7 @@ public class UniversalFunctionsLibrary : MonoBehaviour
                     tempFloat1 = Vector3.Dot(-tempVector, VARS.curRight);
 
                     //verDistanceDetect
-                    if (tempFloat < -0.5f && tempFloat > -1.025f /*&& Mathf.Abs(tempFloat) > Mathf.Abs(tempFloat1)*/)
+                    if (tempFloat < -0.5f && tempFloat > -1.025f /*-1.25f*/ /*&& Mathf.Abs(tempFloat) > Mathf.Abs(tempFloat1)*/)
                     {
                         //horDistanceDetect
                         //downLeft
@@ -1453,16 +1490,9 @@ public class UniversalFunctionsLibrary : MonoBehaviour
                     tempFloat1 = Vector3.Dot(-tempVector, VARS.curUp);
 
                     //horDistanceDetect
-                    if (tempFloat < -0.5f && tempFloat > -1.025f /*&& Mathf.Abs(tempFloat) > Mathf.Abs(tempFloat1)*/)
+                    if (tempFloat < -0.5f && tempFloat > -1.025f /*-1.25f*/ /*&& Mathf.Abs(tempFloat) > Mathf.Abs(tempFloat1)*/)
                     {
-                        ////verDistanceDetect
-                        //if (tempFloat1 > -0.75f && tempFloat1 < 0.75f)
-                        //{
-                        //    VARS.curLeftTile = curBlocks[i];
-                        //    VARS.curLeftTileData = curBlockTileDatas[i];
-                        //    VARS.curLeftTileHorDistance = tempFloat;
-                        //    VARS.curLeftTileVerDistance = tempFloat1;
-                        //}
+                        //verDistanceDetect
                         //leftUp
                         if (tempFloat1 >= 0 && tempFloat1 < 1.25f && tempFloat1 < VARS.curLeftUpTileVerDistance)
                         {
@@ -1546,16 +1576,9 @@ public class UniversalFunctionsLibrary : MonoBehaviour
                     tempFloat1 = Vector3.Dot(-tempVector, VARS.curUp);
 
                     //horDistanceDetect
-                    if (tempFloat > 0.5f && tempFloat < 1.025f /*&& Mathf.Abs(tempFloat) > Mathf.Abs(tempFloat1)*/)
+                    if (tempFloat > 0.5f && tempFloat < 1.025f /*1.25f*/ /*&& Mathf.Abs(tempFloat) > Mathf.Abs(tempFloat1)*/)
                     {
-                        ////verDistanceDetect
-                        //if (tempFloat1 > -0.75f && tempFloat1 < 0.75f)
-                        //{
-                        //    VARS.curRightTile = curBlocks[i];
-                        //    VARS.curRightTileData = curBlockTileDatas[i];
-                        //    VARS.curRightTileHorDistance = tempFloat;
-                        //    VARS.curRightTileVerDistance = tempFloat1;
-                        //}
+                        //verDistanceDetect
                         //rightUp
                         if (tempFloat1 >= 0 && tempFloat1 < 1.25f && tempFloat1 < VARS.curRightUpTileVerDistance)
                         {
@@ -1628,8 +1651,9 @@ public class UniversalFunctionsLibrary : MonoBehaviour
                     #endregion
                 }
             }
+            #endregion
 
-            //liquid
+            #region Liquid
             if (curBlockTileDatas[i].stateOfMatterIndex == 2)
             {
                 //if (!isFullyDrown)
@@ -1708,8 +1732,9 @@ public class UniversalFunctionsLibrary : MonoBehaviour
                     }
                 }
             }
+            #endregion
 
-            //gas
+            #region Gas
             if (curBlockTileDatas[i].stateOfMatterIndex == 3)
             {
                 if (!hasGotCurGasBlock)
@@ -1734,8 +1759,9 @@ public class UniversalFunctionsLibrary : MonoBehaviour
                     }
                 }
             }
+            #endregion
 
-            //mist
+            #region Mist
             if (curBlockTileDatas[i].stateOfMatterIndex == 4)
             {
                 if (!hasGotCurMistBlock)
@@ -1767,6 +1793,7 @@ public class UniversalFunctionsLibrary : MonoBehaviour
                     }
                 }
             }
+            #endregion
         }
 
         if (VARS.IsLiquidDetected)
@@ -1931,8 +1958,10 @@ public class UniversalFunctionsLibrary : MonoBehaviour
             Mathf.Abs(VARS.horCurSpeed) < 1)
         {
             if ((VARS.curDownLeftTileHorDistance > -1.2f && VARS.curDownRightTileHorDistance < 1.2f) ||
+                (VARS.curDownLeftTileHorDistance > -1.2f && ((VARS.curFarRightAllStateTile != null && VARS.curFarRightAllStateTileData.blockTypeIndex == 7010) || (VARS.curDownRightAllStateTile != null && VARS.curDownRightAllStateTileData.blockTypeIndex == 7010))) ||
+                (VARS.curDownRightTileHorDistance < 1.2f && ((VARS.curFarLeftAllStateTile != null && VARS.curFarLeftAllStateTileData.blockTypeIndex == 7010) || (VARS.curDownLeftAllStateTile != null && VARS.curDownLeftAllStateTileData.blockTypeIndex == 7010))) ||
                 VARS.IsInputtingDownKey)
-                VARS.curDownOneGridTunnelEntryEasingFloat = (0.05f - (Mathf.Abs(VARS.horCurSpeed) / horMaxSpeed) / 100) * 16 /** 12*/ /** 8*/ /** 4*/ /** 2*/ /** 0.5f*/;
+                VARS.curDownOneGridTunnelEntryEasingFloat = (0.05f - (Mathf.Abs(VARS.horCurSpeed) / horMaxSpeed) / 100) * 16 /** 12 /** 8*/ /** 4*/ /** 2*/ /** 0.5f*/;
             else
                 VARS.curDownOneGridTunnelEntryEasingFloat = 0;
         }
@@ -3241,7 +3270,8 @@ public class UniversalFunctionsLibrary : MonoBehaviour
                         tempFloat2 = Mathf.Abs(Vector3.Dot(tempVector, VARS.curRight));
 
                         if ((tempFloat1 < 0.9f && tempFloat2 < 0.9f) ||
-                            tempFloat1 < 0.2f && tempFloat2 < 1)
+                            (tempFloat1 < 0.2f && VARS.IsOnGround && VARS.curDownTile != null && VARS.curDownTileHorDistance < -0.5f && Vector3.Dot(tempVector,VARS.curRight) > -1) ||
+                            (tempFloat1 < 0.2f && VARS.IsOnGround && VARS.curDownTile != null && VARS.curDownTileHorDistance > 0.5f && Vector3.Dot(tempVector, VARS.curRight) < 1))
                         {
                             VARS.curTargetEnergy -= intoVoidEnergyLost;
 

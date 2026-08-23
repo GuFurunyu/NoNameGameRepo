@@ -684,11 +684,15 @@ public class RoomsManager : MonoBehaviour
                     }
                     if (VARS.IsToChangeGatePassabilitiesAfterTwisting)
                     {
-                        if(Vector3.Dot(-gates[i].transform.position,VARS.curRoomStableForward) > 6 * gridBreadth ||
-                            Vector3.Dot(-gates[i].transform.position, VARS.curRoomStableForward) < 3 * gridBreadth)
+                        if(Vector3.Dot(-gates[i].transform.position,VARS.curRoomStableForward) > 14 * gridBreadth ||
+                            Vector3.Dot(-gates[i].transform.position, VARS.curRoomStableForward) < 11 * gridBreadth)
                         {
                             continue;
                         }
+                        //else
+                        //{
+                        //    Debug.Log("enter " + i);
+                        //}
                     }
 
                     tempTransform = gates[i].transform;
@@ -933,17 +937,47 @@ public class RoomsManager : MonoBehaviour
 
 
                 //initializeEdgeGateLinkedToIndexes
-                edgeGateLinkedToIndexes.Clear();
-                for (int i = 0; i < edgeGates.Count; i++)
+                if (edgeGateLinkedToIndexes.Count == 0)
                 {
-                    edgeGateLinkedToIndexes.Add(-1);
+                    for (int i = 0; i < edgeGates.Count; i++)
+                    {
+                        edgeGateLinkedToIndexes.Add(-1);
+                    }
                 }
+                //edgeGateLinkedToIndexes.Clear();
+                //for (int i = 0; i < edgeGates.Count; i++)
+                //{
+                //    edgeGateLinkedToIndexes.Add(-1);
+                //}                
 
                 //determineEdgeGatePassabilities
                 for (int i = 0; i < edgeGates.Count; i++)
                 {
                     //if (edgeGates[i].transform.parent != VARS.curPlaneEmpty.transform)
                     //    continue;
+
+                    //locally
+                    if (VARS.IsToChangeGatePassabilitiesAfterUnlocking)
+                    {
+                        if (Vector3.Distance(edgeGates[i].transform.position, VARS.curUnlockingBlock.transform.position) > 6 * gridBreadth)
+                        {
+                            continue;
+                        }
+                    }
+                    if (VARS.IsToChangeGatePassabilitiesAfterTwisting)
+                    {
+                        if (Vector3.Dot(-gates[i].transform.position, VARS.curRoomStableForward) > 14 * gridBreadth ||
+                            Vector3.Dot(-gates[i].transform.position, VARS.curRoomStableForward) < 11 * gridBreadth)
+                        {
+                            continue;
+                        }
+                        //else
+                        //{
+                        //    Debug.Log("enter " + i);
+                        //}
+                    }
+
+                    edgeGateLinkedToIndexes[i] = -1;
 
                     tempTransform = edgeGates[i].transform;
 

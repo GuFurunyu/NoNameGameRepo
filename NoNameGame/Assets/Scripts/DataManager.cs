@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -246,6 +247,27 @@ public class DataManager : MonoBehaviour
 
     KeyCodesData curKeyCodesData = new KeyCodesData();
 
+    public class AchievementData
+    {
+        public bool isAchievementRotateUnlocked;
+        public bool isAchievementTwistUnlocked;
+        public bool isAchievementGearsOfDestinyUnlocked;
+        public bool isAchievementPortalUnlocked;
+        public bool isAchievementPivotUnlocked;
+        public bool isAchievementFullAppearanceUnlocked;
+        public bool isAchievementRedUnlocked;
+        public bool isAchievementYellowUnlocked;
+        public bool isAchievementBlueUnlocked;
+        public bool isAchievementOrangeUnlocked;
+        public bool isAchievementGreenUnlocked;
+        public bool isAchievementPurpleUnlocked;
+        public bool isAchievementCUBE_Unlocked;
+        public bool isAchievementConnectedUnlocked;
+        public bool isAchievementSolvedUnlocked;
+    }
+
+    AchievementData curAchievementData = new AchievementData();
+
     string tempPath;
     string tempJsonString;
 
@@ -377,6 +399,7 @@ public class DataManager : MonoBehaviour
         WriteKeysAndLocksData(true);
         WriteGuideData(true);
         WriteKeyCodesData(true);
+        WriteAchievementData(true);
 
         tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "Version_0.7.2.txt");
 
@@ -392,6 +415,7 @@ public class DataManager : MonoBehaviour
             ReadKeysAndLocksData();
             ReadGuideData();
             ReadKeyCodesData();
+            ReadAchievementData();
         }
         else
         {
@@ -458,6 +482,13 @@ public class DataManager : MonoBehaviour
             WriteKeyCodesData();
 
             VARS.IsToWriteKeyCodesData = false;
+        }
+
+        if (VARS.IsToWriteAchievementData)
+        {
+            WriteAchievementData();
+
+            VARS.IsToWriteAchievementData = false;
         }
 
         VARS.IsWritingAllData = false;
@@ -858,6 +889,20 @@ public class DataManager : MonoBehaviour
                 }
             }
 
+            //collectedNumbers
+            for(int i=0; i < 6; i++)
+            {
+                VARS.curOneColorFragmentCollectedNumbers[i] = 0;
+            }
+            VARS.curAllColorsFragmentCollectedNumber = 0;
+            for (int i = 0; i < 54; i++)
+            {
+                if ((i - 4) % 9 == 0) continue;
+
+                VARS.curOneColorFragmentCollectedNumbers[i / 9] += Convert.ToInt32(VARS.IsRoomFragmentCollected[i]);
+                VARS.curAllColorsFragmentCollectedNumber += Convert.ToInt32(VARS.IsRoomFragmentCollected[i]);
+            }
+
             //isCenterFulfilled
             VARS.isCenterFulfilled = curFragmentsData.isCenterFulfilled;
         }
@@ -992,6 +1037,9 @@ public class DataManager : MonoBehaviour
                     minimapLocks[i].SetActive(false);
                 }
             }
+
+            //collectedNumber
+            VARS.curKeysAndLocksCollectedNumber = VARS.deactivatedKeyIndexes.Count;
 
             //~?
             VARS.IsToActivateCurSavePoint = true;
@@ -1150,6 +1198,65 @@ public class DataManager : MonoBehaviour
         //curKeyCodesData.backKeyCode = VARS.backKeyCode;
 
         tempJsonString = JsonUtility.ToJson(curKeyCodesData);
+
+        File.WriteAllText(tempPath, tempJsonString);
+    }
+    #endregion
+
+    #region AchievementData
+    void ReadAchievementData(bool isInitial = false)
+    {
+        if (!isInitial)
+            tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "AchievementData.txt");
+        else
+            tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "InitialAchievementData.txt");
+
+        if (File.Exists(tempPath))
+        {
+            tempJsonString = File.ReadAllText(tempPath);
+            curAchievementData = JsonUtility.FromJson<AchievementData>(tempJsonString);
+
+            VARS.isAchievementRotateUnlocked = curAchievementData.isAchievementRotateUnlocked;
+            VARS.isAchievementTwistUnlocked = curAchievementData.isAchievementTwistUnlocked;
+            VARS.isAchievementGearsOfDestinyUnlocked = curAchievementData.isAchievementGearsOfDestinyUnlocked;
+            VARS.isAchievementPortalUnlocked = curAchievementData.isAchievementPortalUnlocked;
+            VARS.isAchievementPivotUnlocked = curAchievementData.isAchievementPivotUnlocked;
+            VARS.isAchievementFullAppearanceUnlocked = curAchievementData.isAchievementFullAppearanceUnlocked;
+            VARS.isAchievementRedUnlocked = curAchievementData.isAchievementRedUnlocked;
+            VARS.isAchievementYellowUnlocked = curAchievementData.isAchievementYellowUnlocked;
+            VARS.isAchievementBlueUnlocked = curAchievementData.isAchievementBlueUnlocked;
+            VARS.isAchievementOrangeUnlocked = curAchievementData.isAchievementOrangeUnlocked;
+            VARS.isAchievementGreenUnlocked = curAchievementData.isAchievementGreenUnlocked;
+            VARS.isAchievementPurpleUnlocked = curAchievementData.isAchievementPurpleUnlocked;
+            VARS.isAchievementCUBE_Unlocked = curAchievementData.isAchievementCUBE_Unlocked;
+            VARS.isAchievementConnectedUnlocked = curAchievementData.isAchievementConnectedUnlocked;
+            VARS.isAchievementSolvedUnlocked = curAchievementData.isAchievementSolvedUnlocked;
+        }
+    }
+    void WriteAchievementData(bool isInitial = false)
+    {
+        if (!isInitial)
+            tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "AchievementData.txt");
+        else
+            tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "InitialAchievementData.txt");
+
+        curAchievementData.isAchievementRotateUnlocked = VARS.isAchievementRotateUnlocked;
+        curAchievementData.isAchievementTwistUnlocked = VARS.isAchievementTwistUnlocked;
+        curAchievementData.isAchievementGearsOfDestinyUnlocked = VARS.isAchievementGearsOfDestinyUnlocked;
+        curAchievementData.isAchievementPortalUnlocked = VARS.isAchievementPortalUnlocked;
+        curAchievementData.isAchievementPivotUnlocked = VARS.isAchievementPivotUnlocked;
+        curAchievementData.isAchievementFullAppearanceUnlocked = VARS.isAchievementFullAppearanceUnlocked;
+        curAchievementData.isAchievementRedUnlocked = VARS.isAchievementRedUnlocked;
+        curAchievementData.isAchievementYellowUnlocked = VARS.isAchievementYellowUnlocked;
+        curAchievementData.isAchievementBlueUnlocked = VARS.isAchievementBlueUnlocked;
+        curAchievementData.isAchievementOrangeUnlocked = VARS.isAchievementOrangeUnlocked;
+        curAchievementData.isAchievementGreenUnlocked = VARS.isAchievementGreenUnlocked;
+        curAchievementData.isAchievementPurpleUnlocked = VARS.isAchievementPurpleUnlocked;
+        curAchievementData.isAchievementCUBE_Unlocked = VARS.isAchievementCUBE_Unlocked;
+        curAchievementData.isAchievementConnectedUnlocked = VARS.isAchievementConnectedUnlocked;
+        curAchievementData.isAchievementSolvedUnlocked = VARS.isAchievementSolvedUnlocked;
+
+        tempJsonString = JsonUtility.ToJson(curAchievementData);
 
         File.WriteAllText(tempPath, tempJsonString);
     }
@@ -1366,7 +1473,7 @@ public class DataManager : MonoBehaviour
     //        //        holeBlocks[i].transform.position = roomCenters[tempInt] - roomStableForwards[tempInt] * 0.9f;
     //        //    }
     //        //}
-            
+
     //        ////maxEneryBonus
     //        //VARS.maxEnergyBonus = curCatWorldData.maxEnergyBonus;
 
