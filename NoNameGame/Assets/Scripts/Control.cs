@@ -73,6 +73,7 @@ public class Control : MonoBehaviour
         //    VARS.IsKeyCodeChanged = false;
         //}
 
+        #region MainPart
         if (!VARS.IsRotating &&
             !VARS.IsTwisting &&
             !VARS.IsMinimapRotating &&
@@ -244,5 +245,6 @@ public class Control : MonoBehaviour
 
             VARS.IsSpaceDown = false;
         }
+        #endregion
     }
 }

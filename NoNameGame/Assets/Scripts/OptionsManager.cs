@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Video;
 
@@ -13,20 +15,30 @@ public class OptionsManager : MonoBehaviour
     GameObject gameManager;
 
     //bool isOptionPanelActivated;
+    bool isInOptions;
     int curOptionIndex;
 
-    bool isInKeySetSub;
-    int curKeySetSubIndex;
+    bool isInSettingsSub;
+    int curSettingsSubIndex;
+
+    bool isInKeySetSubSub;
+    int curKeySetSubSubIndex;
     bool isSettingAKey;
     int curSetKeyIndex;
+
+    bool isInSoundSubSub;
+    int curSoundSubSubIndex;
+
+    bool isInLanguageSubSub;
+    int curLanguageSubSubIndex;
 
     bool isInNewGameSub;
     int curNewGameSubIndex;
 
     bool isInFragmentsSub;
 
-    bool isFromOptionsToKeySetSub;
-    bool isFromKeySetSubToOptions;
+    bool isFromOptionsToKeySetSubSub;
+    bool isFromKeySetSubSubToOptions;
 
     bool isFromOptionsToNewGameSub;
     bool isFromNewGameSubToOptions;
@@ -40,27 +52,27 @@ public class OptionsManager : MonoBehaviour
     #region ConstantsUsed
     GameObject optionsPanel;
 
-    GameObject optionsEmpty;
-    List<GameObject> optionEmpties = new List<GameObject>();
+    //GameObject optionsEmpty;
+    //List<GameObject> optionEmpties = new List<GameObject>();
 
-    GameObject keySetSubEmpty;
-    List<GameObject> keySetSubEmpties = new List<GameObject>();
+    //GameObject keySetSubEmpty;
+    //List<GameObject> keySetSubEmpties = new List<GameObject>();
 
     List<KeyCode> keyCodes = new List<KeyCode>();
 
     List<Sprite> keySprites = new List<Sprite>();
     List<Sprite> keyChosenSprites = new List<Sprite>();
 
-    GameObject newGameSubEmpty;
-    List<GameObject> newGameSubEmpties = new List<GameObject>();
+    //GameObject newGameSubEmpty;
+    //List<GameObject> newGameSubEmpties = new List<GameObject>();
 
-    GameObject fragmentsSubEmpty;
-    GameObject redFragmentSubEmpty;
-    GameObject yellowFragmentSubEmpty;
-    GameObject blueFragmentSubEmpty;
-    GameObject orangeFragmentSubEmpty;
-    GameObject greenFragmentSubEmpty;
-    GameObject purpleFragmentSubEmpty;
+    //GameObject fragmentsSubEmpty;
+    //GameObject redFragmentSubEmpty;
+    //GameObject yellowFragmentSubEmpty;
+    //GameObject blueFragmentSubEmpty;
+    //GameObject orangeFragmentSubEmpty;
+    //GameObject greenFragmentSubEmpty;
+    //GameObject purpleFragmentSubEmpty;
 
     Material optionsFragmentNotEmbeddedColor;
     Material optionsRedFragmentColor;
@@ -69,6 +81,12 @@ public class OptionsManager : MonoBehaviour
     Material optionsOrangeFragmentColor;
     Material optionsGreenFragmentColor;
     Material optionsPurpleFragmentColor;
+
+    GameObject[] optionsPanelOverTextEmpties = new GameObject[2];
+
+    float setMusicVolumeStep;
+    float maxSetMusicVolume;
+    float minSetMusicVolume;
     #endregion
 
     #region VariablesUsed
@@ -87,22 +105,9 @@ public class OptionsManager : MonoBehaviour
 
         #region ImportConstants
         optionsPanel = CONS.optionsPanel;
-        optionsEmpty = CONS.optionsEmpty;
-        optionEmpties = CONS.optionEmpties;
-        keySetSubEmpty = CONS.keySetSubEmpty;
-        keySetSubEmpties = CONS.keySetSubEmpties;
         keyCodes = CONS.keyCodes;
         keySprites = CONS.keySprites;
         keyChosenSprites = CONS.keyChosenSprites;
-        newGameSubEmpty = CONS.newGameSubEmpty;
-        newGameSubEmpties = CONS.newGameSubEmpties;
-        fragmentsSubEmpty = CONS.fragmentsSubEmpty;
-        redFragmentSubEmpty = CONS.redFragmentSubEmpty;
-        yellowFragmentSubEmpty = CONS.yellowFragmentSubEmpty;
-        blueFragmentSubEmpty = CONS.blueFragmentSubEmpty;
-        orangeFragmentSubEmpty = CONS.orangeFragmentSubEmpty;
-        greenFragmentSubEmpty = CONS.greenFragmentSubEmpty;
-        purpleFragmentSubEmpty = CONS.purpleFragmentSubEmpty;
         optionsFragmentNotEmbeddedColor = CONS.optionsFragmentNotEmbeddedColor;
         optionsRedFragmentColor = CONS.optionsRedFragmentColor;
         optionsYellowFragmentColor = CONS.optionsYellowFragmentColor;
@@ -110,23 +115,32 @@ public class OptionsManager : MonoBehaviour
         optionsOrangeFragmentColor = CONS.optionsOrangeFragmentColor;
         optionsGreenFragmentColor = CONS.optionsGreenFragmentColor;
         optionsPurpleFragmentColor = CONS.optionsPurpleFragmentColor;
+        optionsPanelOverTextEmpties = CONS.optionsPanelOverTextEmpties;
+        setMusicVolumeStep = CONS.setMusicVolumeStep;
+        maxSetMusicVolume = CONS.maxSetMusicVolume;
+        minSetMusicVolume = CONS.minSetMusicVolume;
         #endregion
 
         #region ImportReferenceVariables
         curKeyCodes = VARS.curKeyCodes;
         #endregion
 
-        //setKeySetSubKeysAppearance
+        //setKeySetSubSubKeysAppearance
         for (int i = 0; i < curKeyCodes.Count; i++)
         {
             for (int j = 0; j < keyCodes.Count; j++)
             {
-                if (curKeyCodes[i] == keyCodes[j])
+                for (int k = 0; k < optionsPanelOverTextEmpties.Length; k++)
                 {
-                    keySetSubEmpties[i].transform.GetChild(2).GetComponent<SpriteRenderer>().sprite = keySprites[j];
-                    keySetSubEmpties[i].transform.GetChild(3).GetComponent<SpriteRenderer>().sprite = keyChosenSprites[j];
+                    if (curKeyCodes[i] == keyCodes[j])
+                    {
+                        //keySetSubEmpties[i].transform.GetChild(2).GetComponent<SpriteRenderer>().sprite = keySprites[j];
+                        //keySetSubEmpties[i].transform.GetChild(3).GetComponent<SpriteRenderer>().sprite = keyChosenSprites[j];
+                        optionsPanelOverTextEmpties[k].transform.GetChild(1).GetChild(i).GetChild(2).GetComponent<SpriteRenderer>().sprite = keySprites[j];
+                        optionsPanelOverTextEmpties[k].transform.GetChild(1).GetChild(i).GetChild(3).GetComponent<SpriteRenderer>().sprite = keyChosenSprites[j];
 
-                    break;
+                        break;
+                    }
                 }
             }
         }
@@ -137,39 +151,68 @@ public class OptionsManager : MonoBehaviour
         #region ImportValueVariables
         #endregion
 
+        //language
+        for (int i = 0; i < optionsPanelOverTextEmpties.Length; i++)
+        {
+            optionsPanelOverTextEmpties[i].SetActive(i == VARS.CurLanguageIndex);
+        }
+
         //activateOptionPanel
         if (VARS.IsOptionsManagerActivationExecutable)
         {
-            if (VARS.IsBackKeyDown)
+            if (!VARS.IsOptionPanelActivated &&
+                VARS.IsBackKeyDown)
             {
-                if (!isInKeySetSub &&
-                    !isInFragmentsSub &&
-                    !isInNewGameSub)
-                {
-                    optionsPanel.SetActive(!optionsPanel.activeSelf);
+                VARS.IsOptionPanelActivated = true;
 
-                    VARS.IsOptionPanelActivated = optionsPanel.activeSelf;
+                optionsPanel.SetActive(true);
 
-                    curOptionIndex = 0;
-                }
+                isInOptions = true;
+                curOptionIndex = 0;
+                isInSettingsSub = false;
+                isInKeySetSubSub = false;
+                isInSoundSubSub = false;
+                isInLanguageSubSub = false;
+                isInFragmentsSub = false;
+                isInNewGameSub = false;
+
+                VARS.IsBackKeyDown = false;
             }
         }
 
+        //inOptionPanel
         if (VARS.IsOptionPanelActivated)
         {
+            //setActive
+            //options
+            optionsPanelOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(0).gameObject.SetActive(isInOptions);
+            //settingsSub
+            optionsPanelOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(1).gameObject.SetActive(isInSettingsSub);
+            //keySetSubSub
+            optionsPanelOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(2).gameObject.SetActive(isInKeySetSubSub);
+            //soundSubSub
+            optionsPanelOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(3).gameObject.SetActive(isInSoundSubSub);
+            //languageSubSub
+            optionsPanelOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(4).gameObject.SetActive(isInLanguageSubSub);
+            //fragmentsSub
+            optionsPanelOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(5).gameObject.SetActive(isInFragmentsSub);
+            //newGameSub
+            optionsPanelOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(6).gameObject.SetActive(isInNewGameSub);
+
             #region Options
-            if (!isInKeySetSub &&
+            if (/*!isInKeySetSubSub &&
                 !isInFragmentsSub &&
-                !isInNewGameSub)
+                !isInNewGameSub*/
+                isInOptions)
             {
                 //chooseOptions
                 if (VARS.IsDownKeyDown)
                 {
                     curOptionIndex++;
 
-                    if (curOptionIndex > optionEmpties.Count - 1)
+                    if (curOptionIndex > /*optionEmpties.Count - 1*/ optionsPanelOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(0).childCount - 1)
                     {
-                        curOptionIndex = optionEmpties.Count - 1;
+                        curOptionIndex = /*optionEmpties.Count - 1*/ optionsPanelOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(0).childCount - 1;
                     }
                 }
                 else if (VARS.IsUpKeyDown)
@@ -183,333 +226,601 @@ public class OptionsManager : MonoBehaviour
                 }
 
                 //highLightTheChosenOption
-                for (int i = 0; i < optionEmpties.Count; i++)
+                for (int i = 0; i < /*optionEmpties.Count*/ optionsPanelOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(0).childCount; i++)
                 {
-                    tempTransform = optionEmpties[i].transform;
+                    tempTransform = /*optionEmpties[i].transform*/ optionsPanelOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(0).GetChild(i);
 
                     tempTransform.GetChild(0).gameObject.SetActive(i != curOptionIndex);
                     tempTransform.GetChild(1).gameObject.SetActive(i == curOptionIndex);
                 }
-            }
-            #endregion
 
-            #region KeySetSub
-            if (curOptionIndex == 0)
-            {
-                //intoKeySetSub
-                if (!isInKeySetSub &&
-                    /*(VARS.IsConfirmKeyDown ||
-                    VARS.IsSpaceDown)*/
-                    (VARS.IsSpaceDown || VARS.IsReturnDown))
+                //back
+                if (VARS.IsBackKeyDown)
                 {
-                    isFromOptionsToKeySetSub = true;
+                    VARS.IsOptionPanelActivated = false;
+
+                    optionsPanel.SetActive(false);
+
+                    isInOptions = false;
+
+                    VARS.IsBackKeyDown = false;
                 }
-                if (isFromOptionsToKeySetSub)
+
+                //transfer
+                if (VARS.IsSpaceDown || VARS.IsReturnDown)
                 {
-                    isFromOptionsToKeySetSub = false;
+                    //outOfOption
+                    isInOptions = false;
+                    //curOptionIndex = 0;
 
-                    isInKeySetSub = true;
+                    //toSettingsSub
+                    if (curOptionIndex == 0)
+                    {
+                        isInSettingsSub = true;
+                        curSettingsSubIndex = 0;
+                    }
+                    //toFragmentsSub
+                    else if (curOptionIndex == 1)
+                    {
+                        isInFragmentsSub = true;
 
-                    optionsEmpty.SetActive(false);
-                    keySetSubEmpty.SetActive(true);
+                        DetermineFragmentsSubFragmentStates();
+                    }
+                    //toNewGamesSub
+                    else if (curOptionIndex == 2)
+                    {
+                        isInNewGameSub = true;
+                        curNewGameSubIndex = 0;
+                    }
+                    //exit
+                    else if (curOptionIndex == 3)
+                    {
+                        VARS.IsWritingAllData = true;
+                        VARS.IsExiting = true;
+                    }
 
-                    //Input.ResetInputAxes();
-
-                    //VARS.IsConfirmKeyDown = false;
                     VARS.IsSpaceDown = false;
                     VARS.IsReturnDown = false;
                 }
+            }
+            #endregion
 
-                if (isInKeySetSub)
+            #region SettingsSub
+            if (isInSettingsSub)
+            {
+                //chooseSettings
+                if (VARS.IsDownKeyDown)
                 {
-                    //chooseKeys
-                    if (!isSettingAKey)
+                    curSettingsSubIndex++;
+
+                    if (curSettingsSubIndex > optionsPanelOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(1).childCount - 1)
                     {
-                        if (VARS.IsDownKeyDown)
-                        {
-                            curKeySetSubIndex++;
-
-                            if (curKeySetSubIndex > keySetSubEmpties.Count - 1)
-                            {
-                                curKeySetSubIndex = keySetSubEmpties.Count - 1;
-                            }
-                        }
-                        else if (VARS.IsUpKeyDown)
-                        {
-                            curKeySetSubIndex--;
-
-                            if (curKeySetSubIndex < 0)
-                            {
-                                curKeySetSubIndex = 0;
-                            }
-                        }
+                        curSettingsSubIndex = optionsPanelOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(1).childCount - 1;
                     }
+                }
+                else if (VARS.IsUpKeyDown)
+                {
+                    curSettingsSubIndex--;
 
-                    //highLightTheChosenKey
-                    for (int i = 0; i < keySetSubEmpties.Count; i++)
+                    if (curSettingsSubIndex < 0)
                     {
-                        tempTransform = keySetSubEmpties[i].transform;
-
-                        tempTransform.GetChild(0).gameObject.SetActive(i != curKeySetSubIndex || isSettingAKey);
-                        tempTransform.GetChild(1).gameObject.SetActive(i == curKeySetSubIndex && !isSettingAKey);
-                        if (tempTransform.childCount > 2)
-                        {
-                            tempTransform.GetChild(2).gameObject.SetActive(i != curKeySetSubIndex || !isSettingAKey);
-                            tempTransform.GetChild(3).gameObject.SetActive(i == curKeySetSubIndex && isSettingAKey);
-                        }
+                        curSettingsSubIndex = 0;
                     }
+                }
 
-                    //toSetAKey
-                    if (!isSettingAKey &&
-                        curKeySetSubIndex < keySetSubEmpties.Count - 1 &&
-                        /*(VARS.IsConfirmKeyDown ||
-                    VARS.IsSpaceDown)*/
-                        (VARS.IsSpaceDown || VARS.IsReturnDown))
+                //highLightTheChosenSetting
+                for (int i = 0; i < optionsPanelOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(1).childCount; i++)
+                {
+                    tempTransform = optionsPanelOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(1).GetChild(i);
+
+                    tempTransform.GetChild(0).gameObject.SetActive(i != curSettingsSubIndex);
+                    tempTransform.GetChild(1).gameObject.SetActive(i == curSettingsSubIndex);
+                }
+
+                //back
+                if (VARS.IsBackKeyDown)
+                {
+                    //fromSettingsSubToOptions
+                    isInSettingsSub = false;
+                    isInOptions = true;
+
+                    VARS.IsBackKeyDown = false;
+                }
+
+                //transfer
+                if (VARS.IsSpaceDown || VARS.IsReturnDown)
+                {
+                    //outOfSettings
+                    isInSettingsSub = false;
+
+                    //toKeySet
+                    if (curSettingsSubIndex == 0)
                     {
-                        isSettingAKey = true;
-
-                        Input.ResetInputAxes();
-                    }
-
-                    //setAKey
-                    if (isSettingAKey)
-                    {
-                        if (Input.anyKeyDown)
-                        {
-                            tempKeyCode = GetTheInputedKey();
-
-                            if ((tempKeyCode != KeyCode.None &&
-                                !curKeyCodes.Contains(tempKeyCode)) ||
-                                curKeyCodes[curKeySetSubIndex] == tempKeyCode)
-                            {
-                                //logicChange
-                                switch (curKeySetSubIndex)
-                                {
-                                    case 0:
-                                        VARS.upKeyCode = tempKeyCode;
-                                        break;
-                                    case 1:
-                                        VARS.downKeyCode = tempKeyCode;
-                                        break;
-                                    case 2:
-                                        VARS.leftKeyCode = tempKeyCode;
-                                        break;
-                                    case 3:
-                                        VARS.rightKeyCode = tempKeyCode;
-                                        break;
-                                    case 4:
-                                        VARS.jumpKeyCode = tempKeyCode;
-                                        break;
-                                    case 5:
-                                        VARS.dashKeyCode = tempKeyCode;
-                                        break;
-                                    case 6:
-                                        VARS.minimapKeyCode = tempKeyCode;
-                                        break;
-                                }
-                                curKeyCodes[curKeySetSubIndex] = tempKeyCode;
-
-                                //appearanceChange
-                                keySetSubEmpties[curKeySetSubIndex].transform.GetChild(2).GetComponent<SpriteRenderer>().sprite = keySprites[curSetKeyIndex];
-                                keySetSubEmpties[curKeySetSubIndex].transform.GetChild(3).GetComponent<SpriteRenderer>().sprite = keyChosenSprites[curSetKeyIndex];
-
-                                VARS.IsToWriteKeyCodesData = true;
-
-                                VARS.IsKeyCodeChanged = true;
-
-                                isSettingAKey = false;
-                            }
-                        }
-                    }
-
-                    //ok
-                    if ((curKeySetSubIndex == keySetSubEmpties.Count - 1 &&
-                        /*(VARS.IsConfirmKeyDown || VARS.IsSpaceDown)*/(VARS.IsSpaceDown || VARS.IsReturnDown)) ||
-                        VARS.IsBackKeyDown)
-                    {
-                        isFromKeySetSubToOptions = true;
-                    }
-                    if (isFromKeySetSubToOptions)
-                    {
-                        isFromKeySetSubToOptions = false;
-
-                        isInKeySetSub = false;
-
-                        keySetSubEmpty.SetActive(false);
-                        optionsEmpty.SetActive(true);
-
-                        curKeySetSubIndex = 0;
-
+                        isInKeySetSubSub = true;
+                        curKeySetSubSubIndex = 0;
                         isSettingAKey = false;
+                        //curSetKeyIndex = 0;
                     }
-                }
-            }
-            #endregion
-
-            #region Fragments
-            if (curOptionIndex == 1)
-            {
-                if (!isInFragmentsSub &&
-                    (VARS.IsSpaceDown || VARS.IsReturnDown))
-                {
-                    isFromOptionsToFragmentsSub = true;
-                }
-                if (isFromOptionsToFragmentsSub)
-                {
-                    for (int i = 0; i < redFragmentSubEmpty.transform.childCount; i++)
+                    //toSound
+                    else if (curSettingsSubIndex == 1)
                     {
-                        tempTransform = redFragmentSubEmpty.transform.GetChild(i);
-                        if (VARS.isRedFragmentsEmbeded[i])
-                            tempTransform.GetComponent<MeshRenderer>().material = optionsRedFragmentColor;
-                        else
-                            tempTransform.GetComponent<MeshRenderer>().material = optionsFragmentNotEmbeddedColor;
+                        isInSoundSubSub = true;
+                        curSoundSubSubIndex = 0;
                     }
-                    for (int i = 0; i < yellowFragmentSubEmpty.transform.childCount; i++)
+                    //toLanguage
+                    else if (curSettingsSubIndex == 2)
                     {
-                        tempTransform = yellowFragmentSubEmpty.transform.GetChild(i);
-                        if (VARS.isYellowFragmentsEmbeded[i])
-                            tempTransform.GetComponent<MeshRenderer>().material = optionsYellowFragmentColor;
-                        else
-                            tempTransform.GetComponent<MeshRenderer>().material = optionsFragmentNotEmbeddedColor;
-                    }
-                    for (int i = 0; i < blueFragmentSubEmpty.transform.childCount; i++)
-                    {
-                        tempTransform = blueFragmentSubEmpty.transform.GetChild(i);
-                        if (VARS.isBlueFragmentsEmbeded[i])
-                            tempTransform.GetComponent<MeshRenderer>().material = optionsBlueFragmentColor;
-                        else
-                            tempTransform.GetComponent<MeshRenderer>().material = optionsFragmentNotEmbeddedColor;
-                    }
-                    for (int i = 0; i < orangeFragmentSubEmpty.transform.childCount; i++)
-                    {
-                        tempTransform = orangeFragmentSubEmpty.transform.GetChild(i);
-                        if (VARS.isOrangeFragmentsEmbeded[i])
-                            tempTransform.GetComponent<MeshRenderer>().material = optionsOrangeFragmentColor;
-                        else
-                            tempTransform.GetComponent<MeshRenderer>().material = optionsFragmentNotEmbeddedColor;
-                    }
-                    for (int i = 0; i < greenFragmentSubEmpty.transform.childCount; i++)
-                    {
-                        tempTransform = greenFragmentSubEmpty.transform.GetChild(i);
-                        if (VARS.isGreenFragmentsEmbeded[i])
-                            tempTransform.GetComponent<MeshRenderer>().material = optionsGreenFragmentColor;
-                        else
-                            tempTransform.GetComponent<MeshRenderer>().material = optionsFragmentNotEmbeddedColor;
-                    }
-                    for (int i = 0; i < purpleFragmentSubEmpty.transform.childCount; i++)
-                    {
-                        tempTransform = purpleFragmentSubEmpty.transform.GetChild(i);
-                        if (VARS.isPurpleFragmentsEmbeded[i])
-                            tempTransform.GetComponent<MeshRenderer>().material = optionsPurpleFragmentColor;
-                        else
-                            tempTransform.GetComponent<MeshRenderer>().material = optionsFragmentNotEmbeddedColor;
+                        isInLanguageSubSub = true;
+                        curLanguageSubSubIndex = 0;
                     }
 
-                    isFromOptionsToFragmentsSub = false;
-
-                    isInFragmentsSub = true;
-
-                    optionsEmpty.SetActive(false);
-                    fragmentsSubEmpty.SetActive(true);
-
-                    //Input.ResetInputAxes();
-
-                    //VARS.IsConfirmKeyDown = false;
                     VARS.IsSpaceDown = false;
                     VARS.IsReturnDown = false;
                 }
             }
-
-            if (isInFragmentsSub)
-            {
-                if ((VARS.IsSpaceDown || VARS.IsReturnDown) ||
-                    VARS.IsBackKeyDown)
-                {
-                    isFromFragmentsSubToOptions = true;
-                }
-                if (isFromFragmentsSubToOptions)
-                {
-                    isFromFragmentsSubToOptions = false;
-
-                    isInFragmentsSub = false;
-
-                    fragmentsSubEmpty.SetActive(false);
-                    optionsEmpty.SetActive(true);
-                }
-            }
             #endregion
 
-            #region NewGame
-            if (curOptionIndex == 2)
+            #region KeySetSubSub
+            //if (curOptionIndex == 0)
+            //{
+            //    //intoKeySetSubSub
+            //    if (!isInKeySetSubSub &&
+            //        /*(VARS.IsConfirmKeyDown ||
+            //        VARS.IsSpaceDown)*/
+            //        (VARS.IsSpaceDown || VARS.IsReturnDown))
+            //    {
+            //        isFromOptionsToKeySetSubSub = true;
+            //    }
+            //    if (isFromOptionsToKeySetSubSub)
+            //    {
+            //        isFromOptionsToKeySetSubSub = false;
+
+            //        isInKeySetSubSub = true;
+
+            //        //optionsEmpty.SetActive(false);
+            //        //keySetSubEmpty.SetActive(true);
+            //        optionsPanelOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(0).gameObject.SetActive(false);
+            //        optionsPanelOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(1).gameObject.SetActive(true);
+
+            //        //Input.ResetInputAxes();
+
+            //        //VARS.IsConfirmKeyDown = false;
+            //        VARS.IsSpaceDown = false;
+            //        VARS.IsReturnDown = false;
+            //    }
+
+            if (isInKeySetSubSub)
             {
-                //if (VARS.IsConfirmKeyDown ||
-                //    VARS.IsSpaceDown)
-                //if(VARS.IsSpaceDown || VARS.IsReturnDown)
-                //{
-                //    optionsPanel.SetActive(false);
-                //    VARS.IsOptionPanelActivated = false;
-
-                //    VARS.IsToStartNewGame = true;
-                //    VARS.IsToDie = true;
-                //}
-                if (!isInNewGameSub &&
-                    (VARS.IsSpaceDown || VARS.IsReturnDown))
+                //chooseKeys
+                if (!isSettingAKey)
                 {
-                    isFromOptionsToNewGameSub = true;
-                }
-                if (isFromOptionsToNewGameSub)
-                {
-                    isFromOptionsToNewGameSub = false;
-
-                    isInNewGameSub = true;
-
-                    optionsEmpty.SetActive(false);
-                    newGameSubEmpty.SetActive(true);
-
-                    //Input.ResetInputAxes();
-
-                    //VARS.IsConfirmKeyDown = false;
-                    VARS.IsSpaceDown = false;
-                    VARS.IsReturnDown = false;
-                }
-
-                if (isInNewGameSub)
-                {
-                    //yesOrNo
                     if (VARS.IsDownKeyDown)
                     {
-                        curNewGameSubIndex++;
+                        curKeySetSubSubIndex++;
 
-                        if (curNewGameSubIndex > 1)
+                        if (curKeySetSubSubIndex > /*keySetSubEmpties.Count - 1*/ optionsPanelOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(2).childCount - 1)
                         {
-                            curNewGameSubIndex = 1;
+                            curKeySetSubSubIndex = /*keySetSubEmpties.Count - 1*/ optionsPanelOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(2).childCount - 1;
                         }
                     }
                     else if (VARS.IsUpKeyDown)
                     {
-                        curNewGameSubIndex--;
+                        curKeySetSubSubIndex--;
 
-                        if (curNewGameSubIndex < 0)
+                        if (curKeySetSubSubIndex < 0)
                         {
-                            curNewGameSubIndex = 0;
+                            curKeySetSubSubIndex = 0;
                         }
                     }
+                }
 
-                    //highLightTheChosenOne
-                    for (int i = 0; i < newGameSubEmpties.Count; i++)
+                //highLightTheChosenKey
+                for (int i = 0; i < /*keySetSubEmpties.Count*/ optionsPanelOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(2).childCount; i++)
+                {
+                    //tempTransform = keySetSubEmpties[i].transform;
+                    tempTransform = optionsPanelOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(2).GetChild(i);
+
+                    tempTransform.GetChild(0).gameObject.SetActive(i != curKeySetSubSubIndex || isSettingAKey);
+                    tempTransform.GetChild(1).gameObject.SetActive(i == curKeySetSubSubIndex && !isSettingAKey);
+                    if (tempTransform.childCount > 2)
                     {
-                        tempTransform = newGameSubEmpties[i].transform;
-
-                        tempTransform.GetChild(0).gameObject.SetActive(i != curNewGameSubIndex);
-                        tempTransform.GetChild(1).gameObject.SetActive(i == curNewGameSubIndex);
+                        tempTransform.GetChild(2).gameObject.SetActive(i != curKeySetSubSubIndex || !isSettingAKey);
+                        tempTransform.GetChild(3).gameObject.SetActive(i == curKeySetSubSubIndex && isSettingAKey);
                     }
+                }
 
-                    //yes
-                    if (curNewGameSubIndex == 0 &&
-                        (VARS.IsSpaceDown || VARS.IsReturnDown))
+                //toSetAKey
+                if (!isSettingAKey &&
+                    curKeySetSubSubIndex < /*keySetSubEmpties.Count - 1*/ optionsPanelOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(2).childCount - 1 &&
+                    /*(VARS.IsConfirmKeyDown ||
+                VARS.IsSpaceDown)*/
+                    (VARS.IsSpaceDown || VARS.IsReturnDown))
+                {
+                    isSettingAKey = true;
+
+                    Input.ResetInputAxes();
+                }
+
+                //setAKey
+                if (isSettingAKey)
+                {
+                    if (Input.anyKeyDown)
                     {
-                        newGameSubEmpty.SetActive(false);
-                        optionsEmpty.SetActive(true);
+                        tempKeyCode = GetTheInputedKey();
+
+                        if ((tempKeyCode != KeyCode.None &&
+                            !curKeyCodes.Contains(tempKeyCode)) ||
+                            curKeyCodes[curKeySetSubSubIndex] == tempKeyCode)
+                        {
+                            //logicChange
+                            switch (curKeySetSubSubIndex)
+                            {
+                                case 0:
+                                    VARS.upKeyCode = tempKeyCode;
+                                    break;
+                                case 1:
+                                    VARS.downKeyCode = tempKeyCode;
+                                    break;
+                                case 2:
+                                    VARS.leftKeyCode = tempKeyCode;
+                                    break;
+                                case 3:
+                                    VARS.rightKeyCode = tempKeyCode;
+                                    break;
+                                case 4:
+                                    VARS.jumpKeyCode = tempKeyCode;
+                                    break;
+                                case 5:
+                                    VARS.dashKeyCode = tempKeyCode;
+                                    break;
+                                case 6:
+                                    VARS.minimapKeyCode = tempKeyCode;
+                                    break;
+                            }
+                            curKeyCodes[curKeySetSubSubIndex] = tempKeyCode;
+
+                            //appearanceChange
+                            //keySetSubEmpties[curKeySetSubSubIndex].transform.GetChild(2).GetComponent<SpriteRenderer>().sprite = keySprites[curSetKeyIndex];
+                            //keySetSubEmpties[curKeySetSubSubIndex].transform.GetChild(3).GetComponent<SpriteRenderer>().sprite = keyChosenSprites[curSetKeyIndex];
+                            optionsPanelOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(2).GetChild(curKeySetSubSubIndex).GetChild(2).GetComponent<SpriteRenderer>().sprite = keySprites[curSetKeyIndex];
+                            optionsPanelOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(2).GetChild(curKeySetSubSubIndex).GetChild(3).GetComponent<SpriteRenderer>().sprite = keyChosenSprites[curSetKeyIndex];
+
+                            VARS.IsToWriteKeyCodesData = true;
+
+                            VARS.IsKeyCodeChanged = true;
+
+                            isSettingAKey = false;
+                        }
+                    }
+                }
+
+                //back
+                if (VARS.IsBackKeyDown)
+                {
+                    //fromKeySetSubSubToSettings
+                    isInKeySetSubSub = false;
+                    isInSettingsSub = true;
+
+                    VARS.IsBackKeyDown = false;
+                }
+
+                //ok
+                if (curKeySetSubSubIndex == /*keySetSubEmpties.Count - 1*/ optionsPanelOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(2).childCount - 1 &&
+                    /*(VARS.IsConfirmKeyDown || VARS.IsSpaceDown)*/(VARS.IsSpaceDown || VARS.IsReturnDown))
+                {
+                    //    isFromKeySetSubSubToOptions = true;
+                    //}
+                    //if (isFromKeySetSubSubToOptions)
+                    //{
+                    //    isFromKeySetSubSubToOptions = false;
+
+                    //isInKeySetSubSub = false;
+
+                    //keySetSubEmpty.SetActive(false);
+                    //optionsEmpty.SetActive(true);
+                    //optionsPanelOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(1).gameObject.SetActive(false);
+                    //optionsPanelOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(0).gameObject.SetActive(true);
+
+                    //curKeySetSubSubIndex = 0;
+
+                    //isSettingAKey = false;
+
+                    //fromKeySetSubSubToSettings
+                    isInKeySetSubSub = false;
+                    isInSettingsSub = true;
+
+                    VARS.IsSpaceDown = false;
+                    VARS.IsReturnDown = false;
+                }
+            }
+            //}
+            #endregion
+
+            #region SoundSubSub
+            if (isInSoundSubSub)
+            {
+                //adjustVolume
+                if (VARS.IsUpKeyDown)
+                {
+                    VARS.curSetMusicVolumeFixFloat = Mathf.Min(maxSetMusicVolume, VARS.curSetMusicVolumeFixFloat + setMusicVolumeStep);
+
+                    optionsPanelOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(3).GetChild(0).GetChild(1).GetComponent<SpriteRenderer>().color =
+                        new Color(1, 1, 1, 0.2f);
+
+                    VARS.IsToWriteSoundData = true;
+                }
+                else if (VARS.IsDownKeyDown)
+                {
+                    VARS.curSetMusicVolumeFixFloat = Mathf.Max(minSetMusicVolume, VARS.curSetMusicVolumeFixFloat - setMusicVolumeStep);
+
+                    optionsPanelOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(3).GetChild(0).GetChild(2).GetComponent<SpriteRenderer>().color =
+                        new Color(1, 1, 1, 0.2f);
+
+                    VARS.IsToWriteSoundData = true;
+                }
+
+                //changeColor
+                optionsPanelOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(3).GetChild(0).GetChild(0).GetComponent<SpriteRenderer>().color = 
+                    new Color(1, 1, 1, 0.01f + (VARS.curSetMusicVolumeFixFloat - minSetMusicVolume) / (maxSetMusicVolume - minSetMusicVolume));
+                optionsPanelOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(3).GetChild(0).GetChild(1).GetComponent<SpriteRenderer>().color =
+                    new Color(1, 1, 1, Mathf.Min
+                    (1, optionsPanelOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(3).GetChild(0).GetChild(1).GetComponent<SpriteRenderer>().color.a + 5 * Time.deltaTime));
+                optionsPanelOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(3).GetChild(0).GetChild(2).GetComponent<SpriteRenderer>().color =
+                    new Color(1, 1, 1, Mathf.Min
+                    (1, optionsPanelOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(3).GetChild(0).GetChild(2).GetComponent<SpriteRenderer>().color.a + 5 * Time.deltaTime));
+
+                //back
+                if (VARS.IsBackKeyDown)
+                {
+                    //fromSoundSubSubToSettingsSub
+                    isInSoundSubSub = false;
+                    isInSettingsSub = true;
+
+                    VARS.IsBackKeyDown = false;
+                }
+            }
+            #endregion
+
+            #region LanguageSubSub
+            if (isInLanguageSubSub)
+            {
+                //switchLanguage
+                if (VARS.IsSpaceDown || VARS.IsReturnDown)
+                {
+                    VARS.CurLanguageIndex++;
+
+                    VARS.IsToWriteLanguageData = true;
+
+                    VARS.IsSpaceDown = false;
+                    VARS.IsReturnDown = false;
+                }
+
+                //back
+                if (VARS.IsBackKeyDown)
+                {
+                    //fromLanguageSubSubToSettingsSub
+                    isInLanguageSubSub = false;
+                    isInSettingsSub = true;
+
+                    VARS.IsBackKeyDown = false;
+                }
+            }
+            #endregion
+
+            #region FragmentsSub
+            //if (curOptionIndex == 1)
+            //{
+            //    //intoFragmentSub
+            //    if (!isInFragmentsSub &&
+            //        (VARS.IsSpaceDown || VARS.IsReturnDown))
+            //    {
+            //        isFromOptionsToFragmentsSub = true;
+            //    }
+            //    if (isFromOptionsToFragmentsSub)
+            //    {
+            //        for (int i = 0; i < /*redFragmentSubEmpty.transform.childCount*/ optionsPanelOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(5).GetChild(0).childCount; i++)
+            //        {
+            //            //tempTransform = redFragmentSubEmpty.transform.GetChild(i);
+            //            tempTransform = optionsPanelOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(5).GetChild(0).GetChild(i);
+            //            if (VARS.isRedFragmentsEmbeded[i])
+            //                tempTransform.GetComponent<MeshRenderer>().material = optionsRedFragmentColor;
+            //            else
+            //                tempTransform.GetComponent<MeshRenderer>().material = optionsFragmentNotEmbeddedColor;
+            //        }
+            //        for (int i = 0; i < /*yellowFragmentSubEmpty.transform.childCount*/ optionsPanelOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(5).GetChild(1).childCount; i++)
+            //        {
+            //            //tempTransform = yellowFragmentSubEmpty.transform.GetChild(i);
+            //            tempTransform = optionsPanelOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(5).GetChild(1).GetChild(i);
+            //            if (VARS.isYellowFragmentsEmbeded[i])
+            //                tempTransform.GetComponent<MeshRenderer>().material = optionsYellowFragmentColor;
+            //            else
+            //                tempTransform.GetComponent<MeshRenderer>().material = optionsFragmentNotEmbeddedColor;
+            //        }
+            //        for (int i = 0; i < /*blueFragmentSubEmpty.transform.childCount*/ optionsPanelOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(5).GetChild(2).childCount; i++)
+            //        {
+            //            //tempTransform = blueFragmentSubEmpty.transform.GetChild(i);
+            //            tempTransform = optionsPanelOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(5).GetChild(2).GetChild(i);
+            //            if (VARS.isBlueFragmentsEmbeded[i])
+            //                tempTransform.GetComponent<MeshRenderer>().material = optionsBlueFragmentColor;
+            //            else
+            //                tempTransform.GetComponent<MeshRenderer>().material = optionsFragmentNotEmbeddedColor;
+            //        }
+            //        for (int i = 0; i < /*orangeFragmentSubEmpty.transform.childCount*/ optionsPanelOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(5).GetChild(3).childCount; i++)
+            //        {
+            //            //tempTransform = orangeFragmentSubEmpty.transform.GetChild(i);
+            //            tempTransform = optionsPanelOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(5).GetChild(3).GetChild(i);
+            //            if (VARS.isOrangeFragmentsEmbeded[i])
+            //                tempTransform.GetComponent<MeshRenderer>().material = optionsOrangeFragmentColor;
+            //            else
+            //                tempTransform.GetComponent<MeshRenderer>().material = optionsFragmentNotEmbeddedColor;
+            //        }
+            //        for (int i = 0; i < /*greenFragmentSubEmpty.transform.childCount*/ optionsPanelOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(5).GetChild(4).childCount; i++)
+            //        {
+            //            //tempTransform = greenFragmentSubEmpty.transform.GetChild(i);
+            //            tempTransform = optionsPanelOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(5).GetChild(4).GetChild(i);
+            //            if (VARS.isGreenFragmentsEmbeded[i])
+            //                tempTransform.GetComponent<MeshRenderer>().material = optionsGreenFragmentColor;
+            //            else
+            //                tempTransform.GetComponent<MeshRenderer>().material = optionsFragmentNotEmbeddedColor;
+            //        }
+            //        for (int i = 0; i < /*purpleFragmentSubEmpty.transform.childCount*/ optionsPanelOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(5).GetChild(5).childCount; i++)
+            //        {
+            //            //tempTransform = purpleFragmentSubEmpty.transform.GetChild(i);
+            //            tempTransform = optionsPanelOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(5).GetChild(5).GetChild(i);
+            //            if (VARS.isPurpleFragmentsEmbeded[i])
+            //                tempTransform.GetComponent<MeshRenderer>().material = optionsPurpleFragmentColor;
+            //            else
+            //                tempTransform.GetComponent<MeshRenderer>().material = optionsFragmentNotEmbeddedColor;
+            //        }
+
+            //        isFromOptionsToFragmentsSub = false;
+
+            //        isInFragmentsSub = true;
+
+            //        //optionsEmpty.SetActive(false);
+            //        //fragmentsSubEmpty.SetActive(true);
+            //        optionsPanelOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(0).gameObject.SetActive(false);
+            //        optionsPanelOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(2).gameObject.SetActive(true);
+
+            //        //Input.ResetInputAxes();
+
+            //        //VARS.IsConfirmKeyDown = false;
+            //        VARS.IsSpaceDown = false;
+            //        VARS.IsReturnDown = false;
+            //    }
+            //}
+
+            if (isInFragmentsSub)
+            {
+                //back
+                if (VARS.IsBackKeyDown)
+                {
+                    //fromFragmentsSubToOptions
+                    isInFragmentsSub = false;
+                    isInOptions = true;
+
+                    VARS.IsBackKeyDown = false;
+                }
+
+                //ok
+                if (VARS.IsSpaceDown || VARS.IsReturnDown)
+                {
+                    //fromFragmentsSubToOptions
+                    isInFragmentsSub = false;
+                    isInOptions = true;
+
+                    VARS.IsSpaceDown = false;
+                    VARS.IsReturnDown= false;
+                }
+
+                //if ((VARS.IsSpaceDown || VARS.IsReturnDown) ||
+                //    VARS.IsBackKeyDown)
+                //{
+                //    isFromFragmentsSubToOptions = true;
+                //}
+                //if (isFromFragmentsSubToOptions)
+                //{
+                //    isFromFragmentsSubToOptions = false;
+
+                //    isInFragmentsSub = false;
+
+                //    //fragmentsSubEmpty.SetActive(false);
+                //    //optionsEmpty.SetActive(true);
+                //    optionsPanelOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(2).gameObject.SetActive(false);
+                //    optionsPanelOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(0).gameObject.SetActive(true);
+                //}
+            }
+            #endregion
+
+            #region NewGameSub
+            //if (curOptionIndex == 2)
+            //{
+            //    //if (VARS.IsConfirmKeyDown ||
+            //    //    VARS.IsSpaceDown)
+            //    //if(VARS.IsSpaceDown || VARS.IsReturnDown)
+            //    //{
+            //    //    optionsPanel.SetActive(false);
+            //    //    VARS.IsOptionPanelActivated = false;
+
+            //    //    VARS.IsToStartNewGame = true;
+            //    //    VARS.IsToDie = true;
+            //    //}
+            //    if (!isInNewGameSub &&
+            //        (VARS.IsSpaceDown || VARS.IsReturnDown))
+            //    {
+            //        isFromOptionsToNewGameSub = true;
+            //    }
+            //    if (isFromOptionsToNewGameSub)
+            //    {
+            //        isFromOptionsToNewGameSub = false;
+
+            //        isInNewGameSub = true;
+
+            //        //optionsEmpty.SetActive(false);
+            //        //newGameSubEmpty.SetActive(true);
+            //        optionsPanelOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(0).gameObject.SetActive(false);
+            //        optionsPanelOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(3).gameObject.SetActive(true);
+
+            //        //Input.ResetInputAxes();
+
+            //        //VARS.IsConfirmKeyDown = false;
+            //        VARS.IsSpaceDown = false;
+            //        VARS.IsReturnDown = false;
+            //    }
+
+            if (isInNewGameSub)
+            {
+                //yesOrNo
+                if (VARS.IsDownKeyDown)
+                {
+                    curNewGameSubIndex++;
+
+                    if (curNewGameSubIndex > 1)
+                    {
+                        curNewGameSubIndex = 1;
+                    }
+                }
+                else if (VARS.IsUpKeyDown)
+                {
+                    curNewGameSubIndex--;
+
+                    if (curNewGameSubIndex < 0)
+                    {
+                        curNewGameSubIndex = 0;
+                    }
+                }
+
+                //highLightTheChosenOne
+                for (int i = 0; i < /*newGameSubEmpties.Count*/ optionsPanelOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(6).childCount - 1; i++)
+                {
+                    //tempTransform = newGameSubEmpties[i].transform;
+                    tempTransform = optionsPanelOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(6).GetChild(i + 1);
+
+                    tempTransform.GetChild(0).gameObject.SetActive(i != curNewGameSubIndex);
+                    tempTransform.GetChild(1).gameObject.SetActive(i == curNewGameSubIndex);
+                }
+
+                //back
+                if (VARS.IsBackKeyDown)
+                {
+                    //fromNewGameToOptions
+                    isInNewGameSub = false;
+                    isInOptions = true;
+
+                    VARS.IsBackKeyDown = false;
+                }
+
+                //newGameOrTransfer
+                if (VARS.IsSpaceDown || VARS.IsReturnDown)
+                {
+                    //HTR
+                    //yes
+                    if (curNewGameSubIndex == 0)
+                    {
+                        //newGameSubEmpty.SetActive(false);
+                        //optionsEmpty.SetActive(true);
+                        optionsPanelOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(6).gameObject.SetActive(false);
+                        optionsPanelOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(0).gameObject.SetActive(true);
                         isInNewGameSub = false;
                         optionsPanel.SetActive(false);
                         VARS.IsOptionPanelActivated = false;
@@ -519,48 +830,44 @@ public class OptionsManager : MonoBehaviour
                     }
 
                     //no
-                    if ((curNewGameSubIndex == 1 &&
-                        (VARS.IsSpaceDown || VARS.IsReturnDown)) ||
-                        VARS.IsBackKeyDown)
+                    if (curNewGameSubIndex == 1)
                     {
-                        isFromNewGameSubToOptions = true;
-                    }
-                    if (isFromNewGameSubToOptions)
-                    {
-                        isFromNewGameSubToOptions = false;
+                        //    isFromNewGameSubToOptions = true;
+                        //}
+                        //if (isFromNewGameSubToOptions)
+                        //{
+                        //    isFromNewGameSubToOptions = false;
+
+                        //isInNewGameSub = false;
+
+                        ////newGameSubEmpty.SetActive(false);
+                        ////optionsEmpty.SetActive(true);
+                        //optionsPanelOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(3).gameObject.SetActive(false);
+                        //optionsPanelOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(0).gameObject.SetActive(true);
+
+                        //curNewGameSubIndex = 0;
 
                         isInNewGameSub = false;
+                        isInOptions = true;
 
-                        newGameSubEmpty.SetActive(false);
-                        optionsEmpty.SetActive(true);
-
-                        curNewGameSubIndex = 0;
+                        VARS.IsSpaceDown = false;
+                        VARS.IsReturnDown = false;
                     }
                 }
             }
+            //}
             #endregion
 
             #region Exit
-            if (curOptionIndex == 3)
+            //exit
+            if (VARS.IsExiting &&
+                !VARS.IsWritingAllData)
             {
-                //if (VARS.IsConfirmKeyDown ||
-                //    VARS.IsSpaceDown)
-                if(VARS.IsSpaceDown || VARS.IsReturnDown)
-                {
-                    VARS.IsWritingAllData = true;
-                    VARS.IsExiting = true;
-                }
-                if (VARS.IsExiting)
-                {
-                    if (!VARS.IsWritingAllData)
-                    {
-                        #if UNITY_EDITOR
-                        UnityEditor.EditorApplication.isPlaying = false;
-                        #endif
+                #if UNITY_EDITOR
+                UnityEditor.EditorApplication.isPlaying = false;
+                #endif
 
-                        Application.Quit();
-                    }
-                }
+                Application.Quit();
             }
             #endregion
         }
@@ -781,5 +1088,63 @@ public class OptionsManager : MonoBehaviour
         }
         else
             return KeyCode.None;
+    }
+
+    void DetermineFragmentsSubFragmentStates()
+    {
+        for (int i = 0; i < /*redFragmentSubEmpty.transform.childCount*/ optionsPanelOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(5).GetChild(0).childCount; i++)
+        {
+            //tempTransform = redFragmentSubEmpty.transform.GetChild(i);
+            tempTransform = optionsPanelOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(5).GetChild(0).GetChild(i);
+            if (VARS.isRedFragmentsEmbeded[i])
+                tempTransform.GetComponent<MeshRenderer>().material = optionsRedFragmentColor;
+            else
+                tempTransform.GetComponent<MeshRenderer>().material = optionsFragmentNotEmbeddedColor;
+        }
+        for (int i = 0; i < /*yellowFragmentSubEmpty.transform.childCount*/ optionsPanelOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(5).GetChild(1).childCount; i++)
+        {
+            //tempTransform = yellowFragmentSubEmpty.transform.GetChild(i);
+            tempTransform = optionsPanelOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(5).GetChild(1).GetChild(i);
+            if (VARS.isYellowFragmentsEmbeded[i])
+                tempTransform.GetComponent<MeshRenderer>().material = optionsYellowFragmentColor;
+            else
+                tempTransform.GetComponent<MeshRenderer>().material = optionsFragmentNotEmbeddedColor;
+        }
+        for (int i = 0; i < /*blueFragmentSubEmpty.transform.childCount*/ optionsPanelOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(5).GetChild(2).childCount; i++)
+        {
+            //tempTransform = blueFragmentSubEmpty.transform.GetChild(i);
+            tempTransform = optionsPanelOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(5).GetChild(2).GetChild(i);
+            if (VARS.isBlueFragmentsEmbeded[i])
+                tempTransform.GetComponent<MeshRenderer>().material = optionsBlueFragmentColor;
+            else
+                tempTransform.GetComponent<MeshRenderer>().material = optionsFragmentNotEmbeddedColor;
+        }
+        for (int i = 0; i < /*orangeFragmentSubEmpty.transform.childCount*/ optionsPanelOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(5).GetChild(3).childCount; i++)
+        {
+            //tempTransform = orangeFragmentSubEmpty.transform.GetChild(i);
+            tempTransform = optionsPanelOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(5).GetChild(3).GetChild(i);
+            if (VARS.isOrangeFragmentsEmbeded[i])
+                tempTransform.GetComponent<MeshRenderer>().material = optionsOrangeFragmentColor;
+            else
+                tempTransform.GetComponent<MeshRenderer>().material = optionsFragmentNotEmbeddedColor;
+        }
+        for (int i = 0; i < /*greenFragmentSubEmpty.transform.childCount*/ optionsPanelOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(5).GetChild(4).childCount; i++)
+        {
+            //tempTransform = greenFragmentSubEmpty.transform.GetChild(i);
+            tempTransform = optionsPanelOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(5).GetChild(4).GetChild(i);
+            if (VARS.isGreenFragmentsEmbeded[i])
+                tempTransform.GetComponent<MeshRenderer>().material = optionsGreenFragmentColor;
+            else
+                tempTransform.GetComponent<MeshRenderer>().material = optionsFragmentNotEmbeddedColor;
+        }
+        for (int i = 0; i < /*purpleFragmentSubEmpty.transform.childCount*/ optionsPanelOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(5).GetChild(5).childCount; i++)
+        {
+            //tempTransform = purpleFragmentSubEmpty.transform.GetChild(i);
+            tempTransform = optionsPanelOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(5).GetChild(5).GetChild(i);
+            if (VARS.isPurpleFragmentsEmbeded[i])
+                tempTransform.GetComponent<MeshRenderer>().material = optionsPurpleFragmentColor;
+            else
+                tempTransform.GetComponent<MeshRenderer>().material = optionsFragmentNotEmbeddedColor;
+        }
     }
 }

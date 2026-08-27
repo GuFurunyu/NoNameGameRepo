@@ -56,6 +56,7 @@ public class ScriptsExecutionOrder : MonoBehaviour
         textManager,
         audioManager,
         achievementManager,
+        cheatManager,
         test
     }
 

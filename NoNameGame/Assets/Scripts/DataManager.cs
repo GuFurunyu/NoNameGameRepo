@@ -247,6 +247,22 @@ public class DataManager : MonoBehaviour
 
     KeyCodesData curKeyCodesData = new KeyCodesData();
 
+    public class SoundData
+    {
+        public float curSetMusicVolumeFixFloat;
+    }
+
+    SoundData curSoundData = new SoundData();
+
+    public class LanguageData
+    {
+        public int curLanguageIndex;
+
+        public bool hasSetLanguageForTheFirstPlay;
+    }
+
+    LanguageData curLanguageData = new LanguageData();
+
     public class AchievementData
     {
         public bool isAchievementRotateUnlocked;
@@ -399,6 +415,8 @@ public class DataManager : MonoBehaviour
         WriteKeysAndLocksData(true);
         WriteGuideData(true);
         WriteKeyCodesData(true);
+        WriteLanguageData(true);
+        WriteSoundData(true);
         WriteAchievementData(true);
 
         tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "Version_0.7.2.txt");
@@ -415,6 +433,8 @@ public class DataManager : MonoBehaviour
             ReadKeysAndLocksData();
             ReadGuideData();
             ReadKeyCodesData();
+            ReadLanguageData();
+            ReadSoundData();
             ReadAchievementData();
         }
         else
@@ -428,62 +448,77 @@ public class DataManager : MonoBehaviour
         #region ImportValueVariables
         #endregion
 
+        //worldData
         if (VARS.IsToWriteWorldData)
         {
             WriteWorldData();
 
             VARS.IsToWriteWorldData = false;
         }
-
+        //explorationData
         if (VARS.IsToWriteExplorationData)
         {
             WriteExplorationData();
 
             VARS.IsToWriteExplorationData = false;
         }
-
+        //catData
         if (VARS.IsToWriteCatData)
         {
             WriteCatData();
 
             VARS.IsToWriteCatData = false;
         }
-
+        //savePointsData
         if (VARS.IsToWriteSavePointsData)
         {
             WriteSavePointsData();
 
             VARS.IsToWriteSavePointsData = false;
         }
-
+        //fragmentsData
         if (VARS.IsToWriteFragmentsData)
         {
             WriteFragmentsData();
 
             VARS.IsToWriteFragmentsData = false;
         }
-
+        //keysAndLocksData
         if (VARS.IsToWriteKeysAndLocksData)
         {
             WriteKeysAndLocksData();
 
             VARS.IsToWriteKeysAndLocksData = false;
         }
-
+        //guideData
         if (VARS.IsToWriteGuideData)
         {
             WriteGuideData();
 
             VARS.IsToWriteGuideData = false;
         }
-
+        //keyCodesData
         if (VARS.IsToWriteKeyCodesData)
         {
             WriteKeyCodesData();
 
             VARS.IsToWriteKeyCodesData = false;
         }
+        //soundData
+        if (VARS.IsToWriteSoundData)
+        {
+            WriteSoundData();
 
+            VARS.IsToWriteSoundData = false;
+        }
+        //languageData
+        if (VARS.IsToWriteLanguageData)
+        {
+            WriteLanguageData();
+
+            VARS.IsToWriteLanguageData = false;
+        }
+        //achievementData
         if (VARS.IsToWriteAchievementData)
         {
             WriteAchievementData();
@@ -1169,7 +1204,7 @@ public class DataManager : MonoBehaviour
             VARS.curKeyCodes.Add(VARS.jumpKeyCode);
             //VARS.curKeyCodes.Add(VARS.acceKeyCode);
             //VARS.curKeyCodes.Add(VARS.grabKeyCode);
-            //VARS.curKeyCodes.Add(VARS.dashKeyCode);
+            VARS.curKeyCodes.Add(VARS.dashKeyCode);
             VARS.curKeyCodes.Add(VARS.minimapKeyCode);
             //VARS.curKeyCodes.Add(VARS.backKeyCode);
         }
@@ -1198,6 +1233,72 @@ public class DataManager : MonoBehaviour
         //curKeyCodesData.backKeyCode = VARS.backKeyCode;
 
         tempJsonString = JsonUtility.ToJson(curKeyCodesData);
+
+        File.WriteAllText(tempPath, tempJsonString);
+    }
+    #endregion
+
+    #region SoundData
+    void ReadSoundData(bool isInitial = false)
+    {
+        if (!isInitial)
+            tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "SoundData.txt");
+        else
+            tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "InitialSoundData.txt");
+
+        if (File.Exists(tempPath))
+        {
+            tempJsonString = File.ReadAllText(tempPath);
+            curSoundData = JsonUtility.FromJson<SoundData>(tempJsonString);
+
+            VARS.curSetMusicVolumeFixFloat = curSoundData.curSetMusicVolumeFixFloat;
+        }
+    }
+    void WriteSoundData(bool isInitial = false)
+    {
+        if (!isInitial)
+            tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "SoundData.txt");
+        else
+            tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "InitialSoundData.txt");
+
+        curSoundData.curSetMusicVolumeFixFloat = VARS.curSetMusicVolumeFixFloat;
+
+        tempJsonString = JsonUtility.ToJson(curSoundData);
+
+        File.WriteAllText(tempPath, tempJsonString);
+    }
+    #endregion
+
+    #region LanguageData
+    void ReadLanguageData(bool isInitial = false)
+    {
+        if (!isInitial)
+            tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "LanguageData.txt");
+        else
+            tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "InitialLanguageData.txt");
+
+        if (File.Exists(tempPath))
+        {
+            tempJsonString = File.ReadAllText(tempPath);
+            curLanguageData = JsonUtility.FromJson<LanguageData>(tempJsonString);
+
+            VARS.CurLanguageIndex = curLanguageData.curLanguageIndex;
+
+            VARS.hasSetTheLanguageForTheFirstPlay = curLanguageData.hasSetLanguageForTheFirstPlay;
+        }
+    }
+    void WriteLanguageData(bool isInitial = false)
+    {
+        if (!isInitial)
+            tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "LanguageData.txt");
+        else
+            tempPath = Path.Combine(Application.persistentDataPath, /*"Datas",*/ "InitialLanguageData.txt");
+
+        curLanguageData.curLanguageIndex = VARS.CurLanguageIndex;
+
+        curLanguageData.hasSetLanguageForTheFirstPlay = VARS.hasSetTheLanguageForTheFirstPlay;
+
+        tempJsonString = JsonUtility.ToJson(curLanguageData);
 
         File.WriteAllText(tempPath, tempJsonString);
     }

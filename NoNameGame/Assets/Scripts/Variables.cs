@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -75,6 +76,14 @@ public class Variables : MonoBehaviour
     [SerializeField] private bool _isToWriteKeyCodesData;
     public bool IsToWriteKeyCodesData { get { return _isToWriteKeyCodesData; } set { _isToWriteKeyCodesData = value; } }
 
+    //soundData
+    [SerializeField] private bool _isToWriteSoundData;
+    public bool IsToWriteSoundData { get { return _isToWriteSoundData; } set { _isToWriteSoundData = value; } }
+
+    //languageData
+    [SerializeField] private bool _isToWriteLanguageData;
+    public bool IsToWriteLanguageData { get { return _isToWriteLanguageData; } set { _isToWriteLanguageData = value; } }
+
     //achievementData
     [SerializeField] private bool _isToWriteAchievementData;
     public bool IsToWriteAchievementData { get { return _isToWriteAchievementData; } set { _isToWriteAchievementData = value; } }
@@ -102,6 +111,8 @@ public class Variables : MonoBehaviour
                 IsToWriteKeysAndLocksData = true;
                 IsToWriteGuideData = true;
                 IsToWriteKeyCodesData = true;
+                IsToWriteSoundData = true;
+                IsToWriteLanguageData = true;
                 IsToWriteAchievementData = true;
             }
 
@@ -1570,7 +1581,7 @@ public class Variables : MonoBehaviour
                 IsInDashGuide ||
                 IsInIntoMinimapGuide ||
                 IsInRotateGuide ||
-                IsInClimbGuide ||
+                //IsInClimbGuide ||
                 IsInTwistGuide ||
                 IsInBackCenterGuide ||
                 IsInOutOfCenterTwistGuide ||
@@ -1591,8 +1602,7 @@ public class Variables : MonoBehaviour
         {
             _isInPauseGuide =
                 IsInKeysGuide ||
-                IsInJumpGuide ||
-                IsInClimbGuide;
+                IsInJumpGuide;
 
             return _isInPauseGuide;
         }
@@ -1618,8 +1628,8 @@ public class Variables : MonoBehaviour
     [SerializeField] private bool _isInRotateGuide;
     public bool IsInRotateGuide { get { return _isInRotateGuide; } set { _isInRotateGuide = value; } }
 
-    [SerializeField] private bool _isInClimbGuide;
-    public bool IsInClimbGuide { get { return _isInClimbGuide; } set { _isInClimbGuide = value; } }
+    //[SerializeField] private bool _isInClimbGuide;
+    //public bool IsInClimbGuide { get { return _isInClimbGuide; } set { _isInClimbGuide = value; } }
 
     [SerializeField] private bool _isInTwistGuide;
     public bool IsInTwistGuide { get { return _isInTwistGuide; } set { _isInTwistGuide = value; } }
@@ -1637,16 +1647,37 @@ public class Variables : MonoBehaviour
 
     #endregion
 
-    #region TextManaget
+    #region TextManager
     [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
         "  \nTEXTMANAGER\n --- ")]
+    //executability
+    [SerializeField] private bool _isTextManagerMainPartExecutable;
+    public bool IsTextManagerMainPartExecutable { get { return _isTextManagerMainPartExecutable; } set { _isTextManagerMainPartExecutable = value; } }
+
+    //language
+    //languageIndex:
+    //  0-English, 1-Chinese, 2-German, 3-French, 4-EuropeanSpanish, 5-BrazilianPortuguese, 6-Russian, 7-Japanese
+    [SerializeField] private int _curLanguageIndex;
+    public int CurLanguageIndex
+    {
+        get
+        {
+            return _curLanguageIndex;
+        }
+        set
+        {
+            _curLanguageIndex = value * Convert.ToInt32(value >= 0 && value < 8);
+        }
+    }
+    public bool hasSetTheLanguageForTheFirstPlay;
+
+    //collectingTexts
     [SerializeField] private bool _isOneColorFragmentCollectingTextActivated;
     public bool IsOneColorFragmentCollectingTextActivated;
     [SerializeField] private bool _isAllColorsFragmentCollectingTextActivated;
     public bool IsAllColorsFragmentCollectingTextActivated;
     [SerializeField] private bool _isKeysAndLocksCollectingTextActivated;
     public bool IsKeysAndLocksCollectingTextActivated;
-
     public float oneColorFragmentCollectingTextActivatedStartTime;
     public float allColorsFragmentCollectingTextActivatedStartTime;
     public float keysAndLocksCollectingTextActivatedStartTime;
@@ -1666,6 +1697,9 @@ public class Variables : MonoBehaviour
     //[SerializeField] private bool _isFormalBgmFadedOut;
     //public bool IsFormalBgmFadedOut { get { return _isFormalBgmFadedOut; } set { _isFormalBgmFadedOut = value; } }
 
+    //volume
+    public float curSetMusicVolumeFixFloat = 0;
+
     //pitch
     public float curPitch = 1;
     public float curTargetAccumulatedChangedPitch;
@@ -1677,6 +1711,11 @@ public class Variables : MonoBehaviour
     #region AchievementManager
     [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
         "  \nACHIEVEMENTMANAGER\n --- ")]
+    [SerializeField] private bool _isAchievementManagerEnabled;
+    public bool IsAchievementManagerEnabled { get { return _isAchievementManagerEnabled; } set { _isAchievementManagerEnabled = value; } }
+
+
+    //isUnlocked
     public bool isAchievementRotateUnlocked;
     public bool isAchievementTwistUnlocked;
     public bool isAchievementGearsOfDestinyUnlocked;
@@ -1692,6 +1731,14 @@ public class Variables : MonoBehaviour
     public bool isAchievementCUBE_Unlocked;
     public bool isAchievementConnectedUnlocked;
     public bool isAchievementSolvedUnlocked;
+    #endregion
+
+    #region CheatManager
+    [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
+        "  \nCHEATMANAGER\n --- ")]
+    //int
+    public int immortalCheatCurActivatingCharIndex;
+    public int immortalCheatCurDeactivatingCharIndex;
     #endregion
 
     void Start()

@@ -74,7 +74,7 @@ public class AudioManager : MonoBehaviour
         {
             if (!hasStartedMainBoardBGM)
             {
-                audioSource.volume = normalVolume;
+                audioSource.volume = normalVolume * VARS.curSetMusicVolumeFixFloat;
 
                 audioSource.clip = mainBoardBGM;
                 audioSource.Play();
@@ -114,11 +114,11 @@ public class AudioManager : MonoBehaviour
                 //formalBgmFadeOut
                 if (VARS.IsFormerBgmFadingOut)
                 {
-                    audioSource.volume -= volumeFadingOutSpeed * Time.deltaTime;
+                    audioSource.volume -= volumeFadingOutSpeed * (0.1f + 1 + VARS.curSetMusicVolumeFixFloat) * Time.deltaTime;
 
                     if (audioSource.volume < volumeFadingOutThres)
                     {
-                        audioSource.volume = normalVolume;
+                        audioSource.volume = normalVolume * (1 + VARS.curSetMusicVolumeFixFloat);
 
                         audioSource.clip = inGameBGMs[storedInGameBGMIndex];
                         audioSource.UnPause();
@@ -127,6 +127,11 @@ public class AudioManager : MonoBehaviour
 
                         VARS.IsFormerBgmFadingOut = false;
                     }
+                }
+
+                if (!VARS.IsFormerBgmFadingOut)
+                {
+                    audioSource.volume = normalVolume * (1 + VARS.curSetMusicVolumeFixFloat);
                 }
 
                 ////pitch

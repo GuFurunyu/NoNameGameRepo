@@ -300,6 +300,9 @@ public class Constants : MonoBehaviour
     //maxEnergy
     public float maxEnergy;
 
+    //immortal
+    public float immortalEnergyBonus;
+
     //void
     public float intoVoidEnergyLost;
 
@@ -559,12 +562,12 @@ public class Constants : MonoBehaviour
     public GameObject optionsPanel;
 
     //options
-    public GameObject optionsEmpty;
-    public List<GameObject> optionEmpties = new List<GameObject>();
+    //public GameObject optionsEmpty;
+    //public List<GameObject> optionEmpties = new List<GameObject>();
 
     //keySetSub
-    public GameObject keySetSubEmpty;
-    public List<GameObject> keySetSubEmpties = new List<GameObject>();
+    //public GameObject keySetSubEmpty;
+    //public List<GameObject> keySetSubEmpties = new List<GameObject>();
 
     //keyCodes
     public List<KeyCode> keyCodes = new List<KeyCode>();
@@ -580,17 +583,17 @@ public class Constants : MonoBehaviour
     }
 
     //newGameSub
-    public GameObject newGameSubEmpty;
-    public List<GameObject> newGameSubEmpties = new List<GameObject>();
+    //public GameObject newGameSubEmpty;
+    //public List<GameObject> newGameSubEmpties = new List<GameObject>();
 
     //fragmentsSub
-    public GameObject fragmentsSubEmpty;
-    public GameObject redFragmentSubEmpty;
-    public GameObject yellowFragmentSubEmpty;
-    public GameObject blueFragmentSubEmpty;
-    public GameObject orangeFragmentSubEmpty;
-    public GameObject greenFragmentSubEmpty;
-    public GameObject purpleFragmentSubEmpty;
+    //public GameObject fragmentsSubEmpty;
+    //public GameObject redFragmentSubEmpty;
+    //public GameObject yellowFragmentSubEmpty;
+    //public GameObject blueFragmentSubEmpty;
+    //public GameObject orangeFragmentSubEmpty;
+    //public GameObject greenFragmentSubEmpty;
+    //public GameObject purpleFragmentSubEmpty;
 
     //fragmentColors
     public Material optionsFragmentNotEmbeddedColor;
@@ -612,18 +615,31 @@ public class Constants : MonoBehaviour
     #region TextManaget
     [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
         "  \nTEXTMANAGER\n --- ")]
+    //language
+    //languageIndex:
+    //  0-English, 1-Chinese, 2-German, 3-French, 4-EuropeanSpanish, 5-BrazilianPortuguese, 6-Russian, 7-Japanese
+
+    //mainBoard
+    public GameObject[] mainBoardOverTextEmpties = new GameObject[8];
+
+    //optionsPanel
+    public GameObject[] optionsPanelOverTextEmpties = new GameObject[8];
+
+    //guide
+    public GameObject[] guideOverTextEmpties = new GameObject[8];
+
     //guideTexts    
-    public GameObject keysGuideTextEmpty;
-    //public List<GameObject> keysGuideTexts = new List<GameObject>();
-    public GameObject jumpGuideText;
-    public GameObject dashGuideText;
-    public GameObject intoMinimapGuideText;
-    public GameObject climbGuideText;
-    public GameObject twistGuideText;
-    public GameObject rotateGuideText;
-    public GameObject backCenterGuideText;
-    public GameObject outOfCenterTwistGuideText;
-    public GameObject betweenCentersTransportGuideText;
+    //public GameObject keysGuideTextEmpty;
+    ////public List<GameObject> keysGuideTexts = new List<GameObject>();
+    //public GameObject jumpGuideText;
+    //public GameObject dashGuideText;
+    //public GameObject intoMinimapGuideText;
+    ////public GameObject climbGuideText;
+    //public GameObject twistGuideText;
+    //public GameObject rotateGuideText;
+    //public GameObject backCenterGuideText;
+    //public GameObject outOfCenterTwistGuideText;
+    //public GameObject betweenCentersTransportGuideText;
 
     //collectingTexts
     public GameObject oneColorFragmentCollectingTextEmpty;
@@ -675,15 +691,26 @@ public class Constants : MonoBehaviour
     public float normalVolume;
     public float volumeFadingOutSpeed;
     public float volumeFadingOutThres;
+    public float setMusicVolumeStep;
+    public float maxSetMusicVolume;
+    public float minSetMusicVolume;
 
     //pitchChangingSpeed
     public float pitchChangingSpeed;
     #endregion
 
     #region AchievementManager
-    //[Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
-    //    "  \nACHIEVEMENTMANAGER\n --- ")]
+    [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
+        "  \nACHIEVEMENTMANAGER\n --- ")]
 
+    #endregion
+
+    #region CheatManager
+    [Header("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" +
+        "  \nCHEATMANAGER\n --- ")]
+    //immortal
+    public string immortalCheatActivatingString = "MakeMeImmortal";
+    public string immortalCheatDeactivatingString = "NotImmortal";
     #endregion
 
     void Start()

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Steamworks;
 using UnityEngine;
 
 [DefaultExecutionOrder((int)ScriptsExecutionOrder.ExecutionOrder.textManager)]
@@ -11,6 +12,8 @@ public class TextManager : MonoBehaviour
     ScriptsExecutionController SEC;
 
     GameObject gameManager;
+
+    string curGameLanguageString;
 
     #region ConstantsUsed
     GameObject oneColorFragmentCollectingTextEmpty;
@@ -68,6 +71,73 @@ public class TextManager : MonoBehaviour
     {
         #region ImportValueVariables
         #endregion
+
+        //languageSetForTheFirstPlay
+        if (!VARS.hasSetTheLanguageForTheFirstPlay &&
+            SteamManager.Initialized)
+        {
+            //curGameLanguageString = SteamApps.GetCurrentGameLanguage();
+            curGameLanguageString = SteamUtils.GetSteamUILanguage();
+
+            if (curGameLanguageString != null)
+            {
+                //English
+                if (curGameLanguageString == "english")
+                {
+                    VARS.CurLanguageIndex = 0;
+                }
+                //Chinese(Simplified)
+                else if (curGameLanguageString == "schinese")
+                {
+                    VARS.CurLanguageIndex = 1;
+                }
+                //German
+                else if (curGameLanguageString == "german")
+                {
+                    VARS.CurLanguageIndex = 2;
+                }
+                //French
+                else if (curGameLanguageString == "french")
+                {
+                    VARS.CurLanguageIndex = 3;
+                }
+                //Spanish(European)
+                else if (curGameLanguageString == "spanish" || curGameLanguageString == "latam")
+                {
+                    VARS.CurLanguageIndex = 4;
+                }
+                //Portuguese(Brazilian)
+                else if (curGameLanguageString == "portuguese" || curGameLanguageString == "brazilian")
+                {
+                    VARS.CurLanguageIndex = 5;
+                }
+                //Russian
+                else if (curGameLanguageString == "russian")
+                {
+                    VARS.CurLanguageIndex = 6;
+                }
+                //Japanese
+                else if (curGameLanguageString == "japanese")
+                {
+                    VARS.CurLanguageIndex = 7;
+                }
+                //Others(ToDefaultEnglish)
+                else
+                {
+                    VARS.CurLanguageIndex = 0;
+                }
+
+                VARS.hasSetTheLanguageForTheFirstPlay = true;
+
+                VARS.IsToWriteLanguageData = true;
+            }
+        }
+
+        ////languageSwitch
+        //if (/*Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.L)*/Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift))
+        //{
+        //    VARS.CurLanguageIndex++;
+        //}
 
         #region CollectingText
         //oneColorFragment

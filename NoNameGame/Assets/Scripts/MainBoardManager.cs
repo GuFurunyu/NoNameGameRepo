@@ -16,6 +16,8 @@ public class MainBoardManager : MonoBehaviour
 
     #region ConstantsUsed
     GameObject mainBoard;
+
+    GameObject[] mainBoardOverTextEmpties = new GameObject[2];
     #endregion
 
     #region VariablesUsed
@@ -33,6 +35,7 @@ public class MainBoardManager : MonoBehaviour
 
         #region ImportConstants
         mainBoard = CONS.mainBoard;
+        mainBoardOverTextEmpties = CONS.mainBoardOverTextEmpties;
         #endregion
 
         #region ImportReferenceVariable
@@ -46,6 +49,12 @@ public class MainBoardManager : MonoBehaviour
 
         if (VARS.IsInMainBoard)
         {
+            //language
+            for (int i = 0; i < mainBoardOverTextEmpties.Length; i++)
+            {
+                mainBoardOverTextEmpties[i].SetActive(i == VARS.CurLanguageIndex);
+            }
+
             if (VARS.IsDownKeyDown)
             {
                 curOptionIndex++;
@@ -68,10 +77,10 @@ public class MainBoardManager : MonoBehaviour
 
         if (curOptionIndex == 0)
         {
-            mainBoard.transform.GetChild(1).GetChild(0).gameObject.SetActive(false);
-            mainBoard.transform.GetChild(1).GetChild(1).gameObject.SetActive(true);
-            mainBoard.transform.GetChild(2).GetChild(0).gameObject.SetActive(true);
-            mainBoard.transform.GetChild(2).GetChild(1).gameObject.SetActive(false);
+            mainBoardOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(0).GetChild(0).gameObject.SetActive(false);
+            mainBoardOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(0).GetChild(1).gameObject.SetActive(true);
+            mainBoardOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(1).GetChild(0).gameObject.SetActive(true);
+            mainBoardOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(1).GetChild(1).gameObject.SetActive(false);
 
             if (VARS.IsSpaceDown || VARS.IsReturnDown)
             {
@@ -82,10 +91,10 @@ public class MainBoardManager : MonoBehaviour
         }
         else if (curOptionIndex == 1)
         {
-            mainBoard.transform.GetChild(1).GetChild(0).gameObject.SetActive(true);
-            mainBoard.transform.GetChild(1).GetChild(1).gameObject.SetActive(false);
-            mainBoard.transform.GetChild(2).GetChild(0).gameObject.SetActive(false);
-            mainBoard.transform.GetChild(2).GetChild(1).gameObject.SetActive(true);
+            mainBoardOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(0).GetChild(0).gameObject.SetActive(true);
+            mainBoardOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(0).GetChild(1).gameObject.SetActive(false);
+            mainBoardOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(1).GetChild(0).gameObject.SetActive(false);
+            mainBoardOverTextEmpties[VARS.CurLanguageIndex].transform.GetChild(1).GetChild(1).gameObject.SetActive(true);
 
             if (VARS.IsSpaceDown || VARS.IsReturnDown)
             {
